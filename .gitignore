@@ -1,0 +1,26 @@
+node_modules/
+.DS_Store
+.env
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# API Keys & Credentials - Keep these secret!
+config.js
+SECRETS.md
+
+# Test artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Test artifacts
+playwright-report/
+test-results/
+
+# Build output
+dist/
+
+# Local backups (not tracked - policy updated 2026-01-16)
+backups/

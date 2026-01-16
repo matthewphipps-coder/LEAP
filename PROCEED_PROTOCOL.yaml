@@ -1,0 +1,231 @@
+metadata:
+  type: "governance"
+  name: "Proceed Air-Gap Protocol"
+  purpose: "Absolute enforcement of Constitution Rule #3"
+  version: "1.0.0"
+  created: "2026-01-15"
+  authority: "Constitution Rule #3 - Proceed Air-Gap (Zero Exception)"
+  status: "active"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (enforcement protocol)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "AI must read this BEFORE any file operation"
+
+rule:
+  name: "Proceed Air-Gap (Zero Exception)"
+  source: "constitution.yaml Rule #3"
+  enforcement: "Absolute - no exceptions"
+  
+  coreRequirement: |
+    No code committed to filesystem without standalone word 'Proceed' from User.
+
+beforeAnyFileOperation:
+  purpose: "Mandatory checklist AI must verify before ANY file operation"
+  
+  mandatoryChecklist:
+    - item: "□ Listed ALL files to modify/create/delete"
+      validation: "User sees complete list of affected files"
+      
+    - item: "□ Received standalone 'Proceed' or '!Proceed' from user"
+      validation: "Exact word 'Proceed' present in user's response"
+      
+    - item: "□ User approved the technical approach"
+      validation: "User understands what will happen"
+  
+  enforcement: "AI must verify ALL checkboxes ✓ before executing"
+  consequence: "If ANY checkbox unchecked → STOP and wait"
+
+whatRequiresProceed:
+  fileOperations:
+    - "Creating new files"
+    - "Modifying existing files"
+    - "Deleting files"
+    - "Renaming files"
+    - "Moving files"
+  
+  codeChanges:
+    - "JavaScript (.js)"
+    - "CSS (.css)"
+    - "HTML (.html)"
+    - "Any source code"
+  
+  governanceChanges:
+    - "Constitution rules"
+    - "Protocols"
+    - "Standards"
+    - "Workflows"
+    - "Any YAML governance file"
+  
+  otherChanges:
+    - "Architecture changes"
+    - "Dependency changes"
+    - "Configuration changes"
+    - "Git operations (commit, push, branch)"
+  
+  principle: "If it touches the filesystem → Proceed required"
+
+whatDoesNotRequireProceed:
+  metadataUpdates:
+    - description: "Recording completed work AFTER approval"
+    - examples:
+      - "Updating 'tested: 2026-01-15' AFTER test approved"
+      - "Changing status: 'experimental' → 'active' AFTER test approved"
+      - "Moving lifecycle stage AFTER stage completion approved"
+    - principle: "!Proceed for NEW work, not for recording completed work"
+  
+  readOperations:
+    - "Reading files"
+    - "Viewing code"
+    - "Checking git status"
+    - "Listing directories"
+
+yesIsNotProceed:
+  criticalDistinction: "User saying 'yes' is NOT the same as 'Proceed'"
+  
+  whatYesMeans:
+    - "Agreement with the idea"
+    - "Approval of the approach"
+    - "Understanding of the plan"
+    - "Permission to continue discussion"
+  
+  whatProceedMeans:
+    - "Execute the change NOW"
+    - "Commit to filesystem"
+    - "Make it real"
+    - "Point of no return"
+  
+  example:
+    userSays: "yes"
+    aiShould: "Wait for 'Proceed' before executing"
+    aiShouldNot: "Interpret 'yes' as permission to execute"
+  
+  correctFlow:
+    - step: 1
+      ai: "Proposes change and lists files"
+    - step: 2
+      user: "yes" or "sounds good" or "I agree"
+    - step: 3
+      ai: "Ready to proceed? (Say 'Proceed' to execute)"
+    - step: 4
+      user: "Proceed" or "!Proceed"
+    - step: 5
+      ai: "NOW executes the change"
+
+commonViolations:
+  
+  violation1:
+    scenario: "User says 'yes' to recommendation"
+    whatAiDoes: "Immediately executes file changes"
+    whyWrong: "'Yes' is not 'Proceed'"
+    correct: "AI waits for explicit 'Proceed' before executing"
+    severity: "high"
+  
+  violation2:
+    scenario: "Simple file rename"
+    whatAiThinks: "It's just a rename, doesn't need Proceed"
+    whyWrong: "ALL file operations need Proceed - no exceptions"
+    correct: "List file, wait for Proceed, then rename"
+    severity: "high"
+  
+  violation3:
+    scenario: "Obvious fix"
+    whatAiThinks: "This is clearly what user wants, I'll just do it"
+    whyWrong: "User must have veto power over ALL changes"
+    correct: "Propose fix, list files, wait for Proceed"
+    severity: "medium"
+  
+  violation4:
+    scenario: "User seems impatient"
+    whatAiThinks: "I should be helpful and execute quickly"
+    whyWrong: "Speed never justifies bypassing Proceed"
+    correct: "Follow protocol even if user seems rushed"
+    severity: "high"
+  
+  violation5:
+    scenario: "Metadata update after approved work"
+    whatAiDoes: "Waits for Proceed to update 'tested: date'"
+    whyWrong: "Recording completed work doesn't need new Proceed"
+    correct: "Update metadata after work approved, no new Proceed needed"
+    severity: "low"
+
+noExceptions:
+  rule: "Zero exceptions to Proceed Air-Gap"
+  
+  notEvenFor:
+    - "Simple renames"
+    - "Obvious fixes"
+    - "Tiny changes"
+    - "Urgent requests"
+    - "When user seems impatient"
+    - "When AI is confident"
+    - "When it's 'clearly' what user wants"
+  
+  rationale: |
+    The Proceed Air-Gap exists to give user absolute veto power.
+    Even if AI is 99.9% sure, user must have final say.
+    This is about partnership control, not AI confidence.
+
+aiSelfCheck:
+  purpose: "Questions AI must ask itself before ANY file operation"
+  
+  questions:
+    - question: "Did I list ALL files I'm about to modify/create/delete?"
+      ifNo: "STOP - List files first"
+    
+    - question: "Did user say the standalone word 'Proceed' or '!Proceed'?"
+      ifNo: "STOP - Wait for Proceed"
+    
+    - question: "Am I interpreting 'yes' as 'Proceed'?"
+      ifYes: "STOP - 'Yes' is not 'Proceed'"
+    
+    - question: "Am I thinking 'this is simple, doesn't need Proceed'?"
+      ifYes: "STOP - ALL file operations need Proceed"
+    
+    - question: "Am I about to bypass Proceed for any reason?"
+      ifYes: "STOP - Zero exceptions"
+  
+  enforcement: "If ANY answer triggers STOP → Do not proceed"
+
+whenViolationOccurs:
+  userMayInvoke: "Hard Stop (Constitution Rule #7)"
+  
+  aiMust:
+    - "Immediately cease all file operations"
+    - "Acknowledge the violation"
+    - "Explain what went wrong"
+    - "Await user direction"
+    - "Commit to not repeating"
+  
+  aiMustNot:
+    - "Make excuses"
+    - "Blame user communication"
+    - "Minimize the violation"
+    - "Continue working"
+
+integration:
+  readWith:
+    - "constitution.yaml (Rule #3)"
+    - "AI_ONBOARDING.yaml (Quick Start)"
+    - ".agent/workflows/pulse.md (!pulse protocol)"
+  
+  checkedDuring:
+    - "!pulse workflow execution"
+    - "Before any file operation"
+    - "After any rule violation"
+
+reminders:
+  - "Read this file BEFORE any file operation"
+  - "'Yes' ≠ 'Proceed'"
+  - "Zero exceptions - even for simple changes"
+  - "User veto power is absolute"
+  - "Partnership control over AI helpfulness"
+
+signoff:
+  created: "2026-01-15"
+  reason: "Strengthen Rule #3 enforcement after violation"
+  status: "Active and Enforced"

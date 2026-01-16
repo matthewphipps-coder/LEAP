@@ -1,0 +1,181 @@
+metadata:
+  type: "template"
+  name: "Peer Review Template"
+  purpose: "Standard format for all peer review findings"
+  version: "1.0.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-15"
+
+# INSTRUCTIONS FOR REVIEWER:
+# 1. Copy this template
+# 2. Fill in all sections
+# 3. Save to: reviews/YYYY-MM-DD-[artifact-name]-review.yaml
+# 4. Update artifact metadata with review status
+
+reviewMetadata:
+  type: "peer-review"
+  reviewDate: "YYYY-MM-DD"
+  reviewer: "[AI Model Name, e.g., Claude 3.5 Sonnet]"
+  artifactReviewed: "[path/to/artifact.yaml]"
+  reviewType: "spec" # spec | code | implementation | design | closure
+
+constitutionCompliance:
+  
+  rule1_recursiveSummary:
+    compliant: true # true | false
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule2_proposedImpact:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule3_proceedAirGap:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule4_visualWitness:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule5_noAssumptionShield:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule6_personaAudit:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule7_hardStop:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule8_pulse:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule9_rrmd:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule10_agentTesting:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule11_statusUpdates:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+  
+  rule12_bump:
+    compliant: true
+    finding: "[Issue if non-compliant, or 'N/A' if not applicable]"
+
+lifecycleCompliance:
+  
+  currentStage:
+    expected: "[Stage from CURRENT_STATE.yaml]"
+    actual: "[Stage in artifact]"
+    compliant: true # true | false
+  
+  stageAppropriate:
+    compliant: true
+    finding: "[Does work match stage activities?]"
+
+rrmdCompliance:
+  
+  required: false # true | false (based on scope)
+  completed: true # true | false | N/A
+  
+  riskAssessment:
+    present: true
+    adequate: true
+    finding: "[Issues if any]"
+  
+  research:
+    present: true
+    adequate: true
+    finding: "[Issues if any]"
+  
+  mitigation:
+    present: true
+    adequate: true
+    finding: "[Issues if any]"
+  
+  documentation:
+    present: true
+    adequate: true
+    finding: "[Issues if any]"
+  
+  verification:
+    present: true
+    adequate: true
+    finding: "[Issues if any]"
+
+qualityAssessment:
+  
+  completeness:
+    score: "100%" # Percentage of required items present
+    missing: [] # List any missing required items
+  
+  accuracy:
+    score: "100%" # Correctness of content
+    errors: [] # List any inaccuracies
+  
+  clarity:
+    score: "100%" # Understandability
+    issues: [] # List any clarity problems
+
+issues:
+  
+  critical:
+    - issue: "[Description of critical issue]"
+      rule: "[Which rule/standard violated]"
+      impact: "[What could go wrong]"
+      recommendation: "[How to fix]"
+  
+  medium:
+    - issue: "[Description of medium issue]"
+      recommendation: "[How to fix]"
+  
+  minor:
+    - issue: "[Description of minor issue]"
+      recommendation: "[Suggestion for improvement]"
+
+strengths:
+  - "[What was done well]"
+  - "[Positive findings]"
+  - "[Best practices followed]"
+
+overallAssessment:
+  
+  summary: "[Brief overall assessment]"
+  
+  scores:
+    completeness: "100%" # 0-100%
+    accuracy: "100%" # 0-100%
+    compliance: "100%" # 0-100%
+    overall: "100%" # Average or weighted
+  
+  readyForImplementation: true # true | false
+
+recommendation:
+  
+  decision: "APPROVE" # APPROVE | REVISE | REJECT
+  
+  reasoning: "[Why this decision was made]"
+  
+  requiredChanges: [] # If REVISE, list required changes
+  
+  blockers: [] # If REJECT, list fundamental problems
+  
+  conditions: [] # Any conditions for approval
+
+reviewerNotes:
+  - "[Any additional context]"
+  - "[Suggestions for improvement]"
+  - "[Observations about process]"
+  - "[Recommendations for future work]"
+
+nextSteps:
+  ifApproved: "[What happens next if approved]"
+  ifRevised: "[What needs to happen if revisions required]"
+  ifRejected: "[What should be reconsidered if rejected]"

@@ -1,0 +1,363 @@
+metadata:
+  type: "tracking"
+  name: "LEAP Feature Backlog"
+  purpose: "Track planned features and improvements"
+  version: "1.1.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-15T23:31:31Z"
+  status: "active"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (living document)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Active feature backlog - review at phase start"
+
+tracker:
+  purpose: "Track planned features and improvements"
+  categories:
+    - "governance"
+    - "phase-21"
+    - "phase-22"
+    - "future"
+
+items:
+  
+  governance:
+    name: "Governance Refinements"
+    focus: "Optimize AI governance system based on critical review"
+    source: "Critical review from first session (2026-01-15)"
+    overallScore: "9.2/10"
+    
+    mediumPriority:
+      - id: "GOV-001"
+        title: "Clarify RRMD+ Triggers"
+        description: "Add objective triggers to reduce ambiguity in RRMD+ activation"
+        issue: "Subjective triggers like 'risky implementations' and 'when impact is unclear' can lead to inconsistent RRMD+ usage"
+        severity: "medium"
+        priority: "medium"
+        effort: "10 minutes"
+        impact: "Prevents skipped RRMD+ on risky changes"
+        recommendation: |
+          Add to constitution.yaml Rule 9:
+          whenToUse:
+            objective:
+              - "Modifying >3 files"
+              - "Changing core files (app.js, index.html, vite.config.js, firebase.js)"
+              - "Modifying data schema (Firestore structure)"
+              - "Changing build/deploy process"
+              - "After 2+ failed attempts at same task"
+            subjective:
+              - "Risky implementations (if unsure, ask)"
+              - "When impact is unclear (if unsure, ask)"
+            rule: "If in doubt, invoke RRMD+ or ask user"
+        status: "complete"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+    
+    lowPriority:
+      - id: "GOV-002"
+        title: "Two-Tier !pulse System"
+        description: "Add !pulse-quick for frequent checks, keep !pulse-full for major transitions"
+        issue: "Full !pulse takes 3-4 minutes, interrupts flow"
+        severity: "low"
+        priority: "low"
+        effort: "30 minutes"
+        impact: "Reduces flow interruption, enables frequent sanity checks"
+        recommendation: |
+          Create two variants:
+          !pulse-quick:
+            reads: [CURRENT_STATE.yaml, constitution.yaml]
+            time: ~30 seconds
+            use: "Frequent sanity checks, between phases"
+          
+          !pulse-full:
+            reads: [all 7 governance files + state + architecture]
+            time: ~3-4 minutes
+            use: "Major phase transitions, onboarding, recovery"
+        alternative: "Add guidance on when to use full vs quick pulse"
+        status: "complete"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+      
+      - id: "GOV-003"
+        title: "Constitution Quick Reference"
+        description: "Add 10-line summary at top of constitution.yaml for instant lookup"
+        issue: "Constitution is 443 lines, can be dense for quick lookups"
+        severity: "low"
+        priority: "low"
+        effort: "5 minutes"
+        impact: "Faster rule lookup, improved UX"
+        recommendation: |
+          Add to constitution.yaml after preamble:
+          quickReference:
+            - "Rule 3: Wait for !Proceed before any file operation"
+            - "Rule 8: Run !pulse when modifying >3 files"
+            - "Rule 9: Execute RRMD+ for significant changes"
+            - "Rule 11: Provide 10-second status updates"
+            - "Rule 12: Respond to !bump for recovery"
+        status: "complete"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+      
+      - id: "GOV-004"
+        title: "Freeze Governance File Count"
+        description: "Commit to max 15 governance files, merge new rules into existing files"
+        issue: "Currently at 13 files, approaching maintainability threshold (~20)"
+        severity: "low"
+        priority: "low"
+        effort: "0 minutes (policy decision)"
+        impact: "Prevents governance sprawl, maintains clarity"
+        recommendation: |
+          Policy: Maximum 15 governance files
+          If new rules needed:
+            - Merge into existing files (e.g., add to constitution.yaml)
+            - Do NOT create constitution-2.yaml or similar
+          Annual consolidation review:
+            - Merge rarely-used protocols
+            - Archive obsolete rules
+        status: "complete"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+      
+      - id: "GOV-005"
+        title: "Clarify Backup Edge Cases"
+        description: "Add guidance for mid-phase core file refactors"
+        issue: "Ambiguity when core file refactor needed mid-implementation"
+        severity: "low"
+        priority: "low"
+        effort: "5 minutes"
+        impact: "Removes backup ambiguity, ensures safety"
+        recommendation: |
+          Update safety-protocol.yaml:
+          mandatoryBackups:
+            - stage: "design → implementation"
+              note: "Backup before ANY code changes"
+            
+            - stage: "Before Core File Refactor"
+              note: "If not already backed up in this phase"
+              rule: "One backup per phase minimum, additional backup if touching core files mid-phase"
+        status: "complete"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+      
+      - id: "GOV-006"
+        title: "Stage Artifacts System"
+        description: "Enable safe AI handoff between lifecycle stages"
+        issue: "AI agents lose context when switching between stages or sessions"
+        severity: "medium"
+        priority: "medium"
+        effort: "10 minutes"
+        impact: "Enables AI to pick up work at any stage without context loss"
+        implementation:
+          - "Added stageArtifacts section to pulse-protocol.yaml"
+          - "Enhanced pulse.md to read stage artifacts"
+          - "Updated CURRENT_STATE.yaml with stage artifacts guidance"
+          - "Created docs/phases/phase-21.2c/ folder structure"
+          - "Documented artifact format and handoff protocol"
+        status: "complete"
+        addedDate: "2026-01-16"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+  
+  phase21:
+    name: "Phase 21: AI CODE NIRVANA"
+    focus: "Make codebase AI-friendly and fix architectural issues"
+    
+    highPriority:
+      - id: "FEAT-21-001"
+        title: "CSS Architecture Fix"
+        description: "Remove duplicate loading, single source of truth"
+        status: "planned"
+        priority: "high"
+      
+      - id: "FEAT-21-002"
+        title: "Create ARCHITECTURE.md"
+        description: "Document module dependencies and data flow"
+        status: "planned"
+        priority: "high"
+      
+      - id: "FEAT-21-003"
+        title: "Establish JSDoc Standards"
+        description: "Add @dependencies, @sideEffects, @impacts tags"
+        status: "planned"
+        priority: "high"
+      
+      - id: "FEAT-21-004"
+        title: "Dependency Mapping"
+        description: "Auto-generate dependency graph"
+        status: "planned"
+        priority: "high"
+      
+      - id: "FEAT-21-005"
+        title: "Version System Enhancement"
+        description: "Auto-sync CSS versions, build-time validation"
+        status: "planned"
+        priority: "high"
+    
+    mediumPriority:
+      - id: "FEAT-21-006"
+        title: "Refactor for AI-Friendliness"
+        description: "Explicit dependencies, clear boundaries"
+        status: "planned"
+        priority: "medium"
+      
+      - id: "FEAT-21-007"
+        title: "Code Documentation"
+        description: "Add comprehensive JSDoc to all functions"
+        status: "planned"
+        priority: "medium"
+      
+      - id: "FEAT-21-008"
+        title: "Modular CSS Review"
+        description: "Ensure clean separation of concerns"
+        status: "planned"
+        priority: "medium"
+    
+    lowPriority:
+      - id: "FEAT-21-009"
+        title: "Performance Audit"
+        description: "Measure and optimize"
+        status: "planned"
+        priority: "low"
+      
+      - id: "FEAT-21-010"
+        title: "Accessibility Review"
+        description: "WCAG compliance check"
+        status: "planned"
+        priority: "low"
+      
+      - id: "FEAT-21-011"
+        title: "Improved Phase Stage Gates for AI Understanding"
+        description: "Enhance stage transition gates to make lifecycle progression clearer for AI agents"
+        rationale: "AI agents sometimes struggle to understand when to advance stages vs when to wait for approval"
+        potentialImprovements:
+          - "Add explicit completion criteria checklist for each stage"
+          - "Create visual/textual indicators of stage readiness"
+          - "Improve reporting templates to make findings clearer"
+          - "Add examples of good vs bad stage transitions"
+          - "Consider automation for routine stage transitions"
+        status: "complete"
+        priority: "low"
+        addedDate: "2026-01-15"
+        completedDate: "2026-01-16"
+        completedPhase: "21.2c"
+  
+  phase22:
+    name: "Phase 22: FEATURES & FUNCTIONS"
+    focus: "Return to feature development with solid foundation"
+    
+    plannedFeatures:
+      - id: "FEAT-22-001"
+        title: "Voice input for LEAP Orb"
+        status: "planned"
+      
+      - id: "FEAT-22-002"
+        title: "Collaborative features (multi-user)"
+        status: "planned"
+      
+      - id: "FEAT-22-003"
+        title: "Mobile responsive optimizations"
+        status: "planned"
+      
+      - id: "FEAT-22-004"
+        title: "Advanced AI agent integration"
+        status: "planned"
+      
+      - id: "FEAT-22-005"
+        title: "Real-time collaboration"
+        status: "planned"
+      
+      - id: "FEAT-22-006"
+        title: "Notification system enhancements"
+        status: "planned"
+  
+  future:
+    name: "Future / Someday"
+    description: "Ideas for future consideration"
+    
+    uxEnhancements:
+      - "Keyboard shortcuts system"
+      - "Customizable card layouts"
+      - "Advanced filtering options"
+      - "Bulk actions on cards"
+      - "Card templates"
+    
+    aiFeatures:
+      - "Proactive task suggestions"
+      - "Smart scheduling"
+      - "Context-aware reminders"
+      - "AI-powered search"
+      - "Natural language task creation"
+    
+    integration:
+      - "Calendar integration"
+      - "Email integration"
+      - "Slack/Teams integration"
+      - "API for external tools"
+      - "Webhook support"
+    
+    technical:
+      - "Offline mode"
+      - "Progressive Web App (PWA)"
+      - "Desktop app (Electron)"
+      - "Browser extension"
+      - "Mobile apps (iOS/Android)"
+
+statistics:
+  governance:
+    total: 5
+    medium: 1
+    low: 4
+    source: "Critical review 2026-01-15"
+    overallScore: "9.2/10"
+  
+  phase21:
+    total: 11
+    high: 5
+    medium: 3
+    low: 3
+  
+  phase22:
+    total: 6
+  
+  future:
+    total: 20
+
+howToUse:
+  
+  addingFeatures:
+    - step: 1
+      action: "Determine which phase (21, 22, or Future)"
+    - step: 2
+      action: "Add under appropriate section"
+    - step: 3
+      action: "Include brief description"
+    - step: 4
+      action: "Update lastUpdated date in metadata"
+  
+  completingFeatures:
+    - step: 1
+      action: "Change status to 'complete'"
+    - step: 2
+      action: "Move to phase completion summary"
+    - step: 3
+      action: "Update lastUpdated date in metadata"
+  
+  prioritizing:
+    high: "Must have for phase"
+    medium: "Should have if time permits"
+    low: "Nice to have"
+  
+  reviewing:
+    - "Review at phase start"
+    - "Update during phase planning"
+    - "Reference in RRMD+ research"

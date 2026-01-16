@@ -1,0 +1,205 @@
+metadata:
+  type: "tracking"
+  name: "LEAP Known Issues Tracker"
+  purpose: "Track all known bugs and issues"
+  version: "1.0.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-15"
+  status: "active"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (living document)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Active bug tracker - check before starting new work"
+
+tracker:
+  purpose: "Track all known bugs and issues"
+  categories:
+    - "critical"
+    - "medium"
+    - "low"
+    - "resolved"
+
+items:
+  
+  - id: "BUG-001"
+    title: "CSS Architecture Issue"
+    severity: "critical"
+    status: "resolved"
+    priority: "high"
+    created: "2026-01-15"
+    updated: "2026-01-16"
+    discoveredIn: "Phase 19"
+    resolvedIn: "Phase 21.3"
+    
+    details:
+      issue: "Duplicate CSS loading prevents changes from applying"
+      impact: "HIGH - CSS modifications don't take effect"
+      
+      problem:
+        - "index.html loads CSS files directly with stale versions (v5.5.0)"
+        - "index.css uses @imports for same files"
+        - "Direct links load first, @imports ignored"
+        - "Result: CSS changes never apply"
+      
+      filesAffected:
+        - file: "index.html"
+          lines: "17-19"
+        - file: "login.html"
+          lines: "13"
+        - note: "All CSS files loaded via @import"
+      
+      resolution:
+        phase: "21.3"
+        date: "2026-01-16"
+        commit: "2d3148e"
+        changes:
+          - "Removed duplicate layout.css link from index.html"
+          - "Removed duplicate scenario-builder.css link from index.html"
+          - "Kept single index.css link (entry point for @imports)"
+        validation: "Tested CSS change application (accent color change)"
+        result: "CSS modifications now apply immediately"
+      
+      unblocked: "BUG-002 (Card Visibility)"
+  
+  - id: "BUG-002"
+    title: "Card Visibility - Dark Theme"
+    severity: "medium"
+    status: "resolved"
+    priority: "medium"
+    created: "2026-01-15"
+    updated: "2026-01-16"
+    discoveredIn: "Phase 19"
+    resolvedIn: "2026-01-16"
+    
+    details:
+      issue: "Cards appear nearly invisible in dark theme"
+      impact: "MEDIUM - Cards hard to see against dark gradient"
+      
+      problem:
+        - "Base cards: transparent 80% (only 20% opaque)"
+        - "Decision cards: transparent 95% (only 5% opaque green)"
+        - "Activity cards: var(--bg-primary) (same as background)"
+      
+      resolution:
+        date: "2026-01-16"
+        changes:
+          - "Base cards: transparent 80% → 5% (now 95% opaque)"
+          - "Decision cards: transparent 95% → 85% (now 15% opaque green)"
+          - "Activity cards: Added gradient matching base cards"
+        validation: "User confirmed dark theme cards clearly visible"
+        result: "Dark theme fixed and validated"
+  
+  - id: "BUG-003"
+    title: "Card Visibility - Light Theme"
+    severity: "medium"
+    status: "open"
+    priority: "high"
+    created: "2026-01-16"
+    updated: "2026-01-16"
+    discoveredIn: "BUG-002 fix"
+    blockedBy: "BUG-004 (Theme Architecture Debt)"
+    
+    details:
+      issue: "Cards still washed out in light theme despite opacity fixes"
+      impact: "MEDIUM - Light theme cards blend into background"
+      
+      problem:
+        - "Light theme uses rgba() hardcoded values instead of color-mix()"
+        - "Decision cards: rgba(98, 216, 78, 0.85) - too bold/inconsistent"
+        - "Background gradient too vibrant (lime green)"
+        - "CSS cascade issues: .light-theme overrides flatten card gradients"
+      
+      rootCause: "Theme architecture inconsistency (see BUG-004)"
+      
+      attemptedFixes:
+        - fix: "Increased card opacity to 0.98"
+          result: "Partial improvement, still washed out"
+        - fix: "Added card-specific light theme gradients"
+          result: "Better but inconsistent with dark theme"
+        - fix: "Increased decision card green to 0.85 opacity"
+          result: "Still not satisfactory"
+      
+      nextSteps: "Requires architectural fix (BUG-004) for proper resolution"
+  
+  - id: "BUG-004"
+    title: "Theme Architecture Inconsistency (Technical Debt)"
+    severity: "low"
+    status: "open"
+    priority: "medium"
+    created: "2026-01-16"
+    updated: "2026-01-16"
+    discoveredIn: "BUG-002/BUG-003 investigation"
+    type: "architectural-debt"
+    
+    details:
+      issue: "Dark and light themes use completely different CSS patterns"
+      impact: "LOW (functional) / HIGH (maintainability, AI-friendliness)"
+      
+      problem:
+        darkTheme:
+          pattern: "Uses color-mix() with CSS variables"
+          example: "color-mix(in srgb, var(--accent-primary), transparent 85%)"
+          benefits: "Consistent, variable-driven, AI-friendly"
+        
+        lightTheme:
+          pattern: "Uses hardcoded rgba() values"
+          example: "rgba(98, 216, 78, 0.85)"
+          issues: "Brittle, inconsistent, AI-unfriendly"
+        
+        consequences:
+          - "Two different systems to maintain"
+          - "AI confusion when modifying themes"
+          - "Governance failure (violates AI-first principles)"
+          - "Difficult to ensure visual consistency"
+      
+      proposedSolution:
+        approach: "Unify both themes to use color-mix() pattern"
+        implementation:
+          - "Light theme overrides CSS variables only"
+          - "Both themes use same gradient structure"
+          - "Single source of truth for card styling"
+        
+        effort: "20-30 minutes"
+        phase: "21.4 (proposed)"
+      
+      deferralReason: "Time pressure - tactical fix applied, strategic fix deferred"
+      
+      blocks: "BUG-003 (proper light theme fix)"
+
+statistics:
+  total: 4
+  critical: 0
+  medium: 3
+  low: 1
+  resolved: 2
+  open: 2
+
+howToUse:
+  
+  addingIssues:
+    - step: 1
+      action: "Determine severity (critical/medium/low)"
+    - step: 2
+      action: "Add under appropriate section"
+    - step: 3
+      action: "Include: Issue name, impact, status, problem description, affected files"
+    - step: 4
+      action: "Update lastUpdated date in metadata"
+  
+  resolvingIssues:
+    - step: 1
+      action: "Change status to 'resolved'"
+    - step: 2
+      action: "Add resolution date and method"
+    - step: 3
+      action: "Update lastUpdated date in metadata"
+  
+  reviewing:
+    - "Check before starting new work"
+    - "Reference in RRMD+ research phase"
+    - "Update during phase closure"

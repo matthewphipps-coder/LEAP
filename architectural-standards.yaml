@@ -1,0 +1,284 @@
+metadata:
+  type: "governance"
+  name: "LEAP Architectural Standards & Code Hygiene"
+  purpose: "Mandatory structural rules for LEAP codebase"
+  version: "1.0.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-15"
+  status: "active"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (living document)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Active governance - AI Agents must adhere to these patterns"
+
+preamble:
+  purpose: "Prevent re-emergence of monolithic, unmaintainable code"
+  enforcement: "Mandatory for all AI Agents"
+
+separationOfConcerns:
+  name: "The Triad Pattern"
+  description: "Every new feature must be split into three distinct layers"
+  
+  serviceLayer:
+    name: "Service Layer"
+    location: "src/features/[feature-name]/[feature]-service.js"
+    responsibility:
+      - "Business logic"
+      - "Data transformations"
+      - "API calls"
+      - "State calculation"
+    rule: "NO DOM MANIPULATION"
+    principle: "Services take input, perform logic, return data or update State Manager"
+  
+  uiRenderingLayer:
+    name: "UI Rendering Layer"
+    location: "src/ui/components/[component]-ui.js"
+    responsibility:
+      - "Creating HTML structures"
+      - "Applying classes"
+      - "Handling direct user events (clicks, inputs)"
+    rule: "NO HEAVY LOGIC"
+    principle: "UI layer calls Service layer for data - acts as dumb view that knows how to look good"
+  
+  styleLayer:
+    name: "Style Layer"
+    location: "src/ui/components/[component].css or src/core/"
+    responsibility: "Visual presentation only"
+    rule: "Component-specific styles in own .css file"
+    globalOverrides: "Strictly for base.css"
+    legacyProhibition:
+      - "NO root-level component CSS files (e.g., cards.css, task-styles.css)"
+      - "All styles must live in src/ui/ or be imported via modular index.css"
+      - "Ensures CSS specificity remains predictable"
+      - "Prevents Brand Leaks"
+
+codeHygieneRules:
+  
+  lineLimit:
+    name: "500-Line Limit"
+    rule: "No single JavaScript file should exceed 500 lines"
+    enforcement: "MUST be refactored into smaller, utility-based sub-modules"
+    examples:
+      - "task-formatter.js"
+      - "task-validators.js"
+  
+  eventManagement:
+    rules:
+      - "Do not use inline onclick attributes in HTML"
+      - "Always use addEventListener within ui.js file for relevant component"
+      - "Ensure event listeners are cleaned up if component is destroyed (prevent memory leaks)"
+  
+  stateFlow:
+    directDBAccessIsSin:
+      rule: "Components should never call Firestore directly"
+      requirement: "Must use a Service function"
+    
+    stateAsSourceOfTruth:
+      rule: "UI should reflect state provided by StateManager"
+      prohibition: "Do not store vital application state in DOM"
+      example: "Checking a class to see if agent is active (WRONG)"
+  
+  namingConventions:
+    functions:
+      prefixes:
+        - "get..."
+        - "set..."
+        - "handle..."
+        - "render..."
+        - "calculate..."
+    
+    booleanVariables:
+      prefixes:
+        - "is..."
+        - "has..."
+        - "should..."
+      example: "isAgentActive"
+    
+    css:
+      style: "BEM-lite naming"
+      examples:
+        - ".nexus-orb"
+        - ".nexus-orb--active"
+
+enforcementForAIAgents:
+  description: "If tasked with adding a feature"
+  
+  steps:
+    - step: 1
+      action: "Draft the Interface"
+      description: "Define what the Service will do before writing UI"
+    
+    - step: 2
+      action: "Verify the Hookup"
+      description: "Ensure app.js (orchestrator) only calls initialization functions, not containing logic itself"
+    
+    - step: 3
+      action: "Modular CSS"
+      description: "Create new .css file for feature and link in index.html"
+      prohibition: "Do not append to base.css unless it is global variable change"
+  
+  consequence: "Failure to follow these rules will result in code rejection"
+  motto: "Keep the Zen in the codebase as much as the UI"
+
+agentEngagementRules:
+  name: "The Pair Protocol"
+  purpose: "Ensure high-fidelity collaboration between User and AI"
+  
+  rules:
+    pauseAndPivot:
+      description: "Do not begin implementation until high-level architecture and UX discussed and agreed upon in chat"
+    
+    consultativePartnering:
+      description: "Propose multiple solutions (Option A vs Option B) for complex problems"
+      principle: "Do not assume most efficient path is best for the brand"
+    
+    finalGate:
+      name: "HARD STOP"
+      requirement: "Must receive exact word 'Proceed' as standalone message before executing write_to_file or replace_file_content"
+      prohibition: "No assumptions about platform infrastructure (Email servers, Backend APIs, environment variables) without prior inquiry"
+      question: "Always ask: Are you ready for me to proceed with development?"
+
+chameleonBrandingProtocol:
+  name: "Chameleon Branding Protocol (Phase 7)"
+  purpose: "Maintain LEAP Premium Cockpit aesthetic while pivoting to customer brands"
+  
+  accentFirstMandate:
+    nexusDNA:
+      rule: "Primary background MUST remain deep, dark neutral (Indigo/Navy/Black)"
+      brandColors: "ACCENTS ONLY"
+    
+    noColorBombing:
+      prohibition: "NEVER use primary brand color as background for high-surface area elements"
+      examples:
+        - "Modals"
+        - "Sidebars"
+        - "Global Header"
+  
+  dynamicColorLogic:
+    glowEffect:
+      description: "Brand colors applied via gradients and glows"
+      technique: "radial-gradient(circle, brand_alpha_20, transparent)"
+      notTechnique: "Solid blocks"
+    
+    surfaceAllocation:
+      theOrb:
+        changes: "Pulsar pulse and localized aura"
+      
+      cardArchitecture:
+        allowed:
+          - "1px borders"
+          - "Status indicators"
+          - "Hover-state glows only"
+      
+      typography:
+        allowed: "Limited to high-contrast bolded keywords within AI briefings and title headers"
+    
+    evolutionaryColor:
+      rule: "If brand uses single aggressive color, AI must generate complimentary dark/muted variant"
+      purpose: "Create depth-giving spectrum rather than flat fill"
+      example: "Orange to Amber"
+
+folderOrganization:
+  name: "Folder Organization Rules"
+  purpose: "Maintain clean, predictable project structure"
+  enforcement: "Mandatory for all AI Agents"
+  
+  establishedFolders:
+    description: "Use existing folders - do not create new ones without approval"
+    
+    folders:
+      src:
+        purpose: "All source code"
+        subfolders:
+          - "core/ - Application core (app.js, state, firebase)"
+          - "features/ - Feature modules (tasks, ai, nexus)"
+          - "ui/ - UI components and styles"
+      
+      docs:
+        purpose: "All documentation"
+        subfolders:
+          - "guides/ - How-to guides and protocols"
+          - "specs/ - Technical specifications"
+          - "phases/ - Phase artifacts and closures"
+      
+      demos:
+        purpose: "ONLY for active, useful demo files"
+        allowed:
+          - "Theme testing tools (theme-preview.html)"
+          - "Live presentation demos"
+          - "Interactive prototypes for stakeholders"
+        prohibited:
+          - "Old mockups (delete after implementation)"
+          - "Test files (use tests/ folder)"
+          - "Experimental code (use src/ with feature flags)"
+        rule: "Delete demo files after they're no longer needed"
+      
+      tests:
+        purpose: "Automated test files only"
+      
+      templates:
+        purpose: "YAML templates for documentation"
+      
+      schemas:
+        purpose: "JSON schemas for YAML validation"
+      
+      scripts:
+        purpose: "Utility scripts (deploy, backup, etc.)"
+  
+  prohibitions:
+    - rule: "Do NOT create new folders in root"
+      examples:
+        - "old-docs/ ❌"
+        - "backups/ ❌"
+        - "sessions/ ❌"
+        - "design/ ❌"
+      reason: "Leads to clutter and confusion"
+    
+    - rule: "Do NOT create 'temp' or 'scratch' folders"
+      reason: "Use git branches for experimental work"
+    
+    - rule: "Do NOT keep obsolete files 'just in case'"
+      reason: "Git history preserves everything"
+  
+  cleanupPolicy:
+    when: "After feature implementation or phase completion"
+    action: "Delete demo files, mockups, and temporary artifacts"
+    backup: "Git history is the backup"
+
+documentation:
+  name: "Required Documentation"
+  purpose: "Mandatory documentation that must exist and be maintained"
+  enforcement: "AI Agents must verify these exist before code changes"
+  
+  required:
+    architecture:
+      file: "ARCHITECTURE.yaml"
+      purpose: "System architecture reference"
+      location: "Root directory"
+      mustContain:
+        - "System overview and entry points"
+        - "Module structure (core, features, ui)"
+        - "Data flow (Firebase → State → UI)"
+        - "Dependency map (what depends on what)"
+        - "Key architectural patterns (Triad, State management)"
+        - "CSS architecture and loading order"
+        - "Extension points (how to add features)"
+      
+      updateWhen:
+        - "Adding new modules or features"
+        - "Changing module dependencies"
+        - "Modifying data flow patterns"
+        - "Refactoring architecture"
+        - "Adding new architectural patterns"
+      
+      verificationRequired:
+        - "Before making code changes, verify ARCHITECTURE.yaml exists"
+        - "After architectural changes, update ARCHITECTURE.yaml"
+        - "During !pulse, check ARCHITECTURE.yaml is current"
+      
+      consequence: "Code changes without architecture documentation will be rejected"

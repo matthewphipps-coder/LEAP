@@ -1,0 +1,223 @@
+# LEAP Architecture Decision Record
+# Generated: 2026-01-16T15:58:00Z
+# Source: Consolidated from 6 research files in /Documents/Research/
+
+metadata:
+  version: "1.0.0"
+  created: "2026-01-16"
+  status: "approved"
+  researchSources:
+    - "LEAP_EVOLUTION_BLUEPRINT_20260116_134515.yaml (Gemini 2.5 Pro)"
+    - "LEAP_EVOLUTION_BLUEPRINT_20260116_141341.yaml (Gemini 2.5 Pro)"
+    - "LEAP_EVOLUTION_BLUEPRINT_20260116_142049.yaml (Claude Sonnet 4.5)"
+    - "LEAP_EVOLUTION_BLUEPRINT_20260116_143328.yaml (Gemini 2.0)"
+    - "LEAP_EVOLUTION_BLUEPRINT_20260116_144026.yaml (Gemini 1.5 Flash)"
+    - "chatgpt.yaml (Gemini 3 Flash)"
+
+---
+
+# STRATEGIC DECISIONS
+
+decisions:
+  
+  approvedApproach:
+    name: "Clean Room Rebuild"
+    status: "APPROVED"
+    rationale: "Enables pure Hexagonal Architecture without carrying tech debt"
+    constraint: "Preserve governance layer entirely (constitution, pulse-protocol, safety-protocol)"
+  
+  rejectedPatterns:
+    - pattern: "Ship of Theseus (Incremental Refactor)"
+      status: "REJECTED"
+      reason: "Clean rebuild preferred for architectural purity"
+    
+    - pattern: "Multi-Agent Orchestration (MAS) as Foundation"
+      status: "REJECTED"
+      reason: "Coordination overhead, debugging complexity, premature optimization"
+
+---
+
+# ADOPTED PATTERNS
+
+patterns:
+
+  tier1_foundation:
+    
+    hexagonalArchitecture:
+      priority: "P0 - Critical"
+      consensus: "6/6 research files"
+      definition: "Isolates core business logic from externals via ports (interfaces) and adapters"
+      nexusBenefit: "AI agents focus on domain logic, not Firebase/UI specifics"
+      implementation:
+        - "Define Port interfaces (ITaskRepository, IAIProvider, IAuthService)"
+        - "Create adapters for Firebase, LLM providers, UI layer"
+        - "Core domain has zero external dependencies"
+    
+    intentBasedDevelopment:
+      priority: "P0 - Critical"
+      consensus: "6/6 research files"
+      definition: "Define WHAT (specs/intent), AI handles HOW (implementation)"
+      currentState: "Already partially implemented via YAML governance specs"
+      implementation:
+        - "Enhance ARCHITECTURE.yaml with module-level specs"
+        - "Add @intent JSDoc annotations to functions"
+        - "Intent classification for Nexus Orb commands"
+    
+    autonomousVerificationLoops:
+      priority: "P0 - Critical"
+      consensus: "5/6 research files"
+      definition: "AI continuously tests, validates, refines in closed-loop iterations"
+      currentState: "Playwright tests exist but not AI-integrated"
+      implementation:
+        - "Integrate Playwright into AI development loop"
+        - "Run tests → iterate on failures → auto-commit on green"
+        - "Add visual regression testing"
+        - "Schema validation for data structures"
+
+  tier2_structural:
+    
+    microModularMonolith:
+      priority: "P1 - High"
+      consensus: "5/6 research files"
+      definition: "Single deployable unit with strictly-bounded modules"
+      nexusBenefit: "AI works on one module without needing full codebase context"
+      implementation:
+        - "Enforce boundaries with ESLint import restrictions"
+        - "Define explicit module APIs via index.js exports"
+        - "Target module size: 200-400 lines"
+    
+    singleAgentOrchestration:
+      priority: "P1 - High"
+      consensus: "4/6 research files (preferred over MAS)"
+      definition: "Single AI agent manages workflows through reasoning, planning, execution cycles"
+      rationale: "Simpler than MAS, maintains conversation context, easier to debug"
+      evolutionPath: "Upgrade to MAS only if single-agent becomes bottleneck"
+      implementation:
+        - "Nexus Orb as primary orchestrator"
+        - "ReAct (Reasoning and Acting) pattern"
+        - "Tool-based capability extension"
+
+  tier3_enhancement:
+    
+    eventDrivenArchitecture:
+      priority: "P2 - Medium"
+      consensus: "4/6 research files"
+      currentState: "Firebase real-time already event-driven at DB level"
+      consideration: "Add internal event bus only if needed for agent communication"
+    
+    productionEraAI:
+      priority: "P2 - Medium"
+      definition: "Reliability, observability, and governance for production AI"
+      implementation:
+        - "Comprehensive logging of AI decisions"
+        - "Cost tracking per operation"
+        - "LLM observability integration"
+
+---
+
+# GOVERNANCE PRESERVATION
+
+preserveIntact:
+  critical:
+    - "constitution.yaml"
+    - "pulse-protocol.yaml"
+    - "safety-protocol.yaml"
+    - "architectural-standards.yaml"
+  
+  rationale: |
+    All 6 research files unanimously recommend preserving the governance layer.
+    It represents mature AI-first development lifecycle already implemented.
+    "Code can be rewritten; governance specs should be preserved and enhanced."
+
+---
+
+# IMPLEMENTATION ROADMAP
+
+phases:
+
+  phase1_foundation:
+    duration: "1-2 weeks"
+    focus: "Core Architecture"
+    deliverables:
+      - "Define Hexagonal port interfaces"
+      - "Create Firebase adapter (extract from current services)"
+      - "Create LLM provider adapter"
+      - "Integrate Playwright into AI verification loop"
+      - "Enhance ARCHITECTURE.yaml with module specs"
+    successCriteria:
+      - "Domain logic testable without Firebase"
+      - "AI agent can generate code and verify it automatically"
+
+  phase2_structure:
+    duration: "2-3 weeks"
+    focus: "Module Boundaries"
+    deliverables:
+      - "Enforce module boundaries with ESLint"
+      - "Extract pure domain models (Task, Card, Scenario)"
+      - "Create application use cases (CompleteTaskUseCase, etc.)"
+      - "Add schema validation (Zod/JSON Schema)"
+    successCriteria:
+      - "Each module independently testable"
+      - "No cross-module direct imports"
+
+  phase3_enhancement:
+    duration: "3-4 weeks"
+    focus: "AI Capabilities"
+    deliverables:
+      - "Single-agent orchestrator (enhanced Nexus Orb)"
+      - "Intent classification for commands"
+      - "Visual regression testing"
+      - "Production observability dashboard"
+    successCriteria:
+      - "Natural language commands execute workflows"
+      - "Self-healing for common failures"
+
+---
+
+# RISKS AND MITIGATIONS
+
+risks:
+
+  - id: "RISK-001"
+    risk: "Feature parity loss during rebuild"
+    severity: "HIGH"
+    mitigation:
+      - "Use functionality.yaml as contract"
+      - "Visual regression testing"
+      - "Parallel operation during transition"
+
+  - id: "RISK-002"
+    risk: "AI-generated code quality issues"
+    severity: "MEDIUM"
+    mitigation:
+      - "Autonomous verification loops (P0)"
+      - "Human review gates"
+      - "Schema validation"
+
+  - id: "RISK-003"
+    risk: "Over-engineering for demo platform"
+    severity: "MEDIUM"
+    mitigation:
+      - "Start with Tier 1 patterns only"
+      - "Evaluate before adding Tier 2+"
+      - "Remember: demo, not enterprise infrastructure"
+
+  - id: "RISK-004"
+    risk: "Context window overflow for AI agents"
+    severity: "MEDIUM"
+    mitigation:
+      - "Hexagonal boundaries limit context to domain only"
+      - "Micro-modular structure enables focused context"
+
+---
+
+# NEXT STEPS
+
+immediate:
+  - "Review and approve this document"
+  - "Decide on Phase 1 kickoff timing"
+  - "Create module spec templates"
+
+archiveResearch:
+  action: "Move /Documents/Research/ files to /LEAP/.ai/research-archive/"
+  rationale: "Consolidation complete; keep sources for reference"

@@ -1,0 +1,81 @@
+metadata:
+  type: "governance"
+  name: "LEAP Zero-Regression Protocol"
+  purpose: "Ensure experimental development does not degrade core stability"
+  version: "1.0.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-15"
+  status: "mandatory"
+  context: "Phase 7 (Experimental) development"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (living document)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Mandatory for experimental feature development"
+
+rules:
+  
+  featureFlagging:
+    name: "Feature Flagging (The Kill Switch)"
+    rule: "All Chameleon logic must be gated by FLAGS.CHAMELEON_UI in src/core/constants.js"
+    implementation: "If flag is false, /seed command must return 'Command Disabled' and ThemeManager must not execute"
+    enforcement: "Mandatory"
+  
+  dataIntegrity:
+    name: "Data Integrity & Namespacing"
+    
+    simulatedDataTagging:
+      rule: "All cards created via Scenario Architect must include isSimulated: true and scenarioId"
+      storage: "Firestore document"
+      enforcement: "Mandatory"
+    
+    wipeIsolation:
+      rule: "Atomic Wipe (Step 2 of Build Guide) must ONLY delete documents where isSimulated: true"
+      prohibition: "FORBIDDEN from deleting standard user tasks unless user explicitly confirms Full Factory Reset"
+      enforcement: "Mandatory"
+  
+  visualRegressionSafeguards:
+    name: "Visual Regression Safeguards"
+    
+    variableBackups:
+      rule: "Before ThemeManager modifies any CSS variable, must store Standard Theme values in localStorage"
+      enforcement: "Mandatory"
+    
+    resetLogic:
+      rule: "Hard Reset (on Logout or via command) must restore CSS variables from backup"
+      purpose: "Ensure app doesn't get stuck in customer's colors"
+      enforcement: "Mandatory"
+  
+  mandatoryAutomatedTests:
+    name: "Mandatory Automated Tests (The Gatekeeper)"
+    rule: "Before any Phase 7 code is merged into stable branch, must pass all tests"
+    
+    tests:
+      authentication:
+        requirement: "Ensure login/logout flows are 100% functional"
+        priority: "Critical"
+      
+      persistence:
+        requirement: "Ensure real user tasks are still savable to Firebase"
+        priority: "Critical"
+      
+      commandIntegrity:
+        requirement: "Ensure standard / commands (Search, AI) still work alongside new /seed command"
+        priority: "High"
+    
+    enforcement: "Mandatory"
+  
+  uiLayoutProtection:
+    name: "UI Layout Protection (The Overlay Rule)"
+    rule: "Phase 7 Starfield mask must be self-cleaning"
+    
+    implementation:
+      - "Must include timeout safety"
+      - "If data generation takes longer than 30 seconds, mask must lift"
+      - "Show error state rather than soft-locking user's screen forever"
+    
+    enforcement: "Mandatory"
