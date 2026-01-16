@@ -1,7 +1,7 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-16T04:24:00Z"
+  lastUpdated: "2026-01-16T19:10:00Z"
   version: "3.0.0"
 
 aiMustRead:
@@ -13,139 +13,49 @@ aiMustRead:
 projectContext:
   name: "LEAP"
   tagline: "AI-First Workflow Assistant"
-  version: "v6.8.0-partnership"
-  currentFocus: "AI Code Nirvana - Governance system at elite level"
-  vision: "See VISION.yaml for complete vision (dual-purpose: shows AI-first future + proves AI demo creation)"
+  version: "v1.0.0-fresh"
+  currentFocus: "Clean room rebuild - starting fresh with governance framework"
+  vision: "To be defined"
 
 currentPhase:
-  number: "21.3"
-  name: "CSS Architecture Fix"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-16T02:31:43Z"
-  completedDate: "2026-01-16T03:00:00Z"
+  number: "1"
+  name: "Project Setup"
+  status: "in-progress"
+  stage: "initialization"
+  startedDate: "2026-01-16T19:10:00Z"
   
-  summary: "Resolved BUG-001: Removed duplicate CSS loading from index.html"
-  result: "CSS modifications now apply immediately, unblocked BUG-002"
+  summary: "Fresh project start - governance preserved, codebase empty"
   
-  details: "See docs/phases/phase-21.3/ for stage artifacts and PHASE_21.3_CLOSURE.yaml"
-
-nextPhase:
-  number: "21.4"
-  name: "Theme Architecture Unification (BUG-004)"
-  status: "proposed"
-  
-  context: "BUG-002 partially resolved - dark theme fixed, light theme blocked by architecture debt"
-  
-  options:
-    - "Phase 21.4: Fix BUG-003/004 (theme architecture unification)"
-    - "Defer BUG-003/004, move to other work"
-    - "New feature from backlog"
-  
-  recommendation: "Review bugs.yaml for BUG-003/004 details before deciding"
-  
-  details: "See bugs.yaml for complete bug status and backlog.yaml for other options"
-
-previousPhase:
-  number: "21.3"
-  name: "CSS Architecture Fix"
-  status: "complete"
-  completedDate: "2026-01-16T03:00:00Z"
-  
-  details: "See docs/phases/phase-21.2f/ for stage artifacts"
+  details: "Clean room rebuild. Old LEAP codebase cleared, governance framework retained."
 
 currentActivity:
-  status: "between-phases"
-  lastWork: "BUG-002 (Card Visibility) - Partially resolved"
+  status: "starting-fresh"
+  lastWork: "Documentation reset for clean room rebuild"
   
   summary:
     completed:
-      - "BUG-002: Dark theme cards fixed and user-validated ✅"
-      - "Git committed: All changes saved (commit 42d0840)"
-      - "Bugs logged: BUG-003 (light theme) and BUG-004 (architecture debt)"
+      - "Cleared old codebase"
+      - "Preserved governance framework"
+      - "Reset documentation for fresh start"
     
-    remaining:
-      - "BUG-003: Light theme cards still washed out"
-      - "BUG-004: Theme architecture inconsistency (technical debt)"
-    
-    context: "Dark/light themes use different CSS patterns (color-mix vs rgba)"
+    context: "Ready to define new project vision and architecture"
   
-  nextPhase: "21.4 (proposed) - Theme Architecture Unification"
-  nextStage: "discovery"
-  
-  aiReminders:
-    - "✅ BUG-002 dark theme DONE - user confirmed working"
-    - "⚠️ BUG-003 light theme OPEN - requires BUG-004 fix"
-    - "📋 Read bugs.yaml for complete BUG-003/004 details"
-    - "🎯 Proposed: Unify themes to use color-mix() pattern (20-30 min)"
-    - "⏸️ Alternative: Defer BUG-003/004, work on other priorities"
+  nextPhase: "Design"
+  nextStage: "requirements"
 
 references:
-  purpose: "Where to find information removed from this file"
-  
-  historicalData:
-    location: "docs/phases/phase-*/PHASE_*_CLOSURE.yaml"
-    contains: "Phase summaries, accomplishments, lessons learned, decisions"
-    example: "Phase 20 summary → docs/phases/phase-20/PHASE_20_CLOSURE.yaml"
-  
-  knownIssues:
-    location: "bugs.yaml"
-    contains: "All known bugs and issues"
-  
-  featureBacklog:
-    location: "backlog.yaml"
-    contains: "Feature roadmap, Phase 21 preview, priorities"
-  
   governanceFiles:
-    command: "ls *.yaml"
-    contains: "List of all governance YAML files in root"
+    - "constitution.yaml - Partnership rules"
+    - "pulse-protocol.yaml - Development methodology"
+    - "safety-protocol.yaml - Backup and deployment"
+    - "architectural-standards.yaml - Code patterns"
   
   workflows:
+    location: ".agent/workflows/"
     command: "ls .agent/workflows/"
-    contains: "List of all workflow files"
-  
-  stageArtifacts:
-    location: "pulse-protocol.yaml (lines 762-849)"
-    contains: "Stage artifacts system documentation"
-  
-  architecture:
-    location: "ARCHITECTURE.yaml"
-    contains: "System architecture, module structure, data flow"
-
-latestBackup:
-  name: "LEAP-phase-21.2d-complete"
-  date: "2026-01-16T01:08:58Z"
-  note: "See safety-protocol.yaml for backup policy"
-
-howToUseThisDoc:
-  forAI:
-    sessionStart:
-      - "Read this file FIRST at start of every session"
-      - "Check currentPhase to see where we are"
-      - "Check currentActivity to see what you should do"
-      - "Check aiReminders for critical context"
-    
-    beforeCoding:
-      - "If nextPhase is CODE type, complete Rule 13 technical onboarding"
-      - "Read ARCHITECTURE.yaml (1,283 lines)"
-      - "Read bugs.yaml for relevant issues"
-      - "Examine affected files"
-    
-    whenLost:
-      - "Run !pulse to reset governance context"
-      - "Check references section for where to find detailed info"
-      - "Read phase closure docs for historical context"
-  
-  forHuman:
-    - "This file shows current state only (not historical archive)"
-    - "For historical data, see docs/phases/phase-*/PHASE_*_CLOSURE.yaml"
-    - "For detailed phase info, see stage artifacts in docs/phases/phase-*/"
-    - "Update this file after phase transitions and major decisions"
 
 aiReminders:
-  - "This file is CURRENT STATE only - historical data is in closure docs"
-  - "For file lists, query filesystem (ls, tree, find)"
-  - "For detailed phase info, see stage artifacts and closure docs"
-  - "Rule 13 applies to CODE phases only (not governance/documentation phases)"
-  - "Always run !pulse at session start to reset governance context"
-  - "Never assume - verify current state in this file"
+  - "This is a FRESH START - no old code exists"
+  - "Governance framework is preserved and active"
+  - "Run !pulse at session start to reset context"
+  - "Define vision and architecture before writing code"
