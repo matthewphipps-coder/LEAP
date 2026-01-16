@@ -561,8 +561,8 @@ keyCommands:
     clear: "/clear - Delete all tasks"
 
 links:
-  github: "https://github.com/matthewphipps-coder/BIZ"
-  liveDemo: "https://matthewphipps-coder.github.io/BIZ/"
+  github: "https://github.com/matthewphipps-coder/LEAP"
+  liveDemo: "https://matthewphipps-coder.github.io/LEAP/"
   documentation: "See DOCUMENTATION_INDEX.md"
 
 license:

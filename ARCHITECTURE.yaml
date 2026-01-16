@@ -1117,7 +1117,7 @@ technologyStack:
   deployment:
     platform: "GitHub Pages"
     repository: "matthewphipps-coder/ZenTask"
-    url: "https://matthewphipps-coder.github.io/BIZ/"
+    url: "https://matthewphipps-coder.github.io/LEAP/"
     
     commands:
       build: "npm run build"
@@ -1264,7 +1264,7 @@ quickReference:
     - "□ Commit changes to git"
     - "□ Run npm run build (verify no errors)"
     - "□ Run npm run deploy (pushes to gh-pages branch)"
-    - "□ Verify deployment at https://matthewphipps-coder.github.io/BIZ/"
+    - "□ Verify deployment at https://matthewphipps-coder.github.io/LEAP/"
 
 updateProtocol:
   whenToUpdate:
