@@ -716,6 +716,35 @@ rules:
       principle: "Mutual improvement requires actual understanding, not reflexive approval"
     
     enforcement: "Constitutional - same weight as Rules 1-13"
+  
+  - id: 15
+    name: "Gate Record Immutability"
+    description: "Audit records created at gates cannot be modified after creation"
+    addedDate: "2026-01-18"
+    source: "Phase 4 - External Control and Audit"
+    
+    principle:
+      statement: "Gate records are truth. Truth cannot be edited."
+      rationale: "Audit compliance requires immutable evidence of stage gate decisions"
+    
+    scope:
+      applies:
+        - "Stage gate artifacts (stage-N-*.yaml after completion)"
+        - "Gate records (gate-N-to-N+1.yaml)"
+        - "Phase closure documents"
+      doesNotApply:
+        - "Working documents before gate completion"
+        - "Task tracking artifacts"
+        - "In-progress stage artifacts"
+    
+    enforcement:
+      aiMustNot: "Modify any artifact where stageStatus or completed field exists"
+      humanMay: "Request corrections via new amendment artifact"
+      auditTrail: "Amendments reference original, do not replace"
+    
+    violation:
+      detection: "Git history shows modification of completed artifact"
+      consequence: "Audit failure - compromised evidence"
 
 
 signoff:
