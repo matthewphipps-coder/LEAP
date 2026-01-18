@@ -5,7 +5,8 @@ metadata:
   stage: 8
   stageName: "closure"
   created: "2026-01-18T19:42:38Z"
-  status: "pending-signoff"
+  completed: "2026-01-18T19:45:56Z"
+  status: "complete"
 
 stageObjective: "Phase retrospective, lessons learned, executive sign-off"
 
@@ -68,8 +69,10 @@ stageCompletionCriteria:
   - criterion: "Governance changes committed"
     status: "complete"
   - criterion: "Executive sign-off"
-    status: "pending"
+    status: "complete"
 
 signoff:
-  requirement: "Executive sign-off to close Phase 5"
-  command: "Approve closure of Phase 5"
+  received: "2026-01-18T19:45:56Z"
+  command: "!Proceed"
+  authority: "Matthew Phipps (Executive Authority)"
+  result: "Phase 5 officially closed"
