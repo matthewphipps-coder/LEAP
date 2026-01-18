@@ -1,0 +1,106 @@
+metadata:
+  type: "stage-artifact"
+  phase: "3"
+  phaseName: "LEAP Governance Enhancement"
+  stage: 1
+  stageName: "discovery"
+  completed: "2026-01-18T12:58:00Z"
+  completedBy: "Antigravity"
+  nextStage: "research"
+
+lifecycle:
+  currentStage: "discovery"
+  status: "complete"
+  nextStage: "research"
+
+humanInterface:
+  checkpointRequired: true
+  nextCheckpoint: "Research stage findings review"
+  humanRole: "Confirm research is complete before analysis"
+  context: "Enhancing LEAP governance with partnership model"
+
+problemStatement:
+  coreGoal: "Human and AI are explicitly here to make each other better at every phase and stage"
+  summary: "LEAP governance should make the mutual improvement partnership explicit, not implicit"
+  details:
+    - "Human improves AI: through gates, feedback, reality checks, pace control"
+    - "AI improves Human: through analysis, risk identification, structured thinking, documentation"
+    - "This mutual improvement should be visible and trackable, not assumed"
+
+proposedChanges:
+  fromSpecKitAnalysis:
+    adopt:
+      - change: "Partnership model documentation"
+        target: "constitution.yaml"
+        rationale: "Makes mutual improvement explicit"
+      
+      - change: "Partnership health check"
+        target: "pulse-protocol.yaml"
+        rationale: "Tracks partnership quality in !pulse"
+      
+      - change: "Priority markers (P1/P2/P3)"
+        target: "Phase objectives"
+        rationale: "Focus on highest-value first"
+        status: "optional"
+    
+    reject:
+      - pattern: "Optional artifacts"
+        reason: "LEAP requires mandatory trail for reproducibility"
+      
+      - pattern: "Implicit gates"
+        reason: "LEAP requires explicit !Proceed for clarity"
+      
+      - pattern: "High AI autonomy"
+        reason: "Controlled autonomy = predictable outcomes"
+      
+      - pattern: "Speed over correctness"
+        reason: "Zero regression is LEAP priority"
+
+scope:
+  included:
+    - "Partnership model in constitution.yaml"
+    - "Partnership health in pulse-protocol.yaml"
+    - "CURRENT_STATE.yaml phase update"
+  excluded:
+    - "Spec template changes"
+    - "Task template patterns"
+    - "Workflow file changes"
+
+filesToModify:
+  - file: "docs/phases/phase-3/"
+    action: "CREATE"
+    purpose: "Phase directory"
+  
+  - file: "docs/phases/phase-3/stage-1-discovery.yaml"
+    action: "CREATE"
+    purpose: "This artifact"
+  
+  - file: "constitution.yaml"
+    action: "MODIFY"
+    purpose: "Add partnership rule"
+  
+  - file: "pulse-protocol.yaml"
+    action: "MODIFY"
+    purpose: "Add partnership health check"
+  
+  - file: "CURRENT_STATE.yaml"
+    action: "MODIFY"
+    purpose: "Update to Phase 3"
+
+rrmdDecision:
+  triggered: false
+  reason: "≤3 governance files, all additive changes, no core logic"
+
+questionsForResearch:
+  - "Where in constitution.yaml should partnership model go?"
+  - "What rule number for partnership (Rule 14?)"
+  - "Where in pulse-protocol.yaml should health check go?"
+  - "What partnership health indicators to track?"
+
+completionCriteria:
+  problemIdentified: true
+  scopeUnderstood: true
+  filesListed: true
+  questionsForResearchDefined: true
+
+stageStatus: "complete"

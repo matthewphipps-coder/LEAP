@@ -1,0 +1,142 @@
+metadata:
+  type: "stage-artifact"
+  phase: "3"
+  phaseName: "LEAP Governance Enhancement"
+  stage: 2
+  stageName: "research"
+  completed: "2026-01-18T13:05:00Z"
+  completedBy: "Antigravity"
+  nextStage: "analysis"
+  revisedFrom: "Updated based on revised discovery - explicit mutual improvement goal"
+
+lifecycle:
+  currentStage: "research"
+  status: "complete"
+  nextStage: "analysis"
+
+humanInterface:
+  checkpointRequired: true
+  nextCheckpoint: "Analysis stage - risk assessment and approach"
+  humanRole: "Confirm research aligns with explicit mutual improvement goal"
+  context: "Making partnership visible and trackable, not assumed"
+
+alignmentWithDiscovery:
+  coreGoal: "Human and AI are explicitly here to make each other better at every phase and stage"
+  implication: "Every governance change must reinforce this mutual improvement relationship"
+
+criticalGap:
+  name: "Asymmetric Discipline Requirements"
+  observation: "If Human says 'yep' after 10 seconds on a 100-line doc, have they really read it?"
+  
+  currentState:
+    aiDiscipline:
+      explicit: true
+      mechanisms:
+        - "Rule 8: !pulse forces AI to stop and review"
+        - "Stage gates: AI must wait for approval"
+        - "10-second updates: AI must communicate during long work"
+        - "RRMD+: AI must do risk assessment"
+    
+    humanDiscipline:
+      explicit: false
+      gap: "No equivalent 'Human must actually read before approving'"
+      risk: "Gates become rubber stamps, partnership is performative"
+  
+  principle: "Both parties slow down - this is about correctness, not speed"
+  
+  proposedFix:
+    inRule14:
+      - "Human commits to reading artifacts before approving gates"
+      - "AI may ask: 'Would you like more time to review?' if approval seems quick"
+      - "Neither party should rush - mutual improvement requires actual understanding"
+    
+    inPulseChecks:
+      - "Is Human taking time to actually review artifacts?"
+      - "Are approvals considered, not reflexive?"
+
+researchFindings:
+  constitutionYaml:
+    currentRules: 13
+    lastRuleId: 13
+    insertionPoint: "Rule 14, after line 682, before signoff line 684"
+    
+    existingMutualImprovementContent:
+      humanImprovesAI:
+        - "Rule 3: !Proceed authorization - Human controls AI execution"
+        - "Rule 4: Visual Witness - Human confirms AI output works"
+        - "Rule 8: !pulse - Human triggers AI reset/realignment"
+        - "Rule 12: !bump - Human helps AI recover from blind spots"
+      
+      aiImprovesHuman:
+        - "Implicit in stage reports (structured analysis)"
+        - "Implicit in risk assessments (expertise Human might miss)"
+        - "Implicit in documentation (audit trail for decisions)"
+        - "NOT EXPLICIT - needs to be stated"
+    
+    gap: "Human→AI is well documented. AI→Human is implicit and should be explicit."
+
+  pulseWorkflow:
+    file: ".agent/workflows/pulse.md"
+    existingPartnershipSection: "lines 306-326"
+    
+    currentChecks:
+      - "Am I respecting User's pace?"
+      - "Am I explaining, not assuming?"
+      - "Am I waiting for direction?"
+      - "Have I jumped ahead?"
+      - "Am I following 'no code!' discipline?"
+    
+    gap: "All checks are AI self-assessment of compliance. No checks for:"
+    missing:
+      - "Is AI helping Human see risks they might miss?"
+      - "Is AI providing structured analysis that improves Human's thinking?"
+      - "Is Human providing feedback that improves AI's behavior?"
+      - "Are both parties actively making each other better?"
+
+proposedEnhancements:
+  rule14:
+    name: "Mutual Improvement Partnership"
+    purpose: "Make explicit that both parties are here to improve each other"
+    content:
+      humanImprovesAI:
+        - "Gates provide clear boundaries"
+        - "Feedback teaches what meets standards"
+        - "Reality checks ground AI in observable outcomes"
+        - "Pace control prevents rushing"
+      
+      aiImprovesHuman:
+        - "Structured analysis surfaces patterns Human might miss"
+        - "Risk identification provides expert perspective"
+        - "Documentation creates audit trail for future decisions"
+        - "Status transparency builds trust"
+      
+      coreStatement: "Both parties are explicitly here to make each other better at every phase and stage"
+
+  pulseEnhancement:
+    section: "partnership health checks"
+    addChecks:
+      - "Has AI provided analysis that improved Human's understanding?"
+      - "Has Human provided feedback that improved AI's behavior?"
+      - "Are gates being used for alignment, not just approval?"
+      - "Is mutual improvement visible in this session?"
+
+filesAffected:
+  - file: "constitution.yaml"
+    change: "Add Rule 14: Mutual Improvement Partnership"
+    risk: "LOW"
+  
+  - file: ".agent/workflows/pulse.md"
+    change: "Enhance partnership section with mutual improvement checks"
+    risk: "LOW"
+  
+  - file: "CURRENT_STATE.yaml"
+    change: "Update to Phase 3"
+    risk: "LOW"
+
+completionCriteria:
+  informationGathered: true
+  alignedWithDiscovery: true
+  mutualImprovementGapIdentified: true
+  proposedEnhancementsDocumented: true
+
+stageStatus: "complete"

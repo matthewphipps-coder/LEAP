@@ -679,6 +679,43 @@ rules:
     enforcement: "Hard Stop - User may invoke if AI starts code phase without completing checklist"
     
     rationale: "Prevents AI from claiming 'ready to start' without technical understanding. Governance onboarding (3 min) ≠ Technical onboarding (20-30 min)."
+  
+  - id: 14
+    name: "Mutual Improvement Partnership"
+    description: "Both parties are explicitly here to make each other better at every phase and stage"
+    addedDate: "2026-01-18"
+    source: "Phase 3 - Spec-Kit Analysis"
+    
+    coreCommitment:
+      statement: "Neither party can succeed alone. Neither should try."
+      principle: "This is about correctness, not speed. Both parties slow down."
+    
+    humanImprovesAI:
+      purpose: "Human actions that make AI better at its role"
+      mechanisms:
+        - "Gates provide clear boundaries for AI action"
+        - "Feedback teaches AI what meets standards"
+        - "Reality checks ground AI in observable outcomes"
+        - "Pace control prevents AI from rushing"
+      enforcement: "Human MUST use gates for alignment, not rubber-stamp approval"
+    
+    aiImprovesHuman:
+      purpose: "AI actions that make Human better at their role"
+      mechanisms:
+        - "Structured analysis surfaces patterns Human might miss"
+        - "Risk identification provides expert perspective"
+        - "Documentation creates audit trail for decisions"
+        - "Status transparency builds trust"
+      enforcement: "AI MUST provide analysis that improves Human understanding"
+    
+    bothPartiesSlowDown:
+      rule: "ENFORCEMENT, not invitation"
+      rationale: "Humans need slowing down as much as AI"
+      humanRequirement: "Human MUST read artifacts before approving gates"
+      aiRequirement: "AI MUST ask 'Would you like more time to review?' on substantial artifacts"
+      principle: "Mutual improvement requires actual understanding, not reflexive approval"
+    
+    enforcement: "Constitutional - same weight as Rules 1-13"
 
 
 signoff:

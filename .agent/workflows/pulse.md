@@ -323,6 +323,25 @@ workflow:
         - check: "Am I following 'no code!' discipline?"
           validation: "Not coding without approval"
       
+      mutualImprovement:
+        purpose: "Verify partnership is improving both parties (Rule 14)"
+        required: true
+        
+        checks:
+          - check: "Has AI provided analysis that improved Human's understanding?"
+            validation: "Surfaced risks or patterns Human might have missed"
+          
+          - check: "Has Human provided feedback that improved AI's behavior?"
+            validation: "Corrections that taught AI something"
+          
+          - check: "Did Human take time to actually review artifacts?"
+            validation: "Approvals are considered, not reflexive"
+          
+          - check: "Are gates being used for alignment, not just approval?"
+            validation: "Substantive discussion at gates"
+        
+        status: "[✅ Mutual Improvement Active / ⚠️ Partnership Performative]"
+      
       status: "[✅ Healthy / ⚠️ Needs Adjustment]"
     
     lifecycleStage:
