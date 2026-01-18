@@ -591,29 +591,6 @@ planningLayers:
             report: "Going back to fix something"
             why: "Not specific - what's wrong? Which stage?"
     
-    batchApproval:
-      rule: "User can batch approve multiple stages"
-      
-      commands:
-        - "continue through [stage-name]"
-        - "fast-track to [stage-name]"
-        - "skip to [stage-name]"
-        - "!go through [stage-name]"
-      
-      note: "AI must still report at end of batch, but doesn't wait at each gate"
-      
-      examples:
-        - user: "fast-track to design"
-          ai: "Batch approval received. Completing discovery → research → analysis → design without stopping at each gate. Will report when design complete."
-          behavior: "AI completes all 4 stages, reports once at end"
-        
-        - user: "continue through analysis"
-          ai: "Batch approval received. Completing research → analysis. Will report when analysis complete."
-          behavior: "AI completes 2 stages, reports once at end"
-        
-        - user: "!go through implementation"
-          ai: "Batch approval received. Completing design → implementation. Will report when implementation complete."
-          behavior: "AI completes 2 stages, reports once at end"
     
     clarifications:
       proceedUsage: "!Proceed is used for both Rule 3 (file operations) and design → implementation gate (which IS a file operation gate)"
