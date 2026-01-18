@@ -1,0 +1,83 @@
+metadata:
+  type: "stage-artifact"
+  phase: 5
+  phaseName: "Define LEAP Vision"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-18T16:48:00Z"
+  completed: "2026-01-18T19:00:00Z"
+  status: "complete"
+
+stageObjective: "Identify what needs to be defined to establish a clear LEAP vision"
+
+discovery:
+  
+  questionsAnswered:
+    
+    - question: "What is LEAP's core purpose?"
+      status: "answered"
+      answer: |
+        LEAP is a governance model that orchestrates and controls a Demo Factory.
+        - LEAP and the Demo Factory are separate (separation of concerns)
+        - LEAP builds the Demo Factory
+        - The Demo Factory builds ServiceNow demos
+        - LEAP also checks output of Demo Factory (continuous improvement cycle)
+    
+    - question: "Who is the target user?"
+      status: "answered"
+      answer: |
+        - LEAP: Matthew Phipps (Architect) - sole developer
+        - Demo Factory: Humans who want to build demos
+        Note: LEAP is single-user governance; Demo Factory is multi-user
+    
+    - question: "What problem does LEAP solve?"
+      status: "answered"
+      answer: |
+        - Traditional demo building is slow (months) and doesn't use AI
+        - Without external governance, Demo Factory would self-certify as compliant
+        - Without LEAP orchestration, factory reverts to vibe coding → garbage
+        - LEAP ensures demo quality meets ServiceNow reputation standards
+        Two-tier governance:
+        - LEAP = End-to-end governance (builds factory right, validates output)
+        - Demo Factory = Per-demo governance (builds each demo right)
+    
+    - question: "What makes LEAP different from existing solutions?"
+      status: "answered"
+      answer: |
+        - Other AI methods: Fast but light on compliance → produce garbage
+        - Traditional methods: Compliant but too slow, don't utilize AI
+        - LEAP: Proves AI speed + governance rigor can coexist
+        Differentiator: Best of both worlds (fast AND compliant)
+    
+    - question: "What is the minimum viable product (MVP)?"
+      status: "answered"
+      answer: "A Demo Factory that produces one type of demo"
+  
+  existingContext:
+    fromCurrentState:
+      tagline: "AI-First Workflow Assistant"
+      note: "May need updating to reflect governance focus"
+    
+    fromGovernance:
+      personas:
+        - "Master Solution Consultant"
+        - "Principal Architect"
+        - "Experience Craftsman"
+        - "Data Steward"
+        - "Narrative Strategist"
+        - "AI Governance Lead"
+      note: "These personas may need updating based on new vision"
+    
+    fromPhilosophy:
+      motto: "Precision over velocity. Experience over features."
+
+stageCompletionCriteria:
+  - criterion: "Core questions identified"
+    status: "complete"
+  - criterion: "Existing context gathered"
+    status: "complete"
+  - criterion: "Executive input received"
+    status: "complete"
+
+nextStage: "research"
+gateRequirement: "!Proceed to advance to research"

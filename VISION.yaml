@@ -2,9 +2,9 @@ metadata:
   type: "vision"
   name: "LEAP Vision"
   purpose: "Core vision - what LEAP is, why it matters, how it's different"
-  version: "2.0.0"
+  version: "3.0.0"
   created: "2026-01-16"
-  lastUpdated: "2026-01-16"
+  lastUpdated: "2026-01-18"
   status: "active"
 
 lifecycle:
@@ -17,31 +17,54 @@ humanInterface:
   context: "Read during Discovery stage of feature phases"
 
 vision:
-  tagline: "It's 2026. Reinvent now."
+  tagline: "AI Speed + Governance Rigor"
   
   whatItIs:
-    primary: "Living demo platform showing the future of ServiceNow in an AI-agent world"
-    secondary: "Proof that AI can build enterprise demos faster than traditional methods"
-    metaNarrative: "LEAP is both the message (AI-first future) AND the medium (AI-built demo)"
+    primary: "Governance model that orchestrates and controls a Demo Factory"
+    secondary: "Proves AI speed and governance rigor can coexist"
+    architecture:
+      leap: "Governance layer - builds the factory, validates output"
+      demoFactory: "Production layer - builds ServiceNow demos (separate system)"
+      relationship: "LEAP builds factory; factory builds demos; LEAP validates demos"
   
   whyItMatters:
-    urgency: "Enterprise work must be reinvented for the AI age - it's 2026, not 2015"
-    dualImpact:
-      customers: "Shows what ServiceNow could become (AI agents, not forms)"
-      internal: "Proves how demos should be built (AI, not Figma/Reprise)"
+    problem:
+      traditional: "Demo building takes months, doesn't use AI"
+      aiWithoutGovernance: "Fast but produces garbage (light on compliance)"
+      selfCertification: "Without external governance, systems self-certify as compliant"
+    solution:
+      leap: "External governance that validates factory output"
+      feedbackLoop: "Continuous improvement - each demo improves the factory"
+      qualityStandard: "Demos must not impact ServiceNow reputation"
   
   howItsDifferent:
-    - "AI agents as first-class citizens (not chatbots)"
-    - "Natural language + cards (not forms and lists)"
-    - "Built entirely by AI in weeks (not months of manual work)"
-    - "Adapts to any customer scenario (flexible, not static)"
+    separationOfConcerns:
+      - "LEAP = End-to-end governance (builds factory right)"
+      - "Demo Factory = Per-demo governance (builds each demo right)"
+    speedWithQuality:
+      - "AI speed (days/weeks, not months)"
+      - "Governance rigor (not garbage)"
+    continuousImprovement:
+      - "LEAP validates every demo output"
+      - "Learnings feed back to improve factory"
+  
+  targetAudiences:
+    leapUsers:
+      - user: "Matthew Phipps (Architect)"
+        role: "Sole developer of LEAP governance"
+    demoFactoryUsers:
+      - user: "Demo requesters"
+        role: "Humans who want to build demos"
+    note: "LEAP is single-user governance; Demo Factory is multi-user"
   
   howWeBuiltIt:
     methodology: "AI-first development with human oversight"
-    governance: "13 partnership rules + 8-stage lifecycle + stage gates"
+    governance: "15 partnership rules + 8-stage lifecycle + stage gates"
     
     keyInnovations:
       - "Rule 13: Technical onboarding (AI reads architecture before coding)"
+      - "Rule 14: Mutual improvement partnership (both parties make each other better)"
+      - "Rule 15: Gate record immutability (audit compliance)"
       - "Stage gates: Validation catches errors before delivery"
       - "Stage artifacts: Complete audit trail of every decision"
       - "RRMD+ protocol: Risk assessment for significant changes"
@@ -49,12 +72,6 @@ vision:
     validation: "Phase 21.3: Governance caught AI mistake (broken app), enabled recovery, delivered quality code"
     
     significance: "This methodology is replicable - any team can adopt it"
-  
-  targetAudiences:
-    - "ServiceNow demo creation teams (adopt AI-first demo methodology)"
-    - "ServiceNow executives (approve AI-first strategy)"
-    - "Customer C-suite (buy the vision of AI-first enterprise)"
-    - "Customer IT leaders (understand the future of work)"
 
 usage:
   forAI:

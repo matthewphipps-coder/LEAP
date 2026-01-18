@@ -1,0 +1,110 @@
+metadata:
+  type: "stage-artifact"
+  phase: 5
+  phaseName: "Define LEAP Vision"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-18T19:14:26Z"
+  status: "in-progress"
+
+stageObjective: "Analyze research findings, assess risks, identify approach options"
+
+analysis:
+  
+  situationAssessment:
+    current: "VISION.yaml describes LEAP as demo platform"
+    required: "VISION.yaml should describe LEAP as governance for Demo Factory"
+    gap: "Complete rewrite of vision content needed"
+  
+  riskAssessment:
+    
+    - risk: "Breaking existing references to VISION.yaml content"
+      probability: "Low"
+      impact: "Low"
+      rationale: "VISION.yaml is reference document, not binding rules"
+      mitigation: "Keep same file structure, update content only"
+    
+    - risk: "Losing useful content from current VISION.yaml"
+      probability: "Medium"
+      impact: "Low"
+      rationale: "Some current content may still apply (howWeBuiltIt methodology)"
+      mitigation: "Preserve methodology section, update vision sections"
+    
+    - risk: "Scope creep during rewrite"
+      probability: "Medium"
+      impact: "Medium"
+      rationale: "Vision is foundational - temptation to over-engineer"
+      mitigation: "Keep to 80-100 lines max, focus on core vision only"
+  
+  approachOptions:
+    
+    - option: "A - Full rewrite"
+      description: "Replace all vision content with new governance-focused vision"
+      pros:
+        - "Clean slate"
+        - "No legacy confusion"
+      cons:
+        - "Loses methodology documentation"
+        - "More work"
+    
+    - option: "B - Surgical update"
+      description: "Update vision sections, preserve methodology sections"
+      pros:
+        - "Keeps validated methodology content"
+        - "Less risk"
+        - "Faster"
+      cons:
+        - "May have inconsistencies between old and new sections"
+    
+    - option: "C - Addendum approach"
+      description: "Add new governance vision, mark old vision as 'demo platform' context"
+      pros:
+        - "Preserves history"
+        - "No content loss"
+      cons:
+        - "Confusing dual vision"
+        - "File grows unnecessarily"
+  
+  recommendation:
+    selected: "B - Surgical update"
+    rationale: |
+      - howWeBuiltIt section is still valid (methodology hasn't changed)
+      - usage section is still valid
+      - Only whatItIs, whyItMatters, howItsDifferent, targetAudiences need updating
+      - Keeps within 80-100 lines
+      - Lower risk than full rewrite
+
+  sectionsToUpdate:
+    - section: "vision.whatItIs"
+      current: "Living demo platform showing the future of ServiceNow"
+      proposed: "Governance model that orchestrates and controls a Demo Factory"
+    
+    - section: "vision.whyItMatters"
+      current: "Enterprise work must be reinvented for AI age"
+      proposed: "AI speed without governance produces garbage"
+    
+    - section: "vision.howItsDifferent"
+      current: "AI agents as first-class citizens"
+      proposed: "Separation of governance (LEAP) from production (Demo Factory)"
+    
+    - section: "vision.targetAudiences"
+      current: "Demo creation teams, executives, customers"
+      proposed: "Matthew Phipps (Architect) for LEAP; demo requesters for Factory"
+  
+  sectionsToPreserve:
+    - "vision.howWeBuiltIt (methodology is still valid)"
+    - "usage section (AI/human guidance)"
+    - "references section"
+
+stageCompletionCriteria:
+  - criterion: "Situation assessed"
+    status: "complete"
+  - criterion: "Risks identified and rated"
+    status: "complete"
+  - criterion: "Approach options evaluated"
+    status: "complete"
+  - criterion: "Recommendation documented"
+    status: "complete"
+
+nextStage: "design"
+gateRequirement: "!Proceed to advance to design"

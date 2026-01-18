@@ -1,0 +1,30 @@
+metadata:
+  type: "gate-record"
+  phase: 5
+  phaseName: "Define LEAP Vision"
+  transition: "design → implementation"
+  timestamp: "2026-01-18T19:21:46Z"
+  immutable: true
+  criticalGate: true
+
+authorization:
+  command: "!Proceed"
+  receivedAt: "2026-01-18T19:21:46Z"
+  note: "Explicit authorization for file operations - critical gate per Rule 3"
+
+stageCompleted:
+  stage: 4
+  name: "design"
+  artifact: "stage-4-design.yaml"
+  status: "complete"
+
+approvedChanges:
+  file: "VISION.yaml"
+  action: "Surgical update"
+  sectionsToModify: 6
+  sectionsToPreserve: 3
+
+nextStage:
+  stage: 5
+  name: "implementation"
+  objective: "Modify VISION.yaml per implementation plan"

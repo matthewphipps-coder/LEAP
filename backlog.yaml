@@ -4,11 +4,11 @@ metadata:
   purpose: "Feature roadmap and priorities"
   version: "2.0.0"
   created: "2026-01-16"
-  lastUpdated: "2026-01-16"
+  lastUpdated: "2026-01-18"
   status: "active"
 
 summary:
-  totalItems: 1
+  totalItems: 3
   
   note: "Fresh project - backlog to be defined based on new vision"
 
@@ -24,6 +24,28 @@ priorities:
       dependencies: []
       addedDate: "2026-01-18"
       source: "Phase 4 lesson learned"
+    
+    - id: "GOV-002"
+      name: "Gate Record Template and Enforcement"
+      priority: "immediate"
+      status: "proposed"
+      description: "Create gate record template and operationalize gate record creation at all stage transitions"
+      rationale: "Phase 4 defined the gate record spec but template doesn't exist yet. Mandatory from Phase 5 onwards."
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-18"
+      source: "Phase 4 - External Control and Audit"
+    
+    - id: "VISION-001"
+      name: "Define LEAP Vision"
+      priority: "immediate"
+      status: "proposed"
+      description: "Define what LEAP is - its purpose, target users, core functionality, and value proposition"
+      rationale: "Project is marked 'pending-vision'. Cannot build meaningful features without knowing what we're building."
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-18"
+      source: "Clean room rebuild - vision reset"
   
   shortTerm: []
   mediumTerm: []
