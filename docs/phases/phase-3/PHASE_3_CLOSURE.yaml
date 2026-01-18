@@ -78,5 +78,6 @@ artifacts:
     - ".agent/workflows/pulse.md - mutualImprovement section added"
 
 signoff:
-  status: "awaiting"
-  requiredFrom: "Matthew Phipps (Executive Authority)"
+  status: "approved"
+  approvedBy: "Matthew Phipps (Executive Authority)"
+  approvedDate: "2026-01-18T13:42:00Z"
