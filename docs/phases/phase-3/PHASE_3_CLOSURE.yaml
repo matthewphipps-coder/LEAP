@@ -55,6 +55,8 @@ closure:
     deletions: 15
     stageArtifacts: 5
     commitHash: "4bafe27"
+    backup: "LEAP-v1.0.1-phase-3-complete"
+    backupLocation: "/Users/matthew.phipps/Documents/"
   
   handoff:
     nextPhase: "User's choice"
