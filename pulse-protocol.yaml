@@ -224,42 +224,45 @@ planningLayers:
       Ready to proceed to [NEXT-STAGE-NAME]?
     
     approvalMechanisms:
-      routine:
+      allTransitions:
+        rule: "ALL stage transitions require explicit !Proceed"
+        addedDate: "2026-01-18"
+        source: "Phase 4 - External Control and Audit"
+        rationale: "Audit compliance requires explicit authorization at every gate"
+        
         transitions:
           - "discovery → research"
           - "research → analysis"
           - "analysis → design"
+          - "design → implementation"
           - "implementation → validation"
+          - "validation → delivery"
+          - "delivery → closure"
+          - "closure → next phase"
         
-        approval: "Simple confirmation (yes, yep, continue, go ahead, !go)"
+        requirement: "Explicit !Proceed (or 'Proceed')"
+        note: "'yep', 'yes', 'continue', 'go ahead' are NOT valid"
         
         examples:
-          good:
-            - user: "yep"
-              ai: "Advancing to research stage..."
+          valid:
+            - user: "!Proceed"
+              ai: "Authorization received. Advancing to [stage]..."
             
-            - user: "yes, proceed to analysis"
-              ai: "Advancing to analysis stage..."
-            
-            - user: "continue"
-              ai: "Advancing to next stage..."
-            
-            - user: "!go"
-              ai: "Advancing to next stage..."
+            - user: "Proceed"
+              ai: "Authorization received. Advancing to [stage]..."
           
-          acceptable:
-            - user: "go ahead"
-              ai: "Advancing to next stage..."
+          invalid:
+            - user: "yep"
+              ai: "Need explicit !Proceed. 'Yep' is not valid for audit compliance."
+            
+            - user: "yes"
+              ai: "Need explicit !Proceed. 'Yes' indicates agreement, not authorization."
             
             - user: "sounds good"
-              ai: "Advancing to next stage..."
-          
-          notAcceptable:
-            - user: "maybe"
-              ai: "Unclear approval - please confirm with 'yes' or 'proceed'"
+              ai: "Need explicit !Proceed for stage advancement."
             
-            - user: "I think so"
-              ai: "Need clear approval - please confirm with 'yes' or 'proceed'"
+            - user: "continue"
+              ai: "Need explicit !Proceed. Please type 'Proceed' or '!Proceed'."
       
       critical:
         transitions:
@@ -622,9 +625,47 @@ planningLayers:
         example: "Design stage ends, design→implementation gate requires !Proceed, then implementation stage begins"
       
       approvalVsAuthorization:
-        approval: "Simple 'yes' or 'yep' - indicates agreement to proceed"
-        authorization: "Explicit '!Proceed' or 'Proceed' - grants permission for file operations"
-        rule: "Routine gates need approval. Critical gates need authorization."
+        note: "As of Phase 4, ALL gates require !Proceed (no distinction between routine and critical)"
+        authorization: "Explicit '!Proceed' or 'Proceed' - required for ALL stage transitions"
+        rule: "ALL gates require explicit !Proceed for audit compliance."
+
+  gateRecords:
+    name: "Gate Record System"
+    purpose: "Audit trail for external compliance verification"
+    addedDate: "2026-01-18"
+    source: "Phase 4 - External Control and Audit"
+    
+    requirement: "Create gate record at each stage transition"
+    
+    location: "docs/phases/phase-X/gate-records/"
+    naming: "gate-stage-N-to-N+1.yaml"
+    template: "templates/gate-record-template.yaml"
+    
+    contents:
+      - "Timestamp of transition"
+      - "!pulse summary (governance compliance)"
+      - "Conversation summary (mutual understanding)"
+      - "!Proceed authorization (exact quote)"
+      - "Files approved for creation/modification"
+    
+    immutability:
+      rule: "Gate records cannot be modified after creation"
+      reference: "constitution.yaml Rule 15"
+      enforcement: "AI must not edit files with completed gate records"
+    
+    workflow:
+      - step: 1
+        action: "AI completes stage work"
+      - step: 2
+        action: "AI invokes !pulse (governance check)"
+      - step: 3
+        action: "AI reports findings and awaits !Proceed"
+      - step: 4
+        action: "Human provides !Proceed"
+      - step: 5
+        action: "AI creates gate-record before advancing"
+      - step: 6
+        action: "AI advances to next stage"
 
 
 safetyProtocols:
