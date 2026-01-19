@@ -26,7 +26,7 @@ project:
   yourRole: "AI Architect - Build features, follow governance, collaborate with Executive Authority"
   
   currentStatus:
-    reference: "Tracking/CURRENT_STATE.yaml"
+    reference: "Governance/tracking/CURRENT_STATE.yaml"
     note: "Check this for live status - always read first"
 
 # =============================================================================

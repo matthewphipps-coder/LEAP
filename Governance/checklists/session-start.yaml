@@ -13,7 +13,7 @@ metadata:
 orient:
   - step: 1
     action: "Read CURRENT_STATE.yaml"
-    location: "Tracking/CURRENT_STATE.yaml"
+    location: "Governance/tracking/CURRENT_STATE.yaml"
     
   - step: 2
     action: "Check current phase and stage"
