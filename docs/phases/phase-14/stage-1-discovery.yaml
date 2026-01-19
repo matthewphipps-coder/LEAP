@@ -1,0 +1,176 @@
+metadata:
+  type: "stage-artifact"
+  phase: 14
+  phaseName: "Factory Vision Alignment"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-19T11:12:00Z"
+  status: "in-progress"
+  previousPhase: "Phase 13 - DemoFactory Prototype"
+
+discoveryObjective: "Restructure DemoFactory to be a process engine (workflow) rather than a demo instance"
+
+# =============================================================================
+# CONTEXT: PHASE 13 LEARNINGS + VISION CLARIFICATION
+# =============================================================================
+
+phase13Learnings:
+  whatWasBuilt:
+    description: "A working web app scaffold with Agentic Dashboard archetype"
+    files: 20
+    linesOfCode: 3267
+    status: "Verified working"
+  
+  misconception:
+    ai_understood: "DemoFactory = the demo itself (the output)"
+    actual_vision: "DemoFactory = the PROCESS that creates demos (the workflow)"
+  
+  technicalLearnings:
+    - "ES Modules require local server (cannot use file:// protocol)"
+    - "Relative import paths are error-prone (../../ vs ../../../)"
+    - "AI-First annotations proved valuable for dependency tracking"
+    - "Scaffold-first approach works well"
+
+# =============================================================================
+# VISION CLARIFICATION
+# =============================================================================
+
+visionClarification:
+  
+  components:
+    LEAP:
+      role: "Governance layer + Gold Source"
+      contains:
+        - "GoldSource/ - Master copies of scaffold and archetypes"
+        - "DemoFactoryResources/ - Standards, templates"
+        - "DemoFactory/ - Process engine (NOT output)"
+    
+    GoldSource:
+      role: "Protected master copies"
+      purpose: "Copied outward when starting a new demo"
+      contents:
+        - "scaffold/ - Core locked components"
+        - "archetypes/ - Template patterns (e.g., Agentic Dashboard)"
+        - "standards/ - Rules and architecture doc"
+    
+    DemoFactory:
+      role: "Process engine / workflow orchestrator"
+      purpose: "Guides user through creating a safe, reliable demo"
+      notTheDemoItself: true
+    
+    DemoInstances:
+      role: "Output demos"
+      location: "OUTSIDE of LEAP"
+      differentiation: ["Content", "Archetype", "Customer-specific"]
+
+  executionModel:
+    type: "Hybrid (AI + Human)"
+    gates: "!Proceed at every stage (identical to LEAP)"
+    scenarioSource: "User input"
+
+# =============================================================================
+# FACTORY WORKFLOW (Phases 1-8)
+# =============================================================================
+
+factoryWorkflow:
+  phases:
+    - phase: 1
+      name: "Discovery"
+      purpose: "User describes demo scenario and requirements"
+      gate: "!Proceed"
+    
+    - phase: 2
+      name: "Research"
+      purpose: "AI researches relevant patterns, components, APIs"
+      gate: "!Proceed"
+    
+    - phase: 3
+      name: "Analysis"
+      purpose: "Risk assessment, approach options, archetype selection"
+      gate: "!Proceed"
+    
+    - phase: 4
+      name: "Design"
+      purpose: "Implementation plan, file structure, component decisions"
+      gate: "!Proceed"
+    
+    - phase: 5
+      name: "Scaffold Copy"
+      purpose: "Copy gold source to demo instance location"
+      gate: "!Proceed"
+    
+    - phase: 6
+      name: "Implementation"
+      purpose: "AI implements demo with human oversight"
+      gate: "!Proceed"
+    
+    - phase: 7
+      name: "Verification"
+      purpose: "Test demo, validate against requirements"
+      gate: "!Proceed"
+    
+    - phase: 8
+      name: "Delivery"
+      purpose: "Finalize, document, handoff"
+      gate: "!Proceed"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  current: "Phase 13 built a demo instance in DemoFactory/"
+  needed: "DemoFactory should be a process engine; scaffold belongs in GoldSource/"
+  
+  changesRequired:
+    - rename: "DemoFactory/ → GoldSource/"
+    - create: "DemoFactory/ as process engine"
+    - define: "factory-workflow.yaml with phases 1-8"
+    - document: "Copy-out process for starting new demos"
+    - update: "ARCHITECTURE.yaml to reflect new structure"
+
+# =============================================================================
+# QUESTIONS FOR RESEARCH
+# =============================================================================
+
+questionsForResearch:
+  structure:
+    - "Exact folder structure for GoldSource (scaffold vs archetype separation?)"
+    - "How should archetypes be packaged? Folders? Manifests?"
+    - "Where specifically should demo instances be created? ~/Documents/DemoInstances?"
+  
+  process:
+    - "What does the factory engine look like? YAML workflow? CLI? AI prompt?"
+    - "How does the copy-out process work? Full copy or selective?"
+    - "How is demo-specific content differentiated from scaffold?"
+  
+  governance:
+    - "Does each demo instance need its own CURRENT_STATE.yaml?"
+    - "Should demo instances track their parent archetype version?"
+    - "How do we handle updates to GoldSource after demos are created?"
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  inScope:
+    - "Restructure existing code from DemoFactory/ to GoldSource/"
+    - "Create DemoFactory/ as process engine skeleton"
+    - "Define factory-workflow.yaml"
+    - "Update ARCHITECTURE.yaml"
+    - "Document the new structure"
+  
+  outOfScope:
+    - "Building a full CLI or UI for the factory (future phase)"
+    - "Creating additional archetypes (future phase)"
+    - "Actually running the factory to create a demo (future phase)"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"
+  focus: "Answer questions about folder structure, process engine, governance"
