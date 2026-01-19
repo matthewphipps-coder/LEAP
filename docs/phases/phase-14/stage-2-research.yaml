@@ -5,7 +5,8 @@ metadata:
   stage: 2
   stageName: "research"
   created: "2026-01-19T11:37:00Z"
-  status: "in-progress"
+  completedDate: "2026-01-19T11:46:00Z"
+  status: "complete"
   previousStage: "docs/phases/phase-14/stage-1-discovery.yaml"
 
 researchObjective: "Determine exact folder structure, Gold Source contents, and restructuring plan"
@@ -66,7 +67,7 @@ goldSourceRequirements:
       - "Entry point (index.html)"
     
     metadata:
-      - "ARCHITECTURE.yaml (playing field)"
+      - "ARCHITECTURE.yaml (DUPLICATED - factory unaware of LEAP)"
       - "architectural-standards.yaml (rules)"
       - "functionality.yaml (what exists)"
     
@@ -78,6 +79,50 @@ goldSourceRequirements:
     governance:
       - "Stage definitions (identical to LEAP)"
       - "Gate requirements (!Proceed at each stage)"
+
+# =============================================================================
+# FACTORY GOVERNANCE (SELF-CONTAINED GOLD COPY)
+# =============================================================================
+
+factoryGovernance:
+  
+  principle: |
+    Factory governance is a simplified, self-contained copy of LEAP governance.
+    Just enough for demo creation, nothing more.
+    Factory must not be aware of LEAP.
+  
+  structure:
+    folder: "GoldSource/governance/"
+    contents:
+      - file: "FACTORY_README.yaml"
+        purpose: "Entry point - what the factory is and how it works"
+      - file: "factory-protocol.yaml"
+        purpose: "How factory operates (adapted from pulse-protocol)"
+      - file: "lifecycle-stages.yaml"
+        purpose: "8 stages with gate definitions"
+      - file: "demo-rules.yaml"
+        purpose: "What demos can/cannot do for consistency"
+      - folder: "templates/"
+        purpose: "Stage artifact templates and CURRENT_STATE template"
+  
+  mappingFromLeap:
+    leapSource: "pulse-protocol.yaml"
+    factoryVersion: "factory-protocol.yaml (simplified)"
+    
+    leapSource: "rrmd-lifecycle.yaml"
+    factoryVersion: "lifecycle-stages.yaml (identical stages)"
+    
+    leapSource: "Stage templates"
+    factoryVersion: "templates/ folder (simplified for demos)"
+  
+  notNeeded:
+    - "constitution.yaml (factory is simpler)"
+    - "backlog.yaml (not needed for single demo)"
+    - "Phase management (demos don't have phases)"
+  
+  demoNaming:
+    pattern: "NEXUS vx.x.x-feature"
+    example: "NEXUS v1.0.0-itsm-dashboard"
 
 # =============================================================================
 # PROPOSED STRUCTURE
