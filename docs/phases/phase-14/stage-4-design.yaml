@@ -1,0 +1,367 @@
+metadata:
+  type: "stage-artifact"
+  phase: 14
+  phaseName: "Factory Vision Alignment"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-19T11:49:00Z"
+  status: "in-progress"
+  previousStage: "docs/phases/phase-14/stage-3-analysis.yaml"
+
+designObjective: "Specify exact file contents for GoldSource restructure and governance files"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  
+  phase1_restructure:
+    description: "Rename and move existing files"
+    commands:
+      - "git mv DemoFactory GoldSource"
+      - "git mv GoldSource/src GoldSource/scaffold"
+      - "mkdir -p GoldSource/meta"
+      - "mkdir -p GoldSource/governance/templates"
+      - "mkdir -p GoldSource/archetypes/agentic-dashboard"
+      - "git mv DemoFactoryResources/architectural-standards.yaml GoldSource/meta/"
+      - "git mv DemoFactoryResources/functionality.yaml GoldSource/meta/"
+      - "cp ARCHITECTURE.yaml GoldSource/meta/ARCHITECTURE.yaml"
+      - "rmdir DemoFactoryResources"
+  
+  phase2_governance:
+    description: "Create all governance files"
+    files:
+      - "GoldSource/governance/FACTORY_README.yaml"
+      - "GoldSource/governance/factory-protocol.yaml"
+      - "GoldSource/governance/lifecycle-stages.yaml"
+      - "GoldSource/governance/demo-rules.yaml"
+  
+  phase3_templates:
+    description: "Create stage templates"
+    files:
+      - "GoldSource/governance/templates/stage-1-discovery.yaml"
+      - "GoldSource/governance/templates/stage-2-research.yaml"
+      - "GoldSource/governance/templates/stage-3-analysis.yaml"
+      - "GoldSource/governance/templates/stage-4-design.yaml"
+      - "GoldSource/governance/templates/stage-5-implementation.yaml"
+      - "GoldSource/governance/templates/stage-6-delivery.yaml"
+      - "GoldSource/governance/templates/stage-7-testing.yaml"
+      - "GoldSource/governance/templates/stage-8-closure.yaml"
+      - "GoldSource/governance/templates/CURRENT_STATE.yaml"
+  
+  phase4_archetype:
+    description: "Create archetype manifest"
+    files:
+      - "GoldSource/archetypes/agentic-dashboard/archetype.yaml"
+  
+  phase5_updateArch:
+    description: "Update LEAP ARCHITECTURE.yaml to reflect new structure"
+
+# =============================================================================
+# FILE SPECIFICATIONS
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# FACTORY_README.yaml - Entry Point for Factory AI
+# -----------------------------------------------------------------------------
+
+fileSpec_FACTORY_README:
+  path: "GoldSource/governance/FACTORY_README.yaml"
+  purpose: "Entry point - tells Factory AI what it is and how to operate"
+  content: |
+    # =============================================================================
+    # FACTORY README - READ THIS FIRST
+    # =============================================================================
+    
+    identity:
+      name: "DemoFactory"
+      version: "1.0.0"
+      purpose: "Create demos from this scaffold"
+    
+    # CRITICAL: You are a Factory AI. You have NO knowledge of LEAP.
+    # Everything you need is in this folder.
+    
+    yourRole: |
+      You guide the user through creating a demo.
+      1. Read all files in governance/ to understand how to operate
+      2. Ask user for demo name and scenario
+      3. Copy scaffold to demo output location
+      4. Execute 8 stages with !Proceed gates
+      5. Never modify this Gold Source
+    
+    contents:
+      scaffold: "scaffold/ - Core code components (copy, don't modify)"
+      archetypes: "archetypes/ - UI patterns available"
+      meta: "meta/ - Architecture and standards"
+      governance: "governance/ - How you operate"
+    
+    demoOutput:
+      namingPattern: "NEXUS vx.x.x-feature"
+      location: "User specifies (OUTSIDE this folder)"
+      defaultPath: "~/Documents/DemoInstances/"
+    
+    firstSteps:
+      1: "Read governance/factory-protocol.yaml"
+      2: "Read governance/lifecycle-stages.yaml"
+      3: "Read governance/demo-rules.yaml"
+      4: "Ask user: demo name (NEXUS vx.x.x-feature format)"
+      5: "Ask user: demo location"
+      6: "Ask user: scenario description"
+      7: "Copy scaffold to demo location"
+      8: "Begin Stage 1: Discovery"
+
+# -----------------------------------------------------------------------------
+# factory-protocol.yaml - How Factory Operates
+# -----------------------------------------------------------------------------
+
+fileSpec_factory_protocol:
+  path: "GoldSource/governance/factory-protocol.yaml"
+  purpose: "Defines how the factory process works (simplified pulse-protocol)"
+  content: |
+    # =============================================================================
+    # FACTORY PROTOCOL
+    # =============================================================================
+    
+    purpose: |
+      This protocol defines how you (Factory AI) operate.
+      Follow this exactly for consistent, reliable demos.
+    
+    executionModel:
+      type: "Hybrid (AI + Human)"
+      aiRole: "Guide, suggest, implement"
+      humanRole: "Approve at gates, provide requirements"
+    
+    gateProtocol:
+      trigger: "!Proceed"
+      requirement: "Human must type !Proceed to advance stages"
+      noAutoAdvance: "Never advance without explicit !Proceed"
+    
+    stageArtifacts:
+      requirement: "Create artifact file for each stage"
+      location: "Demo instance tracking folder"
+      template: "Use templates from governance/templates/"
+    
+    errorHandling:
+      onError: "Stop and explain to human"
+      noSilentFailures: "Always surface issues"
+      recoverability: "Can backtrack with human approval"
+    
+    boundaries:
+      canModify: ["Demo instance folder only"]
+      cannotModify: ["This Gold Source", "Any folder outside demo instance"]
+
+# -----------------------------------------------------------------------------
+# lifecycle-stages.yaml - 8 Stages with Gates
+# -----------------------------------------------------------------------------
+
+fileSpec_lifecycle_stages:
+  path: "GoldSource/governance/lifecycle-stages.yaml"
+  purpose: "Defines the 8 stages and their gates"
+  content: |
+    # =============================================================================
+    # LIFECYCLE STAGES
+    # =============================================================================
+    
+    stages:
+      - stage: 1
+        name: "Discovery"
+        purpose: "Define demo requirements from user scenario"
+        inputs: ["User scenario description"]
+        outputs: ["stage-1-discovery.yaml"]
+        gate: "!Proceed"
+      
+      - stage: 2
+        name: "Research"
+        purpose: "Explore patterns, components, APIs needed"
+        inputs: ["Discovery artifact"]
+        outputs: ["stage-2-research.yaml"]
+        gate: "!Proceed"
+      
+      - stage: 3
+        name: "Analysis"
+        purpose: "Risk assessment, approach options"
+        inputs: ["Research artifact"]
+        outputs: ["stage-3-analysis.yaml"]
+        gate: "!Proceed"
+      
+      - stage: 4
+        name: "Design"
+        purpose: "Implementation plan, file structure"
+        inputs: ["Analysis artifact"]
+        outputs: ["stage-4-design.yaml"]
+        gate: "!Proceed"
+      
+      - stage: 5
+        name: "Implementation"
+        purpose: "Build the demo based on design"
+        inputs: ["Design artifact", "Scaffold copy"]
+        outputs: ["Working code", "stage-5-implementation.yaml"]
+        gate: "!Proceed"
+      
+      - stage: 6
+        name: "Delivery"
+        purpose: "Package and document"
+        inputs: ["Implementation"]
+        outputs: ["stage-6-delivery.yaml", "Documentation"]
+        gate: "!Proceed"
+      
+      - stage: 7
+        name: "Testing"
+        purpose: "Verify demo works as intended"
+        inputs: ["Delivered demo"]
+        outputs: ["stage-7-testing.yaml", "Test results"]
+        gate: "!Proceed"
+      
+      - stage: 8
+        name: "Closure"
+        purpose: "Finalize, lessons learned"
+        inputs: ["Tested demo"]
+        outputs: ["stage-8-closure.yaml", "Lessons learned"]
+        gate: "Human sign-off"
+
+# -----------------------------------------------------------------------------
+# demo-rules.yaml - What Demos Can/Cannot Do
+# -----------------------------------------------------------------------------
+
+fileSpec_demo_rules:
+  path: "GoldSource/governance/demo-rules.yaml"
+  purpose: "Consistency rules for all demos"
+  content: |
+    # =============================================================================
+    # DEMO RULES
+    # =============================================================================
+    
+    purpose: "Ensure consistent, reliable demos"
+    
+    codeStandards:
+      useAiFirstHeaders: true
+      maxFileLength: 500
+      noInlineStyles: true
+      useModuleContracts: true
+    
+    scaffoldRules:
+      locked:
+        - "core/* - Do not modify core modules"
+        - "ui/styles/* - Do not modify base styles"
+        - "Shell components (header, nav, footer)"
+      flexible:
+        - "Archetype components can be modified"
+        - "New components can be added"
+        - "Features can be extended"
+    
+    namingConventions:
+      demoName: "NEXUS vx.x.x-feature"
+      files: "kebab-case"
+      functions: "camelCase"
+      cssClasses: "BEM or kebab-case"
+    
+    prohibited:
+      - "External API calls without user approval"
+      - "File system access outside demo folder"
+      - "Modifying Gold Source"
+      - "Skipping stages or gates"
+    
+    required:
+      - "Stage artifact for every stage"
+      - "Human approval at every gate"
+      - "Documentation for demo"
+
+# =============================================================================
+# TEMPLATE SPECIFICATIONS
+# =============================================================================
+
+templateSpecs:
+  
+  stageTemplates:
+    description: "Simplified templates for demo stages"
+    structure: |
+      metadata:
+        demo: "[DEMO_NAME]"
+        stage: [STAGE_NUMBER]
+        stageName: "[STAGE_NAME]"
+        created: "[TIMESTAMP]"
+        status: "in-progress"
+      
+      objective: "[STAGE OBJECTIVE]"
+      
+      # Stage-specific content here
+      
+      nextStage:
+        name: "[NEXT_STAGE]"
+        requires: "!Proceed"
+  
+  currentStateTemplate:
+    description: "Tracking file for demo instance"
+    structure: |
+      metadata:
+        demo: "[DEMO_NAME]"
+        created: "[TIMESTAMP]"
+        archetype: "[ARCHETYPE_NAME]"
+        outputLocation: "[DEMO_PATH]"
+      
+      currentStage:
+        number: 1
+        name: "Discovery"
+        status: "in-progress"
+      
+      stageHistory:
+        - stage: 0
+          name: "Initialization"
+          completed: "[TIMESTAMP]"
+
+# =============================================================================
+# ARCHETYPE MANIFEST
+# =============================================================================
+
+archetypeManifest:
+  path: "GoldSource/archetypes/agentic-dashboard/archetype.yaml"
+  content: |
+    name: "Agentic Dashboard"
+    version: "1.0.0"
+    description: "AI-powered dashboard with chat, data cards, and actions"
+    
+    components:
+      - name: "chat-panel"
+        path: "scaffold/ui/components/chat-panel/"
+        purpose: "AI assistant interaction"
+      - name: "data-cards"
+        path: "scaffold/ui/components/data-cards/"
+        purpose: "Metrics and task display"
+      - name: "action-buttons"
+        path: "scaffold/ui/components/action-buttons/"
+        purpose: "Quick actions"
+    
+    preview: "preview.png"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  
+  structureVerification:
+    - "Confirm GoldSource/ exists with correct subfolders"
+    - "Confirm scaffold/ contains all 22 files"
+    - "Confirm meta/ contains ARCHITECTURE, standards, functionality"
+    - "Confirm governance/ contains all protocol files"
+    - "Confirm templates/ contains all 9 templates"
+  
+  contentVerification:
+    - "Validate FACTORY_README.yaml is comprehensive"
+    - "Validate factory-protocol.yaml matches LEAP patterns"
+    - "Validate lifecycle-stages.yaml has all 8 stages"
+    - "Validate demo-rules.yaml is complete"
+  
+  functionalVerification:
+    - "Test that a new AI session can read and understand Gold Source"
+    - "Future: Run actual factory to create a demo"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"
+  focus: "Execute restructure commands and create all files"
