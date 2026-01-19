@@ -1,0 +1,60 @@
+metadata:
+  phase: 8
+  stage: 1
+  name: "discovery"
+  status: "complete"
+  date: "2026-01-19"
+
+problem:
+  statement: "pulse-protocol.yaml is 864 lines - too large for AI to follow reliably"
+  goal: "Reduce to ~300 lines while keeping core content"
+
+sectionAnalysis:
+  keep:
+    - section: "metadata + philosophy"
+      lines: "1-27"
+      reason: "Core identity"
+    - section: "lifecycleStages + phaseStartProtocol"
+      lines: "36-113"
+      reason: "Core methodology"
+    - section: "stateManagement"
+      lines: "115-132"
+      reason: "Brief and necessary"
+    - section: "completionDefinition"
+      lines: "649-664"
+      reason: "Brief and necessary"
+    - section: "phaseClosure"
+      lines: "666-720"
+      reason: "Closure rules"
+  
+  trim:
+    - section: "stageTransitions"
+      lines: "134-562"
+      currentSize: 428
+      issue: "Excessive examples - same concepts repeated many times"
+      action: "Keep core rules, remove redundant examples"
+      targetSize: 100
+    - section: "stageArtifacts"
+      lines: "727-863"
+      currentSize: 137
+      issue: "Excessive detail about artifact format"
+      action: "Keep essence, remove templates"
+      targetSize: 50
+  
+  delete:
+    - section: "safetyProtocols"
+      lines: "601-620"
+      reason: "Belongs in safety-protocol.yaml"
+    - section: "rulesOfEngagement"
+      lines: "622-647"
+      reason: "Overlaps with constitution.yaml"
+    - section: "continuousSafety"
+      lines: "721-725"
+      reason: "Just references safety-protocol.yaml"
+  
+  questionable:
+    - section: "gateRecords"
+      lines: "564-600"
+      question: "Move to separate doc or keep?"
+
+nextStage: "research"

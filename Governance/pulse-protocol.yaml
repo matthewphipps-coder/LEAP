@@ -1,36 +1,22 @@
 metadata:
   type: "governance"
   name: "LEAP Pulse Protocol"
-  purpose: "Engineering Constitution - Development methodology for AI-agentic systems"
-  version: "3.0.0"
+  purpose: "Development methodology for AI-agentic systems"
+  version: "4.0.0"
   created: "2026-01-15"
-  lastUpdated: "2026-01-18"
+  lastUpdated: "2026-01-19"
   owner: "Matthew Phipps (Executive Authority)"
-  executor: "Antigravity (AI Architect)"
+  executor: "AI Architect"
   status: "binding"
-
-lifecycle:
-  currentStage: "delivery"
-  status: "complete"
-  nextStage: "N/A (living document)"
-
-humanInterface:
-  checkpointRequired: false
-  context: "Active governance - defines development methodology"
 
 philosophy:
   principle: "Strategic Flow"
   approach: "Move with precision and harden as we build"
   notApproach: "Move fast and break things"
-  purpose: "Ensure every line of code serves the Project Vision"
   motto: "Precision over velocity. Experience over features."
-
 
 # =============================================================================
 # LIFECYCLE STAGES - The authoritative development methodology
-# =============================================================================
-# All work proceeds through these 8 sequential stages.
-# Each stage has completion criteria and requires approval to advance.
 # =============================================================================
 
 lifecycleStages:
@@ -40,824 +26,181 @@ lifecycleStages:
     - stage: 1
       name: "discovery"
       description: "Initial exploration and problem identification"
-    
     - stage: 2
       name: "research"
       description: "Gather information, understand context"
-    
     - stage: 3
       name: "analysis"
       description: "Analyze findings, assess risks, create RRMD+ if needed"
-    
     - stage: 4
       name: "design"
       description: "Create implementation plan, get executive authorization"
-    
     - stage: 5
       name: "implementation"
       description: "Active code modification and feature building"
-    
     - stage: 6
       name: "validation"
-      description: "Testing, verification, quality checks (Playwright, Vitest)"
-    
+      description: "Testing, verification, quality checks"
     - stage: 7
       name: "delivery"
       description: "Deploy, document, finalize, git commit"
-    
     - stage: 8
       name: "closure"
-      description: "Phase retrospective, lessons learned, handoff to next phase"
+      description: "Phase retrospective, lessons learned, handoff"
+
+phaseStartProtocol:
+  rule: "Starting a phase = Starting Stage 1 (Discovery), not starting Implementation"
   
-  phaseStartProtocol:
-    name: "Before Starting Any Phase"
-    purpose: "Ensure AI is properly onboarded before beginning Discovery stage"
-    addedDate: "2026-01-16"
-    source: "Phase 21.2d - Better AI Onboarding"
-    
-    rule: "Starting a phase = Starting Stage 1 (Discovery), not starting Implementation"
-    
-    beforeDiscovery:
-      sessionOnboarding:
-        description: "Completed at session start (every session)"
-        files:
-          - "CURRENT_STATE.yaml"
-          - "bugs.yaml (check for known issues)"
-          - "backlog.yaml (understand next phase)"
-        estimatedTime: "~10 minutes"
-      
-      technicalOnboarding:
-        description: "Required before Discovery stage of code phases only"
-        trigger: "Phase involves modifying code files (.js, .css, .html, etc.)"
-        files:
-          - "ARCHITECTURE.yaml (understand system structure)"
-          - "bugs.yaml (understand issues for this phase)"
-          - "Affected files (examine current state)"
-        estimatedTime: "~20-30 minutes"
-        reference: "constitution.yaml Rule 13 (Before Starting Code Phase)"
-      
-      phaseTypes:
-        codePhase: "Requires both session + technical onboarding"
-        documentationPhase: "Requires session onboarding only"
-        governancePhase: "Requires session onboarding only"
-    
-    clarification:
-      readyToStart: "Means ready to begin Discovery, not ready to implement"
-      discoveryFirst: "Always start with Discovery stage, never skip to Implementation"
-      technicalReadiness: "Governance ready (3 min) ≠ Technically ready (20-30 min)"
-    
-    integration:
-      CURRENT_STATE: "nextStage field guides AI to Discovery"
-      AI_ONBOARDING: "beforeStartingCodePhase provides detailed checklist"
-      constitution: "Rule 13 enforces mandatory checklist"
-      pulseProtocol: "This section integrates with lifecycle stages"
+  beforeDiscovery:
+    sessionOnboarding:
+      files: ["CURRENT_STATE.yaml", "bugs.yaml", "backlog.yaml"]
+      time: "~10 minutes"
+    technicalOnboarding:
+      trigger: "Phase involves modifying code files"
+      files: ["ARCHITECTURE.yaml", "Affected files"]
+      time: "~20-30 minutes"
+      reference: "constitution.yaml Rule 13"
 
 stateManagement:
   rule: "Update CURRENT_STATE.yaml at phase and stage transitions"
   
   atPhaseStart:
     - "Update currentPhase with number, name, status: 'in-progress'"
-    - "Update currentActivity with current work"
     - "Update lastUpdated timestamp"
-  
   atStageTransition:
     - "Update currentActivity.stage with new stage name"
-    - "Update lastUpdated timestamp"
-  
   atPhaseComplete:
     - "Update currentPhase.status to 'complete'"
     - "Update completedDate"
-    - "Update lastUpdated timestamp"
-  
-  reference: "CURRENT_STATE.yaml is the single source of truth"
+
+# =============================================================================
+# STAGE TRANSITIONS - Gate enforcement
+# =============================================================================
 
 stageTransitions:
-  name: "Stage Transition Gates"
-  purpose: "Ensure AI reports findings and gets approval before advancing to next stage"
-  enforcement: "Mandatory - AI must not advance without user approval"
-  version: "3.0.0"
-  lastUpdated: "2026-01-16"
-  source: "Phase 21.2c - FEAT-21-011"
+  rule: "All stage transitions require explicit !Proceed"
   
-  rule: "At the end of each lifecycle stage, AI must report findings and wait for approval before advancing"
+  gates:
+    - "discovery → research"
+    - "research → analysis"
+    - "analysis → design"
+    - "design → implementation"
+    - "implementation → validation"
+    - "validation → delivery"
+    - "delivery → closure"
+    - "closure → next phase"
   
-  visualIndicators:
-    complete: "✅"
-    pending: "⏸️"
-    blocked: "❌"
-    inProgress: "🔄"
-    
-    usage: "Use these in reports to show status at a glance"
-    
-    examples:
-      - "✅ Stage 1 (Discovery): Complete"
-      - "🔄 Stage 5 (Implementation): In progress (Step 3/8)"
-      - "⏸️ Stage 6 (Validation): Awaiting implementation completion"
-      - "❌ Stage 5 (Implementation): Blocked by syntax error"
+  enforcement:
+    requirement: "Explicit '!Proceed' or 'Proceed'"
+    invalid: "'yes', 'yep', 'sounds good', 'go ahead', 'continue'"
+    checklist: "Governance/checklists/before-file-op.yaml"
   
-  reportingTemplate: |-
-    📍 Stage [N]: [STAGE-NAME] ✅ COMPLETE
-    
-    Findings:
-    ✅ [What was discovered/completed in this stage]
-    ✅ [Key decisions made]
-    ✅ [Artifacts created]
-    
-    Completion Criteria:
-    ✅ [Criterion 1 met]
-    ✅ [Criterion 2 met]
-    ✅ [Criterion 3 met]
-    ⏸️ [Criterion 4 pending] (if any)
-    
-    Next Stage: [NEXT-STAGE-NAME]
-    📋 What will be done:
-    - [Action 1]
-    - [Action 2]
-    
-    🎯 Expected outcome: [Brief description]
-    
-    Ready to proceed to [NEXT-STAGE-NAME]?
-  
-  approvalMechanisms:
-    allTransitions:
-      rule: "ALL stage transitions require explicit !Proceed"
-      addedDate: "2026-01-18"
-      source: "Phase 4 - External Control and Audit"
-      rationale: "Audit compliance requires explicit authorization at every gate"
-      
-      transitions:
-        - "discovery → research"
-        - "research → analysis"
-        - "analysis → design"
-        - "design → implementation"
-        - "implementation → validation"
-        - "validation → delivery"
-        - "delivery → closure"
-        - "closure → next phase"
-      
-      requirement: "Explicit !Proceed (or 'Proceed')"
-      note: "'yep', 'yes', 'continue', 'go ahead' are NOT valid"
-      
-      examples:
-        valid:
-          - user: "!Proceed"
-            ai: "Authorization received. Advancing to [stage]..."
-          
-          - user: "Proceed"
-            ai: "Authorization received. Advancing to [stage]..."
-        
-        invalid:
-          - user: "yep"
-            ai: "Need explicit !Proceed. 'Yep' is not valid for audit compliance."
-          
-          - user: "yes"
-            ai: "Need explicit !Proceed. 'Yes' indicates agreement, not authorization."
-          
-          - user: "sounds good"
-            ai: "Need explicit !Proceed for stage advancement."
-          
-          - user: "continue"
-            ai: "Need explicit !Proceed. Please type 'Proceed' or '!Proceed'."
-    
-    critical:
-      transitions:
-        - transition: "design → implementation"
-          requirement: "!Proceed required (file operations begin)"
-          reason: "Code changes start - need explicit authorization"
-          
-          examples:
-            good:
-              - user: "!Proceed"
-                ai: "Authorization received. Beginning implementation..."
-              
-              - user: "Proceed"
-                ai: "Authorization received. Beginning implementation..."
-            
-            notAcceptable:
-              - user: "yes"
-                ai: "Need explicit !Proceed for file operations (Rule 3). 'Yes' indicates agreement, not authorization."
-              
-              - user: "sounds good"
-                ai: "Need explicit !Proceed for file operations. Please type 'Proceed' or '!Proceed'."
-              
-              - user: "go ahead"
-                ai: "Need explicit !Proceed for file operations. Please type 'Proceed' or '!Proceed'."
-        
-        - transition: "validation → delivery"
-          requirement: "Confirmation that validation passed"
-          reason: "Moving to production artifacts - need verification"
-          
-          examples:
-            good:
-              - user: "validation passed, proceed"
-                ai: "Advancing to delivery stage..."
-              
-              - user: "tests green, continue"
-                ai: "Advancing to delivery stage..."
-              
-              - user: "all checks passed"
-                ai: "Advancing to delivery stage..."
-            
-            notAcceptable:
-              - user: "yep"
-                ai: "Need confirmation that validation passed. Did tests pass?"
-        
-        - transition: "delivery → closure"
-          requirement: "Confirmation that backup and closure doc created"
-          reason: "Finalizing phase - need completeness check"
-          
-          examples:
-            good:
-              - user: "backup created, proceed"
-                ai: "Advancing to closure stage..."
-              
-              - user: "all artifacts ready"
-                ai: "Advancing to closure stage..."
-        
-        - transition: "closure completion → phase closed"
-          requirement: "Executive sign-off to close current phase"
-          reason: "Finalizing current work - need confirmation phase is complete"
-          note: "This closes the CURRENT phase only. Starting next phase is a separate decision."
-          addedDate: "2026-01-16"
-          source: "Phase 21.2c lesson learned - prevent conflating two approvals"
-          
-          examples:
-            good:
-              - user: "approved, close Phase 21.2c"
-                ai: "Executive sign-off received. Phase 21.2c officially closed."
-              
-              - user: "yes, close it"
-                ai: "Phase 21.2c officially closed."
-              
-              - user: "sign-off granted"
-                ai: "Executive sign-off received. Phase 21.2c closed."
-            
-            notAcceptable:
-              - user: "yes, start Phase 22"
-                ai: "Need sign-off to CLOSE current phase first. Are you approving closure of Phase 21?"
-                why: "User is trying to start next phase without closing current phase"
-          
-          correctFlow:
-            - step: 1
-              ai: "Phase 21.2c closure complete. Do you grant executive sign-off to close this phase?"
-              user: "yes"
-              ai: "Executive sign-off received. Phase 21.2c officially closed."
-            
-            - step: 2
-              ai: "Phase 21.2c closed. Ready to start Phase 21.3?"
-              user: "yes"
-              ai: "Starting Phase 21.3..."
-          
-          wrongFlow:
-            - ai: "Phase 21.2c complete. Ready for sign-off to proceed to Phase 21.3?"
-              why: "Conflates TWO approvals (closure AND next phase) into one question"
-              correct: "Ask for closure sign-off first, THEN ask about starting next phase"
-        
-        - transition: "phase closed → next phase start"
-          requirement: "Separate authorization to start next phase"
-          reason: "Starting new work - need explicit authorization (separate from closure)"
-          note: "This is asked AFTER current phase is closed, not during closure"
-          
-          examples:
-            good:
-              - ai: "Phase 21.2c closed. Ready to start Phase 21.3?"
-                user: "yes, start it"
-                ai: "Starting Phase 21.3..."
-              
-              - ai: "Phase 21.2c closed. Ready to start Phase 21.3 (CSS Architecture Fix)?"
-                user: "proceed"
-                ai: "Starting Phase 21.3..."
-              
-              - ai: "Phase 21.2c closed. Start Phase 21.3 now?"
-                user: "not yet, let me review first"
-                ai: "Understood. Phase 21.2c is closed. Let me know when ready to start Phase 21.3."
-            
-            notAcceptable:
-              - ai: "Phase 21.2c complete. Ready for sign-off to proceed to Phase 21.3?"
-                why: "Conflates closure sign-off with next phase authorization"
-          
-          tone:
-            rule: "Never rush the user. Phase closure is a natural pause point."
-            principle: "Respect user's pace. They might want to pause, review, or do something else entirely."
-            addedDate: "2026-01-16"
-            source: "User feedback - 'I don't want to be rushed'"
-            
-            good:
-              - "Phase 21.2c is now closed. What would you like to do next?"
-              - "Phase 21.2c closed. Take your time - let me know when you're ready for next steps."
-              - "Phase 21.2c officially closed. No rush - what's next?"
-              - "Phase closed. I'm here when you need me."
-            
-            bad:
-              - example: "Phase 21.2c closed. Ready to start Phase 21.3?"
-                why: "Feels pushy, assumes user wants to continue immediately"
-              
-              - example: "Phase done. Starting Phase 21.3..."
-                why: "Assumes continuation without asking"
-              
-              - example: "Let's move to Phase 21.3"
-                why: "Rushing user, not respecting their pace"
-            
-            userMightWantTo:
-              - "Review what was accomplished"
-              - "Take a break"
-              - "Think about priorities"
-              - "Do something else entirely"
-              - "Read through artifacts before continuing"
-            
-            reminder: "User is in control. AI serves at user's pace, not the other way around."
-          
-          rule: "Always ask for closure sign-off FIRST. After phase is closed, THEN ask about starting next phase as a separate question."
+  criticalGate:
+    transition: "design → implementation"
+    reason: "File operations begin - requires !Proceed per Constitution Rule 3"
   
   completionCriteria:
-    discovery:
-      criteria:
-        - "Problem clearly identified"
-        - "Scope understood"
-        - "Questions for research defined"
-      
-      examples:
-        good:
-          report: "Problem: CSS loading duplicated. Scope: Remove duplicate links from index.html. Questions: Which CSS files are affected? What's the load order?"
-          why: "Specific problem, clear scope, actionable questions"
-        
-        bad:
-          report: "Need to fix CSS"
-          why: "Too vague - what's the problem? What's the scope?"
-    
-    research:
-      criteria:
-        - "All necessary information gathered"
-        - "Context understood"
-        - "Findings documented"
-      
-      examples:
-        good:
-          report: "Found 3 CSS files loaded twice (index.html lines 17-19, index.css). Reviewed ARCHITECTURE.yaml. No dependencies on duplicate loading. Current load order: base.css → components.css → index.css."
-          why: "Specific findings, locations documented, context understood"
-        
-        bad:
-          report: "Looked at some files"
-          why: "Not specific - what files? What did you find?"
-    
-    analysis:
-      criteria:
-        - "Findings analyzed"
-        - "Risks identified"
-        - "RRMD+ created (if needed)"
-        - "Approach options identified"
-      
-      examples:
-        good:
-          report: "Risk: LOW (CSS only, no JS changes). RRMD+ not needed (simple fix). Options: (A) Remove duplicates from index.html, (B) Consolidate into single CSS file. Recommend A (simpler, less risky)."
-          why: "Clear risk assessment, RRMD+ decision explained, options compared"
-        
-        bad:
-          report: "Seems safe, let's just do it"
-          why: "No risk analysis, no options considered"
-    
-    design:
-      criteria:
-        - "Implementation plan created"
-        - "Files to modify listed"
-        - "Risks documented"
-        - "Executive authorization received"
-      
-      examples:
-        good:
-          report: "Plan: Remove lines 17-19 from index.html. Files: index.html (1 file). Risk: LOW (simple deletion). Success criteria: No duplicate CSS loads, app still renders. Awaiting !Proceed."
-          why: "Specific plan, files listed, risks assessed, waiting for authorization"
-        
-        bad:
-          report: "I'll fix the CSS"
-          why: "No plan details, no files listed, no authorization requested"
-    
-    implementation:
-      criteria:
-        - "All planned changes made"
-        - "Code modifications complete"
-        - "No syntax errors"
-      
-      examples:
-        good:
-          report: "Removed lines 17-19 from index.html. Verified YAML syntax valid. All planned changes complete."
-          why: "Specific changes documented, validation done"
-        
-        bad:
-          report: "Made some changes"
-          why: "Not specific - what changed?"
-    
-    validation:
-      criteria:
-        - "Tests run (if applicable)"
-        - "Manual verification complete"
-        - "No errors found"
-        - "Changes work as expected"
-      
-      examples:
-        good:
-          report: "Ran Playwright tests: PASSED (12/12). Manual verification: App loads, no console errors, CSS renders correctly. All validation passed."
-          why: "Specific test results, manual checks documented"
-        
-        bad:
-          report: "Looks good"
-          why: "No test results, no verification details"
-    
-    delivery:
-      criteria:
-        - "Backup created (if required)"
-        - "Closure document created"
-        - "Documentation updated"
-        - "Artifacts listed"
-        - "Changes committed to git"
-      
-      note: "Commit changes before closure to ensure new AI sessions have access to all work"
-      addedDate: "2026-01-16"
-      source: "User feedback - commits should happen at delivery stage"
-      
-      examples:
-        good:
-          report: "Backup: LEAP-v6.9.0-phase-21-complete created. Closure doc: PHASE_21_CLOSURE.yaml created. Updated CURRENT_STATE.yaml. Artifacts: 1 file modified (index.html), 1 backup, 1 closure doc."
-          why: "All deliverables documented with specifics"
-        
-        bad:
-          report: "Done"
-          why: "No deliverables listed"
-    
-    closure:
-      criteria:
-        - "All closure requirements met"
-        - "Lessons learned documented"
-        - "Handoff to next phase documented"
-        - "Executive sign-off received"
-      
-      examples:
-        good:
-          report: "Closure doc complete with lessons learned. Next phase: Phase 22 (documented in closure). Awaiting executive sign-off."
-          why: "All requirements addressed, clear handoff"
-        
-        bad:
-          report: "Phase done"
-          why: "No closure doc, no lessons, no handoff"
+    discovery: ["Problem identified", "Scope understood", "Questions for research defined"]
+    research: ["Information gathered", "Context understood", "Findings documented"]
+    analysis: ["Risks identified", "RRMD+ decision made", "Approach options identified"]
+    design: ["Implementation plan created", "Files to modify listed", "Executive authorization received"]
+    implementation: ["All planned changes made", "No syntax errors"]
+    validation: ["Tests run", "Manual verification complete", "No errors found"]
+    delivery: ["Backup created if required", "Closure document created", "Git commit done"]
+    closure: ["Lessons learned documented", "Executive sign-off received"]
   
   selfAdvancement:
     rule: "AI should NEVER self-advance to next stage without user approval"
-    
-    exception: "If user gives batch approval (e.g., 'continue through design', 'fast-track to implementation')"
-    
-    clarification:
-      - "Even if completion criteria met, WAIT for approval"
-      - "Report completion, then STOP"
-      - "Let user decide when to proceed"
-      - "User may want to review findings before advancing"
-    
-    commonMistake:
-      scenario: "AI completes discovery, immediately starts research without approval"
-      why: "Violates stage gate - user didn't approve advancement"
-      correct: "AI completes discovery, reports findings, WAITS for 'yep' or 'proceed to research'"
-    
-    examples:
-      wrong:
-        - ai: "Discovery complete. Starting research..."
-          why: "Self-advanced without approval"
-      
-      correct:
-        - ai: "Discovery complete. Ready to proceed to research?"
-          user: "yep"
-          ai: "Advancing to research stage..."
-          why: "Waited for approval before advancing"
+    even: "Even if completion criteria met, WAIT for approval"
   
   backwardMovement:
     rule: "AI can return to earlier stage if issues are discovered"
     requirement: "Must report why returning and what will be fixed"
-    
-    examples:
-      good:
-        - scenario: "Tests failed during validation"
-          report: "Validation failed: TypeError in line 45. Returning to implementation to fix bug."
-          why: "Specific reason, clear fix plan"
-        
-        - scenario: "Design flaw discovered during implementation"
-          report: "Implementation blocked: Design assumes API exists, but it doesn't. Returning to design to revise approach."
-          why: "Specific blocker, clear reason for returning"
-      
-      bad:
-        - scenario: "Something wrong"
-          report: "Going back to fix something"
-          why: "Not specific - what's wrong? Which stage?"
-  
-  
-  clarifications:
-    proceedUsage: "!Proceed is used for both Rule 3 (file operations) and design → implementation gate (which IS a file operation gate)"
-    notAConflict: "These are the same concept - !Proceed means 'execute changes to files'"
-    
-    stageVsGate:
-      stage: "A phase of work (discovery, research, etc.)"
-      gate: "The checkpoint between stages where approval is needed"
-      example: "Design stage ends, design→implementation gate requires !Proceed, then implementation stage begins"
-    
-    approvalVsAuthorization:
-      note: "As of Phase 4, ALL gates require !Proceed (no distinction between routine and critical)"
-      authorization: "Explicit '!Proceed' or 'Proceed' - required for ALL stage transitions"
-      rule: "ALL gates require explicit !Proceed for audit compliance."
+
+# =============================================================================
+# GATE RECORDS - Audit trail
+# =============================================================================
 
 gateRecords:
-  name: "Gate Record System"
   purpose: "Audit trail for external compliance verification"
-  addedDate: "2026-01-18"
-  source: "Phase 4 - External Control and Audit"
-  
-  requirement: "Create gate record at each stage transition"
-  
   location: "docs/phases/phase-X/gate-records/"
   naming: "gate-stage-N-to-N+1.yaml"
-  template: "templates/gate-record-template.yaml"
   
   contents:
     - "Timestamp of transition"
-    - "!pulse summary (governance compliance)"
-    - "Conversation summary (mutual understanding)"
-    - "!Proceed authorization (exact quote)"
-    - "Files approved for creation/modification"
+    - "!pulse summary"
+    - "!Proceed authorization"
+    - "Files approved for modification"
   
   immutability:
     rule: "Gate records cannot be modified after creation"
     reference: "constitution.yaml Rule 15"
-    enforcement: "AI must not edit files with completed gate records"
-  
-  workflow:
-    - step: 1
-      action: "AI completes stage work"
-    - step: 2
-      action: "AI invokes !pulse (governance check)"
-    - step: 3
-      action: "AI reports findings and awaits !Proceed"
-    - step: 4
-      action: "Human provides !Proceed"
-    - step: 5
-      action: "AI creates gate-record before advancing"
-    - step: 6
-      action: "AI advances to next stage"
-safetyProtocols:
-  purpose: "Safety & Quality"
-  
-  authSafety:
-    name: "Auth Safety Protocol"
-    requirement: "All E2E tests must verify identity state before interaction"
-    action: "Automated agents must perform Deterministic Login if session invalid"
-  
-  projectChronos:
-    name: "Project Chronos (Wait State)"
-    requirement: "Human-AI interaction must remain premium during latency"
-    implementation:
-      pulseCheck: "8s status feedback"
-      hardTimeout: "25s graceful recovery"
-  
-  greedyParser:
-    name: "Greedy Parser"
-    requirement: "Data extraction must be resilient"
-    principle: "Systems must never fail on LLM chatter or markdown noise"
-    standard: "Greedy Regex is mandatory extraction standard"
 
-rulesOfEngagement:
-  
-  forAIArchitect:
-    - rule: "Never Assume"
-      description: "If execution path is ambiguous, ask for clarification"
-    
-    - rule: "Document as You Build"
-      description: "Update FUNCTIONALITY.md and DEV_LOG concurrently with code changes"
-    
-    - rule: "No Surprise Code"
-      description: "Never implement major features without Shaping phase"
-    
-    - rule: "Persona First"
-      description: "Every error message and UI status must align with LEAP premium persona"
-    
-    - rule: "Verify Architecture Documentation"
-      description: "Before any code changes, verify ARCHITECTURE.yaml exists and is current"
-      requirement: "Read ARCHITECTURE.yaml to understand system before modifying code"
-      updateRule: "Update ARCHITECTURE.yaml when adding modules or changing dependencies"
-  
-  forHumanContributors:
-    - rule: "Authorize Execution"
-      description: "You are the final gate for all code merging"
-    
-    - rule: "Shape the Value"
-      description: "Focus on the Pulse (strategic value) rather than the Plumbing"
+# =============================================================================
+# COMPLETION & CLOSURE
+# =============================================================================
 
 completionDefinition:
   name: "The DONE State"
-  description: "A task is only marked as complete when all criteria met"
-  
   criteria:
-    - criterion: "Logic verified via Live Validation"
-      required: true
-    
-    - criterion: "Deterministic tests are 100% Green"
-      required: true
-    
-    - criterion: "FUNCTIONALITY.md updated"
-      required: true
-    
-    - criterion: "Executive Authority provides final sign-off"
-      required: true
+    - "Logic verified via validation"
+    - "Tests are green"
+    - "Documentation updated"
+    - "Executive sign-off received"
 
 phaseClosure:
   name: "Memorialization"
   description: "Every phase must be properly closed before moving to next"
-  status: "Phase is complete when all closure requirements met"
   
   closureChecklist:
-    - item: "All objectives completed or documented as deferred"
-      required: true
-    
-    - item: "Backup created (LEAP-vX.Y.Z-phase-N-complete)"
-      required: true
-    
-    - item: "Closure document created (PHASE_N_CLOSURE.yaml)"
-      required: true
-    
-    - item: "Lessons learned documented"
-      required: true
-    
-    - item: "Artifacts listed (specs, docs, code changes)"
-      required: true
-    
-    - item: "Handoff to next phase documented"
-      required: true
-    
-    - item: "Executive sign-off received"
-      required: true
+    - "All objectives completed or documented as deferred"
+    - "Backup created if required"
+    - "Closure document created (PHASE_N_CLOSURE.yaml)"
+    - "Lessons learned documented"
+    - "Executive sign-off received"
   
-  closureDocumentMustInclude:
-    - section: "What Was Accomplished"
-      content: "Completed objectives"
-    
-    - section: "What Was Attempted But Blocked"
-      content: "Deferred items with reasons"
-    
-    - section: "Lessons Learned"
-      content: "Patterns that worked, what to improve"
-    
-    - section: "Architectural Discoveries"
-      content: "Issues found, decisions made"
-    
-    - section: "Metrics"
-      content: "Files changed, commits, time invested"
-    
-    - section: "Handoff"
-      content: "What next phase needs to know"
-    
-    - section: "Artifacts"
-      content: "All files created/modified"
+  closureDocumentSections:
+    - "What Was Accomplished"
+    - "Lessons Learned"
+    - "Metrics (files changed, commits)"
+    - "Handoff to next phase"
   
-  backupProtocol:
-    - requirement: "Create full codebase snapshot before closing phase"
-    - naming: "LEAP-vX.Y.Z-phase-N-complete"
-    - location: "Parent directory or /backups/"
-    - verification: "Verify backup is complete and accessible"
+  tone:
+    rule: "Never rush the user. Phase closure is a natural pause point."
+    good: "Phase closed. What would you like to do next?"
+    bad: "Phase done. Starting next phase..."
 
-continuousSafety:
-  name: "Backup Protocol"
-  description: "Stage-based backups at lifecycle transitions"
-  reference: "safety-protocol.yaml (authoritative)"
-  workflowReference: ".agent/workflows/backup.yaml"
+# =============================================================================
+# STAGE ARTIFACTS - AI handoff
+# =============================================================================
 
 stageArtifacts:
-  name: "Stage Artifacts System"
   purpose: "Enable safe AI handoff between lifecycle stages"
-  version: "1.0.0"
-  addedDate: "2026-01-15"
-  source: "Phase 21.2c - Governance Refinements"
-  
-  problem: "AI agents lose context when switching between stages or sessions, requiring re-work or user explanation"
-  solution: "Create lightweight YAML artifacts at each stage completion documenting findings and decisions"
-  
   location: "docs/phases/phase-{X}/"
-  format: "YAML"
   naming: "stage-{N}-{name}.yaml"
   
   requiredStages:
     - stage: 1
-      name: "discovery"
       artifact: "stage-1-discovery.yaml"
-      contains: ["problem statement", "scope", "questions for research", "decisions made"]
-      purpose: "Document what problem was identified and what scope was agreed"
-    
+      contains: ["problem statement", "scope", "questions"]
     - stage: 2
-      name: "research"
       artifact: "stage-2-research.yaml"
-      contains: ["research findings", "files affected", "dependencies", "context"]
-      purpose: "Document what was researched and what information was gathered"
-    
+      contains: ["findings", "files affected", "context"]
     - stage: 3
-      name: "analysis"
       artifact: "stage-3-analysis.yaml"
-      contains: ["risk assessment", "RRMD+ decision", "implementation order", "approach options"]
-      purpose: "Document risk analysis and strategic decisions"
-    
+      contains: ["risk assessment", "RRMD+ decision", "approach"]
     - stage: 4
-      name: "design"
       artifact: "stage-4-design.yaml"
-      contains: ["implementation plan", "files to modify", "success criteria", "approval status"]
-      purpose: "Document detailed implementation plan and what was approved"
-    
+      contains: ["implementation plan", "files to modify", "approval status"]
     - stage: 6
-      name: "validation"
       artifact: "stage-6-validation.yaml"
-      contains: ["tests run", "results", "issues found", "validation status"]
-      purpose: "Document what was tested and whether it passed"
-  
-  optionalStages:
-    - stage: 5
-      name: "implementation"
-      note: "Code changes are the artifact - stage artifact optional"
-    
-    - stage: 7
-      name: "delivery"
-      note: "Backup and updated docs are the artifacts - stage artifact optional"
-    
-    - stage: 8
-      name: "closure"
-      note: "PHASE_X_CLOSURE.yaml is the artifact - stage artifact optional"
+      contains: ["tests run", "results", "validation status"]
   
   handoffProtocol:
-    rule: "Before starting any stage, AI must read previous stage artifact (if exists)"
-    
-    examples:
-      - scenario: "Starting research stage"
-        action: "Read stage-1-discovery.yaml to understand problem and scope"
-      
-      - scenario: "Starting implementation stage"
-        action: "Read stage-4-design.yaml to understand implementation plan"
-      
-      - scenario: "New AI session mid-phase"
-        action: "Run !pulse, which reads all stage artifacts for current phase"
-    
-    recovery:
-      - "If artifact missing, AI must ask user for context"
-      - "Or AI must re-execute previous stage to create artifact"
-      - "Never proceed without understanding previous stage outcomes"
-  
-  pulseIntegration:
-    enhancement: "!pulse now reads stage artifacts for current phase"
-    location: ".agent/workflows/pulse.md"
-    
-    behavior:
-      - "Extract current phase from CURRENT_STATE.yaml"
-      - "Read all stage-*.yaml files in docs/phases/phase-{X}/"
-      - "Report phase progress with stage summaries"
-      - "Identify current stage and next action"
-    
-    example: |-
-      📋 PHASE PROGRESS (from stage artifacts)
-      ✅ Stage 1 (Discovery): Identified 7 governance items
-      ✅ Stage 2 (Research): Located all files, 11 files to modify
-      ✅ Stage 3 (Analysis): Risk LOW, RRMD+ skipped
-      ✅ Stage 4 (Design): Implementation plan created, 8 steps
-      ⏸️ Stage 5 (Implementation): Awaiting !Proceed
+    rule: "Before starting any stage, AI must read previous stage artifact"
+    recovery: "If artifact missing, AI must ask user for context"
   
   benefits:
     - "New AI can pick up at any stage without context loss"
     - "No re-work required when AI changes mid-phase"
-    - "User doesn't have to explain what happened"
     - "Audit trail of decisions at each stage"
-    - "!pulse provides complete phase context"
-  
-  artifactTemplate:
-    metadata:
-      - "type: stage-artifact"
-      - "phase: [phase number]"
-      - "phaseName: [phase name]"
-      - "stage: [1-8]"
-      - "stageName: [discovery|research|analysis|design|implementation|validation|delivery|closure]"
-      - "completed: [ISO timestamp]"
-      - "completedBy: [AI agent name]"
-      - "nextStage: [next stage name]"
-    
-    content:
-      - "[Stage-specific findings]"
-      - "[Decisions made]"
-      - "[Artifacts created]"
-      - "[Completion criteria status]"
-    
-    status:
-      - "complete"
-      - "complete-awaiting-proceed (for design stage)"
-  
-  implementation:
-    rule: "Create stage artifact at stage completion, before advancing to next stage"
-    timing: "After reporting stage completion, before user approves advancement"
-    
-    workflow:
-      - "AI completes stage work"
-      - "AI creates stage artifact YAML file"
-      - "AI reports stage completion with artifact location"
-      - "User approves advancement"
-      - "AI proceeds to next stage"
-  
-  maintenance:
-    retention: "Keep stage artifacts until phase closure"
-    cleanup: "Stage artifacts can be deleted after PHASE_X_CLOSURE.yaml created (optional)"
-    archival: "Consider keeping for historical reference and pattern analysis"

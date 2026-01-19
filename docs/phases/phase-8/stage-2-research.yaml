@@ -1,0 +1,56 @@
+metadata:
+  phase: 8
+  stage: 2
+  name: "research"
+  status: "complete"
+  date: "2026-01-19"
+
+findings:
+  
+  stageTransitions:
+    current: 428
+    target: 100
+    
+    keepAs-is:
+      - "visualIndicators (12 lines)"
+      - "reportingTemplate (22 lines)"
+      - "selfAdvancement (26 lines)"
+      - "backwardMovement (18 lines)"
+      - "clarifications (13 lines)"
+    
+    majorTrim:
+      - section: "approvalMechanisms.critical (148 lines)"
+        issue: "Same concept repeated 5 times with examples"
+        action: "Condense to ~20 lines"
+      - section: "completionCriteria (130 lines)"
+        issue: "Good/bad examples for all 8 stages"
+        action: "Keep criteria lists, remove examples"
+    
+    estimatedSavings: 280
+  
+  stageArtifacts:
+    current: 137
+    target: 50
+    
+    trim:
+      - "Excessive template detail"
+      - "Multiple examples"
+    
+    estimatedSavings: 87
+  
+  deleteSections:
+    - section: "safetyProtocols (20 lines)"
+      reason: "Move to safety-protocol.yaml"
+    - section: "rulesOfEngagement (26 lines)"
+      reason: "Overlaps with constitution"
+    - section: "continuousSafety (5 lines)"
+      reason: "Just a reference"
+    
+    totalLines: 51
+
+summary:
+  currentTotal: 864
+  estimatedFinal: 300
+  savings: 564
+
+nextStage: "analysis"
