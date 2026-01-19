@@ -31,8 +31,14 @@ documentHierarchy:
   conflictResolution: "Most specific document wins. If unclear, ask user."
 
 governanceManagement:
-  rule: "Maximum 15 governance files"
+  rule: "Maximum 25 governance files"
   enforcement: "Merge new rules into existing files, don't create new ones"
+  
+  # GOVERNANCE IS CODE
+  leapPrinciple: "In LEAP, governance YAML IS the code"
+  implication: "Changes to LEAP_Governance require FULL lifecycle stages"
+  noSkipping: "Never skip research/analysis - YAML changes have ripple effects"
+  scope: "LEAP_Governance only - does NOT apply to GoldSource factory"
 
 governanceTemplates:
   rule: "Use templates when creating new governance documents"

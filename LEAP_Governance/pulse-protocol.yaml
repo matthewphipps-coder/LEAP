@@ -100,13 +100,13 @@ stageTransitions:
     reason: "File operations begin - requires !Proceed per Constitution Rule 3"
   
   completionCriteria:
-    discovery: ["Problem identified", "Scope understood", "Questions for research defined"]
+    discovery: ["Problem identified", "Scope understood", "Questions for research defined", "'Already done' claims verified against source"]
     research: ["Information gathered", "Context understood", "Findings documented"]
     analysis: ["Risks identified", "RRMD+ decision made", "Approach options identified"]
     design: ["Implementation plan created", "Files to modify listed", "Executive authorization received"]
     implementation: ["All planned changes made", "No syntax errors"]
     validation: ["Tests run", "Manual verification complete", "No errors found"]
-    delivery: ["Backup created if required", "Closure document created", "Git commit done"]
+    delivery: ["Backup created if required", "Closure document created", "Git commit done", "CURRENT_STATE backlog counts verified"]
     closure: ["Lessons learned documented", "Executive sign-off received"]
   
   selfAdvancement:

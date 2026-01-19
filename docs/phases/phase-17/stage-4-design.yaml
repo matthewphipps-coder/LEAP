@@ -1,0 +1,104 @@
+metadata:
+  type: "artifact"
+  phase: 17
+  stage: "design"
+  name: "Governance Process Improvements - Design"
+  created: "2026-01-19T20:13:44Z"
+  status: "complete"
+  gateApproval: "Analysis approved with scope decisions at 2026-01-19T20:13:44Z"
+  previousStage: "stage-3-analysis.yaml"
+
+lifecycle:
+  currentStage: "design"
+  status: "complete"
+  nextStage: "implementation"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+filesToModify:
+
+  # ---------------------------------------------------------------------------
+  # FILE 1: constitution.yaml (GOV-006 + governance file limit update)
+  # ---------------------------------------------------------------------------
+  - file: "LEAP_Governance/constitution.yaml"
+    item: "GOV-006"
+    location: "Lines 33-40 (governanceManagement section)"
+    
+    currentContent: |
+      governanceManagement:
+        rule: "Maximum 15 governance files"
+        enforcement: "Merge new rules into existing files, don't create new ones"
+    
+    newContent: |
+      governanceManagement:
+        rule: "Maximum 25 governance files"
+        enforcement: "Merge new rules into existing files, don't create new ones"
+        
+        # GOVERNANCE IS CODE
+        leapPrinciple: "In LEAP, governance YAML IS the code"
+        implication: "Changes to LEAP_Governance require FULL lifecycle stages"
+        noSkipping: "Never skip research/analysis - YAML changes have ripple effects"
+        scope: "LEAP_Governance only - does NOT apply to GoldSource factory"
+    
+    note: "Also updating file limit from 15 to 25 (current count is 25)"
+
+  # ---------------------------------------------------------------------------
+  # FILE 2: pulse-protocol.yaml (GOV-003, GOV-005)
+  # ---------------------------------------------------------------------------
+  - file: "LEAP_Governance/pulse-protocol.yaml"
+    items: ["GOV-003", "GOV-005"]
+    location: "Lines 102-110 (completionCriteria section)"
+    
+    currentContent: |
+      completionCriteria:
+        discovery: ["Problem identified", "Scope understood", "Questions for research defined"]
+        ...
+        delivery: ["Backup created if required", "Closure document created", "Git commit done"]
+    
+    changes:
+      - line: 103
+        item: "GOV-005"
+        action: "Add to discovery array"
+        add: "'Already done' claims verified against source"
+      
+      - line: 109
+        item: "GOV-003"
+        action: "Add to delivery array"
+        add: "CURRENT_STATE backlog counts verified"
+
+  # ---------------------------------------------------------------------------
+  # FILE 3: backlog.yaml (GOV-004)
+  # ---------------------------------------------------------------------------
+  - file: "LEAP_Governance/tracking/backlog.yaml"
+    item: "GOV-004"
+    location: "Lines 374-385 (howToAdd.template)"
+    
+    change: "Add acceptanceCriteria field after rationale"
+    newField: |
+      acceptanceCriteria: ["Verifiable condition 1", "Verifiable condition 2"]
+
+# =============================================================================
+# ACCEPTANCE CRITERIA
+# =============================================================================
+
+acceptanceCriteria:
+  GOV003:
+    - "pulse-protocol.yaml line 109 includes 'CURRENT_STATE backlog counts verified'"
+  GOV004:
+    - "backlog.yaml template includes acceptanceCriteria field with example"
+  GOV005:
+    - "pulse-protocol.yaml line 103 includes source verification text"
+  GOV006:
+    - "constitution.yaml governanceManagement has leapPrinciple, implication, noSkipping, scope"
+
+# =============================================================================
+# GATE - CRITICAL
+# =============================================================================
+
+gateQuestion:
+  stageSummary: "Design complete. 3 files, 4 targeted changes."
+  criticalGate: true
+  readyFor: "implementation"
+  requires: "!Proceed"
