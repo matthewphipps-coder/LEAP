@@ -1,0 +1,65 @@
+metadata:
+  type: "tracking"
+  name: "LEAP Feature Backlog"
+  purpose: "Feature roadmap and priorities"
+  version: "2.0.0"
+  created: "2026-01-16"
+  lastUpdated: "2026-01-18"
+  status: "active"
+
+summary:
+  totalItems: 3
+  
+  note: "Fresh project - backlog to be defined based on new vision"
+
+priorities:
+  immediate:
+    - id: "GOV-001"
+      name: "AI Task Tracking Guidance"
+      priority: "immediate"
+      status: "proposed"
+      description: "Add guidance that AI should NOT create separate task.md or tracking files"
+      rationale: "LEAP's stage artifacts and CURRENT_STATE.yaml are sufficient for progress tracking"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-18"
+      source: "Phase 4 lesson learned"
+    
+    - id: "GOV-002"
+      name: "Gate Record Template and Enforcement"
+      priority: "immediate"
+      status: "proposed"
+      description: "Create gate record template and operationalize gate record creation at all stage transitions"
+      rationale: "Phase 4 defined the gate record spec but template doesn't exist yet. Mandatory from Phase 5 onwards."
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-18"
+      source: "Phase 4 - External Control and Audit"
+    
+    - id: "VISION-001"
+      name: "Define LEAP Vision"
+      priority: "immediate"
+      status: "complete"
+      description: "Define what LEAP is - its purpose, target users, core functionality, and value proposition"
+      rationale: "Project is marked 'pending-vision'. Cannot build meaningful features without knowing what we're building."
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-18"
+      completedDate: "2026-01-18"
+      source: "Clean room rebuild - vision reset"
+  
+  shortTerm: []
+  mediumTerm: []
+  future: []
+
+howToAdd:
+  template: |
+    - id: "FEATURE-XXX"
+      name: "Feature name"
+      priority: "immediate|short-term|medium-term|future"
+      status: "proposed|approved|in-progress|complete"
+      description: "What this feature does"
+      rationale: "Why this feature is needed"
+      estimatedEffort: "small|medium|large"
+      dependencies: []
+      addedDate: "YYYY-MM-DD"

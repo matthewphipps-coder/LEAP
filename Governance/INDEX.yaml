@@ -1,0 +1,20 @@
+# GOVERNANCE INDEX
+# Read this first at every session start
+
+metadata:
+  purpose: "Guide AI to the right governance file"
+  version: "1.0.0"
+
+readFirst:
+  sessionStart: "checklists/session-start.yaml"
+  
+beforeActions:
+  fileOperations: "checklists/before-file-op.yaml"
+  phaseStart: "checklists/before-phase.yaml"
+
+whenConfused: "Run !pulse"
+
+fullDocumentation:
+  rules: "constitution.yaml"
+  lifecycle: "pulse-protocol.yaml"
+  safety: "safety-protocol.yaml"

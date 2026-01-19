@@ -1,0 +1,53 @@
+metadata:
+  type: "reference"
+  name: "LEAP System Architecture"
+  purpose: "System architecture reference for AI agents"
+  version: "2.0.0"
+  created: "2026-01-16"
+  lastUpdated: "2026-01-16"
+  status: "active"
+
+lifecycle:
+  currentStage: "initialization"
+  status: "starting-fresh"
+  nextStage: "design"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Fresh project - architecture to be defined"
+
+projectStatus:
+  state: "clean-room-rebuild"
+  codebaseSize: "0 lines"
+  description: "Fresh LEAP project. Governance framework preserved, application code starting from scratch."
+
+systemOverview:
+  name: "LEAP"
+  tagline: "AI-First Workflow Assistant"
+  description: "To be defined"
+  version: "v1.0.0-fresh"
+  architecture: "TBD"
+
+entryPoints:
+  note: "No application code yet - to be defined during design phase"
+
+modules:
+  note: "No modules yet - to be defined during design phase"
+
+dataFlow:
+  note: "No data flow yet - to be defined during design phase"
+
+governanceFramework:
+  preserved:
+    - "constitution.yaml - Partnership rules and engagement protocols"
+    - "pulse-protocol.yaml - Development methodology"
+    - "safety-protocol.yaml - Backup and deployment safety"
+    - "architectural-standards.yaml - Code structure patterns"
+    - "regression-protocol.yaml - Zero-regression rules"
+    - "agent-persona.yaml - AI personas and review standards"
+  
+  workflows:
+    - ".agent/workflows/pulse.md - Full governance reset"
+
+nextSteps:
+  - "TBD"

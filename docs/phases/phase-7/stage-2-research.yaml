@@ -1,0 +1,43 @@
+metadata:
+  phase: 7
+  stage: 2
+  name: "research"
+  status: "complete"
+  date: "2026-01-19"
+
+findings:
+
+  ruleMerges:
+    - rules: [2, 3]
+      name: "Before File Operations"
+      reason: "Both about pre-change procedure"
+    - rules: [6, 14]
+      name: "Partnership & UX"
+      reason: "Both about human-AI collaboration"
+    - rule: 13
+      action: "Move to onboarding"
+      reason: "Technical onboarding belongs with session start"
+
+  indexStructure:
+    size: "~20 lines max"
+    contents:
+      - "sessionStart checklist"
+      - "beforeFileOp checklist"
+      - "whenConfused: Run !pulse"
+      - "fullRules: constitution.yaml"
+    
+  checklistPattern:
+    format: "Action steps + reference to full rule"
+    example: |
+      steps:
+        - "List ALL files"
+        - "Wait for !Proceed"
+      fullRule: "rules/proceed.yaml"
+
+  proposedFileCount:
+    checklists: 3
+    index: 1
+    reference: 1  # Full constitution
+    total: 5
+
+nextStage: "analysis"

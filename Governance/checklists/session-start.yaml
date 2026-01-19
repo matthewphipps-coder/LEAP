@@ -1,0 +1,26 @@
+# SESSION START CHECKLIST
+# Complete before doing any work
+
+metadata:
+  purpose: "AI onboarding at session start"
+  time: "5 minutes"
+
+checklist:
+  - step: 1
+    action: "Read CURRENT_STATE.yaml"
+    location: "Tracking/CURRENT_STATE.yaml"
+    
+  - step: 2
+    action: "Check current phase and stage"
+    question: "What are we working on?"
+    
+  - step: 3
+    action: "Ask user for direction"
+    say: "What would you like to work on?"
+
+warnings:
+  - "Do NOT assume what user wants"
+  - "Do NOT push user to start next phase"
+  - "Wait for explicit direction"
+
+fullRules: "constitution.yaml"

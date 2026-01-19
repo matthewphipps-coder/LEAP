@@ -1,0 +1,42 @@
+metadata:
+  phase: 7
+  stage: 3
+  name: "analysis"
+  status: "complete"
+  date: "2026-01-19"
+
+riskAssessment:
+  - risk: "AI still skips checklists"
+    probability: "medium"
+    impact: "high"
+    mitigation: "Make checklists first in onboarding"
+  - risk: "More files = confusion"
+    probability: "low"
+    impact: "medium"
+    mitigation: "INDEX.yaml guides to right file"
+  - risk: "Migration breaks work"
+    probability: "low"
+    impact: "low"
+    mitigation: "Create in v2/ first"
+
+rrmdDecision: "Not required - documentation only"
+
+finalStructure:
+  new:
+    - "INDEX.yaml (20 lines)"
+    - "checklists/session-start.yaml (20 lines)"
+    - "checklists/before-file-op.yaml (20 lines)"
+    - "checklists/before-phase.yaml (25 lines)"
+    - "reference/constitution.yaml (full)"
+  
+  delete:
+    - "PROCEED_PROTOCOL.yaml (redundant)"
+    - "pulse.md (duplicate)"
+    - "regression-protocol.yaml (legacy)"
+  
+  keep:
+    - "safety-protocol.yaml"
+    - "agent-persona.yaml"
+    - "pulse-protocol.yaml"
+
+nextStage: "design"

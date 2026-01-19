@@ -1,0 +1,66 @@
+metadata:
+  type: "state"
+  purpose: "Single source of truth for current LEAP work"
+  lastUpdated: "2026-01-19T00:49:00Z"
+  version: "3.0.0"
+
+aiMustRead:
+  - "READ THIS FILE FIRST - at start of every session"
+  - "This tells you exactly where we are"
+  - "Never assume - check this file for truth"
+  - "Update this after every major decision or phase transition"
+
+projectContext:
+  name: "LEAP"
+  tagline: "AI-First DemoFactory Build & Control Project"
+  version: "v1.0.0-fresh"
+  currentFocus: "Governance framework redesign"
+  vision: "To be defined"
+
+currentPhase:
+  number: "7"
+  name: "Governance Framework Redesign"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-19T00:49:00Z"
+  
+  goal: "Redesign governance from monolithic docs into indexed smaller files that are easier for AI to follow"
+  
+  previousPhase:
+    number: "6"
+    name: "Pulse Protocol Cleanup"
+    status: "closed"
+    executiveSignOff: "Granted by Matthew Phipps"
+
+currentActivity:
+  status: "in-progress"
+  stage: "implementation"
+  
+  summary:
+    goal: "Understand current governance structure and design indexed approach"
+    implemented:
+      - "Created INDEX.yaml (entry point)"
+      - "Created 3 checklists (session-start, before-file-op, before-phase)"
+      - "Deleted PROCEED_PROTOCOL.yaml, pulse.md, regression-protocol.yaml"
+      - "Updated AI_ONBOARDING.yaml to reference INDEX.yaml"
+    
+    context: "Phase 7 Implementation complete - ready for validation"
+  
+  nextStage: "validation"
+
+references:
+  governanceFiles:
+    - "constitution.yaml - Partnership rules"
+    - "pulse-protocol.yaml - Development methodology"
+    - "safety-protocol.yaml - Backup and deployment"
+    - "architectural-standards.yaml - Code patterns"
+  
+  workflows:
+    location: ".agent/workflows/"
+    command: "ls .agent/workflows/"
+
+aiReminders:
+  - "This is a FRESH START - no old code exists"
+  - "Leap Governance framework is preserved and active"
+  - "Run !pulse at session start to reset context"
+  - "Define vision and architecture before writing code"
