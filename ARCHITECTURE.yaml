@@ -17,9 +17,9 @@ systemOverview:
   purpose: "Build future-vision ServiceNow demos via AI-assisted development"
   
   entryPoints:
-    - file: "src/index.html"
+    - file: "DemoFactory/src/index.html"
       purpose: "Main entry point - loads shell and initializes app"
-    - file: "src/core/app.js"
+    - file: "DemoFactory/src/core/app.js"
       purpose: "Application orchestrator - initialization only"
   
   archetype: "Agentic Dashboard"
@@ -36,7 +36,7 @@ systemOverview:
 moduleStructure:
   
   core:
-    location: "src/core/"
+    location: "DemoFactory/src/core/"
     purpose: "Locked infrastructure - foundation for all demos"
     locked: true
     modules:
@@ -57,7 +57,7 @@ moduleStructure:
         dependents: ["all modules"]
   
   features:
-    location: "src/features/"
+    location: "DemoFactory/src/features/"
     purpose: "Feature-specific business logic (Service layer)"
     locked: false
     modules:
@@ -67,15 +67,15 @@ moduleStructure:
         dependents: ["chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
   
   ui:
-    location: "src/ui/"
+    location: "DemoFactory/src/ui/"
     purpose: "UI components and styles"
     subfolders:
       styles:
-        location: "src/ui/styles/"
+        location: "DemoFactory/src/ui/styles/"
         locked: true
         files: ["variables.css", "base.css", "shell.css"]
       components:
-        location: "src/ui/components/"
+        location: "DemoFactory/src/ui/components/"
         locked: "varies by component"
         folders:
           - name: "header"
@@ -162,7 +162,7 @@ architecturalPatterns:
   lockedComponents:
     name: "Locked vs Flexible"
     description: "Factory provides locked scaffold; AI customizes flexible content"
-    locked: ["src/core/*", "src/ui/styles/*", "header", "nav", "footer"]
+    locked: ["DemoFactory/src/core/*", "DemoFactory/src/ui/styles/*", "header", "nav", "footer"]
     flexible: ["chat-panel", "data-cards", "action-buttons"]
 
 # =============================================================================

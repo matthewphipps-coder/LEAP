@@ -11,6 +11,18 @@ metadata:
 designObjective: "Create implementation plan for DemoFactory Prototype v1"
 
 # =============================================================================
+# LOCATION DECISION
+# =============================================================================
+
+locationDecision:
+  decision: "DemoFactory as subfolder within LEAP"
+  rationale:
+    - "LEAP governs DemoFactory - makes sense for it to contain it"
+    - "Single repo = single source of truth"
+    - "Clear folder boundary prevents confusion"
+  structure: "/LEAP/DemoFactory/src/"
+
+# =============================================================================
 # IMPLEMENTATION PLAN
 # =============================================================================
 
@@ -34,27 +46,27 @@ implementationPlan:
     description: "Create folder structure per architectural-standards.yaml"
     
     filesToCreate:
-      - path: "src/index.html"
+      - path: "DemoFactory/src/index.html"
         purpose: "Entry point - locked shell structure"
         type: "new"
       
-      - path: "src/core/app.js"
+      - path: "DemoFactory/src/core/app.js"
         purpose: "Application orchestrator - initialization only"
         type: "new"
       
-      - path: "src/core/state.js"
+      - path: "DemoFactory/src/core/state.js"
         purpose: "StateManager - locked infrastructure"
         type: "new"
       
-      - path: "src/core/mock-data.js"
+      - path: "DemoFactory/src/core/mock-data.js"
         purpose: "Mock data patterns - locked infrastructure"
         type: "new"
       
-      - path: "src/core/error-handler.js"
+      - path: "DemoFactory/src/core/error-handler.js"
         purpose: "Error handling framework - locked infrastructure"
         type: "new"
       
-      - path: "src/core/logger.js"
+      - path: "DemoFactory/src/core/logger.js"
         purpose: "Logging/observability - locked infrastructure"
         type: "new"
   
@@ -67,15 +79,15 @@ implementationPlan:
     description: "Create CSS foundation with variables and brand-safe palette"
     
     filesToCreate:
-      - path: "src/ui/styles/variables.css"
+      - path: "DemoFactory/src/ui/styles/variables.css"
         purpose: "CSS variables - colors, spacing, typography"
         type: "new"
       
-      - path: "src/ui/styles/base.css"
+      - path: "DemoFactory/src/ui/styles/base.css"
         purpose: "Global reset and base styles"
         type: "new"
       
-      - path: "src/ui/styles/shell.css"
+      - path: "DemoFactory/src/ui/styles/shell.css"
         purpose: "Header, nav, footer styles - locked"
         type: "new"
   
@@ -88,27 +100,27 @@ implementationPlan:
     description: "Create locked shell UI components"
     
     filesToCreate:
-      - path: "src/ui/components/header/header-ui.js"
+      - path: "DemoFactory/src/ui/components/header/header-ui.js"
         purpose: "Header rendering - locked"
         type: "new"
       
-      - path: "src/ui/components/header/header.css"
+      - path: "DemoFactory/src/ui/components/header/header.css"
         purpose: "Header styles"
         type: "new"
       
-      - path: "src/ui/components/nav/nav-ui.js"
+      - path: "DemoFactory/src/ui/components/nav/nav-ui.js"
         purpose: "Navigation rendering - locked"
         type: "new"
       
-      - path: "src/ui/components/nav/nav.css"
+      - path: "DemoFactory/src/ui/components/nav/nav.css"
         purpose: "Navigation styles"
         type: "new"
       
-      - path: "src/ui/components/footer/footer-ui.js"
+      - path: "DemoFactory/src/ui/components/footer/footer-ui.js"
         purpose: "Footer rendering - locked"
         type: "new"
       
-      - path: "src/ui/components/footer/footer.css"
+      - path: "DemoFactory/src/ui/components/footer/footer.css"
         purpose: "Footer styles"
         type: "new"
   
@@ -121,31 +133,31 @@ implementationPlan:
     description: "Create archetype-specific components"
     
     filesToCreate:
-      - path: "src/features/dashboard/dashboard-service.js"
+      - path: "DemoFactory/src/features/dashboard/dashboard-service.js"
         purpose: "Dashboard business logic - Service layer"
         type: "new"
       
-      - path: "src/ui/components/chat-panel/chat-panel-ui.js"
+      - path: "DemoFactory/src/ui/components/chat-panel/chat-panel-ui.js"
         purpose: "Chat panel rendering"
         type: "new"
       
-      - path: "src/ui/components/chat-panel/chat-panel.css"
+      - path: "DemoFactory/src/ui/components/chat-panel/chat-panel.css"
         purpose: "Chat panel styles"
         type: "new"
       
-      - path: "src/ui/components/data-cards/data-cards-ui.js"
+      - path: "DemoFactory/src/ui/components/data-cards/data-cards-ui.js"
         purpose: "Data cards rendering"
         type: "new"
       
-      - path: "src/ui/components/data-cards/data-cards.css"
+      - path: "DemoFactory/src/ui/components/data-cards/data-cards.css"
         purpose: "Data cards styles"
         type: "new"
       
-      - path: "src/ui/components/action-buttons/action-buttons-ui.js"
+      - path: "DemoFactory/src/ui/components/action-buttons/action-buttons-ui.js"
         purpose: "Action buttons rendering"
         type: "new"
       
-      - path: "src/ui/components/action-buttons/action-buttons.css"
+      - path: "DemoFactory/src/ui/components/action-buttons/action-buttons.css"
         purpose: "Action buttons styles"
         type: "new"
 
@@ -157,41 +169,43 @@ fileStructure:
   totalFiles: 20
   
   structure: |
-    src/
-    ├── index.html                          # Entry point
-    ├── core/
-    │   ├── app.js                          # Orchestrator
-    │   ├── state.js                        # StateManager
-    │   ├── mock-data.js                    # Mock data
-    │   ├── error-handler.js                # Error handling
-    │   └── logger.js                       # Logging
-    ├── features/
-    │   └── dashboard/
-    │       └── dashboard-service.js        # Dashboard logic
-    └── ui/
-        ├── styles/
-        │   ├── variables.css               # CSS variables
-        │   ├── base.css                    # Base styles
-        │   └── shell.css                   # Shell styles
-        └── components/
-            ├── header/
-            │   ├── header-ui.js
-            │   └── header.css
-            ├── nav/
-            │   ├── nav-ui.js
-            │   └── nav.css
-            ├── footer/
-            │   ├── footer-ui.js
-            │   └── footer.css
-            ├── chat-panel/
-            │   ├── chat-panel-ui.js
-            │   └── chat-panel.css
-            ├── data-cards/
-            │   ├── data-cards-ui.js
-            │   └── data-cards.css
-            └── action-buttons/
-                ├── action-buttons-ui.js
-                └── action-buttons.css
+    LEAP/
+    └── DemoFactory/
+        └── src/
+            ├── index.html                          # Entry point
+            ├── core/
+            │   ├── app.js                          # Orchestrator
+            │   ├── state.js                        # StateManager
+            │   ├── mock-data.js                    # Mock data
+            │   ├── error-handler.js                # Error handling
+            │   └── logger.js                       # Logging
+            ├── features/
+            │   └── dashboard/
+            │       └── dashboard-service.js        # Dashboard logic
+            └── ui/
+                ├── styles/
+                │   ├── variables.css               # CSS variables
+                │   ├── base.css                    # Base styles
+                │   └── shell.css                   # Shell styles
+                └── components/
+                    ├── header/
+                    │   ├── header-ui.js
+                    │   └── header.css
+                    ├── nav/
+                    │   ├── nav-ui.js
+                    │   └── nav.css
+                    ├── footer/
+                    │   ├── footer-ui.js
+                    │   └── footer.css
+                    ├── chat-panel/
+                    │   ├── chat-panel-ui.js
+                    │   └── chat-panel.css
+                    ├── data-cards/
+                    │   ├── data-cards-ui.js
+                    │   └── data-cards.css
+                    └── action-buttons/
+                        ├── action-buttons-ui.js
+                        └── action-buttons.css
 
 # =============================================================================
 # LOCKED vs FLEXIBLE COMPONENTS
@@ -202,21 +216,21 @@ componentClassification:
   locked:
     description: "Factory provides these - AI cannot modify in demo creation"
     components:
-      - "src/core/* (all infrastructure)"
-      - "src/ui/styles/variables.css"
-      - "src/ui/styles/base.css"
-      - "src/ui/styles/shell.css"
-      - "src/ui/components/header/*"
-      - "src/ui/components/nav/*"
-      - "src/ui/components/footer/*"
+      - "DemoFactory/src/core/* (all infrastructure)"
+      - "DemoFactory/src/ui/styles/variables.css"
+      - "DemoFactory/src/ui/styles/base.css"
+      - "DemoFactory/src/ui/styles/shell.css"
+      - "DemoFactory/src/ui/components/header/*"
+      - "DemoFactory/src/ui/components/nav/*"
+      - "DemoFactory/src/ui/components/footer/*"
   
   archetypeProvided:
     description: "Archetype provides patterns - AI customizes content"
     components:
-      - "src/features/dashboard/dashboard-service.js"
-      - "src/ui/components/chat-panel/*"
-      - "src/ui/components/data-cards/*"
-      - "src/ui/components/action-buttons/*"
+      - "DemoFactory/src/features/dashboard/dashboard-service.js"
+      - "DemoFactory/src/ui/components/chat-panel/*"
+      - "DemoFactory/src/ui/components/data-cards/*"
+      - "DemoFactory/src/ui/components/action-buttons/*"
 
 # =============================================================================
 # VERIFICATION PLAN
@@ -225,7 +239,7 @@ componentClassification:
 verificationPlan:
   
   manualVerification:
-    - step: "Open src/index.html in browser"
+    - step: "Open DemoFactory/src/index.html in browser"
       expected: "Page loads with header, nav, footer visible"
     
     - step: "Verify shell is responsive"
