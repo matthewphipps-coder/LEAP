@@ -4,7 +4,7 @@
  * @layer core
  * @dependencies [logger.js]
  * @dependents [dashboard-service.js]
- * @locked true
+ * @locked false
  * @modifyImpact [all components displaying mock data]
  */
 

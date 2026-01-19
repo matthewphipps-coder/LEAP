@@ -84,7 +84,8 @@ stages:
       - "Specify new components"
     
     outputs:
-      - "stage-4-design.yaml"
+      - "stage-4-design.yaml (in factory workspace)"
+      - "Wireframe images for UI changes (in factory workspace)"
     
     gate: "!Proceed"
   
@@ -102,27 +103,28 @@ stages:
       - "Modify flexible components"
     
     outputs:
-      - "stage-5-implementation.yaml"
+      - "stage-5-implementation.yaml (in factory workspace)"
       - "Working demo code"
+      - "Updated functionality.yaml in demo"
     
     gate: "!Proceed"
   
   - stage: 6
-    name: "Delivery"
-    purpose: "Package and document the demo"
+    name: "Validation"
+    purpose: "Validate all Discovery features are implemented"
     
     inputs:
       - "Implementation artifact"
-      - "Working demo"
+      - "functionality.yaml (updated)"
     
     activities:
-      - "Create demo documentation"
-      - "Package for distribution"
-      - "Prepare handoff materials"
+      - "Compare Discovery requirements to functionality.yaml"
+      - "Verify all features implemented or explained in scopeChanges"
+      - "Validate README and documentation complete"
+      - "Confirm deployment readiness"
     
     outputs:
-      - "stage-6-delivery.yaml"
-      - "README.md for demo"
+      - "stage-6-validation.yaml (in factory workspace)"
     
     gate: "!Proceed"
   
@@ -131,16 +133,17 @@ stages:
     purpose: "Verify demo works as intended"
     
     inputs:
-      - "Delivery artifact"
-      - "Packaged demo"
+      - "Validation artifact"
+      - "Running demo server"
     
     activities:
-      - "Test all demo features"
+      - "Start local server: python3 -m http.server 8080"
+      - "Test all demo features in browser"
       - "Verify against requirements"
       - "Document any issues"
     
     outputs:
-      - "stage-7-testing.yaml"
+      - "stage-7-testing.yaml (in factory workspace)"
       - "Test results"
     
     gate: "!Proceed"

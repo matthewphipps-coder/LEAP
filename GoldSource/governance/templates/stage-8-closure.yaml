@@ -10,21 +10,53 @@ metadata:
 
 closureObjective: "Finalize demo and capture lessons learned"
 
+# =============================================================================
+# DEMO SUMMARY
+# =============================================================================
 summary:
   whatWasBuilt: "[Brief description]"
-  keyFeatures: "[List of features]"
+  keyFeatures: ["[Feature 1]", "[Feature 2]"]
+  filesCreated: "[number]"
+  filesModified: "[number]"
+  duration: "[total time]"
 
+# =============================================================================
+# LESSONS LEARNED (Be specific!)
+# =============================================================================
 lessonsLearned:
+  
   whatWorkedWell:
-    - "[Lesson 1]"
+    - "[Specific thing that worked]"
   
   whatCouldImprove:
-    - "[Improvement 1]"
+    - "[Specific improvement]"
+  
+  frictionPoints:
+    description: "Where did you struggle or slow down?"
+    points:
+      - "[Specific friction point]"
+      - "[What caused confusion]"
   
   feedbackForGoldSource:
-    - "[Suggestion for improving the scaffold]"
+    - "[Specific suggestion]"
 
+# =============================================================================
+# SCOPE CHANGES (from Discovery)
+# =============================================================================
+scopeChanges:
+  intentionallyDeferred:
+    - feature: "[Feature descoped]"
+      reason: "[Why]"
+  
+  notImplemented:
+    - feature: "[Feature from Discovery not done]"
+      explanation: "[Why]"
+
+# =============================================================================
+# SIGN-OFF
+# =============================================================================
 signOff:
+  demoLocation: "[path]"
+  runCommand: "python3 -m http.server 8080"
   status: "pending"
   approvedBy: "[name]"
-  date: "[date]"

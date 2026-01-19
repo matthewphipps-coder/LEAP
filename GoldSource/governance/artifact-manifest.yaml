@@ -1,0 +1,106 @@
+# =============================================================================
+# ARTIFACT MANIFEST
+# =============================================================================
+# Defines what artifacts the factory creates and where they belong.
+# This is the single source of truth for artifact locations.
+# =============================================================================
+
+metadata:
+  name: "Factory Artifact Manifest"
+  version: "1.0.0"
+  purpose: "Define artifact locations and ownership"
+
+# =============================================================================
+# TWO LOCATIONS - UNDERSTAND THE DIFFERENCE
+# =============================================================================
+
+locations:
+  
+  factoryWorkspace:
+    path: "[DemoInstances]/Factory-[version]/"
+    purpose: "Factory process tracking and audit trail"
+    lifecycle: "Always keep for LEAP review and improvement"
+    
+    contains:
+      - "stage-*.yaml (all 8 stages)"
+      - "CURRENT_STATE.yaml (factory progress)"
+      - "Gold Source copy (reference)"
+      - "Wireframe images (from design)"
+    
+    doesNotContain:
+      - "Demo code"
+      - "Demo README"
+  
+  demoOutput:
+    path: "[DemoOutput]/NEXUS-[version]/"
+    purpose: "Final demo product for end user"
+    lifecycle: "Owned by user after factory complete"
+    
+    contains:
+      - "Scaffold code (modified)"
+      - "README.md (demo docs)"
+      - "Demo assets"
+      - "meta/functionality.yaml (updated by factory)"
+    
+    doesNotContain:
+      - "stage-*.yaml files"
+      - "CURRENT_STATE.yaml"
+      - "Factory tracking"
+
+# =============================================================================
+# ARTIFACT TYPES
+# =============================================================================
+
+artifactTypes:
+  
+  stageArtifacts:
+    location: "factoryWorkspace"
+    naming: "stage-[N]-[name].yaml"
+  
+  currentState:
+    location: "factoryWorkspace"
+    naming: "CURRENT_STATE.yaml"
+  
+  wireframes:
+    location: "factoryWorkspace"
+    naming: "wireframe-[feature].png"
+  
+  demoReadme:
+    location: "demoOutput"
+    naming: "README.md"
+  
+  functionalityYaml:
+    location: "demoOutput"
+    naming: "meta/functionality.yaml"
+    note: "Updated in Stage 5, validated in Stage 6"
+  
+  demoCode:
+    location: "demoOutput"
+
+# =============================================================================
+# ANTI-PATTERNS (AVOID THESE)
+# =============================================================================
+
+antiPatterns:
+  - pattern: "Stage artifacts in demo output"
+    why: "Stage docs are factory process, not demo deliverables"
+    
+  - pattern: "CURRENT_STATE.yaml in demo output"
+    why: "Tracking belongs to factory"
+    
+  - pattern: "Using brain/ folder"
+    why: "Factory should be self-contained"
+
+# =============================================================================
+# LEAP FEEDBACK LOOP
+# =============================================================================
+
+leapFeedback:
+  description: |
+    LEAP analyzes both factory workspace AND demo output 
+    to improve the factory process and Gold Source.
+  
+  leapReviews:
+    - "Factory workspace stage artifacts (for process improvement)"
+    - "Demo functionality.yaml (for Gold Source feature promotion)"
+    - "Friction points from closure (for governance improvement)"

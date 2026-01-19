@@ -10,13 +10,46 @@ metadata:
 
 testingObjective: "Verify demo works as intended"
 
-testResults:
-  - test: "[Test description]"
-    result: "[pass|fail]"
-    notes: "[Any observations]"
+# =============================================================================
+# DEPLOYMENT (Required before testing)
+# =============================================================================
+deployment:
+  requirement: "Start local server before testing"
+  command: "python3 -m http.server 8080"
+  directory: "[DEMO_OUTPUT]"
+  url: "http://localhost:8080"
+  status: "[running|not-started]"
+
+# =============================================================================
+# TEST CASES
+# =============================================================================
+testCases:
+  
+  coreTests:
+    - id: "TEST-001"
+      name: "[Test name]"
+      steps: ["[Step 1]", "[Step 2]"]
+      expected: "[Expected result]"
+      actual: "[Actual result]"
+      result: "[pass|fail]"
+  
+  edgeCases:
+    - id: "EDGE-001"
+      name: "[Edge case]"
+      expected: "[Expected]"
+      actual: "[Actual]"
+      result: "[pass|fail]"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+summary:
+  totalTests: "[number]"
+  passed: "[number]"
+  failed: "[number]"
 
 issuesFound:
-  - issue: "[Issue description]"
+  - issue: "[Issue]"
     severity: "[low|medium|high]"
     resolved: "[true|false]"
 

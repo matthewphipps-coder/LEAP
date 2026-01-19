@@ -1,0 +1,114 @@
+# =============================================================================
+# /newfactory WORKFLOW
+# =============================================================================
+# Triggered when user types: /newfactory
+# Creates a new factory instance and generates onboarding prompt
+# =============================================================================
+
+metadata:
+  name: "Create New Factory"
+  trigger: "/newfactory"
+  type: "workflow"
+  version: "1.0.0"
+
+# =============================================================================
+# LEAP KNOWS (pre-configured)
+# =============================================================================
+
+leapKnows:
+  goldSourceLocation: "GoldSource/"
+  factoryVersion: "1.0.0"
+  defaultDemoLocation: "~/Documents/DemoOutput/"
+  defaultFactoryLocation: "~/Documents/DemoInstances/"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+  
+  1_askUser:
+    action: "Ask user for demo details"
+    note: "AI suggests next version number, user provides feature name"
+    prompts:
+      - question: "What feature name for this demo?"
+        example: "itsm-dashboard"
+        note: "AI will combine with version: NEXUS v1.0.1-[featurename]"
+        required: true
+      
+      - question: "Demo output location?"
+        default: "~/Documents/DemoOutput/NEXUS-v[version]-[featurename]/"
+        required: false
+      
+      - question: "Brief scenario description?"
+        example: "Major Incident view with AI agent support"
+        required: true
+    
+    versionLogic:
+      source: "AI determines from previous demos or starts at v1.0.0"
+      format: "vMAJOR.MINOR.PATCH-featurename"
+      examples:
+        first: "v1.0.0-itsm-dashboard"
+        increment: "v1.0.1-approval-flow"
+  
+  2_createFactoryInstance:
+    action: "Copy Gold Source to factory workspace"
+    source: "GoldSource/"
+    destination: "~/Documents/DemoInstances/Factory-[version]/"
+    commands:
+      - "mkdir -p ~/Documents/DemoInstances/Factory-[version]"
+      - "cp -r GoldSource/* ~/Documents/DemoInstances/Factory-[version]/"
+  
+  3_copyScaffold:
+    action: "Copy scaffold to demo output location"
+    source: "GoldSource/scaffold/"
+    destination: "[user-specified location]/NEXUS-[version]/"
+    commands:
+      - "mkdir -p [demo-output-location]"
+      - "cp -r GoldSource/scaffold/* [demo-output-location]/"
+  
+  4_generateOnboardingPrompt:
+    action: "Generate and display factory onboarding prompt"
+    display: true
+    template: |
+      ═══════════════════════════════════════════════════════════════════════════
+      FACTORY ONBOARDING PROMPT - Copy this to a NEW AI conversation
+      ═══════════════════════════════════════════════════════════════════════════
+      
+      You are a DemoFactory AI. Your job is to create a demo for the user.
+      
+      CRITICAL INSTRUCTIONS:
+      1. Read the Gold Source governance files at:
+         [FACTORY_WORKSPACE]/governance/FACTORY_README.yaml
+      
+      2. Demo details:
+         - Name: NEXUS [VERSION]
+         - Scenario: [SCENARIO]
+         - Output location: [DEMO_OUTPUT]
+         - Factory workspace: [FACTORY_WORKSPACE]
+      
+      3. The scaffold has already been copied to [DEMO_OUTPUT].
+         Begin with Stage 1: Discovery.
+      
+      4. Follow the 8-stage lifecycle with !Proceed gates.
+      
+      5. Save stage artifacts to the FACTORY WORKSPACE ([FACTORY_WORKSPACE]),
+         NOT the demo output folder.
+      
+      Start by reading governance/FACTORY_README.yaml, then begin Discovery.
+      ═══════════════════════════════════════════════════════════════════════════
+  
+  5_confirmReady:
+    action: "Confirm factory is ready"
+    message: |
+      ✅ Factory instance created!
+      
+      Factory workspace: [FACTORY_WORKSPACE]
+      Demo output: [DEMO_OUTPUT]
+      
+      NEXT STEPS:
+      1. Copy the onboarding prompt above
+      2. Start a NEW AI conversation (not this one)
+      3. Paste the prompt to initialize the Factory AI
+      
+      The Factory AI is completely separate from this LEAP session.

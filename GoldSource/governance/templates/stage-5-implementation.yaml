@@ -10,17 +10,38 @@ metadata:
 
 implementationObjective: "Build the demo based on design"
 
+# =============================================================================
+# FILES CHANGED
+# =============================================================================
 filesCreated:
   - "[path/to/file1]"
-  - "[path/to/file2]"
 
 filesModified:
   - "[path/to/file]"
 
+# =============================================================================
+# FUNCTIONALITY.YAML UPDATE (Required)
+# =============================================================================
+functionalityUpdate:
+  description: "Update the demo's functionality.yaml with new capabilities"
+  location: "[DEMO_OUTPUT]/meta/functionality.yaml"
+  
+  newCapabilities:
+    - name: "[New feature name]"
+      description: "[What it does]"
+      addedBy: "Factory - [demo name]"
+  
+  note: |
+    This updates the DEMO's functionality.yaml, not the Gold Source.
+    LEAP will review and decide if any should be promoted to Gold Source.
+
+# =============================================================================
+# COMMITS
+# =============================================================================
 commits:
   - hash: "[commit hash]"
     message: "[commit message]"
 
 nextStage:
-  name: "delivery"
+  name: "validation"
   requires: "!Proceed"

@@ -1,6 +1,8 @@
 # =============================================================================
 # STAGE 4: DESIGN TEMPLATE
 # =============================================================================
+# This document IS the implementation plan. No separate plan needed.
+# =============================================================================
 metadata:
   demo: "[DEMO_NAME]"
   stage: 4
@@ -10,6 +12,21 @@ metadata:
 
 designObjective: "Implementation plan and file structure"
 
+# =============================================================================
+# WIREFRAMES (Required for UI changes)
+# =============================================================================
+wireframes:
+  requirement: "Generate wireframe images for any new UI elements"
+  tool: "AI image generation"
+  saveLocation: "Factory workspace (not demo output)"
+  
+  images:
+    - name: "[feature-name]-wireframe.png"
+      description: "[What it shows]"
+
+# =============================================================================
+# FILES TO MODIFY/CREATE
+# =============================================================================
 filesToModify:
   - file: "[path/to/file]"
     changes: "[What changes to make]"
@@ -18,9 +35,55 @@ filesToCreate:
   - file: "[path/to/new/file]"
     purpose: "[What it does]"
 
+# =============================================================================
+# IMPLEMENTATION STEPS
+# =============================================================================
 implementationSteps:
   1: "[Step 1]"
   2: "[Step 2]"
+
+# =============================================================================
+# SCOPE CHANGES (Track what changed from Discovery)
+# =============================================================================
+scopeChanges:
+  description: "Compare this design to stage-1-discovery.yaml requirements"
+  
+  intentionallyDeferred:
+    description: "Features explicitly moved to future phase"
+    items:
+      - feature: "[Feature name]"
+        reason: "[Why deferred]"
+        futurePhase: "[When to address]"
+  
+  notImplemented:
+    description: "Features from Discovery NOT in this design (explain why)"
+    items:
+      - feature: "[Feature from Discovery]"
+        status: "[dropped|simplified|merged]"
+        explanation: "[Why not implemented as originally scoped]"
+
+# =============================================================================
+# TRACEABILITY REVIEW (Required before !Proceed)
+# =============================================================================
+traceabilityReview:
+  description: "Before requesting !Proceed, verify design addresses all requirements"
+  
+  checkAgainstStages:
+    stage1Discovery:
+      file: "stage-1-discovery.yaml"
+      verify: "All features from Discovery are in this design OR in scopeChanges"
+    
+    stage2Research:
+      file: "stage-2-research.yaml"
+      verify: "All research findings are addressed in design"
+    
+    stage3Analysis:
+      file: "stage-3-analysis.yaml"
+      verify: "Recommended approach from analysis is reflected here"
+  
+  confirmation:
+    allFeaturesAddressed: "[true|false]"
+    gapsExplained: "[true|false - if false, scopeChanges must explain why]"
 
 nextStage:
   name: "implementation"

@@ -51,7 +51,8 @@ gateProtocol:
 
 stageArtifacts:
   requirement: "Create artifact file for each stage"
-  location: "Demo instance tracking folder"
+  location: "Factory workspace (NOT demo output)"
+  locationReference: "See artifact-manifest.yaml for details"
   template: "Use templates from governance/templates/"
   
   naming: "stage-[number]-[name].yaml"
@@ -66,6 +67,10 @@ stageArtifacts:
       - "objective (what this stage accomplished)"
       - "findings or outputs"
       - "next stage reference"
+  
+  critical: |
+    Stage artifacts belong in the FACTORY WORKSPACE.
+    The demo output contains only code and user documentation.
 
 # =============================================================================
 # ERROR HANDLING
@@ -114,3 +119,22 @@ communicationStyle:
   - "Ask clarifying questions when unsure"
   - "Summarize at stage boundaries"
   - "Never assume - confirm with human"
+
+# =============================================================================
+# WORKSPACE LIFECYCLE
+# =============================================================================
+
+workspaceLifecycle:
+  description: "What happens to factory workspace after completion"
+  
+  duringFactory:
+    - "Factory workspace holds stage artifacts"
+    - "Gold Source copy is reference-only"
+    - "CURRENT_STATE.yaml tracks progress"
+  
+  afterCompletion:
+    policy: "Always keep"
+    reason: |
+      LEAP analyzes both factory workspace AND demo output 
+      to improve the factory process and Gold Source.
+    location: "Keep in DemoInstances/ for LEAP review"

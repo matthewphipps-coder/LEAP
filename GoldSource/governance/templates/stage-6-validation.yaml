@@ -1,0 +1,60 @@
+# =============================================================================
+# STAGE 6: VALIDATION TEMPLATE
+# =============================================================================
+# Validates all Discovery features are implemented and documented
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 6
+  stageName: "validation"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+validationObjective: "Verify all Discovery features exist in implementation"
+
+# =============================================================================
+# FEATURE VALIDATION (Against functionality.yaml)
+# =============================================================================
+featureValidation:
+  description: "Compare stage-1-discovery.yaml features to functionality.yaml"
+  
+  functionalityFile: "[DEMO_OUTPUT]/meta/functionality.yaml"
+  discoveryFile: "[FACTORY_WORKSPACE]/stage-1-discovery.yaml"
+  
+  checklist:
+    - feature: "[Feature from Discovery]"
+      inFunctionality: "[true|false]"
+      implemented: "[true|false]"
+      notes: "[any discrepancy explanation]"
+  
+  summary:
+    totalFeatures: "[number]"
+    implemented: "[number]"
+    missing: "[number]"
+    allAccountedFor: "[true|false]"
+
+# =============================================================================
+# DOCUMENTATION VALIDATION
+# =============================================================================
+documentationValidation:
+  readme:
+    exists: "[true|false]"
+    hasQuickStart: "[true|false]"
+    hasFeatureList: "[true|false]"
+  
+  functionalityYaml:
+    updated: "[true|false]"
+    newCapabilitiesListed: "[number]"
+
+# =============================================================================
+# DEPLOYMENT READINESS
+# =============================================================================
+deploymentReadiness:
+  serverCommand: "python3 -m http.server 8080"
+  directory: "[DEMO_OUTPUT]"
+  canStart: "[true|false]"
+  url: "http://localhost:8080"
+
+nextStage:
+  name: "testing"
+  requires: "!Proceed"

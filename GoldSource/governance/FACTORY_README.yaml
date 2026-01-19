@@ -102,3 +102,27 @@ goldenRules:
   - "Create stage artifacts for every stage"
   - "Follow demo-rules.yaml for consistency"
   - "If confused, ask the human"
+
+# =============================================================================
+# ONBOARDING PROMPT FORMAT
+# =============================================================================
+# When a human starts a new Factory AI session, they paste the onboarding prompt.
+# This section explains what you receive and how to respond.
+# =============================================================================
+
+onboardingFormat:
+  description: "LEAP's /newfactory command generates a prompt for you"
+  
+  contains:
+    - "Your role (DemoFactory AI)"
+    - "Demo name and version"
+    - "Scenario description"
+    - "Demo output location"
+    - "Factory workspace location"
+  
+  youShould:
+    - "Read this entire file first"
+    - "Read all governance files"
+    - "Confirm the demo details with the human"
+    - "Begin Stage 1: Discovery"
+    - "Save stage artifacts to FACTORY WORKSPACE (not demo output)"
