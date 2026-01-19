@@ -1,7 +1,7 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-19T09:04:00Z"
+  lastUpdated: "2026-01-19T09:13:00Z"
   version: "3.0.0"
 
 aiMustRead:
@@ -14,45 +14,38 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.0.0-fresh"
-  currentFocus: "Governance framework redesign"
+  currentFocus: "DemoFactory Prototype"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "12"
-  name: "Template Cleanup and Integration"
-  status: "closed"
-  stage: "closure"
-  startedDate: "2026-01-19T08:38:00Z"
-  closedDate: "2026-01-19T09:06:00Z"
+  number: "13"
+  name: "DemoFactory Prototype"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-19T09:13:00Z"
   
-  goal: "Remove legacy template, integrate 5 templates into governance"
+  goal: "Build the first working prototype of DemoFactory"
   
-  closureDocument: "docs/phases/phase-12/PHASE_12_CLOSURE.yaml"
-  executiveSignOff: "Granted by Matthew Phipps"
+  stageArtifact: "docs/phases/phase-13/stage-1-discovery.yaml"
   
   previousPhase:
-    number: "11"
-    name: "GOV-001 AI Task Tracking Guidance"
+    number: "12"
+    name: "Template Cleanup and Integration"
     status: "closed"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "complete"
-  stage: "closure"
+  status: "in-progress"
+  stage: "discovery"
   
   summary:
     accomplished:
-      - "Deleted REVIEW_TEMPLATE.yaml (legacy)"
-      - "Added template refs to pulse-protocol.yaml (v4.2.0)"
-      - "Added governanceTemplates to constitution.yaml (v3.1.0)"
-      - "Added templateRef to backlog.yaml and bugs.yaml"
-      - "All 6 stage gates approved with explicit !Proceed"
-      - "Git commits complete (d253094)"
-      - "Closure document created"
+      - "Phase 13 initiated"
+      - "Discovery artifact created"
     
-    context: "Awaiting executive sign-off for phase closure"
+    context: "Discovery stage - defining scope and research questions"
   
-  nextStage: "New phase (after executive sign-off)"
+  nextStage: "Research (pending !Proceed)"
 
 references:
   governanceFiles:

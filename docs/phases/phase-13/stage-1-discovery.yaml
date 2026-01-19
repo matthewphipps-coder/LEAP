@@ -1,0 +1,57 @@
+metadata:
+  type: "stage-artifact"
+  phase: 13
+  phaseName: "DemoFactory Prototype"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-19T09:13:00Z"
+  status: "in-progress"
+
+problemStatement:
+  summary: "Build the first working prototype of DemoFactory"
+  context:
+    - "LEAP = Governance layer (builds and validates the factory)"
+    - "DemoFactory = Production layer (builds ServiceNow demos)"
+    - "Current state: LEAP governance is mature (12 phases complete), but no DemoFactory code exists"
+  
+  goal: "Create a functional prototype that demonstrates demo-building capability"
+
+scope:
+  inScope:
+    - "Core DemoFactory architecture"
+    - "Minimum viable demo-building capability"
+    - "Integration with LEAP governance"
+  
+  outOfScope:
+    - "Full feature set (future phases)"
+    - "Multi-user support (LEAP is single-user per VISION.yaml)"
+    - "Production deployment"
+  
+  tbd:
+    - "What constitutes a 'demo' (output format, components)?"
+    - "What is the minimum viable functionality?"
+    - "Technology stack confirmation"
+
+questionsForResearch:
+  architectural:
+    - "What technology stack should DemoFactory use (per architectural-standards.yaml)?"
+    - "How does the Triad Pattern (Service/UI/Style) apply to DemoFactory?"
+    - "What is the data flow (Firebase → State → UI)?"
+  
+  functional:
+    - "What does 'building a demo' mean concretely?"
+    - "What inputs does DemoFactory need from users?"
+    - "What outputs should DemoFactory produce?"
+  
+  integration:
+    - "How does LEAP validate DemoFactory output?"
+    - "What is the feedback loop between demos and factory improvement?"
+  
+  existingResources:
+    - "Are there any prior specifications or mockups for DemoFactory?"
+    - "What ServiceNow components are relevant?"
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"
+  focus: "Answer the questions above, define concrete scope"
