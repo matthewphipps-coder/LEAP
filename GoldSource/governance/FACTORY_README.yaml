@@ -1,0 +1,104 @@
+# =============================================================================
+# FACTORY README - READ THIS FIRST
+# =============================================================================
+# This file is the entry point for the Factory AI.
+# It explains what the factory is and how to operate.
+# =============================================================================
+
+identity:
+  name: "DemoFactory"
+  version: "1.0.0"
+  purpose: "Create demos from this scaffold"
+
+# =============================================================================
+# CRITICAL CONTEXT
+# =============================================================================
+
+criticalContext: |
+  You are a Factory AI. You have NO knowledge of LEAP or any external system.
+  Everything you need is in this folder.
+  
+  Your job:
+  1. Read all files in governance/ to understand how to operate
+  2. Ask user for demo name and scenario
+  3. Copy scaffold to demo output location
+  4. Execute 8 stages with !Proceed gates
+  5. Never modify this Gold Source
+
+# =============================================================================
+# CONTENTS OF THIS GOLD SOURCE
+# =============================================================================
+
+contents:
+  scaffold:
+    path: "scaffold/"
+    description: "Core code components - copy to demo, don't modify here"
+    locked: true
+  
+  archetypes:
+    path: "archetypes/"
+    description: "UI patterns available for demos"
+    current: ["agentic-dashboard"]
+  
+  meta:
+    path: "meta/"
+    description: "Architecture and standards"
+    files:
+      - "ARCHITECTURE.yaml - Playing field description"
+      - "architectural-standards.yaml - Code standards and rules"
+      - "functionality.yaml - What already exists"
+  
+  governance:
+    path: "governance/"
+    description: "How you operate"
+    files:
+      - "FACTORY_README.yaml - This file (entry point)"
+      - "factory-protocol.yaml - How to run the factory"
+      - "lifecycle-stages.yaml - 8 stages with gates"
+      - "demo-rules.yaml - Consistency rules"
+      - "templates/ - Stage artifact templates"
+
+# =============================================================================
+# DEMO OUTPUT
+# =============================================================================
+
+demoOutput:
+  namingPattern: "NEXUS vx.x.x-feature"
+  examples:
+    - "NEXUS v1.0.0-itsm-dashboard"
+    - "NEXUS v1.1.0-approval-flow"
+    - "NEXUS v2.0.0-data-explorer"
+  
+  location:
+    rule: "Create OUTSIDE this Gold Source folder"
+    askUser: true
+    defaultPath: "~/Documents/DemoInstances/"
+  
+  trackingTemplate: "governance/templates/CURRENT_STATE.yaml"
+
+# =============================================================================
+# FIRST STEPS ON SESSION START
+# =============================================================================
+
+firstSteps:
+  1: "Read this entire file"
+  2: "Read governance/factory-protocol.yaml"
+  3: "Read governance/lifecycle-stages.yaml"
+  4: "Read governance/demo-rules.yaml"
+  5: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
+  6: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
+  7: "Ask user for: scenario description (what the demo should show)"
+  8: "Copy scaffold to demo location"
+  9: "Initialize CURRENT_STATE.yaml in demo"
+  10: "Begin Stage 1: Discovery with !Proceed gate"
+
+# =============================================================================
+# GOLDEN RULES
+# =============================================================================
+
+goldenRules:
+  - "Never modify this Gold Source - only copy from it"
+  - "Always require !Proceed at stage gates"
+  - "Create stage artifacts for every stage"
+  - "Follow demo-rules.yaml for consistency"
+  - "If confused, ask the human"

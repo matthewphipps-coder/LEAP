@@ -1,0 +1,27 @@
+# =============================================================================
+# STAGE 4: DESIGN TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 4
+  stageName: "design"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+designObjective: "Implementation plan and file structure"
+
+filesToModify:
+  - file: "[path/to/file]"
+    changes: "[What changes to make]"
+
+filesToCreate:
+  - file: "[path/to/new/file]"
+    purpose: "[What it does]"
+
+implementationSteps:
+  1: "[Step 1]"
+  2: "[Step 2]"
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"

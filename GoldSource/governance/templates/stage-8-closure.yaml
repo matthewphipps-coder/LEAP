@@ -1,0 +1,30 @@
+# =============================================================================
+# STAGE 8: CLOSURE TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 8
+  stageName: "closure"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+closureObjective: "Finalize demo and capture lessons learned"
+
+summary:
+  whatWasBuilt: "[Brief description]"
+  keyFeatures: "[List of features]"
+
+lessonsLearned:
+  whatWorkedWell:
+    - "[Lesson 1]"
+  
+  whatCouldImprove:
+    - "[Improvement 1]"
+  
+  feedbackForGoldSource:
+    - "[Suggestion for improving the scaffold]"
+
+signOff:
+  status: "pending"
+  approvedBy: "[name]"
+  date: "[date]"

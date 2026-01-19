@@ -1,0 +1,29 @@
+# =============================================================================
+# STAGE 3: ANALYSIS TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 3
+  stageName: "analysis"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+analysisObjective: "Risk assessment and approach options"
+
+risks:
+  - risk: "[Risk description]"
+    probability: "[low|medium|high]"
+    impact: "[low|medium|high]"
+    mitigation: "[How to address]"
+
+approachOptions:
+  - option: "[Option 1]"
+    pros: "[Benefits]"
+    cons: "[Drawbacks]"
+    recommended: "[true|false]"
+
+selectedApproach: "[Which option and why]"
+
+nextStage:
+  name: "design"
+  requires: "!Proceed"

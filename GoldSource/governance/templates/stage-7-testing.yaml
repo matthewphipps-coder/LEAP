@@ -1,0 +1,25 @@
+# =============================================================================
+# STAGE 7: TESTING TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 7
+  stageName: "testing"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+testingObjective: "Verify demo works as intended"
+
+testResults:
+  - test: "[Test description]"
+    result: "[pass|fail]"
+    notes: "[Any observations]"
+
+issuesFound:
+  - issue: "[Issue description]"
+    severity: "[low|medium|high]"
+    resolved: "[true|false]"
+
+nextStage:
+  name: "closure"
+  requires: "!Proceed"

@@ -1,0 +1,26 @@
+# =============================================================================
+# STAGE 5: IMPLEMENTATION TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 5
+  stageName: "implementation"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+implementationObjective: "Build the demo based on design"
+
+filesCreated:
+  - "[path/to/file1]"
+  - "[path/to/file2]"
+
+filesModified:
+  - "[path/to/file]"
+
+commits:
+  - hash: "[commit hash]"
+    message: "[commit message]"
+
+nextStage:
+  name: "delivery"
+  requires: "!Proceed"

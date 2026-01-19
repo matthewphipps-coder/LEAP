@@ -1,0 +1,177 @@
+# =============================================================================
+# LIFECYCLE STAGES
+# =============================================================================
+# Defines the 8 stages of demo creation.
+# These are identical to LEAP stages (Discovery through Closure).
+# =============================================================================
+
+overview:
+  totalStages: 8
+  gateRequirement: "!Proceed at each stage transition"
+  skipStages: "Not allowed - all stages are mandatory"
+
+# =============================================================================
+# STAGE DEFINITIONS
+# =============================================================================
+
+stages:
+  
+  - stage: 1
+    name: "Discovery"
+    purpose: "Define demo requirements from user scenario"
+    
+    inputs:
+      - "User scenario description"
+      - "Demo name (NEXUS vx.x.x-feature)"
+      - "Target archetype"
+    
+    activities:
+      - "Understand what the demo should accomplish"
+      - "Identify key features and flows"
+      - "Document requirements"
+    
+    outputs:
+      - "stage-1-discovery.yaml"
+    
+    gate: "!Proceed"
+  
+  - stage: 2
+    name: "Research"
+    purpose: "Explore patterns, components, APIs needed"
+    
+    inputs:
+      - "Discovery artifact"
+      - "Scaffold structure"
+      - "Archetype components"
+    
+    activities:
+      - "Review what scaffold provides"
+      - "Identify gaps between requirements and scaffold"
+      - "Research solutions for gaps"
+    
+    outputs:
+      - "stage-2-research.yaml"
+    
+    gate: "!Proceed"
+  
+  - stage: 3
+    name: "Analysis"
+    purpose: "Risk assessment, approach options"
+    
+    inputs:
+      - "Research artifact"
+    
+    activities:
+      - "Identify risks"
+      - "Compare approach options"
+      - "Recommend approach"
+    
+    outputs:
+      - "stage-3-analysis.yaml"
+    
+    gate: "!Proceed"
+  
+  - stage: 4
+    name: "Design"
+    purpose: "Implementation plan, file structure"
+    
+    inputs:
+      - "Analysis artifact"
+    
+    activities:
+      - "Create detailed implementation plan"
+      - "Define file changes"
+      - "Specify new components"
+    
+    outputs:
+      - "stage-4-design.yaml"
+    
+    gate: "!Proceed"
+  
+  - stage: 5
+    name: "Implementation"
+    purpose: "Build the demo based on design"
+    
+    inputs:
+      - "Design artifact"
+      - "Scaffold copy in demo folder"
+    
+    activities:
+      - "Implement design changes"
+      - "Create new files"
+      - "Modify flexible components"
+    
+    outputs:
+      - "stage-5-implementation.yaml"
+      - "Working demo code"
+    
+    gate: "!Proceed"
+  
+  - stage: 6
+    name: "Delivery"
+    purpose: "Package and document the demo"
+    
+    inputs:
+      - "Implementation artifact"
+      - "Working demo"
+    
+    activities:
+      - "Create demo documentation"
+      - "Package for distribution"
+      - "Prepare handoff materials"
+    
+    outputs:
+      - "stage-6-delivery.yaml"
+      - "README.md for demo"
+    
+    gate: "!Proceed"
+  
+  - stage: 7
+    name: "Testing"
+    purpose: "Verify demo works as intended"
+    
+    inputs:
+      - "Delivery artifact"
+      - "Packaged demo"
+    
+    activities:
+      - "Test all demo features"
+      - "Verify against requirements"
+      - "Document any issues"
+    
+    outputs:
+      - "stage-7-testing.yaml"
+      - "Test results"
+    
+    gate: "!Proceed"
+  
+  - stage: 8
+    name: "Closure"
+    purpose: "Finalize, capture lessons learned"
+    
+    inputs:
+      - "Testing artifact"
+      - "Test results"
+    
+    activities:
+      - "Document lessons learned"
+      - "Identify improvements for Gold Source"
+      - "Finalize demo"
+    
+    outputs:
+      - "stage-8-closure.yaml"
+      - "Lessons learned (for LEAP feedback)"
+    
+    gate: "Human sign-off"
+
+# =============================================================================
+# STAGE TRANSITIONS
+# =============================================================================
+
+transitions:
+  rule: "Cannot skip stages or advance without !Proceed"
+  
+  backtracking:
+    allowed: true
+    condition: "With human approval"
+    documentation: "Must document reason in artifact"

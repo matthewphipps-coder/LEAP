@@ -1,0 +1,26 @@
+# Stage templates 2-8 follow the same pattern as stage-1
+# See stage-1-discovery.yaml for full template structure
+
+# =============================================================================
+# STAGE 2: RESEARCH TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 2
+  stageName: "research"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+researchObjective: "Explore patterns, components, APIs needed"
+
+scaffoldReview:
+  whatExists: "[Components and features already in scaffold]"
+  gaps: "[What's missing for this demo]"
+
+solutions:
+  - gap: "[Gap 1]"
+    solution: "[How to address it]"
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
