@@ -5,7 +5,8 @@ metadata:
   stage: 1
   stageName: "discovery"
   created: "2026-01-19T09:13:00Z"
-  status: "in-progress"
+  completedDate: "2026-01-19T09:30:00Z"
+  status: "complete"
 
 problemStatement:
   summary: "Build the first working prototype of DemoFactory"
@@ -33,6 +34,63 @@ scope:
     - "Technology stack confirmation"
 
 questionsForResearch:
+  
+  # CRITICAL - AI Execution Model
+  aiExecution:
+    core: "Are stages 1-8 executed by AI Agents?"
+    implications:
+      - "If yes, how do we scope each phase so AI doesn't get confused?"
+      - "How do stage artifacts serve as 'handoff contracts' between AI executions?"
+      - "Does LEAP validate each stage gate, or just final output?"
+      - "What's the AI context window strategy (fresh context per stage vs. accumulated)?"
+    
+    orchestrationOptions:
+      description: "Explore all three in Research stage"
+      options:
+        - name: "Multi-Agent Orchestration"
+          description: "LEAP orchestrates multiple AI executions, each handling one stage with fresh context"
+        - name: "Single-Agent with Stage Gates"
+          description: "One AI session, but explicit gates force pause/validation between stages"
+        - name: "Human-in-the-Loop Hybrid"
+          description: "AI proposes, human approves at each gate (like LEAP today)"
+  
+  # CRITICAL - Immutable Foundation
+  immutableFoundation:
+    insight: "The more scaffold we provide, the less AI can break. Higher probability of consistent outcomes."
+    core: "What demo components should be locked in and immutable?"
+    
+    candidateComponents:
+      - category: "Authentication"
+        questions:
+          - "Pre-built auth flow that demos inherit?"
+          - "SSO simulation or real integration?"
+      
+      - category: "Page Structure"
+        questions:
+          - "Index page layout/function locked?"
+          - "Navigation patterns immutable?"
+          - "Header/footer scaffolding?"
+      
+      - category: "Theme & Styling"
+        questions:
+          - "Theme control mechanism (CSS variables, design tokens)?"
+          - "Brand-safe color palettes?"
+          - "Typography system?"
+      
+      - category: "Database Interaction"
+        questions:
+          - "DB interaction patterns locked?"
+          - "Data scope boundaries (what AI can/cannot modify)?"
+          - "Mock data vs. real data strategy?"
+      
+      - category: "Core Infrastructure"
+        questions:
+          - "State management pattern?"
+          - "Error handling framework?"
+          - "Logging/observability?"
+    
+    principle: "Factory provides scaffold → AI fills in the gaps → Less variance = More consistency"
+  
   architectural:
     - "What technology stack should DemoFactory use (per architectural-standards.yaml)?"
     - "How does the Triad Pattern (Service/UI/Style) apply to DemoFactory?"
@@ -43,9 +101,24 @@ questionsForResearch:
     - "What inputs does DemoFactory need from users?"
     - "What outputs should DemoFactory produce?"
   
-  integration:
+  userExperience:
+    - "Who initiates a demo build (human request, AI-triggered, scheduled)?"
+    - "What's the ideal user journey from 'I need a demo' to 'demo is ready'?"
+  
+  serviceNowSpecifics:
+    - "What ServiceNow products/modules should demos cover?"
+    - "Are there existing demo patterns or templates to build on?"
+    - "What makes a 'good' ServiceNow demo vs. a bad one?"
+  
+  governanceIntegration:
     - "How does LEAP validate DemoFactory output?"
     - "What is the feedback loop between demos and factory improvement?"
+    - "What validation criteria should LEAP apply to factory output?"
+    - "How granular is the feedback loop (per-demo, per-component, per-stage)?"
+  
+  technicalConstraints:
+    - "Are there existing ServiceNow APIs or tools we need to integrate with?"
+    - "What's the deployment target (instance, PDI, simulated)?"
   
   existingResources:
     - "Are there any prior specifications or mockups for DemoFactory?"

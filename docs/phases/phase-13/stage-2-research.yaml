@@ -1,0 +1,158 @@
+metadata:
+  type: "stage-artifact"
+  phase: 13
+  phaseName: "DemoFactory Prototype"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-19T09:30:00Z"
+  status: "in-progress"
+  previousStage: "docs/phases/phase-13/stage-1-discovery.yaml"
+
+researchObjective: "Answer discovery questions to define concrete scope for DemoFactory Prototype"
+
+# =============================================================================
+# AI EXECUTION MODEL - Critical architectural decision
+# =============================================================================
+
+aiExecutionModel:
+  question: "Are stages 1-8 executed by AI Agents?"
+  answer: null  # TBD during research
+  
+  orchestrationOptions:
+    
+    optionA:
+      name: "Multi-Agent Orchestration"
+      description: "LEAP orchestrates multiple AI executions, each handling one stage with fresh context"
+      pros:
+        - "Fresh context per stage - no accumulated confusion"
+        - "Each AI gets focused, scoped task"
+        - "Stage artifacts are natural handoff contracts"
+        - "Parallel execution possible for independent stages"
+      cons:
+        - "Orchestration complexity"
+        - "Handoff overhead between agents"
+        - "Potential context loss between stages"
+      implementation:
+        - "LEAP provides stage-specific prompt + previous stage artifact"
+        - "AI executes one stage, produces artifact"
+        - "LEAP validates artifact against gate criteria"
+        - "LEAP initiates next agent with new context"
+    
+    optionB:
+      name: "Single-Agent with Stage Gates"
+      description: "One AI session, but explicit gates force pause/validation between stages"
+      pros:
+        - "Accumulated context (AI remembers previous work)"
+        - "Simpler orchestration"
+        - "Natural conversation flow"
+      cons:
+        - "Context window limits (accumulated tokens)"
+        - "Context pollution (earlier confusion affects later stages)"
+        - "Harder to restart mid-process"
+      implementation:
+        - "Single long-running AI session"
+        - "LEAP inserts gate checks between stages"
+        - "AI must produce artifact and await approval before continuing"
+    
+    optionC:
+      name: "Human-in-the-Loop Hybrid"
+      description: "AI proposes, human approves at each gate (like LEAP today)"
+      pros:
+        - "Maximum control and oversight"
+        - "Proven model (LEAP uses it successfully)"
+        - "Human catches AI errors at each stage"
+      cons:
+        - "Slowest option (human bottleneck)"
+        - "Defeats 'AI speed' goal for high-volume demos"
+        - "Human fatigue on repetitive demos"
+      implementation:
+        - "AI executes stage, produces artifact"
+        - "Human reviews artifact, provides !Proceed"
+        - "Repeat for each stage"
+    
+    recommendation: null  # TBD - user to decide after reviewing options
+
+# =============================================================================
+# IMMUTABLE FOUNDATION - What the factory provides
+# =============================================================================
+
+immutableFoundation:
+  principle: "Factory provides scaffold → AI fills in the gaps → Less variance = More consistency"
+  
+  components:
+    
+    authentication:
+      status: "TBD"
+      questions:
+        - "Pre-built auth flow that demos inherit?"
+        - "SSO simulation or real integration?"
+      findings: null
+      recommendation: null
+    
+    pageStructure:
+      status: "TBD"
+      questions:
+        - "Index page layout/function locked?"
+        - "Navigation patterns immutable?"
+        - "Header/footer scaffolding?"
+      findings: null
+      recommendation: null
+    
+    themeStyling:
+      status: "TBD"
+      questions:
+        - "Theme control mechanism (CSS variables, design tokens)?"
+        - "Brand-safe color palettes?"
+        - "Typography system?"
+      findings: null
+      recommendation: null
+    
+    databaseInteraction:
+      status: "TBD"
+      questions:
+        - "DB interaction patterns locked?"
+        - "Data scope boundaries (what AI can/cannot modify)?"
+        - "Mock data vs. real data strategy?"
+      findings: null
+      recommendation: null
+    
+    coreInfrastructure:
+      status: "TBD"
+      questions:
+        - "State management pattern?"
+        - "Error handling framework?"
+        - "Logging/observability?"
+      findings: null
+      recommendation: null
+
+# =============================================================================
+# OTHER RESEARCH AREAS
+# =============================================================================
+
+technicalStack:
+  question: "What technology stack should DemoFactory use?"
+  constraints:
+    - "Must follow architectural-standards.yaml Triad Pattern"
+    - "Must integrate with LEAP governance"
+  findings: null
+  recommendation: null
+
+demoDefinition:
+  question: "What does 'building a demo' mean concretely?"
+  inputs: null
+  outputs: null
+  findings: null
+
+serviceNowContext:
+  question: "What ServiceNow products/modules should demos cover?"
+  findings: null
+  existingPatterns: null
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Analyze findings, assess risks, choose orchestration model, define immutable components"
