@@ -6,7 +6,7 @@ metadata:
   created: "2026-01-19T20:24:33Z"
   status: "complete"
   gateApproval: "Validation approved with !Proceed at 2026-01-19T20:24:33Z"
-  previousStage: "stage-5-validation.yaml"
+  previousStage: "stage-7-delivery.yaml"
 
 lifecycle:
   currentStage: "closure"
