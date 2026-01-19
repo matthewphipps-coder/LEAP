@@ -1,0 +1,249 @@
+# =============================================================================
+# Factory Comparison: v1.0.2-major-incident vs v1.0.3-major-incident
+# =============================================================================
+# This document compares two factory runs to identify deviations requiring
+# LEAP governance improvements.
+# =============================================================================
+
+metadata:
+  type: "factory-comparison"
+  name: "Factory Comparison: v1.0.2 vs v1.0.3"
+  purpose: "Identify deviations between factory runs to improve LEAP governance"
+  version: "1.0.0"
+  created: "2026-01-19"
+  status: "complete"
+  author: "AI Agent"
+
+# =============================================================================
+# AI CONTEXT
+# =============================================================================
+
+aiContext:
+  whatThisIs: "Analysis of structural differences between Factory v1.0.2 and v1.0.3"
+  whyItMatters: "Inconsistencies indicate areas where governance templates need enhancement"
+  keyFindings:
+    - "Approach divergence: v1.0.2 parallel component creation vs v1.0.3 hybrid modification"
+    - "Service path inconsistency: incidents/ vs incident/"
+    - "Test artifact preservation: v1.0.2 kept images in workspace, v1.0.3 didn't"
+    - "Feature count difference: v1.0.2 had 6 features, v1.0.3 had 5"
+
+# =============================================================================
+# COMPARED RUNS
+# =============================================================================
+
+comparedRuns:
+  runA:
+    factory: "Factory-v1.0.2-major-incident"
+    demo: "NEXUS v1.0.2-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v1.0.2-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v1.0.2-major-incident/"
+    completedDate: "2026-01-19T16:55:00Z"
+    testsRun: 8
+    testsPassed: 8
+    hasWireframes: true
+    hasTestScreenshots: true
+    
+  runB:
+    factory: "Factory-v1.0.3-major-incident"
+    demo: "NEXUS v1.0.3-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v1.0.3-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v1.0.3-major-incident/"
+    completedDate: "2026-01-19T21:18:00Z"
+    testsRun: 10
+    testsPassed: 10
+    hasWireframes: false
+    hasTestScreenshots: false
+
+  commonScenario: "Major incident cards with pop-open dialog for AI agent assisted work"
+  commonArchetype: "agentic-dashboard"
+
+# =============================================================================
+# DEVIATION SUMMARY
+# =============================================================================
+
+deviationSummary:
+  totalDeviations: 8
+  
+  bySeverity:
+    critical: 0
+    high: 2
+    medium: 4
+    low: 2
+  
+  byCategory:
+    - category: "scaffold-conventions"
+      count: 3
+      severity: "high"
+      description: "Component approach and naming inconsistencies"
+    - category: "factory-governance"
+      count: 3
+      severity: "medium"
+      description: "Artifact structure and content variations"
+    - category: "demo-output"
+      count: 2
+      severity: "low"
+      description: "Test artifact handling differences"
+
+# =============================================================================
+# DEVIATIONS BY CATEGORY
+# =============================================================================
+
+deviations:
+
+  scaffoldConventions:
+  
+    - id: "DEV-001"
+      category: "scaffold-conventions"
+      severity: "high"
+      description: "Component creation approach differs"
+      v1_value: "Created NEW incident-cards component (ui/components/incident-cards/)"
+      v2_value: "Modified EXISTING data-cards component (hybrid approach)"
+      impact: "Inconsistent codebase structure between demos, harder to maintain"
+      leapAction: "Scaffold governance should define when to create new vs modify existing"
+    
+    - id: "DEV-002"
+      category: "scaffold-conventions"
+      severity: "high"
+      description: "Service directory naming inconsistency"
+      v1_value: "features/incidents/incident-service.js (plural)"
+      v2_value: "features/incident/incident-service.js (singular)"
+      impact: "Violates consistent naming conventions"
+      leapAction: "Add naming convention rule: feature directories use singular (feature/component)"
+    
+    - id: "DEV-003"
+      category: "scaffold-conventions"
+      severity: "medium"
+      description: "Incident count differs"
+      v1_value: "4 mock incidents (2 P1, 2 P2)"
+      v2_value: "3 mock incidents (1 P1, 1 P2, 1 P3)"
+      impact: "Minor - demo quality variation"
+      leapAction: "Add mock data minimum quantity guidance to templates"
+
+  factoryGovernance:
+  
+    - id: "DEV-004"
+      category: "factory-governance"
+      severity: "medium"
+      description: "Feature count interpretation differs"
+      v1_value: "6 features identified in Discovery (FEAT-001 through FEAT-006)"
+      v2_value: "5 features identified in Discovery (FEAT-001 through FEAT-005)"
+      impact: "Different scope interpretation from same scenario"
+      leapAction: "Add feature decomposition guidance to Discovery template"
+    
+    - id: "DEV-005"
+      category: "factory-governance"
+      severity: "medium"
+      description: "Approach options structured differently in Analysis"
+      v1_value: "Options labeled optionA/optionB within sections"
+      v2_value: "Options labeled APPROACH-A/B/C as top-level items"
+      impact: "Inconsistent artifact structure"
+      leapAction: "Standardize Analysis stage approach comparison format"
+    
+    - id: "DEV-006"
+      category: "factory-governance"
+      severity: "medium"
+      description: "Validation matrix detail level varies"
+      v1_value: "Basic requirements list with evidence"
+      v2_value: "Detailed field-by-field validation with data model check"
+      impact: "v1.0.3 approach is more thorough"
+      leapAction: "Update Validation template to require detailed matrix like v1.0.3"
+
+  demoOutput:
+  
+    - id: "DEV-007"
+      category: "demo-output"
+      severity: "low"
+      description: "Test artifacts in factory workspace"
+      v1_value: "Contains wireframes and test screenshots in workspace root"
+      v2_value: "No image artifacts in workspace (stored elsewhere)"
+      impact: "Harder to audit v1.0.3 without reviewing external directories"
+      leapAction: "Specify where test recordings/screenshots should be stored"
+    
+    - id: "DEV-008"
+      category: "demo-output"
+      severity: "low"
+      description: "Test case count differs"
+      v1_value: "8 test cases"
+      v2_value: "10 test cases"
+      impact: "v1.0.3 more thorough testing"
+      leapAction: "Define minimum test case requirements in Testing template"
+
+# =============================================================================
+# POSITIVE OBSERVATIONS (Both Runs)
+# =============================================================================
+
+positiveObservations:
+  - "Both runs completed all 8 stages successfully"
+  - "Both achieved 100% test pass rate"
+  - "Both maintained AI-First headers and MODULE_CONTRACT patterns"
+  - "Both followed BEM-lite CSS naming conventions"
+  - "Both properly used z-index scale for modal dialog"
+  - "Gate approvals documented consistently with !Proceed timestamps"
+  - "v1.0.3 improved: more thorough validation matrix, more test cases, visual quality assessment"
+
+# =============================================================================
+# RECOMMENDATIONS FOR LEAP BACKLOG
+# =============================================================================
+# Updated 2026-01-19 with actual outcomes
+
+recommendations:
+
+  high:
+    - id: "LEAP-019"
+      name: "Component Creation vs Modification Policy"
+      priority: "high"
+      status: "ADDED TO BACKLOG"
+      description: "Define when factory agents should create new components vs modify existing"
+      rationale: "DEV-001 shows divergent approaches - need clear guidance"
+      effort: "small"
+      deliverable: "Update architectural-standards.yaml with component decision tree"
+    
+    - id: "LEAP-020"
+      name: "Feature Directory Naming Convention"
+      priority: "high"
+      status: "DUPLICATE - NOT ADDED"
+      note: "Duplicate of existing LEAP-003. Added v1.0.2→v1.0.3 comparison as additional source to LEAP-003."
+
+  medium:
+    - id: "LEAP-021"
+      name: "Standardize Analysis Approach Format"
+      priority: "medium"
+      status: "ADDED TO BACKLOG"
+      description: "Update stage-3-analysis template with consistent approach comparison structure"
+      rationale: "DEV-005 shows differing formats between runs"
+      effort: "small"
+      deliverable: "Update GoldSource/governance/templates/stage-3-analysis.yaml"
+    
+    - id: "LEAP-022"
+      name: "Enhance Validation Matrix Template"
+      priority: "medium"
+      status: "ADDED TO BACKLOG"
+      description: "Adopt v1.0.3's detailed validation approach as standard"
+      rationale: "DEV-006 shows v1.0.3's thorough field-by-field validation is better"
+      effort: "small"
+      deliverable: "Update GoldSource/governance/templates/stage-6-validation.yaml"
+
+  low:
+    - id: "LEAP-023"
+      name: "Test Artifact Storage Policy"
+      priority: "low"
+      status: "MERGED INTO LEAP-009"
+      note: "Added storage location concern to LEAP-009 description and source references."
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  - step: 1
+    action: "Review this comparison with Executive Authority"
+    status: "complete"
+    completedDate: "2026-01-19"
+  - step: 2
+    action: "Add approved recommendations to LEAP backlog"
+    status: "complete"
+    completedDate: "2026-01-19"
+    outcome: "Added LEAP-019, LEAP-021, LEAP-022. Updated LEAP-003 and LEAP-009 with additional sources."
+  - step: 3
+    action: "Prioritize LEAP-019 and LEAP-021 as next phase candidates"
+    status: "pending"

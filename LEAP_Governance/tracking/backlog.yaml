@@ -8,11 +8,11 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 22
+  totalItems: 25
   immediate: 3
-  shortTerm: 19
+  shortTerm: 22
   
-  note: "16 items added from Factory v1.0.1 vs v1.0.2 comparison analysis"
+  note: "19 items added from Factory comparison analyses (v1.0.1→v1.0.2, v1.0.2→v1.0.3)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -249,12 +249,14 @@ priorities:
       category: "factory-governance"
       priority: "short-term"
       status: "proposed"
-      description: "Require screenshots and recordings in testing stage"
-      rationale: "v1.0.2 had video recording, v1.0.1 only screenshots - provides verification artifacts"
+      description: "Require screenshots and recordings in testing stage, with defined storage location"
+      rationale: "v1.0.2 had video recording in workspace, v1.0.1 only screenshots, v1.0.3 stored artifacts elsewhere - need consistent placement"
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source:
+        - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+        - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-007)"
     
     # -------------------------------------------------------------------------
     # Gold Source Scaffold Items (from demo output comparison)
@@ -265,11 +267,13 @@ priorities:
       priority: "short-term"
       status: "proposed"
       description: "Define whether features use singular or plural naming (e.g., incident/ vs incidents/)"
-      rationale: "v1.0.1 used singular, v1.0.2 used plural - AI cannot predict file locations"
+      rationale: "v1.0.1 used singular, v1.0.2 used plural, v1.0.3 used singular again - AI cannot predict file locations"
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source:
+        - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+        - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-002)"
     
     - id: "LEAP-004"
       name: "Standardize Mock Data Strategy"
@@ -372,6 +376,53 @@ priorities:
       dependencies: []
       addedDate: "2026-01-19"
       source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    # -------------------------------------------------------------------------
+    # From v1.0.2 vs v1.0.3 Comparison
+    # -------------------------------------------------------------------------
+    - id: "LEAP-019"
+      name: "Component Creation vs Modification Policy"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define when factory agents should create new components vs modify existing flexible components"
+      rationale: "v1.0.2 created new incident-cards component, v1.0.3 modified existing data-cards - need clear decision criteria"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-001)"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes component creation decision tree"
+        - "Clear criteria for 'create new' vs 'modify existing'"
+    
+    - id: "LEAP-021"
+      name: "Standardize Analysis Approach Format"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Update stage-3-analysis template with consistent approach comparison structure"
+      rationale: "v1.0.2 used optionA/optionB within sections, v1.0.3 used APPROACH-A/B/C as top-level - inconsistent structure"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-005)"
+      acceptanceCriteria:
+        - "stage-3-analysis.yaml template has standardized approach comparison section"
+    
+    - id: "LEAP-022"
+      name: "Enhance Validation Matrix Template"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Adopt v1.0.3's detailed field-by-field validation approach as standard"
+      rationale: "v1.0.3 had thorough validation matrix with data model check, v1.0.2 had basic requirements list"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-006)"
+      acceptanceCriteria:
+        - "stage-6-validation.yaml template includes detailed feature validation matrix"
+        - "Template includes data model validation section"
   
   mediumTerm: []
   future: []
