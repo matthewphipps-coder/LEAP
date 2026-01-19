@@ -1,249 +1,129 @@
+# =============================================================================
+# LEAP ARCHITECTURE
+# =============================================================================
+# This describes LEAP - the governance and Gold Source maintenance project.
+# For scaffold/demo architecture, see: GoldSource/meta/ARCHITECTURE.yaml
+# =============================================================================
+
 metadata:
   type: "architecture"
-  name: "GoldSource Architecture"
-  purpose: "System architecture reference for AI comprehension"
-  version: "2.0.0"
+  name: "LEAP Architecture"
+  purpose: "System architecture for the LEAP governance project"
+  version: "1.0.0"
   created: "2026-01-19"
   lastUpdated: "2026-01-19"
-  status: "complete"
-  verifiedWorking: true
-  note: "Phase 14: Restructured as GoldSource with factory governance"
+  status: "active"
 
 # =============================================================================
-# SYSTEM OVERVIEW
+# WHAT IS LEAP?
 # =============================================================================
 
-systemOverview:
-  name: "GoldSource v2.0.0"
-  purpose: "Gold copy scaffold for DemoFactory - creates demos via AI-assisted development"
+overview:
+  name: "LEAP (Living Engineering of Agentic Prototypes)"
+  purpose: "Maintain Gold Source scaffold and improve it through AI-assisted demo creation"
   
-  structure:
-    scaffold: "GoldSource/scaffold/ - Core code components"
-    meta: "GoldSource/meta/ - Architecture and standards"
-    governance: "GoldSource/governance/ - Factory protocols and templates"
-    archetypes: "GoldSource/archetypes/ - UI pattern templates"
-  
-  entryPoints:
-    - file: "GoldSource/scaffold/index.html"
-      purpose: "Main entry point - loads shell and initializes app"
-    - file: "GoldSource/scaffold/core/app.js"
-      purpose: "Application orchestrator - initialization only"
-    - file: "GoldSource/governance/FACTORY_README.yaml"
-      purpose: "Entry point for Factory AI"
-  
-  archetype: "Agentic Dashboard"
-  stack:
-    structure: "HTML5"
-    logic: "Vanilla JS (ES Modules)"
-    styling: "CSS variables"
-    build: "None (static files, requires local server for ES modules)"
+  threeLayerModel:
+    LEAP:
+      description: "This project - governance, phases, Gold Source maintenance"
+      location: "This repository"
+    
+    Factory:
+      description: "AI-assisted demo creation workflow (runs in separate AI session)"
+      entryPoint: "GoldSource/governance/FACTORY_README.yaml"
+    
+    Demo:
+      description: "Final product created by Factory (e.g., NEXUS demos)"
+      location: "External to this repo (e.g., ~/Documents/DemoOutput/)"
 
 # =============================================================================
-# MODULE STRUCTURE
+# FOLDER STRUCTURE
 # =============================================================================
 
-moduleStructure:
+folderStructure:
   
-  core:
-    location: "DemoFactory/src/core/"
-    purpose: "Locked infrastructure - foundation for all demos"
-    locked: true
-    modules:
-      - file: "app.js"
-        purpose: "Orchestrator - calls init functions"
-        dependents: ["index.html"]
-      - file: "state.js"
-        purpose: "StateManager - single source of truth"
-        dependents: ["all UI components", "dashboard-service.js"]
-      - file: "mock-data.js"
-        purpose: "Mock data patterns"
-        dependents: ["dashboard-service.js"]
-      - file: "error-handler.js"
-        purpose: "Error handling framework"
-        dependents: ["app.js"]
-      - file: "logger.js"
-        purpose: "Logging/observability"
-        dependents: ["all modules"]
+  Governance:
+    path: "Governance/"
+    purpose: "LEAP governance rules, protocols, and templates"
+    contents:
+      - "constitution.yaml - Core rules"
+      - "pulse-protocol.yaml - Phase/stage lifecycle"
+      - "checklists/ - Session and peer review checklists"
+      - "templates/ - LEAP artifact templates"
+      - "tracking/ - Current state, backlog, bugs"
   
-  features:
-    location: "DemoFactory/src/features/"
-    purpose: "Feature-specific business logic (Service layer)"
-    locked: false
-    modules:
-      - file: "dashboard/dashboard-service.js"
-        purpose: "Dashboard business logic"
-        dependencies: ["state.js", "mock-data.js", "logger.js"]
-        dependents: ["chat-panel-ui.js", "action-buttons-ui.js"]
+  GoldSource:
+    path: "GoldSource/"
+    purpose: "The master copy used by Factory to create demos"
+    contents:
+      - "scaffold/ - Demo code (HTML, JS, CSS)"
+      - "meta/ - Architecture and standards for scaffold"
+      - "governance/ - Factory-specific protocols"
+      - "archetypes/ - UI pattern templates"
+    architectureRef: "GoldSource/meta/ARCHITECTURE.yaml"
   
-  ui:
-    location: "DemoFactory/src/ui/"
-    purpose: "UI components and styles"
-    subfolders:
-      styles:
-        location: "DemoFactory/src/ui/styles/"
-        locked: true
-        files: ["variables.css", "base.css", "shell.css"]
-      components:
-        location: "DemoFactory/src/ui/components/"
-        locked: "varies by component"
-        folders:
-          - name: "header"
-            locked: true
-          - name: "nav"
-            locked: true
-          - name: "footer"
-            locked: true
-          - name: "chat-panel"
-            locked: false
-          - name: "data-cards"
-            locked: false
-          - name: "action-buttons"
-            locked: false
+  docs:
+    path: "docs/"
+    purpose: "Phase history and artifacts"
+    structure: "docs/phases/phase-N/*.yaml"
 
 # =============================================================================
-# DATA FLOW
+# LIFECYCLE
 # =============================================================================
 
-dataFlow:
-  pattern: "Unidirectional"
+lifecycle:
+  description: "LEAP uses phases with 8 stages each"
   
-  flow:
-    - step: 1
-      from: "User Action / AI Command"
-      to: "UI Event Handler"
-    - step: 2
-      from: "UI Event Handler"
-      to: "Service Layer"
-    - step: 3
-      from: "Service Layer"
-      to: "StateManager"
-    - step: 4
-      from: "StateManager"
-      to: "Subscribers (UI Components)"
-    - step: 5
-      from: "UI Components"
-      to: "DOM Update"
+  stages:
+    1: "Discovery - Identify what to build"
+    2: "Research - Gather information"
+    3: "Analysis - Risk assessment, approach selection"
+    4: "Design - Implementation plan"
+    5: "Implementation - Build it"
+    6: "Delivery - Package and document"
+    7: "Testing - Verify it works"
+    8: "Closure - Lessons learned"
   
-  diagram: |
-    User/AI --> UI Handler --> Service --> StateManager --> UI --> DOM
-                                              ↑                    ↓
-                                              └────────────────────┘
+  protocol: "Governance/pulse-protocol.yaml"
+  currentState: "Governance/tracking/CURRENT_STATE.yaml"
 
 # =============================================================================
-# DEPENDENCY MAP (Actual Imports)
+# KEY ENTRY POINTS (FOR AI)
 # =============================================================================
 
-dependencyMap:
-  note: "Verified from actual implementation"
+entryPoints:
   
-  coreModules:
-    "logger.js":
-      imports: []
-      exportedTo: ["error-handler.js", "state.js", "mock-data.js", "app.js", "all *-ui.js", "dashboard-service.js"]
-    "error-handler.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js"]
-    "state.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js", "dashboard-service.js", "header-ui.js", "nav-ui.js", "footer-ui.js", "chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
-    "mock-data.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js", "dashboard-service.js"]
-    "app.js":
-      imports: ["logger.js", "error-handler.js", "state.js", "mock-data.js", "header-ui.js", "nav-ui.js", "footer-ui.js", "chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
-      exportedTo: ["index.html (via script tag)"]
+  startingNewSession:
+    action: "Read CURRENT_STATE.yaml first"
+    location: "Governance/tracking/CURRENT_STATE.yaml"
   
-  featureModules:
-    "dashboard-service.js":
-      imports: ["state.js", "mock-data.js", "logger.js"]
-      exportedTo: ["chat-panel-ui.js", "action-buttons-ui.js"]
+  understandingRules:
+    action: "Read constitution and protocols"
+    files:
+      - "Governance/constitution.yaml"
+      - "Governance/pulse-protocol.yaml"
   
-  uiModules:
-    "header-ui.js":
-      imports: ["state.js", "logger.js"]
-    "nav-ui.js":
-      imports: ["state.js", "logger.js"]
-    "footer-ui.js":
-      imports: ["state.js", "logger.js"]
-    "chat-panel-ui.js":
-      imports: ["state.js", "dashboard-service.js", "logger.js"]
-    "data-cards-ui.js":
-      imports: ["state.js", "logger.js"]
-    "action-buttons-ui.js":
-      imports: ["state.js", "dashboard-service.js", "logger.js"]
+  creatingDemo:
+    action: "Use /newfactory command"
+    workflow: "Governance/newfactory-workflow.yaml"
+  
+  understandingScaffold:
+    action: "Read scaffold architecture"
+    location: "GoldSource/meta/ARCHITECTURE.yaml"
 
 # =============================================================================
-# ARCHITECTURAL PATTERNS
+# FEEDBACK LOOP
 # =============================================================================
 
-architecturalPatterns:
+feedbackLoop:
+  description: "LEAP improves through factory runs"
   
-  triadPattern:
-    name: "Service / UI / Style Separation"
-    reference: "architectural-standards.yaml > separationOfConcerns"
-    enforcement: "Every feature has -service.js, -ui.js, and .css files"
+  cycle:
+    1: "Factory creates demo using Gold Source"
+    2: "Factory captures lessons learned in closure"
+    3: "LEAP reviews factory artifacts"
+    4: "LEAP updates Gold Source and governance"
+    5: "Next factory run benefits from improvements"
   
-  stateManagement:
-    name: "Centralized StateManager"
-    pattern: "Pub/Sub with immutable updates"
-    location: "src/core/state.js"
-  
-  aiFirstCode:
-    name: "AI-First Code Standards"
-    reference: "architectural-standards.yaml > aiFirstCodeStandards"
-    enforcement: "All files have headers, annotations, and module contracts"
-  
-  lockedComponents:
-    name: "Locked vs Flexible"
-    description: "Factory provides locked scaffold; AI customizes flexible content"
-    locked: ["DemoFactory/src/core/*", "DemoFactory/src/ui/styles/*", "header", "nav", "footer"]
-    flexible: ["chat-panel", "data-cards", "action-buttons"]
-
-# =============================================================================
-# CSS ARCHITECTURE
-# =============================================================================
-
-cssArchitecture:
-  
-  loadingOrder:
-    - file: "variables.css"
-      purpose: "CSS custom properties (colors, spacing, typography)"
-    - file: "base.css"
-      purpose: "Reset and global base styles"
-    - file: "shell.css"
-      purpose: "Header, nav, footer layout"
-    - file: "component CSS files"
-      purpose: "Component-specific styles"
-  
-  variableHierarchy:
-    colors: "--color-*"
-    spacing: "--spacing-*"
-    typography: "--font-*, --text-*"
-    layout: "--layout-*"
-
-# =============================================================================
-# EXTENSION POINTS
-# =============================================================================
-
-extensionPoints:
-  
-  addingNewComponent:
-    steps:
-      - "Create src/ui/components/[name]/ folder"
-      - "Create [name]-ui.js with AI-First headers"
-      - "Create [name].css for styles"
-      - "Register in app.js initialization"
-      - "Update this ARCHITECTURE.yaml"
-  
-  addingNewService:
-    steps:
-      - "Create src/features/[name]/ folder"
-      - "Create [name]-service.js with AI-First headers"
-      - "Import in relevant UI components"
-      - "Update this ARCHITECTURE.yaml"
-  
-  addingNewArchetype:
-    steps:
-      - "Document archetype in DemoFactoryResources/"
-      - "Create archetype-specific components"
-      - "Add to templates/ for demo creators"
+  artifacts:
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-*/stage-8-closure.yaml"
+    backlog: "Governance/tracking/backlog.yaml"
