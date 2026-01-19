@@ -21,12 +21,12 @@ currentPhase:
   number: "15"
   name: "Factory Lessons Incorporated"
   status: "in-progress"
-  stage: "validation"
+  stage: "closure"
   startedDate: "2026-01-19T13:24:00Z"
   
   goal: "Incorporate lessons learned from first factory run into Gold Source"
   
-  stageArtifact: "docs/phases/phase-15/stage-6-validation.yaml"
+  stageArtifact: "docs/phases/phase-15/stage-8-closure.yaml"
   
   previousPhase:
     number: "14"
