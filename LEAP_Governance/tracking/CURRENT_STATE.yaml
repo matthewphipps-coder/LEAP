@@ -21,12 +21,12 @@ currentPhase:
   number: "18"
   name: "NexusReturns"
   status: "in-progress"
-  stage: "analysis"
+  stage: "design"
   startedDate: "2026-01-19T22:26:00Z"
   
   goal: "Rebuild Gold Source scaffold with proper AI-First architecture, design system, and stable foundation"
   
-  stageArtifact: "docs/phases/phase-18/stage-3-analysis.yaml"
+  stageArtifact: "docs/phases/phase-18/stage-4-design.yaml"
   
   previousPhase:
     number: "17"

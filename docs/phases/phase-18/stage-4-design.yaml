@@ -1,0 +1,432 @@
+# =============================================================================
+# STAGE 4: DESIGN - Phase 18: NexusReturns
+# =============================================================================
+# Purpose: Detailed file-by-file implementation plan
+# =============================================================================
+
+metadata:
+  phase: 18
+  name: "NexusReturns"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-19T22:54:24Z"
+  status: "in-progress"
+  author: "AI Architect"
+  gateApproval: "!Proceed received 2026-01-19T22:54:24Z"
+
+# =============================================================================
+# IMPLEMENTATION OVERVIEW
+# =============================================================================
+
+overview:
+  approach: "APPROACH-B: Pattern Reference Build"
+  totalPhases: 4
+  estimatedSessions: "4-5"
+  rollbackPlan: "GoldSource_backup_v1.0_pre-phase18/ available for instant restore"
+
+# =============================================================================
+# PHASE A: FOUNDATION
+# =============================================================================
+
+phaseA:
+  name: "Foundation"
+  focus: "Core infrastructure and design system"
+  prerequisite: "None - first phase"
+  
+  files:
+    
+    # -------------------------------------------------------------------------
+    # META: Design System Spec
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/meta/design-system.yaml"
+      action: "CREATE"
+      purpose: "Document all design tokens"
+      contents: |
+        Colors, typography, spacing, glassmorphism, shadows, animations
+        Reference: Research stage findings
+      lines: "~100"
+    
+    # -------------------------------------------------------------------------
+    # CORE: Constants
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/constants.js"
+      action: "MODIFY"
+      purpose: "Logging utilities, environment detection"
+      adds:
+        - "log() - Console logging with checkpoint prefix"
+        - "logError() - Error logging"
+        - "ENV detection (dev/prod)"
+      lines: "~30"
+    
+    # -------------------------------------------------------------------------
+    # CORE: State Manager
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/state.js"
+      action: "REWRITE"
+      purpose: "Minimal state management for shell"
+      pattern: "Singleton class with getters/setters"
+      initialState:
+        user: "null"
+        theme: "'dark'"
+        sidebarCollapsed: "false"
+      methods:
+        - "setUser(user)"
+        - "setTheme(theme)"
+        - "setSidebarCollapsed(collapsed)"
+        - "reset()"
+      lines: "~60"
+      lock: true
+    
+    # -------------------------------------------------------------------------
+    # UI: CSS Variables
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/styles/variables.css"
+      action: "REWRITE"
+      purpose: "CSS custom properties for theming"
+      sections:
+        colors: "--bg-primary, --accent-primary, --text-primary, --text-secondary"
+        semantic: "--success, --error, --warning"
+        glass: "--glass-bg, --glass-border, --glass-blur"
+        typography: "--font-heading, --font-body"
+        spacing: "--space-xs through --space-xl"
+        radius: "--radius-sm, --radius-md, --radius-lg"
+        shadows: "--shadow-card, --shadow-glow"
+        transitions: "--transition-fast, --transition-normal"
+      lines: "~80"
+      lock: true
+    
+    # -------------------------------------------------------------------------
+    # UI: Base Styles
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/styles/base.css"
+      action: "REWRITE"
+      purpose: "Reset, base element styles, utility classes"
+      sections:
+        - "CSS reset (box-sizing, margins)"
+        - "Body defaults (font, background)"
+        - "Typography (h1-h6, p, a)"
+        - "Light theme overrides (.light-theme)"
+      lines: "~120"
+      lock: true
+
+  validation:
+    - "variables.css loads without errors"
+    - "base.css applies correctly"
+    - "State manager initializes"
+    - "Logging works in console"
+
+# =============================================================================
+# PHASE B: AUTHENTICATION
+# =============================================================================
+
+phaseB:
+  name: "Authentication"
+  focus: "Login page and Firebase auth"
+  prerequisite: "Phase A complete"
+  
+  files:
+    
+    # -------------------------------------------------------------------------
+    # CORE: Firebase Config
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/firebase.js"
+      action: "CREATE"
+      purpose: "Firebase initialization"
+      pattern: "Import from CDN, initialize app"
+      exports:
+        - "auth - Firebase Auth instance"
+        - "db - Firestore instance"
+      secrets: "Uses config.js (not committed)"
+      lines: "~40"
+      lock: true
+    
+    # -------------------------------------------------------------------------
+    # CORE: Auth Service
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/auth-service.js"
+      action: "CREATE"
+      purpose: "Authentication functions"
+      functions:
+        - "setupAuthListener(callback) - Watch auth state"
+        - "logout() - Sign out and redirect"
+        - "fetchUserData(uid) - Get user from Firestore"
+        - "createUserAvatarHTML(user) - Generate avatar markup"
+      lines: "~80"
+    
+    # -------------------------------------------------------------------------
+    # PAGE: Login HTML
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/login.html"
+      action: "CREATE"
+      purpose: "Login page with glassmorphism design"
+      structure:
+        - "DOCTYPE, meta, fonts"
+        - "Link to variables.css, base.css"
+        - "Inline page-specific styles"
+        - "Login form (email, password)"
+        - "Login/Signup toggle"
+        - "Error message display"
+        - "Script imports (firebase, login.js)"
+      design:
+        - "Dark background (#0a0a0c)"
+        - "Glassmorphism card"
+        - "Gradient text heading"
+        - "Green accent buttons"
+      lines: "~200"
+    
+    # -------------------------------------------------------------------------
+    # PAGE: Login JS
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/login.js"
+      action: "CREATE"
+      purpose: "Login page logic"
+      functions:
+        - "handleLogin() - Email/password auth"
+        - "handleSignup() - Create account"
+        - "toggleMode() - Switch login/signup"
+        - "showError() - Display error message"
+      flow: "Auth success → redirect to index.html"
+      lines: "~100"
+
+  validation:
+    - "Login page renders with glassmorphism"
+    - "Login with test account works"
+    - "Signup creates new user"
+    - "Redirect to index.html on success"
+    - "Error messages display correctly"
+
+# =============================================================================
+# PHASE C: DASHBOARD SHELL
+# =============================================================================
+
+phaseC:
+  name: "Dashboard Shell"
+  focus: "Index page with header, sidebar, canvas"
+  prerequisite: "Phase B complete"
+  
+  files:
+    
+    # -------------------------------------------------------------------------
+    # PAGE: Index HTML
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/index.html"
+      action: "REWRITE"
+      purpose: "Main dashboard page"
+      structure:
+        - "DOCTYPE, meta, fonts"
+        - "Link to all CSS files"
+        - "Body with .dashboard-shell class"
+        - "Header container"
+        - "Sidebar container"
+        - "Canvas (main content area)"
+        - "Script imports"
+      lines: "~80"
+    
+    # -------------------------------------------------------------------------
+    # CORE: App Bootstrap
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/app.js"
+      action: "REWRITE"
+      purpose: "Application bootstrap and orchestration"
+      functions:
+        - "initApp() - Entry point"
+        - "checkAuth() - Redirect if not logged in"
+        - "initComponents() - Initialize all UI components"
+        - "setupEventListeners() - Global event wiring"
+      flow:
+        - "Check auth → redirect or continue"
+        - "Fetch user data → update state"
+        - "Initialize components"
+        - "Render UI"
+      lines: "~120"
+    
+    # -------------------------------------------------------------------------
+    # COMPONENT: Header
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/components/header/header-ui.js"
+      action: "REWRITE"
+      purpose: "Top navigation bar"
+      elements:
+        - "Logo/brand"
+        - "User avatar with XP"
+        - "Theme toggle button"
+        - "Logout button"
+      exports:
+        - "initHeader()"
+        - "updateUserDisplay(user)"
+      lines: "~80"
+    
+    - path: "GoldSource/scaffold/ui/components/header/header.css"
+      action: "REWRITE"
+      purpose: "Header styles"
+      features:
+        - "Fixed top position"
+        - "Glassmorphism background"
+        - "Flexbox layout"
+      lines: "~60"
+    
+    # -------------------------------------------------------------------------
+    # COMPONENT: Sidebar
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/components/sidebar/sidebar-ui.js"
+      action: "CREATE"
+      purpose: "Left navigation panel"
+      elements:
+        - "Navigation items (placeholder)"
+        - "Collapse/expand toggle"
+      exports:
+        - "initSidebar()"
+        - "toggleSidebar()"
+      lines: "~60"
+    
+    - path: "GoldSource/scaffold/ui/components/sidebar/sidebar.css"
+      action: "CREATE"
+      purpose: "Sidebar styles"
+      features:
+        - "Fixed left position"
+        - "Collapsible width"
+        - "Transition animation"
+      lines: "~80"
+    
+    # -------------------------------------------------------------------------
+    # COMPONENT: Canvas
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/components/canvas/canvas-ui.js"
+      action: "CREATE"
+      purpose: "Main content area (empty for now)"
+      elements:
+        - "Welcome message"
+        - "Placeholder for future cards"
+      exports:
+        - "initCanvas()"
+      lines: "~30"
+    
+    - path: "GoldSource/scaffold/ui/components/canvas/canvas.css"
+      action: "CREATE"
+      purpose: "Canvas styles"
+      features:
+        - "Fills remaining space"
+        - "Scroll behavior"
+        - "Grid-ready layout"
+      lines: "~40"
+
+  validation:
+    - "Dashboard loads after login"
+    - "Header displays user info"
+    - "Sidebar collapses/expands"
+    - "Logout button works"
+    - "Redirect to login if not authenticated"
+
+# =============================================================================
+# PHASE D: PLUMBING
+# =============================================================================
+
+phaseD:
+  name: "Plumbing"
+  focus: "AI service, theme system, final polish"
+  prerequisite: "Phase C complete"
+  
+  files:
+    
+    # -------------------------------------------------------------------------
+    # FEATURE: AI Service
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/features/ai/ai-service.js"
+      action: "CREATE"
+      purpose: "Unified AI provider interface"
+      functions:
+        - "getAPIKeys() - From localStorage"
+        - "askAI(prompt, provider) - Unified interface"
+        - "askGemini(prompt) - Gemini implementation"
+        - "askClaude(prompt) - Claude implementation"
+      note: "Interface only - not wired to UI yet"
+      lines: "~150"
+    
+    # -------------------------------------------------------------------------
+    # CORE: Theme Manager (SIMPLE VERSION)
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/core/theme-manager.js"
+      action: "CREATE"
+      purpose: "Simple dark/light theme toggle"
+      functions:
+        - "getTheme() - Get current theme from storage or system"
+        - "setTheme(theme) - Apply and persist theme"
+        - "initTheme() - Initialize on app load"
+      implementation: |
+        SIMPLE VERSION:
+        - setTheme adds/removes .light-theme class on body
+        - Stores preference in localStorage
+        - NO color mixing, NO sticky scenarios, NO brand themes
+      lines: "~50"
+    
+    # -------------------------------------------------------------------------
+    # META: Functionality Spec
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/meta/functionality.yaml"
+      action: "REWRITE"
+      purpose: "Document scaffold capabilities"
+      sections:
+        - "Authentication (login, logout, user display)"
+        - "Dashboard shell (header, sidebar, canvas)"
+        - "Theme system (dark/light toggle)"
+        - "AI service interface (not active)"
+        - "Extension points for Factory"
+      lines: "~150"
+    
+    # -------------------------------------------------------------------------
+    # META: Architecture Standards Update
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/meta/architectural-standards.yaml"
+      action: "MODIFY"
+      purpose: "Add conventions from backlog learnings"
+      adds:
+        - "Feature path naming: singular (features/incident/)"
+        - "Component structure: {name}-ui.js + {name}.css"
+        - "Service pattern: feature-service.js"
+        - "Locked files list"
+        - "Extension points"
+      lines: "+50"
+
+  validation:
+    - "Theme toggle works (dark ↔ light)"
+    - "Theme persists across refresh"
+    - "AI service can be called (returns error without keys)"
+    - "functionality.yaml accurately describes scaffold"
+
+# =============================================================================
+# FILE SUMMARY
+# =============================================================================
+
+fileSummary:
+  new: 12
+  modified: 3
+  rewritten: 5
+  total: 20
+  
+  byPhase:
+    phaseA: 5
+    phaseB: 4
+    phaseC: 7
+    phaseD: 4
+  
+  locked:
+    - "core/state.js"
+    - "core/firebase.js"
+    - "core/constants.js"
+    - "ui/styles/variables.css"
+    - "ui/styles/base.css"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  number: 5
+  requires: "!Proceed"
+  focus: "Execute the plan - create/modify files per this design"
+  
+  criticalGate: true
+  reason: "File operations begin - this is the design → implementation transition"
+
+designComplete: true
