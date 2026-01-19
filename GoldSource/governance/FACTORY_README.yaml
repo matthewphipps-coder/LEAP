@@ -5,6 +5,20 @@
 # It explains what the factory is and how to operate.
 # =============================================================================
 
+# =============================================================================
+# WHAT IS "GOLDSOURCE"?
+# =============================================================================
+# GoldSource is the master copy of everything needed to create demos.
+# It contains:
+#   - scaffold/     Demo code (HTML, JS, CSS) - copy and customize this
+#   - meta/         Architecture docs and coding standards for the scaffold
+#   - governance/   Factory protocols, templates, and rules (you are here)
+#   - archetypes/   UI pattern examples
+#
+# GoldSource is maintained by LEAP (a separate system). As a Factory AI,
+# you never modify GoldSource - you only copy from it and customize the copy.
+# =============================================================================
+
 identity:
   name: "DemoFactory"
   version: "1.0.0"
