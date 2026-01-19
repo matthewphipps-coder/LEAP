@@ -1,0 +1,215 @@
+metadata:
+  type: "architecture"
+  name: "DemoFactory Architecture"
+  purpose: "System architecture reference for AI comprehension"
+  version: "0.1.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "skeleton"
+  note: "To be updated after Stage 5 (Implementation) complete"
+
+# =============================================================================
+# SYSTEM OVERVIEW
+# =============================================================================
+
+systemOverview:
+  name: "DemoFactory Prototype v1"
+  purpose: "Build future-vision ServiceNow demos via AI-assisted development"
+  
+  entryPoints:
+    - file: "src/index.html"
+      purpose: "Main entry point - loads shell and initializes app"
+    - file: "src/core/app.js"
+      purpose: "Application orchestrator - initialization only"
+  
+  archetype: "Agentic Dashboard"
+  stack:
+    structure: "HTML5"
+    logic: "Vanilla JS"
+    styling: "CSS variables"
+    build: "None (static files)"
+
+# =============================================================================
+# MODULE STRUCTURE
+# =============================================================================
+
+moduleStructure:
+  
+  core:
+    location: "src/core/"
+    purpose: "Locked infrastructure - foundation for all demos"
+    locked: true
+    modules:
+      - file: "app.js"
+        purpose: "Orchestrator - calls init functions"
+        dependents: ["index.html"]
+      - file: "state.js"
+        purpose: "StateManager - single source of truth"
+        dependents: ["TBD - all UI components"]
+      - file: "mock-data.js"
+        purpose: "Mock data patterns"
+        dependents: ["dashboard-service.js"]
+      - file: "error-handler.js"
+        purpose: "Error handling framework"
+        dependents: ["all modules"]
+      - file: "logger.js"
+        purpose: "Logging/observability"
+        dependents: ["all modules"]
+  
+  features:
+    location: "src/features/"
+    purpose: "Feature-specific business logic (Service layer)"
+    locked: false
+    modules:
+      - file: "dashboard/dashboard-service.js"
+        purpose: "Dashboard business logic"
+        dependencies: ["state.js", "mock-data.js"]
+        dependents: ["chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
+  
+  ui:
+    location: "src/ui/"
+    purpose: "UI components and styles"
+    subfolders:
+      styles:
+        location: "src/ui/styles/"
+        locked: true
+        files: ["variables.css", "base.css", "shell.css"]
+      components:
+        location: "src/ui/components/"
+        locked: "varies by component"
+        folders:
+          - name: "header"
+            locked: true
+          - name: "nav"
+            locked: true
+          - name: "footer"
+            locked: true
+          - name: "chat-panel"
+            locked: false
+          - name: "data-cards"
+            locked: false
+          - name: "action-buttons"
+            locked: false
+
+# =============================================================================
+# DATA FLOW
+# =============================================================================
+
+dataFlow:
+  pattern: "Unidirectional"
+  
+  flow:
+    - step: 1
+      from: "User Action / AI Command"
+      to: "UI Event Handler"
+    - step: 2
+      from: "UI Event Handler"
+      to: "Service Layer"
+    - step: 3
+      from: "Service Layer"
+      to: "StateManager"
+    - step: 4
+      from: "StateManager"
+      to: "Subscribers (UI Components)"
+    - step: 5
+      from: "UI Components"
+      to: "DOM Update"
+  
+  diagram: |
+    User/AI --> UI Handler --> Service --> StateManager --> UI --> DOM
+                                              ↑                    ↓
+                                              └────────────────────┘
+
+# =============================================================================
+# DEPENDENCY MAP
+# =============================================================================
+
+dependencyMap:
+  note: "TBD - to be populated during implementation with actual imports"
+  
+  skeleton:
+    "app.js":
+      imports: ["state.js", "logger.js", "error-handler.js", "all *-ui.js"]
+      exportedTo: ["index.html"]
+    "state.js":
+      imports: []
+      exportedTo: ["app.js", "dashboard-service.js", "all *-ui.js"]
+    "dashboard-service.js":
+      imports: ["state.js", "mock-data.js"]
+      exportedTo: ["chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
+
+# =============================================================================
+# ARCHITECTURAL PATTERNS
+# =============================================================================
+
+architecturalPatterns:
+  
+  triadPattern:
+    name: "Service / UI / Style Separation"
+    reference: "architectural-standards.yaml > separationOfConcerns"
+    enforcement: "Every feature has -service.js, -ui.js, and .css files"
+  
+  stateManagement:
+    name: "Centralized StateManager"
+    pattern: "Pub/Sub with immutable updates"
+    location: "src/core/state.js"
+  
+  aiFirstCode:
+    name: "AI-First Code Standards"
+    reference: "architectural-standards.yaml > aiFirstCodeStandards"
+    enforcement: "All files have headers, annotations, and module contracts"
+  
+  lockedComponents:
+    name: "Locked vs Flexible"
+    description: "Factory provides locked scaffold; AI customizes flexible content"
+    locked: ["src/core/*", "src/ui/styles/*", "header", "nav", "footer"]
+    flexible: ["chat-panel", "data-cards", "action-buttons"]
+
+# =============================================================================
+# CSS ARCHITECTURE
+# =============================================================================
+
+cssArchitecture:
+  
+  loadingOrder:
+    - file: "variables.css"
+      purpose: "CSS custom properties (colors, spacing, typography)"
+    - file: "base.css"
+      purpose: "Reset and global base styles"
+    - file: "shell.css"
+      purpose: "Header, nav, footer layout"
+    - file: "component CSS files"
+      purpose: "Component-specific styles"
+  
+  variableHierarchy:
+    colors: "--color-*"
+    spacing: "--spacing-*"
+    typography: "--font-*, --text-*"
+    layout: "--layout-*"
+
+# =============================================================================
+# EXTENSION POINTS
+# =============================================================================
+
+extensionPoints:
+  
+  addingNewComponent:
+    steps:
+      - "Create src/ui/components/[name]/ folder"
+      - "Create [name]-ui.js with AI-First headers"
+      - "Create [name].css for styles"
+      - "Register in app.js initialization"
+      - "Update this ARCHITECTURE.yaml"
+  
+  addingNewService:
+    steps:
+      - "Create src/features/[name]/ folder"
+      - "Create [name]-service.js with AI-First headers"
+      - "Import in relevant UI components"
+      - "Update this ARCHITECTURE.yaml"
+  
+  addingNewArchetype:
+    steps:
+      - "Document archetype in DemoFactoryResources/"
+      - "Create archetype-specific components"
+      - "Add to templates/ for demo creators"
