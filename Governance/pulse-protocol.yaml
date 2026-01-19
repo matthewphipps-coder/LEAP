@@ -2,7 +2,7 @@ metadata:
   type: "governance"
   name: "LEAP Pulse Protocol"
   purpose: "Development methodology for AI-agentic systems"
-  version: "4.1.0"
+  version: "4.2.0"
   created: "2026-01-15"
   lastUpdated: "2026-01-19"
   owner: "Matthew Phipps (Executive Authority)"
@@ -135,6 +135,8 @@ gateRecords:
   immutability:
     rule: "Gate records cannot be modified after creation"
     reference: "constitution.yaml Rule 15"
+  
+  template: "templates/gate-record-template.yaml"
 
 # =============================================================================
 # COMPLETION & CLOSURE
@@ -204,6 +206,8 @@ stageArtifacts:
     - "New AI can pick up at any stage without context loss"
     - "No re-work required when AI changes mid-phase"
     - "Audit trail of decisions at each stage"
+  
+  template: "templates/phase-artifact.yaml"
 
 # =============================================================================
 # AI TRACKING CONSTRAINT - No duplicate tracking
@@ -226,3 +230,12 @@ aiTrackingConstraint:
     - "progress.md"
     - "TODO.md"
     - "Any custom tracking files"
+
+# =============================================================================
+# WORKFLOW CREATION
+# =============================================================================
+
+workflowCreation:
+  purpose: "Standard format for new workflow documents"
+  template: "templates/workflow.yaml"
+  location: "Governance/ or .agent/workflows/"

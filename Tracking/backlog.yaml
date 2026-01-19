@@ -54,6 +54,7 @@ priorities:
   future: []
 
 howToAdd:
+  templateRef: "templates/tracking.yaml"
   template: |
     - id: "FEATURE-XXX"
       name: "Feature name"
