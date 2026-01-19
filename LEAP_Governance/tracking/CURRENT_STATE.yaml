@@ -41,30 +41,20 @@ currentActivity:
   
   recentWork:
     date: "2026-01-19"
-    description: "Compared Factory v1.0.1 and v1.0.2 runs, fixed governance gaps, documented LEAP cycle"
+    phase: 16
+    description: "Created mandatory MANDATORY sections in stage templates for factory governance"
     
-    factoryComparison:
-      factoryDeviations: 30
-      codeDeviations: 25
-      newBacklogItems: 16
+    phase16Changes:
+      templatesModified: 7
+      templatesExpanded: ["stage-2-research.yaml", "stage-3-analysis.yaml"]
+      backlogItemsCompleted: ["LEAP-001", "LEAP-002", "LEAP-005", "LEAP-006"]
+      keyInnovation: "MANDATORY section in each template listing required fields"
     
-    governanceGapsFixes:
-      - "INDEX.yaml updated (v1.2.0) - added protocols, workflows, tracking"
-      - "constitution.yaml - split standingProtocols/triggeredWorkflows"
-      - "agent-persona.yaml - removed stale lifecycle fields"
-      - "VISION.yaml - added leapCycle documenting 6-step process"
-      - "Deleted: templates/tracking.yaml, project-overview.yaml"
-      - "Created: factory-review-workflow.yaml"
-    
-    filesCreated:
-      - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
-      - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
-      - "LEAP_Governance/templates/factory-comparison.yaml"
-      - "LEAP_Governance/templates/demo-output-comparison.yaml"
-      - "LEAP_Governance/tracking/backlog-categories.yaml"
-      - "LEAP_Governance/factory-review-workflow.yaml"
-    
-    backlogUpdated: "22 total items (4 complete, 18 proposed)"
+    commits:
+      - hash: "63d9c87"
+        message: "Phase 16: Factory Governance Templates - LEAP-001, 002, 005, 006"
+      - hash: "3707410"
+        message: "Phase 16: Closure - Mark complete"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
@@ -86,14 +76,22 @@ factoryRunsCompleted:
 
 backlogState:
   totalItems: 22
+  complete: 8
+  proposed: 14
+  
+  completedItems:
+    - "GOV-001, GOV-002, VISION-001 (immediate)"
+    - "ARCH-003 (architecture)"
+    - "LEAP-001, LEAP-002, LEAP-005, LEAP-006 (Phase 16)"
+  
   byCategory:
-    factory-governance: 7
+    factory-governance: "7 (4 complete, 3 proposed)"
     scaffold-conventions: 5
     demo-output: 2
     archetype-domain: 2
-    architecture: 2
+    architecture: "2 (1 complete)"
     user-branding: 1
-    governance: 3
+    governance: "3 (3 complete)"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
   backlogFile: "LEAP_Governance/tracking/backlog.yaml"
@@ -114,8 +112,7 @@ references:
     command: "ls .agent/workflows/"
 
 aiReminders:
-  - "Factory comparison complete - findings added to backlog"
-  - "16 new backlog items await prioritization"
-  - "Categories defined but NOT phased yet - preserves flexibility"
+  - "Phase 16 complete - factory templates now have MANDATORY sections"
+  - "14 backlog items remain proposed (LEAP-007 through LEAP-018 + others)"
+  - "Stage templates in GoldSource/governance/templates/ are now enforced"
   - "Run !pulse at session start to reset context"
-
