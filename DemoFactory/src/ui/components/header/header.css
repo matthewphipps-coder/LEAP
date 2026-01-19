@@ -1,0 +1,63 @@
+/**
+ * @file header.css
+ * @purpose Header component styles
+ * @layer ui
+ * @dependencies [variables.css, shell.css]
+ * @dependents []
+ * @locked true
+ * @modifyImpact [header visual appearance]
+ */
+
+/* ==========================================================================
+   HEADER ACTIONS
+   ========================================================================== */
+
+.header-action {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: var(--text-lg);
+    border-radius: var(--border-radius-full);
+}
+
+/* ==========================================================================
+   HEADER USER
+   ========================================================================== */
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+    border-left: 1px solid var(--color-border);
+    margin-left: var(--spacing-sm);
+}
+
+.header-user__name {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.header-user__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border-radius-full);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .header-user__name {
+        display: none;
+    }
+}
