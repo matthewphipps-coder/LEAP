@@ -136,7 +136,7 @@ gateRecords:
     rule: "Gate records cannot be modified after creation"
     reference: "constitution.yaml Rule 15"
   
-  template: "templates/gate-record-template.yaml"
+  template: "Governance/templates/gate-record-template.yaml"
 
 # =============================================================================
 # COMPLETION & CLOSURE
@@ -207,7 +207,7 @@ stageArtifacts:
     - "No re-work required when AI changes mid-phase"
     - "Audit trail of decisions at each stage"
   
-  template: "templates/phase-artifact.yaml"
+  template: "Governance/templates/phase-artifact.yaml"
 
 # =============================================================================
 # AI TRACKING CONSTRAINT - No duplicate tracking
@@ -237,5 +237,5 @@ aiTrackingConstraint:
 
 workflowCreation:
   purpose: "Standard format for new workflow documents"
-  template: "templates/workflow.yaml"
+  template: "Governance/templates/workflow.yaml"
   location: "Governance/ or .agent/workflows/"

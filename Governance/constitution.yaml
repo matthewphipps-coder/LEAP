@@ -30,7 +30,7 @@ governanceManagement:
 
 governanceTemplates:
   rule: "Use templates when creating new governance documents"
-  template: "templates/governance.yaml"
+  template: "Governance/templates/governance.yaml"
   purpose: "Ensures consistent structure across all governance files"
 
 # =============================================================================
