@@ -32,41 +32,124 @@ phase13Learnings:
     - "Scaffold-first approach works well"
 
 # =============================================================================
-# VISION CLARIFICATION
+# THREE-LAYER ARCHITECTURE
 # =============================================================================
 
-visionClarification:
+threeLayerArchitecture:
   
-  components:
-    LEAP:
-      role: "Governance layer + Gold Source"
-      contains:
-        - "GoldSource/ - Master copies of scaffold and archetypes"
-        - "DemoFactoryResources/ - Standards, templates"
-        - "DemoFactory/ - Process engine (NOT output)"
-    
-    GoldSource:
-      role: "Protected master copies"
-      purpose: "Copied outward when starting a new demo"
-      contents:
-        - "scaffold/ - Core locked components"
-        - "archetypes/ - Template patterns (e.g., Agentic Dashboard)"
-        - "standards/ - Rules and architecture doc"
-    
-    DemoFactory:
-      role: "Process engine / workflow orchestrator"
-      purpose: "Guides user through creating a safe, reliable demo"
-      notTheDemoItself: true
-    
-    DemoInstances:
-      role: "Output demos"
-      location: "OUTSIDE of LEAP"
-      differentiation: ["Content", "Archetype", "Customer-specific"]
+  overview:
+    layer1: "LEAP - Governance & Gold Source Maintenance"
+    layer2: "Factory - Different AI Session (Complete Isolation)"
+    layer3: "Demo Output - Final Product (Outside LEAP)"
+  
+  criticalPrinciple: |
+    If LEAP does all of this then the job is too big,
+    bias and error creeps in, and control is lost.
+    Each layer must be separate with clear boundaries.
 
-  executionModel:
-    type: "Hybrid (AI + Human)"
-    gates: "!Proceed at every stage (identical to LEAP)"
-    scenarioSource: "User input"
+# -----------------------------------------------------------------------------
+# LAYER 1: LEAP
+# -----------------------------------------------------------------------------
+
+  layer1_LEAP:
+    role: "Governance & Gold Source Maintenance"
+    aiSession: "This conversation (you and me)"
+    
+    responsibilities:
+      - "Maintain Gold Source (scaffold, archetypes, standards)"
+      - "Improve factory based on lessons learned from each run"
+      - "Trigger factory creation by copying Gold Source"
+      - "Close loop: factory success → Gold Source improvements"
+    
+    canModify: ["/LEAP/*", "Gold Source", "Governance docs"]
+    cannotModify: ["Demo instances", "Factory session context"]
+    
+    continuousImprovement:
+      description: "LEAP continuously improves the factory based on success of each run"
+      mechanism: |
+        Each factory run produces lessons learned.
+        LEAP reviews and incorporates into Gold Source.
+        The factory keeps getting better.
+
+# -----------------------------------------------------------------------------
+# LAYER 2: FACTORY (DIFFERENT AI SESSION)
+# -----------------------------------------------------------------------------
+
+  layer2_Factory:
+    role: "Process Engine - Guides User Through Demo Creation"
+    aiSession: "COMPLETELY SEPARATE CONVERSATION"
+    
+    sessionProperties:
+      isolation: "Complete - no shared context with LEAP"
+      history: "Deleted after demo completion"
+      context: "Only Gold Source files (self-contained)"
+      bias: "Zero carryover from previous demos"
+    
+    responsibilities:
+      - "Guide user through 8 stages with !Proceed gates"
+      - "Discover, research, analyze, design user's requirements"
+      - "Implement incremental changes for their demo"
+      - "Work only within demo instance folder"
+    
+    canModify: ["Demo instance folder"]
+    cannotModify: ["/LEAP/*", "Gold Source (read-only copy)"]
+    
+    howItKnowsWhatToDo:
+      source: "Gold Source is self-contained"
+      includes:
+        - "Factory instructions (how to run)"
+        - "Scaffold (what to build on)"
+        - "Architecture (playing field)"
+        - "Standards (rules)"
+        - "Where to create demo + what to call it"
+
+# -----------------------------------------------------------------------------
+# LAYER 3: DEMO OUTPUT
+# -----------------------------------------------------------------------------
+
+  layer3_DemoOutput:
+    role: "Final Demo - Independent Product"
+    location: "Outside LEAP folder entirely"
+    
+    properties:
+      ownership: "User owns it"
+      lifecycle: "Independent of LEAP after creation"
+      governance: "None (finished product)"
+    
+    contents:
+      - "Working demo code"
+      - "Documentation"
+      - "Demo-specific tracking (optional)"
+
+# -----------------------------------------------------------------------------
+# HANDOFF MECHANISM
+# -----------------------------------------------------------------------------
+
+  handoffMechanism:
+    step1:
+      actor: "LEAP AI"
+      action: "Copy Gold Source to create factory workspace"
+      note: "Gold Source contains demo location and naming config"
+    
+    step2:
+      actor: "Human"
+      action: "Start NEW conversation with Factory AI"
+      note: "Point Factory AI at the copied Gold Source"
+    
+    step3:
+      actor: "Factory AI"
+      action: "Read Gold Source, know where to create demo"
+      note: "Completely fresh context, no LEAP history"
+    
+    step4:
+      actor: "Factory AI + Human"
+      action: "Execute 8 stages with !Proceed gates"
+      note: "Demo created in location specified by Gold Source"
+    
+    step5_feedback:
+      actor: "Human"
+      action: "Report lessons learned back to LEAP"
+      note: "LEAP improves Gold Source for next factory run"
 
 # =============================================================================
 # FACTORY WORKFLOW
