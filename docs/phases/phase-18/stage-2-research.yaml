@@ -1,0 +1,295 @@
+# =============================================================================
+# STAGE 2: RESEARCH - Phase 18: NexusReturns
+# =============================================================================
+# Purpose: Detailed review of old NEXUS codebase and scaffold requirements
+# =============================================================================
+
+metadata:
+  phase: 18
+  name: "NexusReturns"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-19T22:41:37Z"
+  status: "in-progress"
+  author: "AI Researcher"
+  gateApproval: "!Proceed received 2026-01-19T22:41:37Z"
+
+# =============================================================================
+# OLD NEXUS CODEBASE REVIEW
+# =============================================================================
+
+codebaseReview:
+  location: "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS"
+  
+  structure:
+    core:
+      location: "src/core/"
+      files:
+        - name: "state-manager.js"
+          lines: 105
+          pattern: "StateManager singleton class"
+          assessment: "Clean pattern - centralizes state, has reset(), subscription management"
+          portToScaffold: "Pattern only, not code"
+        
+        - name: "auth-service.js"
+          lines: 126
+          pattern: "Firebase auth functions"
+          functions: ["fetchUserData", "logout", "setupAuthListener", "createUserAvatarHTML", "initializeUser", "updateUserXP"]
+          assessment: "Clean functional approach, good JSDoc comments"
+          portToScaffold: "Pattern and function signatures"
+        
+        - name: "theme-manager.js"
+          lines: 197
+          pattern: "CSS variable injection, light/dark toggle"
+          assessment: "THIS WAS THE BRITTLE PART - too much complexity, sticky scenarios, color mixing, light mode retrofit"
+          portToScaffold: "Concept only - rebuild simpler"
+          warning: "Old implementation was spaghetti. New version must be simpler."
+        
+        - name: "firebase.js"
+          lines: ~40
+          pattern: "Firebase initialization"
+          assessment: "Standard Firebase setup"
+          portToScaffold: "Reference only"
+        
+        - name: "constants.js"
+          lines: ~25
+          pattern: "Log functions, checkpoint prefixes"
+          assessment: "Simple utility"
+          portToScaffold: "Useful pattern"
+    
+    features:
+      location: "src/features/"
+      modules:
+        - name: "ai/"
+          files: 
+            - "ai-service.js (343 lines) - Gemini/Claude dual provider"
+            - "chat-manager.js (163 lines) - History, persistence, rendering"
+          assessment: "Good separation - service handles API, manager handles state"
+          portToScaffold: "Pattern - unified askAI(), loadChatHistory(), saveChatHistory()"
+        
+        - name: "tasks/"
+          files:
+            - "task-service.js (8KB) - Firestore CRUD"
+            - "task-ui.js (21KB) - DOM rendering"
+            - "task-filters.js (3KB) - Temporal logic"
+          assessment: "Card-type specific - NOT for scaffold"
+          portToScaffold: "NO - future Factory runs will build cards"
+        
+        - name: "cards/"
+          assessment: "Card factories and validators"
+          portToScaffold: "NO - future Factory runs"
+        
+        - name: "nexus/"
+          assessment: "Scenario builder"
+          portToScaffold: "NO - advanced feature"
+        
+        - name: "simulation/"
+          assessment: "Test data injection"
+          portToScaffold: "NO - development utility"
+        
+        - name: "filters/"
+          assessment: "Filter UI"
+          portToScaffold: "Consider for sidebar patterns"
+    
+    uiComponents:
+      location: "src/ui/components/"
+      totalFiles: 18
+      largestFiles:
+        - "scenario-builder-ui.js (27KB)"
+        - "task-detail-ui.js (27KB)"
+        - "search-ui.js (13KB)"
+      colocatedCss: true
+      assessment: "Good pattern - JS + CSS co-located per component"
+      portToScaffold: "Pattern only - component template structure"
+    
+    pages:
+      loginHtml:
+        lines: 261
+        features:
+          - "Glassmorphism card design"
+          - "CSS variables for theming"
+          - "Email/password form"
+          - "Login/Signup mode switch"
+          - "Error message display"
+          - "Stars canvas background"
+        fonts: ["Inter (body)", "Outfit (headings)"]
+        colors:
+          bg: "#0a0a0c"
+          accent: "#62d84e"
+          text: "#94a3b8"
+        assessment: "Clean, premium design - worth referencing"
+        portToScaffold: "Design patterns, not code"
+
+# =============================================================================
+# FUNCTIONALITY TO PORT (PATTERNS ONLY)
+# =============================================================================
+
+portablePatterns:
+  
+  stateManagement:
+    from: "state-manager.js"
+    pattern: "Singleton StateManager class"
+    features:
+      - "Getters for state slices"
+      - "Setters that update state"
+      - "reset() for logout"
+      - "Firebase unsubscriber management"
+    scaffoldApproach: "Simpler version with just shell state (user, theme, sidebarCollapsed)"
+  
+  authentication:
+    from: "auth-service.js"
+    pattern: "Functional Firebase auth"
+    features:
+      - "setupAuthListener()"
+      - "logout()"
+      - "fetchUserData()"
+      - "createUserAvatarHTML()"
+    scaffoldApproach: "Keep similar structure, cleaner implementation"
+  
+  aiService:
+    from: "ai-service.js + chat-manager.js"
+    pattern: "Unified AI provider interface"
+    features:
+      - "askAI(prompt, provider, attachment)"
+      - "Gemini and Claude support"
+      - "Chat history (load/save/render)"
+    scaffoldApproach: "Wire up interface, not active. Ready for future features."
+  
+  themeSystem:
+    from: "theme-manager.js"
+    pattern: "CSS variables, light/dark toggle"
+    warning: "OLD VERSION WAS TOO COMPLEX"
+    scaffoldApproach: |
+      SIMPLER VERSION NEEDED:
+      - Dark mode as default
+      - Light mode via .light-theme class on body
+      - CSS variables in :root
+      - Simple setTheme()/getTheme() functions
+      - NO sticky scenarios, NO color mixing, NO brand themes
+  
+  designTokens:
+    from: "login.html CSS, base.css"
+    features:
+      - "Font families: Inter, Outfit"
+      - "Colors: #0a0a0c bg, #62d84e accent"
+      - "Glassmorphism: blur(20px), rgba backgrounds"
+      - "Border radius: 12px inputs, 24px cards"
+      - "Shadows: 0 25px 50px rgba(0,0,0,0.5)"
+    scaffoldApproach: "Document in design-system.yaml"
+
+# =============================================================================
+# FUNCTIONALITY TO EXCLUDE
+# =============================================================================
+
+excludedFeatures:
+  - name: "Card types (ping, signal, decision, activity, task)"
+    reason: "Will be built by Factory runs, not scaffold"
+  
+  - name: "Task management (CRUD, filters, drag-drop)"
+    reason: "Card-specific, not base scaffold"
+  
+  - name: "Scenario Builder (/scenario command)"
+    reason: "Advanced feature, future Factory run"
+  
+  - name: "XP/Gamification system"
+    reason: "Nice to have, not core scaffold"
+  
+  - name: "Complex theme branding (Chameleon)"
+    reason: "This is what broke old NEXUS"
+  
+  - name: "Search functionality"
+    reason: "Needs cards to search, future feature"
+
+# =============================================================================
+# DESIGN SYSTEM FINDINGS
+# =============================================================================
+
+designSystemFindings:
+  
+  colorPalette:
+    source: "login.html, base.css"
+    primary:
+      bg: "#0a0a0c"
+      accent: "#62d84e"
+      textPrimary: "#ffffff"
+      textSecondary: "#94a3b8"
+    semantic:
+      success: "#22c55e"
+      error: "#ef4444"
+      warning: "#f59e0b"
+    glass:
+      bg: "rgba(255, 255, 255, 0.05)"
+      border: "rgba(255, 255, 255, 0.1)"
+      blur: "20px"
+  
+  typography:
+    headings: "Outfit - 300,400,500,600"
+    body: "Inter - 300,400,500,600"
+    googleFontsUrl: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+  
+  spacing:
+    unit: "4px"
+    scale: [4, 8, 12, 16, 20, 24, 32, 40, 48]
+  
+  borderRadius:
+    small: "8px"
+    medium: "12px"
+    large: "24px"
+  
+  shadows:
+    card: "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+    glow: "0 0 10px color-mix(in srgb, var(--accent-primary), transparent 80%)"
+  
+  animations:
+    fadeIn: "0.8s ease-out"
+    transition: "0.3s"
+    
+# =============================================================================
+# SCAFFOLD ARCHITECTURE QUESTIONS (ANSWERED)
+# =============================================================================
+
+architectureAnswers:
+  
+  lockedFiles:
+    description: "Files that Factory should NOT modify"
+    list:
+      - "core/state.js"
+      - "core/firebase.js"
+      - "core/constants.js"
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+    rationale: "Core infrastructure must stay stable"
+  
+  extensionPoints:
+    description: "Where Factory CAN add features"
+    list:
+      - "features/* - new feature modules"
+      - "ui/components/* - new components"
+      - "core/mock-data.js - add data"
+      - "core/app.js - register new components (with care)"
+      - "index.html - add component containers"
+    rationale: "Additive changes only, minimal core modification"
+  
+  stateShape:
+    initial:
+      user: "null (set on auth)"
+      theme: "'dark'"
+      sidebarCollapsed: "false"
+    extensible: "Factory can add feature-specific state slices"
+  
+  fileNaming:
+    features: "singular (features/incident/, not incidents/)"
+    components: "kebab-case (incident-dialog-ui.js)"
+    services: "feature-service.js pattern"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  number: 3
+  requires: "!Proceed"
+  focus: "Risk assessment, approach recommendation, RRMD+ if needed"
+
+researchComplete: true
