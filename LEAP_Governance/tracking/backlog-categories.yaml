@@ -33,6 +33,19 @@ categories:
     owner: "LEAP"
 
   # ---------------------------------------------------------------------------
+  # Factory Test Runs
+  # ---------------------------------------------------------------------------
+  - id: "factory-test-runs"
+    name: "Factory Test Runs"
+    description: "Improvements to the factory run comparison and review workflow"
+    examples:
+      - "Gold Source compliance checking"
+      - "Backlog deduplication process"
+      - "Demo vs scaffold regression detection"
+    impactArea: "FactoryTestRuns/, factory-review-workflow.yaml"
+    owner: "LEAP"
+
+  # ---------------------------------------------------------------------------
   # Gold Source Scaffold
   # ---------------------------------------------------------------------------
   - id: "scaffold-conventions"

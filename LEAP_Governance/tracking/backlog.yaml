@@ -8,11 +8,11 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 25
+  totalItems: 27
   immediate: 3
-  shortTerm: 22
+  shortTerm: 24
   
-  note: "19 items added from Factory comparison analyses (v1.0.1→v1.0.2, v1.0.2→v1.0.3)"
+  note: "21 items added from Factory comparison analyses and process improvements"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -423,6 +423,38 @@ priorities:
       acceptanceCriteria:
         - "stage-6-validation.yaml template includes detailed feature validation matrix"
         - "Template includes data model validation section"
+    
+    - id: "LEAP-024"
+      name: "Gold Source Compliance Check in Factory Review"
+      category: "factory-test-runs"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add step to factory-review-workflow comparing demo output against Gold Source scaffold to detect regression/drift"
+      rationale: "Current workflow compares Run N vs Run N-1, but doesn't verify Factory follows Gold Source conventions (locked files, naming, structure)"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Process discussion - session 2026-01-19"
+      acceptanceCriteria:
+        - "factory-review-workflow.yaml includes Step 3b: Gold Source Compliance Check"
+        - "Comparison template created for demo-vs-goldsource analysis"
+        - "Focus areas defined: locked files, naming conventions, structural patterns"
+    
+    - id: "LEAP-025"
+      name: "Formalize Backlog Deduplication Step"
+      category: "factory-test-runs"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add explicit deduplication step to factory-review-workflow before adding new backlog items"
+      rationale: "Currently done ad-hoc; need formal step to check each finding against existing backlog (duplicate/overlap/new)"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Process discussion - session 2026-01-19"
+      acceptanceCriteria:
+        - "factory-review-workflow.yaml Step 5 includes deduplication checklist"
+        - "Outcomes defined: Duplicate (don't add), Overlapping (merge), New (add)"
+        - "Decision documentation required for each finding"
   
   mediumTerm: []
   future: []
