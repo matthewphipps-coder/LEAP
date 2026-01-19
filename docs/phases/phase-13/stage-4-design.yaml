@@ -1,0 +1,275 @@
+metadata:
+  type: "stage-artifact"
+  phase: 13
+  phaseName: "DemoFactory Prototype"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-19T10:13:00Z"
+  status: "in-progress"
+  previousStage: "docs/phases/phase-13/stage-3-analysis.yaml"
+
+designObjective: "Create implementation plan for DemoFactory Prototype v1"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  
+  overview:
+    goal: "Build minimal scaffold + Agentic Dashboard archetype"
+    approach: "Incremental - start with core scaffold, add archetype components"
+    techStack:
+      structure: "HTML5"
+      logic: "Vanilla JS"
+      styling: "CSS variables"
+      build: "None (static files)"
+  
+  # ---------------------------------------------------------------------------
+  # PHASE A: Project Structure
+  # ---------------------------------------------------------------------------
+  
+  phaseA:
+    name: "Project Structure"
+    description: "Create folder structure per architectural-standards.yaml"
+    
+    filesToCreate:
+      - path: "src/index.html"
+        purpose: "Entry point - locked shell structure"
+        type: "new"
+      
+      - path: "src/core/app.js"
+        purpose: "Application orchestrator - initialization only"
+        type: "new"
+      
+      - path: "src/core/state.js"
+        purpose: "StateManager - locked infrastructure"
+        type: "new"
+      
+      - path: "src/core/mock-data.js"
+        purpose: "Mock data patterns - locked infrastructure"
+        type: "new"
+      
+      - path: "src/core/error-handler.js"
+        purpose: "Error handling framework - locked infrastructure"
+        type: "new"
+      
+      - path: "src/core/logger.js"
+        purpose: "Logging/observability - locked infrastructure"
+        type: "new"
+  
+  # ---------------------------------------------------------------------------
+  # PHASE B: Theme & Styling
+  # ---------------------------------------------------------------------------
+  
+  phaseB:
+    name: "Theme & Styling"
+    description: "Create CSS foundation with variables and brand-safe palette"
+    
+    filesToCreate:
+      - path: "src/ui/styles/variables.css"
+        purpose: "CSS variables - colors, spacing, typography"
+        type: "new"
+      
+      - path: "src/ui/styles/base.css"
+        purpose: "Global reset and base styles"
+        type: "new"
+      
+      - path: "src/ui/styles/shell.css"
+        purpose: "Header, nav, footer styles - locked"
+        type: "new"
+  
+  # ---------------------------------------------------------------------------
+  # PHASE C: Shell Components
+  # ---------------------------------------------------------------------------
+  
+  phaseC:
+    name: "Shell Components"
+    description: "Create locked shell UI components"
+    
+    filesToCreate:
+      - path: "src/ui/components/header/header-ui.js"
+        purpose: "Header rendering - locked"
+        type: "new"
+      
+      - path: "src/ui/components/header/header.css"
+        purpose: "Header styles"
+        type: "new"
+      
+      - path: "src/ui/components/nav/nav-ui.js"
+        purpose: "Navigation rendering - locked"
+        type: "new"
+      
+      - path: "src/ui/components/nav/nav.css"
+        purpose: "Navigation styles"
+        type: "new"
+      
+      - path: "src/ui/components/footer/footer-ui.js"
+        purpose: "Footer rendering - locked"
+        type: "new"
+      
+      - path: "src/ui/components/footer/footer.css"
+        purpose: "Footer styles"
+        type: "new"
+  
+  # ---------------------------------------------------------------------------
+  # PHASE D: Agentic Dashboard Archetype
+  # ---------------------------------------------------------------------------
+  
+  phaseD:
+    name: "Agentic Dashboard Archetype"
+    description: "Create archetype-specific components"
+    
+    filesToCreate:
+      - path: "src/features/dashboard/dashboard-service.js"
+        purpose: "Dashboard business logic - Service layer"
+        type: "new"
+      
+      - path: "src/ui/components/chat-panel/chat-panel-ui.js"
+        purpose: "Chat panel rendering"
+        type: "new"
+      
+      - path: "src/ui/components/chat-panel/chat-panel.css"
+        purpose: "Chat panel styles"
+        type: "new"
+      
+      - path: "src/ui/components/data-cards/data-cards-ui.js"
+        purpose: "Data cards rendering"
+        type: "new"
+      
+      - path: "src/ui/components/data-cards/data-cards.css"
+        purpose: "Data cards styles"
+        type: "new"
+      
+      - path: "src/ui/components/action-buttons/action-buttons-ui.js"
+        purpose: "Action buttons rendering"
+        type: "new"
+      
+      - path: "src/ui/components/action-buttons/action-buttons.css"
+        purpose: "Action buttons styles"
+        type: "new"
+
+# =============================================================================
+# FILE STRUCTURE SUMMARY
+# =============================================================================
+
+fileStructure:
+  totalFiles: 20
+  
+  structure: |
+    src/
+    ├── index.html                          # Entry point
+    ├── core/
+    │   ├── app.js                          # Orchestrator
+    │   ├── state.js                        # StateManager
+    │   ├── mock-data.js                    # Mock data
+    │   ├── error-handler.js                # Error handling
+    │   └── logger.js                       # Logging
+    ├── features/
+    │   └── dashboard/
+    │       └── dashboard-service.js        # Dashboard logic
+    └── ui/
+        ├── styles/
+        │   ├── variables.css               # CSS variables
+        │   ├── base.css                    # Base styles
+        │   └── shell.css                   # Shell styles
+        └── components/
+            ├── header/
+            │   ├── header-ui.js
+            │   └── header.css
+            ├── nav/
+            │   ├── nav-ui.js
+            │   └── nav.css
+            ├── footer/
+            │   ├── footer-ui.js
+            │   └── footer.css
+            ├── chat-panel/
+            │   ├── chat-panel-ui.js
+            │   └── chat-panel.css
+            ├── data-cards/
+            │   ├── data-cards-ui.js
+            │   └── data-cards.css
+            └── action-buttons/
+                ├── action-buttons-ui.js
+                └── action-buttons.css
+
+# =============================================================================
+# LOCKED vs FLEXIBLE COMPONENTS
+# =============================================================================
+
+componentClassification:
+  
+  locked:
+    description: "Factory provides these - AI cannot modify in demo creation"
+    components:
+      - "src/core/* (all infrastructure)"
+      - "src/ui/styles/variables.css"
+      - "src/ui/styles/base.css"
+      - "src/ui/styles/shell.css"
+      - "src/ui/components/header/*"
+      - "src/ui/components/nav/*"
+      - "src/ui/components/footer/*"
+  
+  archetypeProvided:
+    description: "Archetype provides patterns - AI customizes content"
+    components:
+      - "src/features/dashboard/dashboard-service.js"
+      - "src/ui/components/chat-panel/*"
+      - "src/ui/components/data-cards/*"
+      - "src/ui/components/action-buttons/*"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  
+  manualVerification:
+    - step: "Open src/index.html in browser"
+      expected: "Page loads with header, nav, footer visible"
+    
+    - step: "Verify shell is responsive"
+      expected: "Layout adjusts on window resize"
+    
+    - step: "Check chat panel renders"
+      expected: "Chat panel visible in main content area"
+    
+    - step: "Check data cards render"
+      expected: "Data cards visible with mock data"
+    
+    - step: "Check action buttons render"
+      expected: "Action buttons visible and clickable"
+    
+    - step: "Open browser console"
+      expected: "No JavaScript errors"
+    
+    - step: "Test StateManager"
+      expected: "State updates propagate to UI"
+  
+  patternValidation:
+    - check: "No inline onclick handlers"
+      method: "Search codebase for 'onclick='"
+    
+    - check: "All components use StateManager"
+      method: "Verify no direct DOM state storage"
+    
+    - check: "Triad pattern followed"
+      method: "Verify Service/UI/Style separation per component"
+
+# =============================================================================
+# EXECUTIVE AUTHORIZATION
+# =============================================================================
+
+executiveAuthorization:
+  status: "pending"
+  filesApproved: null
+  note: "Awaiting !Proceed to begin implementation"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"
+  focus: "Create all files per implementation plan"
