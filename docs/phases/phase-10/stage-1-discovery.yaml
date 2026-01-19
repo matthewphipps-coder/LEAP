@@ -1,0 +1,41 @@
+metadata:
+  phase: 10
+  stage: 1
+  name: "discovery"
+  status: "complete"
+  date: "2026-01-19"
+
+problem:
+  statement: "AI onboarding content is scattered across 3 files with overlap and stale references"
+  goal: "Consolidate from 497 to ~140 lines"
+
+files:
+  - file: "AI_ONBOARDING.yaml"
+    lines: 275
+    issues:
+      - "References deleted regression-protocol.yaml"
+      - "Says 12 rules (now 15)"
+      - "Duplicates INDEX.yaml and session-start.yaml content"
+  
+  - file: "AI_AGENT_CHECKLIST.md"
+    lines: 195
+    issues:
+      - "References v6.8.0-partnership (stale)"
+      - "References deleted regression-protocol.yaml"
+      - "Markdown format inconsistent with YAML governance"
+  
+  - file: "session-start.yaml"
+    lines: 27
+    issues: "Good but minimal"
+
+plan:
+  keep: "session-start.yaml (enhanced)"
+  trim: "AI_ONBOARDING.yaml (overview + links only)"
+  delete: "AI_AGENT_CHECKLIST.md (content absorbed)"
+
+target:
+  before: 497
+  after: 140
+  reduction: "72%"
+
+nextStage: "research"

@@ -57,7 +57,7 @@ phaseStartProtocol:
       time: "~10 minutes"
     technicalOnboarding:
       trigger: "Phase involves modifying code files"
-      files: ["ARCHITECTURE.yaml", "Affected files"]
+      files: ["bugs.yaml", "Affected files"]
       time: "~20-30 minutes"
       reference: "constitution.yaml Rule 13"
 

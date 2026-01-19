@@ -1,0 +1,30 @@
+metadata:
+  phase: 10
+  stage: 6
+  name: "validation"
+  status: "complete"
+  date: "2026-01-19"
+
+validationResults:
+  yamlSyntax: "All 4 files valid"
+  
+  changes:
+    - file: "session-start.yaml"
+      before: 27
+      after: 78
+    - file: "AI_ONBOARDING.yaml"
+      before: 275
+      after: 89
+    - file: "AI_AGENT_CHECKLIST.md"
+      status: "deleted"
+  
+  staleRefsFixed:
+    - "constitution.yaml: Removed ARCHITECTURE.yaml ref"
+    - "pulse-protocol.yaml: Removed ARCHITECTURE.yaml ref"
+  
+  totalBefore: 497
+  totalAfter: 167
+  reduction: "66%"
+
+overallResult: "PASSED"
+nextStage: "delivery"

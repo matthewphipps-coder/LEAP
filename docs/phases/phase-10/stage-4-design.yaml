@@ -1,0 +1,51 @@
+metadata:
+  phase: 10
+  stage: 4
+  name: "design"
+  status: "complete"
+  date: "2026-01-19"
+  note: "Discovery, Research, Analysis consolidated into Design"
+
+problem:
+  statement: "AI onboarding split across 3 files (497 lines) with overlap and stale refs"
+  goal: "Consolidate to ~140 lines"
+
+riskAssessment:
+  risk: "Lose valuable onboarding content"
+  probability: "low"
+  mitigation: "Keep critical rules summary in AI_ONBOARDING.yaml"
+  rrmd: "Not required - documentation only"
+
+implementationPlan:
+  
+  enhance:
+    - file: "Governance/checklists/session-start.yaml"
+      currentLines: 27
+      targetLines: 60
+      changes:
+        - "Add critical rules summary"
+        - "Add common mistakes to avoid"
+        - "Add quick reference links"
+  
+  trim:
+    - file: "AI_Onboarding/AI_ONBOARDING.yaml"
+      currentLines: 275
+      targetLines: 80
+      changes:
+        - "Keep project overview only"
+        - "Remove content now in session-start.yaml"
+        - "Update stale references"
+        - "Point to session-start.yaml for checklist"
+  
+  delete:
+    - file: "AI_Onboarding/AI_AGENT_CHECKLIST.md"
+      reason: "Content absorbed into session-start.yaml"
+
+successCriteria:
+  - "session-start.yaml ~60 lines"
+  - "AI_ONBOARDING.yaml ~80 lines"
+  - "AI_AGENT_CHECKLIST.md deleted"
+  - "No stale references"
+  - "YAML syntax valid"
+
+nextStage: "implementation"

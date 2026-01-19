@@ -110,7 +110,7 @@ rules:
     name: "Before Starting Code Phase"
     description: "Complete technical onboarding before Discovery stage of code phases"
     checklist: "Governance/checklists/before-phase.yaml"
-    requirement: "Read ARCHITECTURE.yaml and affected files before coding"
+    requirement: "Read affected files before coding"
 
   - id: 14
     name: "Mutual Improvement Partnership"

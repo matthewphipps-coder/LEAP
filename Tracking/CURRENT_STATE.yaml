@@ -18,37 +18,30 @@ projectContext:
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "9"
-  name: "Constitution Trim"
-  status: "closed"
-  stage: "closure"
-  startedDate: "2026-01-19T01:37:00Z"
-  completedDate: "2026-01-19T01:49:00Z"
-  closedDate: "2026-01-19T01:51:00Z"
-  executiveSignOff: "Granted by Matthew Phipps"
+  number: "10"
+  name: "AI Onboarding Cleanup"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-19T01:56:00Z"
   
-  goal: "Trim constitution.yaml from 754 lines to ~300 lines"
+  goal: "Consolidate AI onboarding files from 497 to ~140 lines"
   
   previousPhase:
-    number: "8"
-    name: "Pulse Protocol Trim"
+    number: "9"
+    name: "Constitution Trim"
     status: "closed"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "awaiting-signoff"
-  stage: "closure"
+  status: "in-progress"
+  stage: "discovery"
   
   summary:
-    accomplished:
-      - "constitution.yaml: 755 → 130 lines"
-      - "Created rrmd-protocol.yaml (61 lines)"
-      - "Created bump-protocol.yaml (45 lines)"
-      - "Git commit: 2360ac4"
+    goal: "Consolidate AI_ONBOARDING.yaml, AI_AGENT_CHECKLIST.md, session-start.yaml"
     
-    context: "Phase 9 closure complete - awaiting executive sign-off"
+    context: "Phase 10 Discovery - analyzing 497 lines across 3 files"
   
-  nextStage: "N/A (awaiting sign-off)"
+  nextStage: "research"
 
 references:
   governanceFiles:
