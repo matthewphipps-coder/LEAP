@@ -69,50 +69,83 @@ visionClarification:
     scenarioSource: "User input"
 
 # =============================================================================
-# FACTORY WORKFLOW (Phases 1-8)
+# FACTORY WORKFLOW
 # =============================================================================
 
 factoryWorkflow:
-  phases:
-    - phase: 1
-      name: "Discovery"
-      purpose: "User describes demo scenario and requirements"
-      gate: "!Proceed"
+  
+  criticalCorrection:
+    issue: "Gold Source copy must happen FIRST, before Discovery"
+    reason: |
+      The factory process needs context to operate:
+      - "What's already here?" (code scaffold)
+      - "What functionality exists?" (functionality.yaml)
+      - "What are the constraints?" (architectural-standards.yaml)
+      - "What's the playing field?" (ARCHITECTURE.yaml)
+    resolution: "Initialization step BEFORE standard stages"
+  
+  goldSourceContents:
+    description: "Everything the factory needs to operate"
+    includes:
+      - "Code scaffold (core locked components)"
+      - "Archetypes (UI patterns)"
+      - "ARCHITECTURE.yaml (playing field)"
+      - "architectural-standards.yaml (rules)"
+      - "functionality.yaml (what exists)"
+      - "Factory CURRENT_STATE.yaml template (track progress)"
+  
+  process:
+    step0_initialization:
+      name: "Factory Initialization"
+      gate: "!StartFactory"
+      actions:
+        - "User provides: demo name, location, scenario description"
+        - "Copy Gold Source → Demo Instance location"
+        - "Initialize demo-specific tracking (CURRENT_STATE.yaml)"
+      outcome: "Factory has full context to begin work"
     
-    - phase: 2
-      name: "Research"
-      purpose: "AI researches relevant patterns, components, APIs"
-      gate: "!Proceed"
-    
-    - phase: 3
-      name: "Analysis"
-      purpose: "Risk assessment, approach options, archetype selection"
-      gate: "!Proceed"
-    
-    - phase: 4
-      name: "Design"
-      purpose: "Implementation plan, file structure, component decisions"
-      gate: "!Proceed"
-    
-    - phase: 5
-      name: "Scaffold Copy"
-      purpose: "Copy gold source to demo instance location"
-      gate: "!Proceed"
-    
-    - phase: 6
-      name: "Implementation"
-      purpose: "AI implements demo with human oversight"
-      gate: "!Proceed"
-    
-    - phase: 7
-      name: "Verification"
-      purpose: "Test demo, validate against requirements"
-      gate: "!Proceed"
-    
-    - phase: 8
-      name: "Delivery"
-      purpose: "Finalize, document, handoff"
-      gate: "!Proceed"
+    stages_1_to_8:
+      note: "IDENTICAL to LEAP lifecycle stages"
+      stages:
+        - stage: 1
+          name: "Discovery"
+          purpose: "Define demo requirements based on user scenario"
+          gate: "!Proceed"
+        
+        - stage: 2
+          name: "Research"
+          purpose: "Explore patterns, components, APIs needed"
+          gate: "!Proceed"
+        
+        - stage: 3
+          name: "Analysis"
+          purpose: "Risk assessment, approach options"
+          gate: "!Proceed"
+        
+        - stage: 4
+          name: "Design"
+          purpose: "Implementation plan, file structure"
+          gate: "!Proceed"
+        
+        - stage: 5
+          name: "Implementation"
+          purpose: "AI implements with human oversight"
+          gate: "!Proceed"
+        
+        - stage: 6
+          name: "Delivery"
+          purpose: "Package, document"
+          gate: "!Proceed"
+        
+        - stage: 7
+          name: "Testing"
+          purpose: "Verify demo works as intended"
+          gate: "!Proceed"
+        
+        - stage: 8
+          name: "Closure"
+          purpose: "Finalize, handoff, lessons learned"
+          gate: "Executive sign-off"
 
 # =============================================================================
 # PROBLEM STATEMENT
