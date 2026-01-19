@@ -18,37 +18,30 @@ projectContext:
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "8"
-  name: "Pulse Protocol Trim"
-  status: "closed"
-  stage: "closure"
-  startedDate: "2026-01-19T01:17:00Z"
-  completedDate: "2026-01-19T01:30:00Z"
-  closedDate: "2026-01-19T01:32:00Z"
-  executiveSignOff: "Granted by Matthew Phipps"
+  number: "9"
+  name: "Constitution Trim"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-19T01:37:00Z"
   
-  goal: "Trim pulse-protocol.yaml from 864 lines to a smaller, more focused file"
+  goal: "Trim constitution.yaml from 754 lines to ~300 lines"
   
   previousPhase:
-    number: "7"
-    name: "Governance Framework Redesign"
+    number: "8"
+    name: "Pulse Protocol Trim"
     status: "closed"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "awaiting-signoff"
-  stage: "closure"
+  status: "in-progress"
+  stage: "discovery"
   
   summary:
-    accomplished:
-      - "Trimmed pulse-protocol.yaml: 864 → 207 lines (76%)"
-      - "Removed redundant examples"
-      - "Added checklist references"
-      - "Git commit: d9be3d0"
+    goal: "Analyze constitution.yaml to identify content to trim"
     
-    context: "Phase 8 closure complete - awaiting executive sign-off"
+    context: "Phase 9 Discovery - analyzing 754-line file"
   
-  nextStage: "N/A (awaiting sign-off)"
+  nextStage: "research"
 
 references:
   governanceFiles:

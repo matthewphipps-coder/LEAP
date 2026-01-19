@@ -1,0 +1,46 @@
+metadata:
+  phase: 9
+  stage: 1
+  name: "discovery"
+  status: "complete"
+  date: "2026-01-19"
+
+problem:
+  statement: "constitution.yaml is 755 lines - still too large after other files trimmed"
+  goal: "Reduce to ~300 lines while keeping core rules"
+
+sectionAnalysis:
+  keep:
+    - "metadata (trimmed)"
+    - "preamble"
+    - "Rules 1,2,4-8,10,11,14,15 (already concise)"
+  
+  trim:
+    - section: "documentHierarchy (93 lines)"
+      issue: "Verbose, references deleted files"
+      target: 40
+    - section: "Rule 3 Proceed (66 lines)"
+      issue: "Now covered by before-file-op.yaml"
+      target: 25
+    - section: "Rule 9 RRMD+ (136 lines)"
+      issue: "Excessive examples and triggers"
+      target: 50
+    - section: "Rule 12 !bump (76 lines)"
+      issue: "Long example response"
+      target: 30
+    - section: "Rule 13 Technical Onboarding (78 lines)"
+      issue: "Now covered by before-phase.yaml"
+      target: 25
+  
+  delete:
+    - section: "quickReference (38 lines)"
+      reason: "Duplicates INDEX.yaml content"
+    - section: "governanceManagement.currentFiles (16 lines)"
+      reason: "Stale file list"
+
+summary:
+  before: 755
+  afterTrim: 300
+  reduction: "60%"
+
+nextStage: "research"

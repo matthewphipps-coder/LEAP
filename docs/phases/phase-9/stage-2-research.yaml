@@ -1,0 +1,47 @@
+metadata:
+  phase: 9
+  stage: 2
+  name: "research"
+  status: "complete"
+  date: "2026-01-19"
+
+approach: "Hybrid - Option C"
+
+findings:
+  
+  newFiles:
+    - file: "rrmd-protocol.yaml"
+      content: "Rule 9 RRMD+ extracted"
+      targetLines: 50
+    - file: "bump-protocol.yaml"
+      content: "Rule 12 !bump extracted"
+      targetLines: 30
+  
+  constitutionChanges:
+    keep:
+      - "Rules 1-8 (condensed)"
+      - "Rules 10-11"
+      - "Rules 13-15 (condensed, reference checklists)"
+    
+    extract:
+      - "Rule 9 → rrmd-protocol.yaml"
+      - "Rule 12 → bump-protocol.yaml"
+    
+    delete:
+      - "quickReference section (duplicates INDEX.yaml)"
+      - "governanceManagement.currentFiles (stale)"
+    
+    condense:
+      - "documentHierarchy (remove stale refs)"
+      - "Rule 3 (reference before-file-op.yaml)"
+      - "Rule 13 (reference before-phase.yaml)"
+
+estimate:
+  constitutionBefore: 755
+  constitutionAfter: 200
+  rrmdProtocol: 50
+  bumpProtocol: 30
+  totalAfter: 280
+  savings: 475
+
+nextStage: "analysis"

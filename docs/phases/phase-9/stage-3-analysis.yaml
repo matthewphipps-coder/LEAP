@@ -1,0 +1,36 @@
+metadata:
+  phase: 9
+  stage: 3
+  name: "analysis"
+  status: "complete"
+  date: "2026-01-19"
+
+riskAssessment:
+  - risk: "Lose important rule context"
+    probability: "low"
+    impact: "medium"
+    mitigation: "Keep core statements, only remove examples"
+  - risk: "References break"
+    probability: "low"
+    impact: "low"
+    mitigation: "Update references to new protocol files"
+
+rrmdDecision: "Not required - documentation only"
+
+finalPlan:
+  constitution:
+    targetLines: 200
+    actions:
+      - "Keep all 15 rules (condensed)"
+      - "Rule 9: Reference rrmd-protocol.yaml"
+      - "Rule 12: Reference bump-protocol.yaml"
+      - "Rule 3: Reference before-file-op.yaml"
+      - "Rule 13: Reference before-phase.yaml"
+      - "Delete quickReference section"
+      - "Update documentHierarchy"
+  
+  newFiles:
+    - "rrmd-protocol.yaml (~50 lines)"
+    - "bump-protocol.yaml (~30 lines)"
+
+nextStage: "design"

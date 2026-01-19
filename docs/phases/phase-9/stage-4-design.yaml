@@ -1,0 +1,40 @@
+metadata:
+  phase: 9
+  stage: 4
+  name: "design"
+  status: "complete"
+  date: "2026-01-19"
+
+implementationPlan:
+  
+  create:
+    - file: "Governance/rrmd-protocol.yaml"
+      lines: 50
+      content: "Rule 9 RRMD+ protocol extracted"
+    - file: "Governance/bump-protocol.yaml"
+      lines: 30
+      content: "Rule 12 !bump protocol extracted"
+  
+  modify:
+    - file: "Governance/constitution.yaml"
+      action: "Rewrite condensed version"
+      targetLines: 200
+      structure:
+        - "metadata (10 lines)"
+        - "preamble (5 lines)"
+        - "documentHierarchy (30 lines)"
+        - "governanceManagement (15 lines)"
+        - "rules (140 lines - 15 rules condensed)"
+  
+  delete:
+    - "quickReference section"
+    - "Excessive examples in rules"
+    - "Long example responses"
+
+successCriteria:
+  - "constitution.yaml ~200 lines"
+  - "All 15 rules still present (condensed)"
+  - "References to protocols work"
+  - "YAML syntax valid"
+
+nextStage: "implementation"
