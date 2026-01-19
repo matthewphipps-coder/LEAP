@@ -107,27 +107,67 @@ approachOptions:
   rationale: "Prototype is for learning - build only what we need, learn what matters"
 
 # =============================================================================
-# CONCRETE DEMO SCENARIO (Required before implementation)
+# PROTOTYPE STRATEGY (Analysis Decision)
 # =============================================================================
 
-concreteScenario:
-  status: "TBD"
-  requirement: "Must define ONE specific demo scenario before Design stage"
+prototypeStrategy:
+  decision: "Minimal Scaffold + One Archetype"
   
-  questions:
-    - "What is the demo about? (e.g., IT agent, HR assistant, approval workflow)"
-    - "What 2-3 screens/views does it need?"
-    - "What interaction patterns should it showcase?"
-    - "What 'future vision' element makes it compelling?"
+  minimalScaffold:
+    description: "Universal foundation for ALL demos"
+    components:
+      - category: "Shell"
+        items: ["Header", "Navigation", "Footer"]
+        status: "locked"
+      - category: "Theme"
+        items: ["CSS variables", "Brand-safe palette", "Typography"]
+        status: "locked"
+      - category: "Infrastructure"
+        items: ["StateManager", "Error handling", "Logging", "Mock data patterns"]
+        status: "locked"
   
-  placeholder: null  # To be filled based on user input
+  archetype:
+    name: "Agentic Dashboard"
+    description: "AI-powered command center — user talks to agent, sees live data"
+    
+    keyComponents:
+      - component: "Chat Panel"
+        description: "Conversational interface with AI agent"
+        purpose: "Primary interaction point"
+      
+      - component: "Data Cards"
+        description: "Live data visualization (tasks, metrics, status)"
+        purpose: "Show AI-retrieved/influenced information"
+      
+      - component: "Action Buttons"
+        description: "Quick actions the AI can suggest or execute"
+        purpose: "Demonstrate agent capability"
+    
+    futureVisionElements:
+      - "AI proactively surfaces relevant information"
+      - "Natural language commands instead of forms"
+      - "Agent explains its reasoning/actions"
+      - "Seamless handoff between AI and human"
+  
+  rationale:
+    - "Minimal scaffold ensures we don't overbuild"
+    - "Agentic Dashboard aligns with 'future vision of ServiceNow UX in an agentic world'"
+    - "Chat + Cards + Actions covers core interaction patterns"
+    - "Single archetype proves the pattern before adding more"
 
 # =============================================================================
-# NEXT STAGE
+# ANALYSIS COMPLETE - READY FOR DESIGN
 # =============================================================================
+
+analysisConclusion:
+  risksAssessed: true
+  rrmdRequired: false
+  approachChosen: "Incremental Scaffold"
+  archetypeChosen: "Agentic Dashboard"
+  readyForDesign: true
 
 nextStage:
   name: "design"
   requires: "!Proceed"
-  blockedBy: "concreteScenario must be defined"
-  focus: "Create implementation plan, define files to create, specify scaffold components"
+  focus: "Create implementation plan with file structure, scaffold specs, and archetype components"
+
