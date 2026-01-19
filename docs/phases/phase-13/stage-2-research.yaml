@@ -16,61 +16,32 @@ researchObjective: "Answer discovery questions to define concrete scope for Demo
 
 aiExecutionModel:
   question: "Are stages 1-8 executed by AI Agents?"
-  answer: null  # TBD during research
+  answer: "Yes, with human approval at every gate"
+  
+  decision:
+    chosen: "Option C - Human-in-the-Loop"
+    rationale:
+      - "Human must be in the loop for stages 1-4 and 6 anyway (AI can't do those alone)"
+      - "Consistency: all gates require human approval via !Proceed"
+      - "Reduces risk through explicit authorization"
+      - "Proven model - LEAP uses it successfully"
   
   orchestrationOptions:
     
     optionA:
       name: "Multi-Agent Orchestration"
+      status: "not-selected"
       description: "LEAP orchestrates multiple AI executions, each handling one stage with fresh context"
-      pros:
-        - "Fresh context per stage - no accumulated confusion"
-        - "Each AI gets focused, scoped task"
-        - "Stage artifacts are natural handoff contracts"
-        - "Parallel execution possible for independent stages"
-      cons:
-        - "Orchestration complexity"
-        - "Handoff overhead between agents"
-        - "Potential context loss between stages"
-      implementation:
-        - "LEAP provides stage-specific prompt + previous stage artifact"
-        - "AI executes one stage, produces artifact"
-        - "LEAP validates artifact against gate criteria"
-        - "LEAP initiates next agent with new context"
     
     optionB:
       name: "Single-Agent with Stage Gates"
+      status: "not-selected"
       description: "One AI session, but explicit gates force pause/validation between stages"
-      pros:
-        - "Accumulated context (AI remembers previous work)"
-        - "Simpler orchestration"
-        - "Natural conversation flow"
-      cons:
-        - "Context window limits (accumulated tokens)"
-        - "Context pollution (earlier confusion affects later stages)"
-        - "Harder to restart mid-process"
-      implementation:
-        - "Single long-running AI session"
-        - "LEAP inserts gate checks between stages"
-        - "AI must produce artifact and await approval before continuing"
     
     optionC:
       name: "Human-in-the-Loop Hybrid"
-      description: "AI proposes, human approves at each gate (like LEAP today)"
-      pros:
-        - "Maximum control and oversight"
-        - "Proven model (LEAP uses it successfully)"
-        - "Human catches AI errors at each stage"
-      cons:
-        - "Slowest option (human bottleneck)"
-        - "Defeats 'AI speed' goal for high-volume demos"
-        - "Human fatigue on repetitive demos"
-      implementation:
-        - "AI executes stage, produces artifact"
-        - "Human reviews artifact, provides !Proceed"
-        - "Repeat for each stage"
-    
-    recommendation: null  # TBD - user to decide after reviewing options
+      status: "SELECTED"
+      description: "AI proposes, human approves at each gate via !Proceed"
 
 # =============================================================================
 # IMMUTABLE FOUNDATION - What the factory provides
@@ -82,71 +53,120 @@ immutableFoundation:
   components:
     
     authentication:
-      status: "TBD"
-      questions:
-        - "Pre-built auth flow that demos inherit?"
-        - "SSO simulation or real integration?"
-      findings: null
-      recommendation: null
+      status: "decided"
+      decision: "Simulated (mock) for prototype"
+      rationale: "Keeps demos simple, prevents auth complexity from blocking demo creation"
+      futureWork: "Harden with real auth in future phase"
     
     pageStructure:
-      status: "TBD"
-      questions:
-        - "Index page layout/function locked?"
-        - "Navigation patterns immutable?"
-        - "Header/footer scaffolding?"
-      findings: null
-      recommendation: null
+      status: "decided"
+      decision: "Locked shell, flexible content"
+      details:
+        locked:
+          - "Index page layout"
+          - "Navigation patterns"
+          - "Header/footer scaffolding"
+        flexible:
+          - "Main content area (AI customizes per demo scenario)"
     
     themeStyling:
-      status: "TBD"
-      questions:
-        - "Theme control mechanism (CSS variables, design tokens)?"
-        - "Brand-safe color palettes?"
-        - "Typography system?"
-      findings: null
-      recommendation: null
+      status: "decided"
+      decision: "CSS variables + brand-safe palette"
+      details:
+        - "Factory provides design tokens (colors, spacing, typography)"
+        - "AI picks from approved palettes, can't go off-brand"
     
     databaseInteraction:
-      status: "TBD"
-      questions:
-        - "DB interaction patterns locked?"
-        - "Data scope boundaries (what AI can/cannot modify)?"
-        - "Mock data vs. real data strategy?"
-      findings: null
-      recommendation: null
+      status: "decided"
+      decision: "Mock data for prototype"
+      rationale: "No real DB complexity, focus on UX patterns"
     
     coreInfrastructure:
-      status: "TBD"
-      questions:
-        - "State management pattern?"
-        - "Error handling framework?"
-        - "Logging/observability?"
-      findings: null
-      recommendation: null
+      status: "decided"
+      decision: "All locked"
+      lockedComponents:
+        - component: "State management"
+          description: "Factory provides StateManager pattern"
+        - component: "Error handling"
+          description: "Factory provides error framework"
+        - component: "Logging"
+          description: "Factory provides logging/audit trail"
+        - component: "Routing"
+          description: "Consistent URL patterns, history management"
+        - component: "API patterns"
+          description: "Standard fetch/response handling (even for mock data)"
+        - component: "Component lifecycle"
+          description: "Init/destroy patterns prevent memory leaks"
+        - component: "Event handling"
+          description: "addEventListener, not inline (per architectural-standards.yaml)"
+        - component: "Config management"
+          description: "Environment variables, feature flags"
 
 # =============================================================================
-# OTHER RESEARCH AREAS
+# TECHNOLOGY STACK
 # =============================================================================
 
 technicalStack:
   question: "What technology stack should DemoFactory use?"
-  constraints:
-    - "Must follow architectural-standards.yaml Triad Pattern"
-    - "Must integrate with LEAP governance"
-  findings: null
-  recommendation: null
+  
+  decision:
+    structure: "HTML5"
+    logic: "Vanilla JS"
+    styling: "CSS variables"
+    build: "None (or Vite if needed)"
+  
+  rationale:
+    - "Architectural-standards.yaml Triad Pattern examples are vanilla JS"
+    - "Simpler AI guidance - no framework-specific patterns to learn/break"
+    - "Future vision focus - demoing UX concepts, not framework capabilities"
+    - "Faster prototype - no build tooling, no dependency management"
+    - "Governance fit - LEAP already governs vanilla JS successfully"
+  
+  futureConsideration: "If demos grow complex, consider lightweight option (Alpine.js, Lit)"
+
+# =============================================================================
+# DEMO DEFINITION
+# =============================================================================
 
 demoDefinition:
   question: "What does 'building a demo' mean concretely?"
-  inputs: null
-  outputs: null
-  findings: null
+  
+  decision:
+    outputType: "Web app (standalone HTML/JS/CSS)"
+    purpose: "Future vision of ServiceNow UX in an agentic world"
+    
+  clarification:
+    notSimulating: "Current ServiceNow UI"
+    notConnecting: "Real ServiceNow instances"
+    focus: "What's possible with AI-first design"
+  
+  implications:
+    - "Freedom to innovate on UX patterns"
+    - "No constraints from current ServiceNow UI library"
+    - "Showcase agentic capabilities"
 
-serviceNowContext:
-  question: "What ServiceNow products/modules should demos cover?"
-  findings: null
-  existingPatterns: null
+# =============================================================================
+# FACTORY EVOLUTION STRATEGY
+# =============================================================================
+
+factoryEvolutionStrategy:
+  question: "After prototype, incrementally improve or rebuild?"
+  
+  decision: "Plan for clean room rebuild (v2)"
+  
+  rationale:
+    - "First prototype is a learning vehicle - purpose is to discover right patterns"
+    - "Incremental improvement accumulates technical debt"
+    - "LEAP already does this successfully (v1.0.0-fresh governance rebuild)"
+    - "Lessons are captured in phase closures - nothing lost in rebuild"
+    - "Aligns with 'Precision over velocity' philosophy"
+  
+  strategy:
+    flow: "Prototype v1 → Learn → Document lessons → Rebuild v2 (clean config)"
+    keyQuestions:
+      - "What did we get wrong?"
+      - "What patterns emerged?"
+      - "What should be hardened?"
 
 # =============================================================================
 # NEXT STAGE
@@ -155,4 +175,4 @@ serviceNowContext:
 nextStage:
   name: "analysis"
   requires: "!Proceed"
-  focus: "Analyze findings, assess risks, choose orchestration model, define immutable components"
+  focus: "Assess risks, create implementation approach, define prototype scope"
