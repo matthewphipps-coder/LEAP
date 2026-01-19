@@ -1,25 +1,82 @@
-# Stage templates 2-8 follow the same pattern as stage-1
-# See stage-1-discovery.yaml for full template structure
-
 # =============================================================================
 # STAGE 2: RESEARCH TEMPLATE
 # =============================================================================
+# Explore patterns, components, and approaches needed for the demo.
+# =============================================================================
+
 metadata:
   demo: "[DEMO_NAME]"
   stage: 2
   stageName: "research"
   created: "[TIMESTAMP]"
   status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 1 approved with !Proceed at [timestamp]"
+  previousStage: "stage-1-discovery.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 2"
+    - "stageName: research"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-1-discovery.yaml"
+  
+  content:
+    - "scaffoldReview: What exists and what gaps were found"
+    - "findings: Key discoveries from research"
+    - "questionsForAnalysis: Questions for next stage"
+
+# =============================================================================
+# RESEARCH OBJECTIVE
+# =============================================================================
 
 researchObjective: "Explore patterns, components, APIs needed"
 
-scaffoldReview:
-  whatExists: "[Components and features already in scaffold]"
-  gaps: "[What's missing for this demo]"
+# =============================================================================
+# SCAFFOLD REVIEW
+# =============================================================================
 
-solutions:
-  - gap: "[Gap 1]"
-    solution: "[How to address it]"
+scaffoldReview:
+  whatExists:
+    components: "[Components available in scaffold]"
+    patterns: "[Established patterns to follow]"
+    utilities: "[Utility functions available]"
+  
+  gaps:
+    - gap: "[What's missing for this demo]"
+      severity: "[low|medium|high]"
+      solution: "[How to address it]"
+  
+  relevantPatterns:
+    - pattern: "[Pattern name from scaffold]"
+      location: "[Where it's implemented]"
+      applicability: "[How it applies to this demo]"
+
+# =============================================================================
+# FINDINGS
+# =============================================================================
+
+findings:
+  - finding: "[Key discovery from research]"
+    significance: "[Why it matters]"
+    implication: "[What it means for implementation]"
+
+# =============================================================================
+# QUESTIONS FOR ANALYSIS
+# =============================================================================
+
+questionsForAnalysis:
+  - "[Question about approach that needs risk assessment]"
+  - "[Alternative approach to consider]"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
 
 nextStage:
   name: "analysis"

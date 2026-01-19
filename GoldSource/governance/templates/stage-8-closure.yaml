@@ -7,6 +7,26 @@ metadata:
   stageName: "closure"
   created: "[TIMESTAMP]"
   status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 7 approved with !Proceed at [timestamp]"
+  previousStage: "stage-7-testing.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before sign-off
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 8"
+    - "stageName: closure"
+    - "created: ISO timestamp"
+    - "status: complete (before sign-off)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-7-testing.yaml"
+  
+  content:
+    - "summary: What was built"
+    - "lessonsLearned: At least one lesson"
+    - "signOff: Approved by human"
 
 closureObjective: "Finalize demo and capture lessons learned"
 

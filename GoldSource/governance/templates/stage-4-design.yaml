@@ -9,6 +9,27 @@ metadata:
   stageName: "design"
   created: "[TIMESTAMP]"
   status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 3 approved with !Proceed at [timestamp]"
+  previousStage: "stage-3-analysis.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 4"
+    - "stageName: design"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-3-analysis.yaml"
+  
+  content:
+    - "wireframes: Required for UI changes (see wireframes.required)"
+    - "filesToModify: List of files to change"
+    - "implementationSteps: Ordered steps"
+    - "traceabilityReview: Confirmation that all requirements addressed"
 
 designObjective: "Implementation plan and file structure"
 
@@ -16,6 +37,9 @@ designObjective: "Implementation plan and file structure"
 # WIREFRAMES (Required for UI changes)
 # =============================================================================
 wireframes:
+  required: true
+  when: "Any UI changes (new screens, components, layouts)"
+  notRequired: "Backend-only changes, data/config updates"
   requirement: "Generate wireframe images for any new UI elements"
   tool: "AI image generation"
   saveLocation: "Factory workspace (not demo output)"

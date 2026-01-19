@@ -1,0 +1,206 @@
+metadata:
+  type: "artifact"
+  phase: 16
+  stage: "design"
+  name: "Factory Governance Templates - Design"
+  created: "2026-01-19T19:18:00Z"
+  status: "complete"
+  gateApproval: "Analysis approved with !Proceed at 2026-01-19T19:18:00Z"
+  previousStage: "stage-3-analysis.yaml"
+
+lifecycle:
+  currentStage: "design"
+  status: "complete"
+  nextStage: "implementation"
+
+# =============================================================================
+# DESIGN OBJECTIVE
+# =============================================================================
+
+designObjective: "Implementation plan for Option B (Template Parity)"
+
+# =============================================================================
+# MANDATORY SECTION TEMPLATE
+# =============================================================================
+# This section will be added to each template to enforce required fields.
+
+mandatorySectionTemplate: |
+  # MANDATORY FIELDS - AI must complete these before !Proceed
+  mandatory:
+    metadata:
+      - demo: "[REQUIRED] Demo name"
+      - stage: "[REQUIRED] Stage number"
+      - stageName: "[REQUIRED] Stage name"
+      - created: "[REQUIRED] ISO timestamp"
+      - status: "[REQUIRED] in-progress|complete"
+      - gateApproval: "[REQUIRED] Previous stage approval timestamp"
+      - previousStage: "[REQUIRED] Previous stage artifact filename"
+    
+    content:
+      - "[Stage-specific required fields]"
+
+# =============================================================================
+# FILES TO MODIFY
+# =============================================================================
+
+filesToModify:
+
+  # ---------------------------------------------------------------------------
+  # STAGE 2: RESEARCH (Expand from 27 to ~55 lines)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-2-research.yaml"
+    currentLines: 27
+    targetLines: 55
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+      - "Expand scaffoldReview with more structure"
+      - "Add findings section"
+      - "Add questionsForAnalysis section"
+    
+    newStructure:
+      metadata: "demo, stage, stageName, created, status, gateApproval, previousStage"
+      mandatory: "List of required fields"
+      researchObjective: "Keep existing"
+      scaffoldReview: "Expand with whatExists, gaps, relevantPatterns"
+      findings: "New section for key discoveries"
+      questionsForAnalysis: "New section for next stage"
+      nextStage: "Keep existing"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 3: ANALYSIS (Expand from 30 to ~55 lines)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-3-analysis.yaml"
+    currentLines: 30
+    targetLines: 55
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+      - "Expand risks section with id, name, severity structure"
+      - "Add recommendedApproach section"
+      - "Add rrmdDecision section"
+    
+    newStructure:
+      metadata: "Add gateApproval, previousStage"
+      mandatory: "List of required fields"
+      analysisObjective: "Keep existing"
+      risks: "Keep but standardize format"
+      approachOptions: "Keep existing"
+      selectedApproach: "Rename to recommendedApproach"
+      rrmdDecision: "New section"
+      nextStage: "Keep existing"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 4: DESIGN (Add mandatory marker to wireframes)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-4-design.yaml"
+    currentLines: 91
+    targetLines: 100
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+      - "Add 'required: true' to wireframes section"
+      - "Add note clarifying when wireframes are required"
+    
+    wireframesChange:
+      before: |
+        wireframes:
+          requirement: "Generate wireframe images for any new UI elements"
+      after: |
+        wireframes:
+          required: true
+          when: "Any UI changes (new screens, components, layouts)"
+          notRequired: "Backend-only changes, data/config updates"
+          requirement: "Generate wireframe images for any new UI elements"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 5: IMPLEMENTATION (Add MANDATORY section)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-5-implementation.yaml"
+    currentLines: 48
+    targetLines: 60
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 6: VALIDATION (Add MANDATORY section)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-6-validation.yaml"
+    currentLines: 61
+    targetLines: 72
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 7: TESTING (Fix ID format + add MANDATORY section)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-7-testing.yaml"
+    currentLines: 59
+    targetLines: 70
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+      - "Change TEST-001 to TC-001"
+      - "Change EDGE-001 to TC-101"
+      - "Add comment explaining ID convention"
+    
+    testIdChange:
+      before: "id: \"TEST-001\""
+      after: "id: \"TC-001\"  # TC = Test Case, numbering from 001"
+      edgeBefore: "id: \"EDGE-001\""
+      edgeAfter: "id: \"TC-101\"  # TC-1xx reserved for edge cases"
+
+  # ---------------------------------------------------------------------------
+  # STAGE 8: CLOSURE (Add MANDATORY section)
+  # ---------------------------------------------------------------------------
+  - file: "GoldSource/governance/templates/stage-8-closure.yaml"
+    currentLines: 63
+    targetLines: 75
+    changes:
+      - "Add MANDATORY section after metadata"
+      - "Add gateApproval + previousStage to metadata"
+
+# =============================================================================
+# FILES TO LEAVE UNCHANGED
+# =============================================================================
+
+filesToLeaveUnchanged:
+  - file: "GoldSource/governance/templates/stage-1-discovery.yaml"
+    reason: "Stage 1 has no previousStage or gateApproval (it's first stage)"
+
+# =============================================================================
+# IMPLEMENTATION ORDER
+# =============================================================================
+
+implementationOrder:
+  1: "stage-2-research.yaml (largest expansion)"
+  2: "stage-3-analysis.yaml (second largest expansion)"
+  3: "stage-7-testing.yaml (ID format change)"
+  4: "stage-4-design.yaml (wireframes mandatory)"
+  5: "stage-5-implementation.yaml (MANDATORY section only)"
+  6: "stage-6-validation.yaml (MANDATORY section only)"
+  7: "stage-8-closure.yaml (MANDATORY section only)"
+
+# =============================================================================
+# VALIDATION CRITERIA
+# =============================================================================
+
+validationCriteria:
+  - "All 7 files have gateApproval + previousStage in metadata"
+  - "All 7 files have MANDATORY section"
+  - "stage-4-design.yaml has required: true on wireframes"
+  - "stage-7-testing.yaml uses TC-001 format"
+  - "stage-2 and stage-3 are expanded to ~55 lines"
+
+# =============================================================================
+# GATE - CRITICAL
+# =============================================================================
+
+gateQuestion:
+  stageSummary: "Design complete. 7 files to modify per plan above."
+  criticalGate: true
+  note: "This is design → implementation gate (Constitution Rule 3)"
+  readyFor: "implementation"
+  requires: "!Proceed"

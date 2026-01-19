@@ -1,0 +1,179 @@
+metadata:
+  type: "artifact"
+  phase: 16
+  stage: "analysis"
+  name: "Factory Governance Templates - Analysis"
+  created: "2026-01-19T19:12:35Z"
+  status: "complete"
+  gateApproval: "Research approved with !Proceed at 2026-01-19T19:12:35Z"
+  previousStage: "stage-2-research.yaml"
+
+lifecycle:
+  currentStage: "analysis"
+  status: "complete"
+  nextStage: "design"
+
+# =============================================================================
+# ANALYSIS OBJECTIVE
+# =============================================================================
+
+analysisObjective: "Risk assessment and approach options for template improvements"
+
+# =============================================================================
+# RISK ASSESSMENT
+# =============================================================================
+
+risks:
+
+  - id: "RISK-001"
+    name: "Breaking Existing Factory Runs"
+    probability: "low"
+    impact: "medium"
+    description: "Changing templates could break in-progress factory runs"
+    mitigation: "Changes are additive (new fields). Existing artifacts remain valid."
+    
+  - id: "RISK-002"
+    name: "Template Bloat"
+    probability: "medium"
+    impact: "low"
+    description: "Adding too much to templates makes them unwieldy"
+    mitigation: "Keep templates focused. Use comments for guidance, not prose."
+    
+  - id: "RISK-003"
+    name: "Enforcement Gap Remains"
+    probability: "medium"
+    impact: "high"
+    description: "Even with better templates, AI might still deviate"
+    mitigation: "Add MANDATORY section with explicit required fields list."
+    
+  - id: "RISK-004"
+    name: "Scope Creep"
+    probability: "medium"
+    impact: "medium"
+    description: "Temptation to fix all 30 deviations, not just 4 items"
+    mitigation: "Stick to LEAP-001, 002, 005, 006 only. Defer LEAP-007/008/009."
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+
+approachOptions:
+
+  optionA:
+    name: "Minimal Fix"
+    description: "Add missing fields only, don't restructure"
+    changes:
+      - "Add gateApproval + previousStage to stages 2-8 metadata"
+      - "Add mandatory: true to wireframes section"
+      - "Change TEST-001 to TC-001 format"
+    pros:
+      - "Fast (1-2 hours)"
+      - "Low risk of breaking anything"
+      - "Easy to verify"
+    cons:
+      - "Stages 2-3 remain minimal stubs"
+      - "Root cause (no enforcement) not fully addressed"
+    recommended: false
+
+  optionB:
+    name: "Template Parity"
+    description: "Bring all templates to same quality level + add enforcement"
+    changes:
+      - "Expand stage-2-research.yaml to ~50 lines with structure"
+      - "Expand stage-3-analysis.yaml to ~50 lines with structure"
+      - "Add MANDATORY section to each template listing required fields"
+      - "Add gateApproval + previousStage to stages 2-8"
+      - "Add mandatory: true to wireframes section"
+      - "Change TEST-001 to TC-001 format"
+    pros:
+      - "All templates at consistent quality"
+      - "MANDATORY section creates enforcement"
+      - "Better AI guidance in minimal stages"
+    cons:
+      - "More work (2-3 hours)"
+      - "More files to review"
+    recommended: true
+
+  optionC:
+    name: "Full Overhaul"
+    description: "Redesign all templates from scratch with factory-comparison learnings"
+    changes:
+      - "Rewrite all 8 templates based on v1.0.2 patterns"
+      - "Add standardized section names"
+      - "Add quality checklist to each stage"
+    pros:
+      - "Maximum consistency"
+      - "Addresses more of the 30 deviations"
+    cons:
+      - "Scope creep - exceeds Phase 16 mandate"
+      - "4+ hours work"
+      - "Risk of over-engineering"
+    recommended: false
+
+# =============================================================================
+# SELECTED APPROACH
+# =============================================================================
+
+selectedApproach:
+  choice: "optionB"
+  name: "Template Parity"
+  rationale: |
+    Option B balances thoroughness with scope discipline:
+    - Fixes all 4 backlog items
+    - Adds MANDATORY enforcement section (addresses root cause)
+    - Brings minimal stages up to quality parity
+    - Stays within Phase 16 scope (no LEAP-007/008/009)
+
+# =============================================================================
+# IMPLEMENTATION SCOPE
+# =============================================================================
+
+implementationScope:
+  
+  filesToModify:
+    - file: "GoldSource/governance/templates/stage-2-research.yaml"
+      changes: "Expand from 27 to ~50 lines, add MANDATORY section + gateApproval"
+      
+    - file: "GoldSource/governance/templates/stage-3-analysis.yaml"
+      changes: "Expand from 30 to ~50 lines, add MANDATORY section + gateApproval"
+      
+    - file: "GoldSource/governance/templates/stage-4-design.yaml"
+      changes: "Add mandatory: true to wireframes, add MANDATORY section"
+      
+    - file: "GoldSource/governance/templates/stage-5-implementation.yaml"
+      changes: "Add MANDATORY section + gateApproval"
+      
+    - file: "GoldSource/governance/templates/stage-6-validation.yaml"
+      changes: "Add MANDATORY section + gateApproval"
+      
+    - file: "GoldSource/governance/templates/stage-7-testing.yaml"
+      changes: "Change TEST-001 to TC-001 format, add MANDATORY section"
+      
+    - file: "GoldSource/governance/templates/stage-8-closure.yaml"
+      changes: "Add MANDATORY section + gateApproval"
+  
+  filesToLeaveUnchanged:
+    - file: "GoldSource/governance/templates/stage-1-discovery.yaml"
+      reason: "Stage 1 has no previousStage or gateApproval (it's first)"
+
+# =============================================================================
+# RRMD+ DECISION
+# =============================================================================
+
+rrmdDecision:
+  required: false
+  rationale: |
+    - Modifying 7 files (under threshold when low-risk)
+    - All changes are additive (no deletions)
+    - Changes are in templates only, not production code
+    - No data schema changes
+    - No build/deploy changes
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gateQuestion:
+  stageSummary: "Recommended Option B: Template Parity. 7 files to modify."
+  readyFor: "design"
+  requires: "!Proceed"
