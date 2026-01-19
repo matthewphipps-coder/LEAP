@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-19T21:35:00Z"
-  version: "3.4.0"
+  lastUpdated: "2026-01-19T22:26:00Z"
+  version: "3.5.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -14,47 +14,42 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Factory Run Comparison & Backlog Management"
+  currentFocus: "Rebuilding Gold Source scaffold properly"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "17"
-  name: "Governance Process Improvements"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-19T19:45:29Z"
-  completedDate: "2026-01-19T20:24:33Z"
+  number: "18"
+  name: "NexusReturns"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-19T22:26:00Z"
   
-  goal: "Fix process gaps in tracking sync and discovery validation"
+  goal: "Rebuild Gold Source scaffold with proper AI-First architecture, design system, and stable foundation"
   
-  stageArtifact: "docs/phases/phase-17/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-18/stage-1-discovery.yaml"
   
   previousPhase:
-    number: "16"
-    name: "Factory Governance Templates"
+    number: "17"
+    name: "Governance Process Improvements"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "at-pause-point"
-  summary: "Factory comparison v1.0.2 vs v1.0.3 complete, backlog updated with new items"
+  status: "in-progress"
+  summary: "Phase 18 Discovery - requirements captured from session discussion"
   
   recentWork:
     date: "2026-01-19"
-    session: "Factory Review Session"
-    description: "Completed factory comparison, added 3 backlog items, enriched 2 existing items"
+    session: "NexusReturns Planning Session"
+    description: "Reviewed old NEXUS archive, defined scope for scaffold rebuild, created Discovery artifact"
     
     sessionChanges:
-      filesModified: ["backlog.yaml"]
-      filesCreated: ["factory-comparison-v1.0.2-vs-v1.0.3.yaml"]
-      backlogItemsAdded: ["LEAP-019", "LEAP-021", "LEAP-022"]
-      backlogItemsEnriched: ["LEAP-003", "LEAP-009"]
-    
-    pendingGitActions:
-      status: "2 uncommitted changes, 48 unpushed commits"
-      uncommitted:
-        - "LEAP_Governance/tracking/backlog.yaml (modified)"
-        - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (new)"
+      filesCreated: ["docs/phases/phase-18/stage-1-discovery.yaml"]
+      keyDecisions:
+        - "Take concepts from old NEXUS, not code"
+        - "Build fresh with AI-First patterns"
+        - "Scope: login, index shell, header, sidebar, canvas, plumbing, design system"
+        - "New files needed: functionality.yaml (new), design-system.yaml (new)"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
@@ -80,32 +75,23 @@ factoryRunsCompleted:
     testsRun: 10
     testsPassed: 10
     addedDate: "2026-01-19"
+  
+  note: "Factory runs paused while Phase 18 rebuilds scaffold"
 
 backlogState:
-  totalItems: 25
+  totalItems: 27
   complete: 12
   inProgress: 0
-  proposed: 13
+  proposed: 15
   
   completedItems:
-    - "GOV-001, GOV-002, VISION-001 (immediate - prior)"
-    - "ARCH-003 (architecture)"
-    - "LEAP-001, LEAP-002, LEAP-005, LEAP-006 (Phase 16)"
-    - "GOV-003, GOV-004, GOV-005, GOV-006 (Phase 17)"
+    - "GOV-001 through GOV-006, VISION-001 (governance)"
+    - "ARCH-003, LEAP-001, LEAP-002, LEAP-005, LEAP-006 (factory)"
   
-  recentlyAdded:
+  relevantToPhase18:
+    - "LEAP-003: Standardize Feature Path Naming"
+    - "LEAP-004: Standardize Mock Data Strategy"
     - "LEAP-019: Component Creation vs Modification Policy"
-    - "LEAP-021: Standardize Analysis Approach Format"
-    - "LEAP-022: Enhance Validation Matrix Template"
-  
-  byCategory:
-    factory-governance: "7 (4 complete, 3 proposed)"
-    scaffold-conventions: "6 (0 complete, 6 proposed)"
-    demo-output: 2
-    archetype-domain: 2
-    architecture: "2 (1 complete)"
-    user-branding: 1
-    governance: "7 (7 complete)"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
   backlogFile: "LEAP_Governance/tracking/backlog.yaml"
@@ -117,18 +103,18 @@ references:
     - "safety-protocol.yaml - Backup and deployment"
     - "architectural-standards.yaml - Code patterns"
   
+  phase18Sources:
+    - "Old NEXUS archive: /Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS"
+    - "Old functionality.yaml (567 lines, outdated but conceptually useful)"
+  
   comparisonDocuments:
     - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml"
-  
-  workflows:
-    location: ".agent/workflows/"
-    command: "ls .agent/workflows/"
 
 aiReminders:
-  - "Phase 17 complete - at pause point"
-  - "48 commits ahead of origin/main - consider pushing"
-  - "2 uncommitted changes from factory comparison session"
-  - "13 backlog items remain proposed"
-  - "LEAP-019, LEAP-021, LEAP-022 new from v1.0.2 vs v1.0.3 comparison"
+  - "Phase 18 in progress: NexusReturns"
+  - "Stage 1 Discovery artifact created with full scope"
+  - "Factory runs paused until scaffold rebuild complete"
+  - "Take concepts from old NEXUS, not code"
+  - "Awaiting !Proceed to move to Stage 2 Research"
