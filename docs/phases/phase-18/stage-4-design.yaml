@@ -248,7 +248,7 @@ phaseC:
       purpose: "Top navigation bar"
       elements:
         - "Logo/brand"
-        - "User avatar with XP"
+        - "User avatar"
         - "Theme toggle button"
         - "Logout button"
       exports:

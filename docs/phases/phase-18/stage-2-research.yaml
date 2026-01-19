@@ -34,7 +34,7 @@ codebaseReview:
         - name: "auth-service.js"
           lines: 126
           pattern: "Firebase auth functions"
-          functions: ["fetchUserData", "logout", "setupAuthListener", "createUserAvatarHTML", "initializeUser", "updateUserXP"]
+          functions: ["fetchUserData", "logout", "setupAuthListener", "createUserAvatarHTML", "initializeUser"]
           assessment: "Clean functional approach, good JSDoc comments"
           portToScaffold: "Pattern and function signatures"
         
@@ -191,8 +191,8 @@ excludedFeatures:
   - name: "Scenario Builder (/scenario command)"
     reason: "Advanced feature, future Factory run"
   
-  - name: "XP/Gamification system"
-    reason: "Nice to have, not core scaffold"
+  - name: "Gamification system"
+    reason: "Not core scaffold - dropped from scope"
   
   - name: "Complex theme branding (Chameleon)"
     reason: "This is what broke old NEXUS"
