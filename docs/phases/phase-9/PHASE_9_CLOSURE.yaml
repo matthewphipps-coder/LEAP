@@ -1,0 +1,42 @@
+metadata:
+  type: "closure"
+  phase: 9
+  name: "Constitution Trim"
+  status: "awaiting-signoff"
+  date: "2026-01-19"
+
+summary:
+  goal: "Trim constitution.yaml from 755 lines while keeping all 15 rules"
+  outcome: "SUCCESS"
+  
+  metrics:
+    constitutionBefore: 755
+    constitutionAfter: 130
+    rrmdProtocol: 61
+    bumpProtocol: 45
+    totalAfter: 236
+    reduction: "69%"
+
+accomplished:
+  - "Rewrote constitution.yaml from 755 to 130 lines"
+  - "Extracted Rule 9 (RRMD+) to rrmd-protocol.yaml"
+  - "Extracted Rule 12 (!bump) to bump-protocol.yaml"
+  - "Added references to checklists in Rules 3, 13"
+  - "Removed quickReference section (duplicated INDEX.yaml)"
+  - "Updated documentHierarchy (removed stale refs)"
+
+lessonsLearned:
+  - "Extract large protocols to separate files instead of inline"
+  - "Reference checklists instead of duplicating content"
+  - "15 rules can be condensed to statements with protocol references"
+
+gitCommit: "2360ac4"
+
+handoff:
+  nextPhase: "TBD - user direction"
+  governanceReady: "Yes - all major files now trimmed"
+
+signoff:
+  status: "granted"
+  authority: "Matthew Phipps (Executive Authority)"
+  date: "2026-01-19T01:51:00Z"
