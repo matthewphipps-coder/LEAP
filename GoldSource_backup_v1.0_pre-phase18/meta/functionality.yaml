@@ -1,0 +1,27 @@
+metadata:
+  type: "reference"
+  name: "LEAP Feature Documentation"
+  purpose: "Complete documentation of implemented features"
+  version: "2.0.0"
+  created: "2026-01-16"
+  lastUpdated: "2026-01-16"
+  status: "active"
+
+summary:
+  totalFeatures: 0
+  
+  note: "Fresh project - no features implemented yet"
+
+features: []
+
+howToDocument:
+  template: |
+    - id: "FEAT-XXX"
+      name: "Feature name"
+      status: "implemented|partial|deprecated"
+      description: "What this feature does"
+      files:
+        - "path/to/file.js"
+      usage: "How to use this feature"
+      addedDate: "YYYY-MM-DD"
+      addedPhase: "Phase X"
