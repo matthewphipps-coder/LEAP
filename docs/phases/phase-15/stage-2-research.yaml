@@ -1,0 +1,230 @@
+# =============================================================================
+# STAGE 2: RESEARCH - Phase 15
+# =============================================================================
+# Phase: Factory Lessons Incorporated
+# Gate Approval: !Proceed received 2026-01-19T13:39:00Z
+# =============================================================================
+
+metadata:
+  type: "stage-artifact"
+  phase: 15
+  phaseName: "Factory Lessons Incorporated"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-19T13:39:00Z"
+  status: "complete"
+  completedDate: "2026-01-19T13:50:00Z"
+  previousStage: "docs/phases/phase-15/stage-1-discovery.yaml"
+
+researchObjective: "Prioritize 17 findings, group into workstreams, determine phase scope"
+
+# =============================================================================
+# FINDINGS PRIORITIZATION
+# =============================================================================
+
+prioritization:
+
+  # ---------------------------------------------------------------------------
+  # CRITICAL (Must Fix This Phase)
+  # ---------------------------------------------------------------------------
+  
+  critical:
+    - id: "ARCH-001"
+      name: "@locked Violation"
+      recommendation: "Change mock-data.js to @locked false / @demoModifiable"
+      effort: "small"
+      
+    - id: "USER-006"
+      name: "Stage Documents in Wrong Location"
+      recommendation: "Update factory governance to specify artifact locations"
+      effort: "medium"
+
+  # ---------------------------------------------------------------------------
+  # HIGH - Core Functionality (This Phase)
+  # ---------------------------------------------------------------------------
+  
+  highPriority:
+    workstream_A_factory_workflow:
+      name: "Factory Workflow Creation"
+      items:
+        - id: "USER-001"
+          name: "/newfactory Command"
+          recommendation: "Create Governance/newfactory-workflow.yaml"
+          effort: "medium"
+          
+        - id: "USER-002"
+          name: "Factory Onboarding Prompt"
+          recommendation: "Define in FACTORY_README.yaml"
+          effort: "small"
+    
+    workstream_B_artifact_governance:
+      name: "Artifact Location Governance"
+      items:
+        - id: "USER-007"
+          name: "Artifact Creation Not Governed"
+          recommendation: "Define artifact manifest in factory governance"
+          effort: "medium"
+          
+        - id: "GOV-001"
+          name: "Factory Workspace Lifecycle"
+          recommendation: "Document lifecycle in factory governance"
+          effort: "small"
+    
+    workstream_C_template_improvements:
+      name: "Template Improvements"
+      items:
+        - id: "PROC-001"
+          name: "Superficial Testing"
+          recommendation: "Create real test templates with edge cases"
+          effort: "medium"
+          
+        - id: "USER-005"
+          name: "Wireframes in Design"
+          recommendation: "Add wireframe requirement to design template"
+          effort: "small"
+          
+        - id: "USER-008"
+          name: "Deployment Before Testing"
+          recommendation: "Add deployment step to validation template"
+          effort: "small"
+
+  # ---------------------------------------------------------------------------
+  # MEDIUM - Improvements (This Phase If Time)
+  # ---------------------------------------------------------------------------
+  
+  mediumPriority:
+    - id: "PROC-002"
+      name: "Hidden Scope Creep"
+      recommendation: "Add dropped-features section to templates"
+      effort: "small"
+      
+    - id: "PROC-003"
+      name: "Shallow Lessons Learned"
+      recommendation: "Require friction points in closure template"
+      effort: "small"
+      
+    - id: "ARCH-002"
+      name: "MODULE_CONTRACT Not Updated"
+      recommendation: "Add contract validation to factory protocol"
+      effort: "small"
+      
+    - id: "GOV-002"
+      name: "No Gate Records Created"
+      recommendation: "Remove gate record requirement (too heavy for factory)"
+      effort: "small"
+      
+    - id: "GOV-003"
+      name: "Manual Improvement Loop"
+      recommendation: "Document the feedback process"
+      effort: "small"
+
+  # ---------------------------------------------------------------------------
+  # LOW / DEFERRED (Future Phase)
+  # ---------------------------------------------------------------------------
+  
+  deferred:
+    - id: "ARCH-003"
+      name: "Stale Paths in ARCHITECTURE.yaml"
+      reason: "Low impact, can fix anytime"
+      
+    - id: "USER-003"
+      name: "NEXUS Branding Bleeding"
+      reason: "Requires broader design decision"
+      
+    - id: "USER-004"
+      name: "Demo Output Location"
+      reason: "Current separation works, not broken"
+
+# =============================================================================
+# PHASE 15 SCOPE DECISION
+# =============================================================================
+
+phase15Scope:
+  
+  inScope:
+    critical:
+      - "ARCH-001: Fix @locked annotation in mock-data.js"
+      - "USER-006: Define artifact locations in factory governance"
+    
+    workstreams:
+      A_factory_workflow:
+        - "Create Governance/newfactory-workflow.yaml"
+        - "Define factory onboarding prompt in FACTORY_README.yaml"
+        - "Generate factory init prompt when /newfactory runs"
+      
+      B_artifact_governance:
+        - "Create artifact manifest defining what goes where"
+        - "Document factory workspace lifecycle"
+        - "Clarify demo vs factory folders"
+      
+      C_template_improvements:
+        - "Update stage-4-design template with wireframe requirement"
+        - "Update stage-7-testing template with test cases and deployment"
+        - "Update stage-8-closure template with friction points"
+    
+    quickFixes:
+      - "Add dropped-features tracking to templates"
+      - "Remove gate records requirement from factory"
+      - "Document manual feedback loop"
+  
+  outOfScope:
+    - "NEXUS branding decision (future phase)"
+    - "Demo output folder restructure (works as-is)"
+    - "ARCHITECTURE.yaml path fixes (low priority)"
+
+# =============================================================================
+# KEY RESEARCH FINDINGS
+# =============================================================================
+
+keyFindings:
+
+  artifactLocationDecision:
+    question: "Where should each artifact type live?"
+    answer: |
+      Factory Workspace (e.g., /DemoInstances/Factory-Test-001/):
+        - stage-*.yaml artifacts (process tracking)
+        - CURRENT_STATE.yaml (factory state)
+        - Gate records (if we keep them)
+        - Gold Source copy (reference)
+      
+      Demo Output (e.g., /DemoOutput/Nexus-0.0.1-feature/):
+        - Actual code (scaffold + modifications)
+        - README.md (user documentation)
+        - Any demo-specific config
+        - NO stage artifacts, NO factory tracking
+
+  factoryWorkspaceLifecycle:
+    question: "What happens to factory workspace after demo complete?"
+    answer: |
+      Keep for audit trail and potential re-runs.
+      Name includes demo name for traceability.
+      Can be archived or deleted after demo delivered.
+
+  designVsImplementationPlan:
+    question: "Is design = implementation plan?"
+    answer: |
+      Yes, for factory purposes.
+      stage-4-design.yaml IS the implementation plan.
+      No need for separate implementation_plan.md.
+      Factory should NOT use brain/artifacts folder.
+
+  wireframeRequirement:
+    question: "How should wireframes be produced?"
+    answer: |
+      Use AI image generation tool during design stage.
+      Save wireframes to factory workspace.
+      Reference in stage-4-design.yaml.
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Risk assessment and RRMD+ decision for changes"
+  
+  analysisObjectives:
+    - "Assess risk of governance file changes"
+    - "Identify any breaking changes"
+    - "Confirm no RRMD+ needed (low-risk changes)"

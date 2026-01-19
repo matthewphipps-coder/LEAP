@@ -1,0 +1,826 @@
+# =============================================================================
+# STAGE 5: IMPLEMENTATION - Phase 15
+# =============================================================================
+# Phase: Factory Lessons Incorporated
+# Status: DRAFT FOR REVIEW (not yet executed)
+# =============================================================================
+
+metadata:
+  type: "stage-artifact"
+  phase: 15
+  phaseName: "Factory Lessons Incorporated"
+  stage: 5
+  stageName: "implementation"
+  created: "2026-01-19T13:58:00Z"
+  status: "draft"
+  note: "This document is for review BEFORE implementation"
+  previousStage: "docs/phases/phase-15/stage-4-design.yaml"
+
+implementationObjective: "Execute all 9 file changes as specified in design"
+
+# =============================================================================
+# PRE-IMPLEMENTATION CHECKLIST
+# =============================================================================
+
+preImplementation:
+  - task: "Create backup commit"
+    command: "git add -A && git commit -m 'BACKUP: Pre-Phase-15 implementation'"
+    status: "pending"
+  
+  - task: "Confirm design is approved"
+    status: "pending"
+
+# =============================================================================
+# IMPLEMENTATION ORDER
+# =============================================================================
+
+implementationOrder:
+  1: "Create Governance/newfactory-workflow.yaml"
+  2: "Create GoldSource/governance/artifact-manifest.yaml"
+  3: "Modify GoldSource/governance/FACTORY_README.yaml"
+  4: "Modify GoldSource/governance/factory-protocol.yaml"
+  5: "Modify GoldSource/governance/lifecycle-stages.yaml (incl. rename Stage 6)"
+  6: "Modify GoldSource/governance/templates/stage-4-design.yaml"
+  7: "Replace GoldSource/governance/templates/stage-5-implementation.yaml"
+  8: "Rename & Replace stage-6-delivery.yaml → stage-6-validation.yaml"
+  9: "Modify GoldSource/governance/templates/stage-7-testing.yaml"
+  10: "Modify GoldSource/governance/templates/stage-8-closure.yaml"
+  11: "Modify GoldSource/scaffold/core/mock-data.js"
+
+# =============================================================================
+# STEP 1: CREATE newfactory-workflow.yaml
+# =============================================================================
+
+step1:
+  file: "Governance/newfactory-workflow.yaml"
+  action: "CREATE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # /newfactory WORKFLOW
+    # =============================================================================
+    # Triggered when user types: /newfactory
+    # Creates a new factory instance and generates onboarding prompt
+    # =============================================================================
+    
+    metadata:
+      name: "Create New Factory"
+      trigger: "/newfactory"
+      type: "workflow"
+      version: "1.0.0"
+    
+    # =============================================================================
+    # LEAP KNOWS (pre-configured)
+    # =============================================================================
+    
+    leapKnows:
+      goldSourceLocation: "GoldSource/"
+      factoryVersion: "1.0.0"
+      defaultDemoLocation: "~/Documents/DemoOutput/"
+      defaultFactoryLocation: "~/Documents/DemoInstances/"
+    
+    # =============================================================================
+    # WORKFLOW STEPS
+    # =============================================================================
+    
+    steps:
+      
+      1_askUser:
+        action: "Ask user for demo details"
+        note: "AI suggests next version number, user provides feature name"
+        prompts:
+          - question: "What feature name for this demo?"
+            example: "itsm-dashboard"
+            note: "AI will combine with version: NEXUS v1.0.1-[featurename]"
+            required: true
+          
+          - question: "Demo output location?"
+            default: "~/Documents/DemoOutput/NEXUS-v[version]-[featurename]/"
+            required: false
+          
+          - question: "Brief scenario description?"
+            example: "Major Incident view with AI agent support"
+            required: true
+        
+        versionLogic:
+          source: "AI determines from previous demos or starts at v1.0.0"
+          format: "vMAJOR.MINOR.PATCH-featurename"
+          examples:
+            first: "v1.0.0-itsm-dashboard"
+            increment: "v1.0.1-approval-flow"
+      
+      2_createFactoryInstance:
+        action: "Copy Gold Source to factory workspace"
+        source: "GoldSource/"
+        destination: "~/Documents/DemoInstances/Factory-[version]/"
+        commands:
+          - "mkdir -p ~/Documents/DemoInstances/Factory-[version]"
+          - "cp -r GoldSource/* ~/Documents/DemoInstances/Factory-[version]/"
+      
+      3_copyScaffold:
+        action: "Copy scaffold to demo output location"
+        source: "GoldSource/scaffold/"
+        destination: "[user-specified location]/NEXUS-[version]/"
+        commands:
+          - "mkdir -p [demo-output-location]"
+          - "cp -r GoldSource/scaffold/* [demo-output-location]/"
+      
+      4_generateOnboardingPrompt:
+        action: "Generate and display factory onboarding prompt"
+        display: true
+        template: |
+          ═══════════════════════════════════════════════════════════════════════════
+          FACTORY ONBOARDING PROMPT - Copy this to a NEW AI conversation
+          ═══════════════════════════════════════════════════════════════════════════
+          
+          You are a DemoFactory AI. Your job is to create a demo for the user.
+          
+          CRITICAL INSTRUCTIONS:
+          1. Read the Gold Source governance files at:
+             [FACTORY_WORKSPACE]/governance/FACTORY_README.yaml
+          
+          2. Demo details:
+             - Name: NEXUS [VERSION]
+             - Scenario: [SCENARIO]
+             - Output location: [DEMO_OUTPUT]
+             - Factory workspace: [FACTORY_WORKSPACE]
+          
+          3. The scaffold has already been copied to [DEMO_OUTPUT].
+             Begin with Stage 1: Discovery.
+          
+          4. Follow the 8-stage lifecycle with !Proceed gates.
+          
+          5. Save stage artifacts to the FACTORY WORKSPACE ([FACTORY_WORKSPACE]),
+             NOT the demo output folder.
+          
+          Start by reading governance/FACTORY_README.yaml, then begin Discovery.
+          ═══════════════════════════════════════════════════════════════════════════
+      
+      5_confirmReady:
+        action: "Confirm factory is ready"
+        message: |
+          ✅ Factory instance created!
+          
+          Factory workspace: [FACTORY_WORKSPACE]
+          Demo output: [DEMO_OUTPUT]
+          
+          NEXT STEPS:
+          1. Copy the onboarding prompt above
+          2. Start a NEW AI conversation (not this one)
+          3. Paste the prompt to initialize the Factory AI
+          
+          The Factory AI is completely separate from this LEAP session.
+
+# =============================================================================
+# STEP 2: CREATE artifact-manifest.yaml
+# =============================================================================
+
+step2:
+  file: "GoldSource/governance/artifact-manifest.yaml"
+  action: "CREATE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # ARTIFACT MANIFEST
+    # =============================================================================
+    # Defines what artifacts the factory creates and where they belong.
+    # This is the single source of truth for artifact locations.
+    # =============================================================================
+    
+    metadata:
+      name: "Factory Artifact Manifest"
+      version: "1.0.0"
+      purpose: "Define artifact locations and ownership"
+    
+    # =============================================================================
+    # TWO LOCATIONS - UNDERSTAND THE DIFFERENCE
+    # =============================================================================
+    
+    locations:
+      
+      factoryWorkspace:
+        path: "[DemoInstances]/Factory-[version]/"
+        purpose: "Factory process tracking and audit trail"
+        lifecycle: "Keep until demo is delivered, then archive or delete"
+        
+        contains:
+          - "stage-*.yaml (all 8 stages)"
+          - "CURRENT_STATE.yaml (factory progress)"
+          - "Gold Source copy (reference)"
+          - "Wireframe images (from design)"
+        
+        doesNotContain:
+          - "Demo code"
+          - "Demo README"
+      
+      demoOutput:
+        path: "[DemoOutput]/NEXUS-[version]/"
+        purpose: "Final demo product for end user"
+        lifecycle: "Owned by user after factory complete"
+        
+        contains:
+          - "Scaffold code (modified)"
+          - "README.md (demo docs)"
+          - "Demo assets"
+        
+        doesNotContain:
+          - "stage-*.yaml files"
+          - "CURRENT_STATE.yaml"
+          - "Factory tracking"
+    
+    # =============================================================================
+    # ARTIFACT TYPES
+    # =============================================================================
+    
+    artifactTypes:
+      
+      stageArtifacts:
+        location: "factoryWorkspace"
+        naming: "stage-[N]-[name].yaml"
+      
+      currentState:
+        location: "factoryWorkspace"
+        naming: "CURRENT_STATE.yaml"
+      
+      wireframes:
+        location: "factoryWorkspace"
+        naming: "wireframe-[feature].png"
+      
+      demoReadme:
+        location: "demoOutput"
+        naming: "README.md"
+      
+      demoCode:
+        location: "demoOutput"
+    
+    # =============================================================================
+    # ANTI-PATTERNS (AVOID THESE)
+    # =============================================================================
+    
+    antiPatterns:
+      - pattern: "Stage artifacts in demo output"
+        why: "Stage docs are factory process, not demo deliverables"
+        
+      - pattern: "CURRENT_STATE.yaml in demo output"
+        why: "Tracking belongs to factory"
+        
+      - pattern: "Using brain/ folder"
+        why: "Factory should be self-contained"
+
+# =============================================================================
+# STEP 3: MODIFY FACTORY_README.yaml
+# =============================================================================
+
+step3:
+  file: "GoldSource/governance/FACTORY_README.yaml"
+  action: "MODIFY"
+  status: "pending"
+  
+  modification:
+    type: "append"
+    afterLine: 105
+    addContent: |
+      
+      # =============================================================================
+      # ONBOARDING PROMPT FORMAT
+      # =============================================================================
+      # When a human starts a new Factory AI session, they paste the onboarding prompt.
+      # This section explains what you receive and how to respond.
+      # =============================================================================
+      
+      onboardingFormat:
+        description: "LEAP's /newfactory command generates a prompt for you"
+        
+        contains:
+          - "Your role (DemoFactory AI)"
+          - "Demo name and version"
+          - "Scenario description"
+          - "Demo output location"
+          - "Factory workspace location"
+        
+        youShould:
+          - "Read this entire file first"
+          - "Read all governance files"
+          - "Confirm the demo details with the human"
+          - "Begin Stage 1: Discovery"
+          - "Save stage artifacts to FACTORY WORKSPACE (not demo output)"
+
+# =============================================================================
+# STEP 4: MODIFY factory-protocol.yaml
+# =============================================================================
+
+step4:
+  file: "GoldSource/governance/factory-protocol.yaml"
+  action: "MODIFY"
+  status: "pending"
+  
+  modifications:
+    
+    - type: "replace"
+      location: "Lines 52-68 (stageArtifacts section)"
+      newContent: |
+        stageArtifacts:
+          requirement: "Create artifact file for each stage"
+          location: "Factory workspace (NOT demo output)"
+          locationReference: "See artifact-manifest.yaml for details"
+          template: "Use templates from governance/templates/"
+          
+          naming: "stage-[number]-[name].yaml"
+          examples:
+            - "stage-1-discovery.yaml"
+            - "stage-2-research.yaml"
+            - "stage-8-closure.yaml"
+          
+          content:
+            required:
+              - "metadata (demo name, stage, status, dates)"
+              - "objective (what this stage accomplished)"
+              - "findings or outputs"
+              - "next stage reference"
+          
+          critical: |
+            Stage artifacts belong in the FACTORY WORKSPACE.
+            The demo output contains only code and user documentation.
+    
+    - type: "append"
+      afterLine: 117
+      addContent: |
+        
+        # =============================================================================
+        # WORKSPACE LIFECYCLE
+        # =============================================================================
+        
+        workspaceLifecycle:
+          description: "What happens to factory workspace after completion"
+          
+          duringFactory:
+            - "Factory workspace holds stage artifacts"
+            - "Gold Source copy is reference-only"
+            - "CURRENT_STATE.yaml tracks progress"
+          
+          afterCompletion:
+            policy: "Always keep"
+            reason: |
+              LEAP analyzes both factory workspace AND demo output 
+              to improve the factory process and Gold Source.
+            location: "Keep in DemoInstances/ for LEAP review"
+
+# =============================================================================
+# STEP 5: MODIFY lifecycle-stages.yaml
+# =============================================================================
+
+step5:
+  file: "GoldSource/governance/lifecycle-stages.yaml"
+  action: "MODIFY"
+  status: "pending"
+  
+  modifications:
+    
+    - type: "replace"
+      location: "Stage 4 outputs (lines 86-87)"
+      newContent: |
+        outputs:
+          - "stage-4-design.yaml (in factory workspace)"
+          - "Wireframe images for UI changes (in factory workspace)"
+    
+    - type: "replace"
+      location: "Stage 6 definition (lines 110-127)"
+      description: "Rename from Delivery to Validation"
+      newContent: |
+        - stage: 6
+          name: "Validation"
+          purpose: "Validate all Discovery features are implemented"
+          
+          inputs:
+            - "Implementation artifact"
+            - "functionality.yaml (updated)"
+          
+          activities:
+            - "Compare Discovery requirements to functionality.yaml"
+            - "Verify all features implemented or explained in scopeChanges"
+            - "Validate README and documentation complete"
+            - "Confirm deployment readiness"
+          
+          outputs:
+            - "stage-6-validation.yaml (in factory workspace)"
+          
+          gate: "!Proceed"
+    
+    - type: "replace"
+      location: "Stage 7 activities (lines 137-140)"
+      newContent: |
+        activities:
+          - "Start local server: python3 -m http.server 8080"
+          - "Test all demo features in browser"
+          - "Verify against requirements"
+          - "Document any issues"
+
+# =============================================================================
+# STEP 6: REPLACE stage-4-design.yaml TEMPLATE
+# =============================================================================
+
+step6:
+  file: "GoldSource/governance/templates/stage-4-design.yaml"
+  action: "REPLACE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # STAGE 4: DESIGN TEMPLATE
+    # =============================================================================
+    # This document IS the implementation plan. No separate plan needed.
+    # =============================================================================
+    metadata:
+      demo: "[DEMO_NAME]"
+      stage: 4
+      stageName: "design"
+      created: "[TIMESTAMP]"
+      status: "in-progress"
+    
+    designObjective: "Implementation plan and file structure"
+    
+    # =============================================================================
+    # WIREFRAMES (Required for UI changes)
+    # =============================================================================
+    wireframes:
+      requirement: "Generate wireframe images for any new UI elements"
+      tool: "AI image generation"
+      saveLocation: "Factory workspace (not demo output)"
+      
+      images:
+        - name: "[feature-name]-wireframe.png"
+          description: "[What it shows]"
+    
+    # =============================================================================
+    # FILES TO MODIFY/CREATE
+    # =============================================================================
+    filesToModify:
+      - file: "[path/to/file]"
+        changes: "[What changes to make]"
+    
+    filesToCreate:
+      - file: "[path/to/new/file]"
+        purpose: "[What it does]"
+    
+    # =============================================================================
+    # IMPLEMENTATION STEPS
+    # =============================================================================
+    implementationSteps:
+      1: "[Step 1]"
+      2: "[Step 2]"
+    
+    # =============================================================================
+    # SCOPE CHANGES (Track what changed from Discovery)
+    # =============================================================================
+    scopeChanges:
+      description: "Compare this design to stage-1-discovery.yaml requirements"
+      
+      intentionallyDeferred:
+        description: "Features explicitly moved to future phase"
+        items:
+          - feature: "[Feature name]"
+            reason: "[Why deferred]"
+            futurePhase: "[When to address]"
+      
+      notImplemented:
+        description: "Features from Discovery NOT in this design (explain why)"
+        items:
+          - feature: "[Feature from Discovery]"
+            status: "[dropped|simplified|merged]"
+            explanation: "[Why not implemented as originally scoped]"
+    
+    # =============================================================================
+    # TRACEABILITY REVIEW (Required before !Proceed)
+    # =============================================================================
+    traceabilityReview:
+      description: "Before requesting !Proceed, verify design addresses all requirements"
+      
+      checkAgainstStages:
+        stage1Discovery:
+          file: "stage-1-discovery.yaml"
+          verify: "All features from Discovery are in this design OR in scopeChanges"
+        
+        stage2Research:
+          file: "stage-2-research.yaml"
+          verify: "All research findings are addressed in design"
+        
+        stage3Analysis:
+          file: "stage-3-analysis.yaml"
+          verify: "Recommended approach from analysis is reflected here"
+      
+      confirmation:
+        allFeaturesAddressed: "[true|false]"
+        gapsExplained: "[true|false - if false, scopeChanges must explain why]"
+    
+    nextStage:
+      name: "implementation"
+      requires: "!Proceed"
+
+# =============================================================================
+# STEP 7: REPLACE stage-5-implementation.yaml TEMPLATE
+# =============================================================================
+
+step7:
+  file: "GoldSource/governance/templates/stage-5-implementation.yaml"
+  action: "REPLACE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # STAGE 5: IMPLEMENTATION TEMPLATE
+    # =============================================================================
+    metadata:
+      demo: "[DEMO_NAME]"
+      stage: 5
+      stageName: "implementation"
+      created: "[TIMESTAMP]"
+      status: "in-progress"
+    
+    implementationObjective: "Build the demo based on design"
+    
+    # =============================================================================
+    # FILES CHANGED
+    # =============================================================================
+    filesCreated:
+      - "[path/to/file1]"
+    
+    filesModified:
+      - "[path/to/file]"
+    
+    # =============================================================================
+    # FUNCTIONALITY.YAML UPDATE (Required)
+    # =============================================================================
+    functionalityUpdate:
+      description: "Update the demo's functionality.yaml with new capabilities"
+      location: "[DEMO_OUTPUT]/meta/functionality.yaml"
+      
+      newCapabilities:
+        - name: "[New feature name]"
+          description: "[What it does]"
+          addedBy: "Factory - [demo name]"
+      
+      note: |
+        This updates the DEMO's functionality.yaml, not the Gold Source.
+        LEAP will review and decide if any should be promoted to Gold Source.
+    
+    # =============================================================================
+    # COMMITS
+    # =============================================================================
+    commits:
+      - hash: "[commit hash]"
+        message: "[commit message]"
+    
+    nextStage:
+      name: "validation"
+      requires: "!Proceed"
+
+# =============================================================================
+# STEP 8: RENAME & REPLACE stage-6-delivery → stage-6-validation
+# =============================================================================
+
+step8:
+  file: "GoldSource/governance/templates/stage-6-validation.yaml"
+  oldFile: "GoldSource/governance/templates/stage-6-delivery.yaml"
+  action: "RENAME_AND_REPLACE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # STAGE 6: VALIDATION TEMPLATE
+    # =============================================================================
+    # Validates all Discovery features are implemented and documented
+    # =============================================================================
+    metadata:
+      demo: "[DEMO_NAME]"
+      stage: 6
+      stageName: "validation"
+      created: "[TIMESTAMP]"
+      status: "in-progress"
+    
+    validationObjective: "Verify all Discovery features exist in implementation"
+    
+    # =============================================================================
+    # FEATURE VALIDATION (Against functionality.yaml)
+    # =============================================================================
+    featureValidation:
+      description: "Compare stage-1-discovery.yaml features to functionality.yaml"
+      
+      functionalityFile: "[DEMO_OUTPUT]/meta/functionality.yaml"
+      discoveryFile: "[FACTORY_WORKSPACE]/stage-1-discovery.yaml"
+      
+      checklist:
+        - feature: "[Feature from Discovery]"
+          inFunctionality: "[true|false]"
+          implemented: "[true|false]"
+          notes: "[any discrepancy explanation]"
+      
+      summary:
+        totalFeatures: "[number]"
+        implemented: "[number]"
+        missing: "[number]"
+        allAccountedFor: "[true|false]"
+    
+    # =============================================================================
+    # DOCUMENTATION VALIDATION
+    # =============================================================================
+    documentationValidation:
+      readme:
+        exists: "[true|false]"
+        hasQuickStart: "[true|false]"
+        hasFeatureList: "[true|false]"
+      
+      functionalityYaml:
+        updated: "[true|false]"
+        newCapabilitiesListed: "[number]"
+    
+    # =============================================================================
+    # DEPLOYMENT READINESS
+    # =============================================================================
+    deploymentReadiness:
+      serverCommand: "python3 -m http.server 8080"
+      directory: "[DEMO_OUTPUT]"
+      canStart: "[true|false]"
+      url: "http://localhost:8080"
+    
+    nextStage:
+      name: "testing"
+      requires: "!Proceed"
+
+# =============================================================================
+# STEP 9: REPLACE stage-7-testing.yaml TEMPLATE
+# =============================================================================
+
+step9:
+  file: "GoldSource/governance/templates/stage-7-testing.yaml"
+  action: "REPLACE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # STAGE 7: TESTING TEMPLATE
+    # =============================================================================
+    metadata:
+      demo: "[DEMO_NAME]"
+      stage: 7
+      stageName: "testing"
+      created: "[TIMESTAMP]"
+      status: "in-progress"
+    
+    testingObjective: "Verify demo works as intended"
+    
+    # =============================================================================
+    # DEPLOYMENT (Required before testing)
+    # =============================================================================
+    deployment:
+      requirement: "Start local server before testing"
+      command: "python3 -m http.server 8080"
+      directory: "[DEMO_OUTPUT]"
+      url: "http://localhost:8080"
+      status: "[running|not-started]"
+    
+    # =============================================================================
+    # TEST CASES
+    # =============================================================================
+    testCases:
+      
+      coreTests:
+        - id: "TEST-001"
+          name: "[Test name]"
+          steps: ["[Step 1]", "[Step 2]"]
+          expected: "[Expected result]"
+          actual: "[Actual result]"
+          result: "[pass|fail]"
+      
+      edgeCases:
+        - id: "EDGE-001"
+          name: "[Edge case]"
+          expected: "[Expected]"
+          actual: "[Actual]"
+          result: "[pass|fail]"
+    
+    # =============================================================================
+    # SUMMARY
+    # =============================================================================
+    summary:
+      totalTests: "[number]"
+      passed: "[number]"
+      failed: "[number]"
+    
+    issuesFound:
+      - issue: "[Issue]"
+        severity: "[low|medium|high]"
+        resolved: "[true|false]"
+    
+    nextStage:
+      name: "closure"
+      requires: "!Proceed"
+
+# =============================================================================
+# STEP 10: REPLACE stage-8-closure.yaml TEMPLATE
+# =============================================================================
+
+step10:
+  file: "GoldSource/governance/templates/stage-8-closure.yaml"
+  action: "REPLACE"
+  status: "pending"
+  
+  fullContent: |
+    # =============================================================================
+    # STAGE 8: CLOSURE TEMPLATE
+    # =============================================================================
+    metadata:
+      demo: "[DEMO_NAME]"
+      stage: 8
+      stageName: "closure"
+      created: "[TIMESTAMP]"
+      status: "in-progress"
+    
+    closureObjective: "Finalize demo and capture lessons learned"
+    
+    # =============================================================================
+    # DEMO SUMMARY
+    # =============================================================================
+    summary:
+      whatWasBuilt: "[Brief description]"
+      keyFeatures: ["[Feature 1]", "[Feature 2]"]
+      filesCreated: "[number]"
+      filesModified: "[number]"
+      duration: "[total time]"
+    
+    # =============================================================================
+    # LESSONS LEARNED (Be specific!)
+    # =============================================================================
+    lessonsLearned:
+      
+      whatWorkedWell:
+        - "[Specific thing that worked]"
+      
+      whatCouldImprove:
+        - "[Specific improvement]"
+      
+      frictionPoints:
+        description: "Where did you struggle or slow down?"
+        points:
+          - "[Specific friction point]"
+          - "[What caused confusion]"
+      
+      feedbackForGoldSource:
+        - "[Specific suggestion]"
+    
+    # =============================================================================
+    # DEFERRED FEATURES
+    # =============================================================================
+    deferredFeatures:
+      - feature: "[Feature descoped]"
+        reason: "[Why]"
+    
+    # =============================================================================
+    # SIGN-OFF
+    # =============================================================================
+    signOff:
+      demoLocation: "[path]"
+      runCommand: "python3 -m http.server 8080"
+      status: "pending"
+      approvedBy: "[name]"
+
+# =============================================================================
+# STEP 11: MODIFY mock-data.js
+# =============================================================================
+
+step11:
+  file: "GoldSource/scaffold/core/mock-data.js"
+  action: "MODIFY"
+  status: "pending"
+  
+  modification:
+    type: "line-replace"
+    line: 7
+    from: " * @locked true"
+    to: " * @locked false"
+    reason: "Every demo needs to modify mock-data.js"
+
+# =============================================================================
+# POST-IMPLEMENTATION
+# =============================================================================
+
+postImplementation:
+  - task: "Verify all files created/modified correctly"
+    status: "pending"
+  
+  - task: "Git commit implementation"
+    command: "git add -A && git commit -m 'Phase 15: Factory lessons incorporated'"
+    status: "pending"
+  
+  - task: "Proceed to validation stage"
+    status: "pending"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "validation"
+  requires: "!Proceed"
+  focus: "Verify all changes are correct and test /newfactory conceptually"
