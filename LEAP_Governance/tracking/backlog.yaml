@@ -57,6 +57,61 @@ priorities:
       completedDate: "2026-01-18"
       source: "Clean room rebuild - vision reset"
   
+    # -------------------------------------------------------------------------
+    # Phase 17 Governance Process Improvements
+    # -------------------------------------------------------------------------
+    - id: "GOV-003"
+      name: "Delivery Stage Tracking Sync"
+      category: "governance"
+      priority: "immediate"
+      status: "in-progress"
+      description: "Add mandatory backlog count verification to delivery completionCriteria"
+      rationale: "Phase 16 ended with CURRENT_STATE showing wrong counts - sync not enforced"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 16 retrospective"
+      acceptanceCriteria: ["pulse-protocol.yaml delivery criteria includes count verification"]
+    
+    - id: "GOV-004"
+      name: "Acceptance Criteria for Backlog"
+      category: "governance"
+      priority: "immediate"
+      status: "in-progress"
+      description: "Add acceptanceCriteria field to backlog item template"
+      rationale: "No way to verify when backlog items are truly 'done'"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 16 retrospective"
+      acceptanceCriteria: ["backlog.yaml howToAdd template includes acceptanceCriteria field"]
+    
+    - id: "GOV-005"
+      name: "Discovery Validation Rule"
+      category: "governance"
+      priority: "immediate"
+      status: "in-progress"
+      description: "Require source-document verification before claiming 'already done'"
+      rationale: "Phase 16 Discovery claimed items done without checking original complaint"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 16 retrospective"
+      acceptanceCriteria: ["pulse-protocol.yaml discovery criteria includes source verification"]
+    
+    - id: "GOV-006"
+      name: "Governance Is Code Principle"
+      category: "governance"
+      priority: "immediate"
+      status: "in-progress"
+      description: "Establish in constitution that LEAP governance YAML IS code - no skipping stages"
+      rationale: "Stages 2-3 became compliance theatre because governance changes treated as 'less important'"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 17 lesson learned"
+      acceptanceCriteria: ["constitution.yaml governanceManagement section includes Governance Is Code principle", "scope explicitly limited to LEAP_Governance (not GoldSource)"]
+  
   shortTerm:
     # -------------------------------------------------------------------------
     # Previously existing items

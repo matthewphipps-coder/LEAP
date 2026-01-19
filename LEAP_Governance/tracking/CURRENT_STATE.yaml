@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-19T18:54:34Z"
-  version: "3.2.0"
+  lastUpdated: "2026-01-19T19:45:29Z"
+  version: "3.3.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -18,26 +18,31 @@ projectContext:
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "16"
-  name: "Factory Governance Templates"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-19T18:54:34Z"
-  completedDate: "2026-01-19T19:27:23Z"
+  number: "17"
+  name: "Governance Process Improvements"
+  status: "in-progress"
+  stage: "research"
+  startedDate: "2026-01-19T19:45:29Z"
   
-  goal: "Create mandatory stage artifact templates to ensure factory consistency"
+  goal: "Fix process gaps in tracking sync and discovery validation"
   
-  stageArtifact: "docs/phases/phase-16/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-17/stage-1-discovery.yaml"
+  
+  backtrack:
+    from: "analysis"
+    to: "research"
+    reason: "Stages 2-3 were compliance theatre - proper research needed"
+    timestamp: "2026-01-19T19:59:19Z"
   
   previousPhase:
-    number: "15"
-    name: "Factory Lessons Incorporated"
+    number: "16"
+    name: "Factory Governance Templates"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "at-pause-point"
-  summary: "Phase 16 complete - 4 backlog items delivered (LEAP-001, 002, 005, 006)"
+  status: "in-progress"
+  summary: "Phase 17 backtracked to Research - doing it properly this time"
   
   recentWork:
     date: "2026-01-19"
@@ -75,14 +80,18 @@ factoryRunsCompleted:
     testsPassed: 8
 
 backlogState:
-  totalItems: 22
+  totalItems: 26
   complete: 8
+  inProgress: 4
   proposed: 14
   
   completedItems:
     - "GOV-001, GOV-002, VISION-001 (immediate)"
     - "ARCH-003 (architecture)"
     - "LEAP-001, LEAP-002, LEAP-005, LEAP-006 (Phase 16)"
+  
+  inProgressItems:
+    - "GOV-003, GOV-004, GOV-005, GOV-006 (Phase 17)"
   
   byCategory:
     factory-governance: "7 (4 complete, 3 proposed)"
@@ -91,7 +100,7 @@ backlogState:
     archetype-domain: 2
     architecture: "2 (1 complete)"
     user-branding: 1
-    governance: "3 (3 complete)"
+    governance: "7 (3 complete, 4 in-progress)"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
   backlogFile: "LEAP_Governance/tracking/backlog.yaml"
