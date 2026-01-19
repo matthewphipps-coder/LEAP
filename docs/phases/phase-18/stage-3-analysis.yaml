@@ -1,0 +1,259 @@
+# =============================================================================
+# STAGE 3: ANALYSIS - Phase 18: NexusReturns
+# =============================================================================
+# Purpose: Risk assessment, approach comparison, and implementation strategy
+# =============================================================================
+
+metadata:
+  phase: 18
+  name: "NexusReturns"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-19T22:48:27Z"
+  status: "in-progress"
+  author: "AI Architect"
+  gateApproval: "!Proceed received 2026-01-19T22:48:27Z"
+
+# =============================================================================
+# RISK ASSESSMENT
+# =============================================================================
+
+risks:
+  
+  high:
+    - id: "RISK-001"
+      name: "Theme System Complexity"
+      description: "The old theme-manager.js was 197 lines with sticky scenarios, color mixing, and brand themes - this is what broke old NEXUS"
+      likelihood: "high"
+      impact: "high"
+      mitigation: |
+        Build SIMPLE theme system from scratch:
+        - Dark mode default with CSS variables in :root
+        - Light mode via single .light-theme class on body
+        - Two functions: setTheme(theme), getTheme()
+        - NO sticky scenarios, NO color mixing, NO brand injection
+      owner: "Must be implemented carefully"
+    
+    - id: "RISK-002"
+      name: "Scope Creep"
+      description: "Temptation to add 'just one more feature' to scaffold"
+      likelihood: "medium"
+      impact: "high"
+      mitigation: |
+        Strict scope enforcement:
+        - Login, Index shell, Header, Sidebar, Canvas only
+        - NO card types, NO commands, NO enterprise features
+        - Future features go through Factory runs
+      owner: "Executive (Matthew) enforces"
+  
+  medium:
+    - id: "RISK-003"
+      name: "Firebase Configuration"
+      description: "Firebase config contains secrets, needs proper handling"
+      likelihood: "medium"
+      impact: "medium"
+      mitigation: "Use config.template.js pattern, SECRETS.md for documentation"
+    
+    - id: "RISK-004"
+      name: "AI Service Keys"
+      description: "Gemini/Claude API keys need secure storage"
+      likelihood: "medium"
+      impact: "medium"
+      mitigation: "localStorage for dev, proper env vars for production"
+  
+  low:
+    - id: "RISK-005"
+      name: "Browser Compatibility"
+      description: "Glassmorphism requires backdrop-filter support"
+      likelihood: "low"
+      impact: "low"
+      mitigation: "-webkit-backdrop-filter fallback, graceful degradation"
+
+# =============================================================================
+# APPROACH COMPARISON
+# =============================================================================
+
+approaches:
+  
+  APPROACH-A:
+    name: "Full Rebuild from Scratch"
+    description: "Create all files new, no reference to old NEXUS code"
+    pros:
+      - "Completely clean slate"
+      - "No inherited technical debt"
+      - "Forces thinking through every decision"
+    cons:
+      - "Slower - reinventing solved problems"
+      - "May miss edge cases old NEXUS handled"
+      - "Design system needs to be recreated from memory"
+    effort: "Large"
+    risk: "Medium"
+  
+  APPROACH-B:
+    name: "Pattern Reference Build"
+    description: "Create new files but reference old NEXUS for patterns/structure"
+    pros:
+      - "Faster - don't reinvent the wheel"
+      - "Design system values already captured in Research"
+      - "Architecture decisions documented"
+      - "Can cherry-pick what worked"
+    cons:
+      - "Risk of accidentally copying bad patterns"
+      - "Need discipline to not copy code"
+    effort: "Medium"
+    risk: "Low (with governance)"
+  
+  APPROACH-C:
+    name: "Incremental Port"
+    description: "Start with old NEXUS, strip out features, refactor"
+    pros:
+      - "Fastest to functional"
+      - "All edge cases already handled"
+    cons:
+      - "Inherits technical debt"
+      - "Hard to know where brittleness lives"
+      - "Defeats purpose of clean room approach"
+    effort: "Small"
+    risk: "High"
+
+  recommendation:
+    selected: "APPROACH-B"
+    rationale: |
+      APPROACH-B (Pattern Reference Build) provides the best balance:
+      - Uses Research stage findings (design tokens, architecture decisions)
+      - References old NEXUS for patterns but writes new code
+      - Applies AI-First Code standards from the start
+      - Governance prevents scope creep
+      
+      Key difference from APPROACH-C: We're not porting code, we're porting 
+      PATTERNS. Every line is new, informed by what worked and what didn't.
+
+# =============================================================================
+# IMPLEMENTATION STRATEGY
+# =============================================================================
+
+implementationStrategy:
+  
+  phases:
+    - phase: "A - Foundation"
+      description: "Core infrastructure and design system"
+      deliverables:
+        - "design-system.yaml - Document token values"
+        - "core/constants.js - Logging utilities"
+        - "core/state.js - Minimal state manager"
+        - "ui/styles/variables.css - CSS custom properties"
+        - "ui/styles/base.css - Reset and base styles"
+      effort: "~1 session"
+      lock: "These become LOCKED files after phase A"
+    
+    - phase: "B - Authentication"
+      description: "Login page and Firebase auth"
+      deliverables:
+        - "login.html - Glassmorphism login form"
+        - "login.js - Auth logic"
+        - "core/firebase.js - Firebase initialization"
+        - "core/auth-service.js - Auth functions"
+      effort: "~1 session"
+    
+    - phase: "C - Dashboard Shell"
+      description: "Index page with header, sidebar, canvas"
+      deliverables:
+        - "index.html - Main dashboard"
+        - "core/app.js - Bootstrap and orchestration"
+        - "ui/components/header/ - Header component"
+        - "ui/components/sidebar/ - Sidebar component"
+        - "ui/components/canvas/ - Empty canvas"
+      effort: "~1-2 sessions"
+    
+    - phase: "D - Plumbing"
+      description: "AI service, theme system, final polish"
+      deliverables:
+        - "features/ai/ai-service.js - Unified provider interface"
+        - "core/theme-manager.js - SIMPLE dark/light toggle"
+        - "functionality.yaml - Document what scaffold does"
+        - "architectural-standards.yaml updates"
+      effort: "~1 session"
+  
+  totalEstimate: "4-5 sessions"
+  
+  componentPattern:
+    description: "Every UI component follows this structure"
+    structure: |
+      ui/components/{component-name}/
+      ├── {component-name}-ui.js    # Logic, DOM creation
+      └── {component-name}.css      # Co-located styles
+    
+    jsTemplate: |
+      // ===========================================================================
+      // {COMPONENT-NAME} UI COMPONENT
+      // AI-First Code: This module handles {description}
+      // ===========================================================================
+      
+      // MODULE_CONTRACT
+      // provides: [{functions}]
+      // requires: [{dependencies}]
+      // state: [{state it uses}]
+      
+      export function init{ComponentName}() { ... }
+
+# =============================================================================
+# RRMD+ ASSESSMENT
+# =============================================================================
+
+rrmdPlus:
+  required: false
+  rationale: |
+    RRMD+ (Risk, Rollback, Monitoring, Dependencies, Plus) is NOT required because:
+    - This is a greenfield build, not a modification to working code
+    - No production impact - scaffold doesn't exist yet
+    - Easy rollback - just delete new files
+    - No external dependencies being modified
+    
+    Standard LEAP governance (8-stage lifecycle) is sufficient.
+
+# =============================================================================
+# VALIDATION PLAN
+# =============================================================================
+
+validationPlan:
+  
+  perPhase:
+    phaseA:
+      - "CSS variables load correctly"
+      - "State manager initializes without errors"
+      - "Console logging works"
+    
+    phaseB:
+      - "Login page renders with glassmorphism"
+      - "Firebase auth flow works (login/logout)"
+      - "Redirect to index.html on successful auth"
+      - "Redirect to login.html if not authenticated"
+    
+    phaseC:
+      - "Dashboard loads with header, sidebar, canvas"
+      - "Sidebar can collapse/expand"
+      - "User avatar displays in header"
+      - "Logout button works"
+    
+    phaseD:
+      - "Theme toggle works (dark ↔ light)"
+      - "Theme persists across sessions"
+      - "AI service structure exists (can be called)"
+  
+  finalValidation:
+    - "Cold start test: App loads without errors"
+    - "Auth flow: Full login → logout cycle"
+    - "Theme test: Toggle persists correctly"
+    - "Screenshot comparison: Matches expected design"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  number: 4
+  requires: "!Proceed"
+  focus: "Detailed file-by-file implementation plan, wireframes"
+
+analysisComplete: true
