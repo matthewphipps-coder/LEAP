@@ -111,14 +111,15 @@ sourceMaterial:
   
   fromOldNexus:
     take:
-      - "Feature concepts (card types, commands, interactions)"
       - "Visual/UX patterns (what worked for users)"
+      - "Interactions and navigation flows"
     discard:
       - "All code (too much spaghetti)"
       - "Out-of-date functionality.yaml"
       - "Architectural patterns (replace with AI-First Code)"
+      - "Card type implementations (didn't work well, Factory will build new ones later)"
     location: "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS"
-    note: "Reviewed 2026-01-19 - has 567-line functionality.yaml but outdated"
+    note: "Reviewed 2026-01-19 - concepts only, no code. Card types explicitly out of scope for scaffold."
   
   fromFactoryRuns:
     learnings:
@@ -161,6 +162,13 @@ deliverables:
 # =============================================================================
 
 questionsForResearch:
+  
+  functionalityReview:
+    - "What functionality exists in old NEXUS codebase?"
+    - "Complete detailed review of src/ to discover existing features"
+    - "Which features should be considered for porting to scaffold docs (not code)?"
+    - "What interactions/flows worked well and should inform the new build?"
+  
   designSystem:
     - "What color palette should we use? (refer to old NEXUS for inspiration)"
     - "What font families work for the 'future of ServiceNow' aesthetic?"
