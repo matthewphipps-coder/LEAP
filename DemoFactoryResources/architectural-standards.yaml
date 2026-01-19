@@ -2,9 +2,9 @@ metadata:
   type: "governance"
   name: "LEAP Architectural Standards & Code Hygiene"
   purpose: "Mandatory structural rules for LEAP codebase"
-  version: "1.0.0"
+  version: "2.0.0"
   created: "2026-01-15"
-  lastUpdated: "2026-01-15"
+  lastUpdated: "2026-01-19"
   status: "active"
 
 lifecycle:
@@ -240,3 +240,134 @@ documentation:
         - "During !pulse, check ARCHITECTURE.yaml is current"
       
       consequence: "Code changes without architecture documentation will be rejected"
+
+# =============================================================================
+# AI-FIRST CODE STANDARDS
+# =============================================================================
+
+aiFirstCodeStandards:
+  name: "AI-First Code Architecture"
+  purpose: "Code optimized for AI comprehension, maintainability, and impact analysis"
+  
+  philosophy:
+    principle: "Code is written for future AI to fully understand, not just for human reading"
+    benefits:
+      - "AI can perform accurate impact analysis of changes"
+      - "AI can understand dependencies without parsing entire codebase"
+      - "AI can identify affected components before making changes"
+      - "Reduces AI confusion and errors during modifications"
+  
+  fileHeaders:
+    name: "Required File Header Block"
+    required: true
+    enforcement: "Every .js file must start with this header"
+    
+    template: |
+      /**
+       * @file [filename]
+       * @purpose [single sentence describing what this file does]
+       * @layer [core|feature|ui] - which architectural layer
+       * @dependencies [array of files this imports from]
+       * @dependents [array of files that import from this]
+       * @locked [true|false] - can this be modified by demo creation?
+       * @modifyImpact [array of components/behaviors affected by changes]
+       */
+    
+    example: |
+      /**
+       * @file state.js
+       * @purpose StateManager - single source of truth for application state
+       * @layer core
+       * @dependencies []
+       * @dependents [app.js, dashboard-service.js, chat-panel-ui.js]
+       * @locked true
+       * @modifyImpact [all UI components that subscribe to state]
+       */
+  
+  functionAnnotations:
+    name: "Required Function Annotations"
+    required: true
+    enforcement: "Every exported function must have these annotations"
+    
+    template: |
+      /**
+       * @function [functionName]
+       * @purpose [what this function does and why]
+       * @param {type} paramName - description
+       * @returns {type} description
+       * @impacts [what changes when this runs]
+       * @sideEffects [external state changes, if any]
+       */
+    
+    example: |
+      /**
+       * @function updateState
+       * @purpose Merge new state into current state and notify all subscribers
+       * @param {Object} newState - partial state to merge
+       * @returns {void}
+       * @impacts [all subscribed UI components will re-render]
+       * @sideEffects [triggers subscriber callback functions]
+       */
+  
+  moduleContracts:
+    name: "Explicit Module Contracts"
+    required: true
+    enforcement: "Every module must declare what it provides and requires"
+    
+    structure:
+      provides: "Array of function/constant names this module exports"
+      requires: "Array of modules this depends on"
+    
+    example: |
+      // Module contract - declared at top of file after header
+      export const MODULE_CONTRACT = {
+        provides: ['getState', 'updateState', 'subscribe', 'unsubscribe'],
+        requires: []
+      };
+  
+  atomicPrinciples:
+    name: "Atomic Code Principles"
+    rules:
+      - name: "Single Responsibility"
+        rule: "Each function does ONE thing"
+        bad: "function processAndRenderAndSave()"
+        good: "function process(), function render(), function save()"
+      
+      - name: "Explicit Dependencies"
+        rule: "Never rely on implicit globals"
+        bad: "Uses window.appState directly"
+        good: "Import getState from state.js"
+      
+      - name: "Predictable Naming"
+        rule: "Names describe exactly what the code does"
+        pattern: "[verb][Noun][Modifier]"
+        examples:
+          - "getActiveTasksCount()"
+          - "renderChatMessage()"
+          - "handleButtonClick()"
+      
+      - name: "No Magic Values"
+        rule: "All constants are named and documented"
+        bad: "if (status === 3)"
+        good: "if (status === STATUS_COMPLETE)"
+  
+  impactAnalysisSupport:
+    name: "Impact Analysis Enablement"
+    purpose: "Structure code so AI can predict change effects"
+    
+    requirements:
+      - name: "Dependency Graph in Headers"
+        description: "@dependencies and @dependents must be kept current"
+        updateWhen: "Any import/export change"
+      
+      - name: "Side Effect Documentation"
+        description: "@sideEffects must list all external state changes"
+        examples:
+          - "Writes to localStorage"
+          - "Updates DOM outside component"
+          - "Triggers event listeners"
+      
+      - name: "Locked Component Markers"
+        description: "@locked true means demo AI cannot modify this file"
+        enforcement: "Validation stage checks for unauthorized locked file changes"
+
