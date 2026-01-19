@@ -17,12 +17,13 @@ priorities:
     - id: "GOV-001"
       name: "AI Task Tracking Guidance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: "Add guidance that AI should NOT create separate task.md or tracking files"
       rationale: "LEAP's stage artifacts and CURRENT_STATE.yaml are sufficient for progress tracking"
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-18"
+      completedDate: "2026-01-19"
       source: "Phase 4 lesson learned"
     
     - id: "GOV-002"

@@ -2,7 +2,7 @@ metadata:
   type: "governance"
   name: "LEAP Pulse Protocol"
   purpose: "Development methodology for AI-agentic systems"
-  version: "4.0.0"
+  version: "4.1.0"
   created: "2026-01-15"
   lastUpdated: "2026-01-19"
   owner: "Matthew Phipps (Executive Authority)"
@@ -204,3 +204,25 @@ stageArtifacts:
     - "New AI can pick up at any stage without context loss"
     - "No re-work required when AI changes mid-phase"
     - "Audit trail of decisions at each stage"
+
+# =============================================================================
+# AI TRACKING CONSTRAINT - No duplicate tracking
+# =============================================================================
+
+aiTrackingConstraint:
+  rule: "AI MUST NOT create separate task.md or tracking files"
+  reason: "LEAP's stage artifacts and CURRENT_STATE.yaml are the single source of truth"
+  corollary: "If a phase needs separate tracking, it's too big — break it down"
+  
+  authorizedTrackingFiles:
+    - "CURRENT_STATE.yaml"
+    - "Stage artifacts (stage-N-*.yaml)"
+    - "Gate records"
+    - "backlog.yaml"
+    - "bugs.yaml"
+  
+  prohibited:
+    - "task.md"
+    - "progress.md"
+    - "TODO.md"
+    - "Any custom tracking files"
