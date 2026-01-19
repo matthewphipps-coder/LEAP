@@ -4,13 +4,15 @@ metadata:
   purpose: "Feature roadmap and priorities"
   version: "2.0.0"
   created: "2026-01-16"
-  lastUpdated: "2026-01-18"
+  lastUpdated: "2026-01-19"
   status: "active"
 
 summary:
-  totalItems: 3
+  totalItems: 6
+  immediate: 3
+  shortTerm: 3
   
-  note: "Fresh project - backlog to be defined based on new vision"
+  note: "3 items added from Phase 15 deferred findings"
 
 priorities:
   immediate:
@@ -50,7 +52,40 @@ priorities:
       completedDate: "2026-01-18"
       source: "Clean room rebuild - vision reset"
   
-  shortTerm: []
+  shortTerm:
+    - id: "ARCH-002"
+      name: "MODULE_CONTRACT Validation"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add enforcement mechanism to validate MODULE_CONTRACT.provides matches actual exports"
+      rationale: "Factory modified mock-data.js but didn't update MODULE_CONTRACT - need automated check"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 15 finding - deferred"
+    
+    - id: "ARCH-003"
+      name: "ARCHITECTURE.yaml Path Cleanup"
+      priority: "short-term"
+      status: "proposed"
+      description: "Fix stale path references in ARCHITECTURE.yaml (e.g., DemoFactory/src/core/ → GoldSource/scaffold/core/)"
+      rationale: "Cosmetic fix - old paths from pre-Gold Source restructure"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 15 finding - deferred"
+    
+    - id: "USER-003"
+      name: "NEXUS Branding Separation"
+      priority: "short-term"
+      status: "proposed"
+      description: "Decide if Gold Source scaffold should be NEXUS-branded or generic. Clarify LEAP vs Factory vs NEXUS product identity."
+      rationale: "NEXUS branding appears across all three layers causing confusion"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "Phase 15 finding - deferred"
+  
   mediumTerm: []
   future: []
 
