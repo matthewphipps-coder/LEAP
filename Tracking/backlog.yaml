@@ -27,15 +27,16 @@ priorities:
       source: "Phase 4 lesson learned"
     
     - id: "GOV-002"
-      name: "Gate Record Template and Enforcement"
+      name: "Gate Record Enforcement"
       priority: "immediate"
       status: "proposed"
-      description: "Create gate record template and operationalize gate record creation at all stage transitions"
-      rationale: "Phase 4 defined the gate record spec but template doesn't exist yet. Mandatory from Phase 5 onwards."
+      description: "Add enforcement reminders to pulse-protocol for creating gate records at stage transitions"
+      rationale: "Template exists (templates/gate-record-template.yaml) and is now referenced in pulse-protocol, but we're not actually creating gate records yet."
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-18"
-      source: "Phase 4 - External Control and Audit"
+      updatedDate: "2026-01-19"
+      source: "Phase 12 discovery - template existed but wasn't being used"
     
     - id: "VISION-001"
       name: "Define LEAP Vision"
