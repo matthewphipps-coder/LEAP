@@ -44,9 +44,20 @@ vision:
     speedWithQuality:
       - "AI speed (days/weeks, not months)"
       - "Governance rigor (not garbage)"
-    continuousImprovement:
-      - "LEAP validates every demo output"
-      - "Learnings feed back to improve factory"
+  
+  # The LEAP Continuous Improvement Cycle
+  leapCycle:
+    description: "LEAP's core operational workflow"
+    steps:
+      1_buildFactory: "LEAP builds factory instance (/newfactory)"
+      2_executeFactory: "AI+Human execute 8-stage lifecycle, produce demo"
+      3_compareRuns: "LEAP compares factory outputs after 2+ runs"
+      4_analyzeDeviations: "Categorize deviations by root cause"
+      5_populateBacklog: "Add LEAP-XXX items with categories and sources"
+      6_prioritizeWithUser: "Human decides next phase of improvement"
+    
+    result: "Each cycle improves LEAP → better factory → more consistent demos"
+    workflow: "LEAP_Governance/factory-review-workflow.yaml"
   
   targetAudiences:
     leapUsers:
@@ -91,7 +102,6 @@ usage:
     - "Use as north star for feature prioritization"
 
 references:
-  detailedBranding: "project-overview.yaml (colors, typography, messaging)"
   architecture: "ARCHITECTURE.yaml (system structure)"
   functionality: "functionality.yaml (what exists, including Scenario Architect)"
   currentState: "CURRENT_STATE.yaml (where we are now)"

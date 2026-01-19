@@ -1,0 +1,355 @@
+# =============================================================================
+# FACTORY RUN COMPARISON: v1.0.1 vs v1.0.2
+# =============================================================================
+# Compares two factory runs building the same feature to identify deviations
+# that require LEAP governance and template improvements.
+# =============================================================================
+
+metadata:
+  type: "factory-comparison"
+  name: "Factory Comparison: v1.0.1 vs v1.0.2"
+  purpose: "Identify deviations between factory runs to improve LEAP governance"
+  version: "1.0.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "complete"
+  author: "LEAP AI Architect"
+
+# =============================================================================
+# AI CONTEXT
+# =============================================================================
+# This section helps AI agents quickly understand the document's purpose.
+
+aiContext:
+  whatThisIs: "Analysis of structural differences between two factory runs"
+  whyItMatters: "Inconsistencies between runs indicate missing templates/governance"
+  howToUse: "Review deviations, prioritize LEAP improvements, update templates"
+  outputOf: "Comparative analysis of all 8 stage artifacts from both runs"
+
+# =============================================================================
+# COMPARED RUNS
+# =============================================================================
+
+comparedRuns:
+  runA:
+    factory: "Factory-v1.0.1-major-incident"
+    demo: "NEXUS-v1.0.1-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v1.0.1-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v1.0.1-major-incident/"
+    completedDate: "2026-01-19T16:06:00Z"
+    testsRun: 10
+    testsPassed: 10
+  
+  runB:
+    factory: "Factory-v1.0.2-major-incident"
+    demo: "NEXUS-v1.0.2-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v1.0.2-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v1.0.2-major-incident/"
+    completedDate: "2026-01-19T16:54:54Z"
+    testsRun: 8
+    testsPassed: 8
+
+  commonScenario: "Major incident cards with pop-open dialog for AI agent assisted work"
+  commonArchetype: "agentic-dashboard"
+
+# =============================================================================
+# DEVIATION SUMMARY
+# =============================================================================
+
+deviationSummary:
+  totalDeviations: 30
+  
+  bySeverity:
+    critical: 5
+    high: 7
+    medium: 12
+    low: 6
+  
+  byCategory:
+    - category: "Artifact Structure"
+      count: 12
+      severity: "high"
+      description: "Inconsistent section names, missing required fields"
+    
+    - category: "Naming Conventions"
+      count: 6
+      severity: "medium"
+      description: "Different paths, ID formats, section headers"
+    
+    - category: "File Organization"
+      count: 3
+      severity: "medium"
+      description: "Separate data files vs extending mock-data.js"
+    
+    - category: "Metadata & Gates"
+      count: 5
+      severity: "critical"
+      description: "Missing gate approval timestamps in v1.0.1"
+    
+    - category: "Content Quality"
+      count: 4
+      severity: "low"
+      description: "Wireframes, complexity estimates present in v1.0.2 only"
+
+# =============================================================================
+# CRITICAL DEVIATIONS
+# =============================================================================
+
+criticalDeviations:
+
+  - id: "DEV-001"
+    category: "Metadata & Gates"
+    severity: "critical"
+    description: "v1.0.1 lacks gate approval timestamps"
+    v1_0_1: "No gateApproval field in metadata"
+    v1_0_2: "gateApproval: 'Stage N approved with !Proceed at [timestamp]'"
+    impact: "Cannot audit when approvals occurred"
+    leapAction: "LEAP-002: Enforce gate approval recording"
+
+  - id: "DEV-002"
+    category: "Metadata & Gates"
+    severity: "critical"
+    description: "v1.0.1 missing previousStage reference"
+    v1_0_1: "No previousStage field"
+    v1_0_2: "previousStage linked in v1.0.1 but inconsistently"
+    impact: "AI cannot trace artifact lineage"
+    leapAction: "Include in mandatory metadata template"
+
+  - id: "DEV-003"
+    category: "Artifact Structure"
+    severity: "critical"
+    description: "gateQuestion block missing in v1.0.1"
+    v1_0_1: "Only nextStage.requires: '!Proceed'"
+    v1_0_2: "Full gateQuestion with accomplishments summary"
+    impact: "Less guidance for human at gates"
+    leapAction: "LEAP-001: Create mandatory stage templates"
+
+  - id: "DEV-004"
+    category: "Naming Conventions"
+    severity: "high"
+    description: "Feature path inconsistency"
+    v1_0_1: "features/incident/ (singular)"
+    v1_0_2: "features/incidents/ (plural)"
+    impact: "AI cannot predict file locations"
+    leapAction: "LEAP-003: Standardize naming conventions"
+
+  - id: "DEV-005"
+    category: "File Organization"
+    severity: "high"
+    description: "Mock data strategy differs"
+    v1_0_1: "Separate incident-data.js file"
+    v1_0_2: "Extended core/mock-data.js"
+    impact: "Inconsistent codebase structure"
+    leapAction: "LEAP-004: Standardize mock data strategy"
+
+# =============================================================================
+# DETAILED STAGE-BY-STAGE DEVIATIONS
+# =============================================================================
+
+stageDeviations:
+
+  stage1_discovery:
+    - field: "Section name"
+      v1_0_1: "scaffoldAnalysis.existingComponents"
+      v1_0_2: "scaffoldAnalysis.existingComponents.reusable/locked"
+      note: "v1.0.2 separates reusable from locked components"
+    
+    - field: "Feature priority values"
+      v1_0_1: "priority: 'high', 'medium'"
+      v1_0_2: "priority: 'critical', 'high', 'medium'"
+      note: "v1.0.2 adds 'critical' level"
+
+  stage2_research:
+    - field: "Section header"
+      v1_0_1: "scaffoldResearch"
+      v1_0_2: "scaffoldPatterns"
+      note: "Different naming convention"
+    
+    - field: "Pattern documentation"
+      v1_0_1: "Patterns described inline"
+      v1_0_2: "triadPattern, aiFirstHeaders, moduleContracts as named blocks"
+      note: "v1.0.2 more structured"
+
+  stage3_analysis:
+    - field: "Risk array structure"
+      v1_0_1: "riskAssessment: Array with id, area, description..."
+      v1_0_2: "risks: Array with id, name, severity..."
+      note: "Different field names (area vs name)"
+    
+    - field: "Approach comparison"
+      v1_0_1: "approachComparison.approaches.A/B"
+      v1_0_2: "approachComparison.dialogImplementation.optionA/B"
+      note: "v1.0.2 groups by component"
+
+  stage4_design:
+    - field: "Wireframes"
+      v1_0_1: "None"
+      v1_0_2: "wireframe-incident-cards.png, wireframe-incident-dialog.png"
+      note: "v1.0.2 adds visual design artifacts"
+    
+    - field: "Dependency graph"
+      v1_0_1: "Missing"
+      v1_0_2: "dependencyGraph section present"
+      note: "Helps AI understand relationships"
+    
+    - field: "Complexity estimate"
+      v1_0_1: "Missing"
+      v1_0_2: "complexityEstimate with line counts"
+      note: "Improves planning accuracy"
+
+  stage5_implementation:
+    - field: "Line counts"
+      v1_0_1: "Approximate (~175)"
+      v1_0_2: "Exact (207)"
+      note: "v1.0.2 more precise"
+    
+    - field: "Feature path"
+      v1_0_1: "features/incident/"
+      v1_0_2: "features/incidents/"
+      note: "Singular vs plural"
+
+  stage6_validation:
+    - field: "Section header"
+      v1_0_1: "featureValidation"
+      v1_0_2: "requirementsValidation"
+      note: "Different terminology"
+    
+    - field: "Quality checklist"
+      v1_0_1: "Missing"
+      v1_0_2: "qualityChecklist section present"
+      note: "v1.0.2 more thorough"
+
+  stage7_testing:
+    - field: "Test ID format"
+      v1_0_1: "T1 - Page Load"
+      v1_0_2: "TC-001: Dashboard Load"
+      note: "Different naming convention"
+    
+    - field: "Test evidence"
+      v1_0_1: "Screenshots only"
+      v1_0_2: "Screenshots + WebP video recording"
+      note: "v1.0.2 more comprehensive"
+
+  stage8_closure:
+    - field: "Lessons learned structure"
+      v1_0_1: "lessonsLearned: Array with id: LL-001..."
+      v1_0_2: "lessonsLearned.whatWorkedWell/challengesEncountered (no IDs)"
+      note: "Different organization"
+
+# =============================================================================
+# RECOMMENDED LEAP IMPROVEMENTS
+# =============================================================================
+
+recommendations:
+
+  critical:
+    - id: "LEAP-001"
+      name: "Create Stage Artifact Templates"
+      priority: "critical"
+      description: "Mandatory YAML templates for each of the 8 stages"
+      rationale: "Ensures consistent structure across all factory runs"
+      effort: "medium"
+      deliverable: "GoldSource/governance/templates/stage-{N}-template.yaml"
+    
+    - id: "LEAP-002"
+      name: "Enforce Gate Approval Recording"
+      priority: "critical"
+      description: "Require gateApproval field in metadata after stage 1"
+      rationale: "Creates audit trail for compliance"
+      effort: "small"
+      deliverable: "Update all stage templates with required field"
+    
+    - id: "LEAP-003"
+      name: "Standardize Feature Path Naming"
+      priority: "critical"
+      description: "Define whether features use singular or plural naming"
+      rationale: "AI agents need predictable paths"
+      effort: "small"
+      deliverable: "Update architectural-standards.yaml"
+
+  high:
+    - id: "LEAP-004"
+      name: "Standardize Mock Data Strategy"
+      priority: "high"
+      description: "Define when to extend mock-data.js vs create new file"
+      rationale: "Consistent codebase structure"
+      effort: "small"
+      deliverable: "Add to architectural-standards.yaml"
+    
+    - id: "LEAP-005"
+      name: "Require Wireframes in Design Stage"
+      priority: "high"
+      description: "Make wireframes mandatory for UI features"
+      rationale: "Improves design clarity and documentation"
+      effort: "small"
+      deliverable: "Update stage-4 template"
+    
+    - id: "LEAP-006"
+      name: "Standardize Test Case ID Format"
+      priority: "high"
+      description: "Use TC-001 format consistently"
+      rationale: "Easier to reference and track"
+      effort: "small"
+      deliverable: "Update stage-7 template"
+
+  medium:
+    - id: "LEAP-007"
+      name: "Add Dependency Graph to Design"
+      priority: "medium"
+      description: "Require dependency graph in stage-4 design"
+      rationale: "Helps AI understand component relationships"
+      effort: "small"
+      deliverable: "Update stage-4 template"
+    
+    - id: "LEAP-008"
+      name: "Require Complexity Estimates"
+      priority: "medium"
+      description: "Add complexity estimate section to design stage"
+      rationale: "Improves planning accuracy"
+      effort: "small"
+      deliverable: "Update stage-4 template"
+    
+    - id: "LEAP-009"
+      name: "Mandate Test Evidence Files"
+      priority: "medium"
+      description: "Require screenshots and recordings in testing stage"
+      rationale: "Provides verification artifacts"
+      effort: "small"
+      deliverable: "Update stage-7 template"
+
+# =============================================================================
+# MANDATORY METADATA TEMPLATE
+# =============================================================================
+
+mandatoryMetadataTemplate:
+  description: "Required fields for all stage artifacts after stage 1"
+  
+  template:
+    demo: "[REQUIRED] Demo name"
+    stage: "[REQUIRED] Stage number (1-8)"
+    stageName: "[REQUIRED] discovery|research|analysis|design|implementation|validation|testing|closure"
+    created: "[REQUIRED] ISO timestamp"
+    status: "[REQUIRED] in-progress|complete"
+    gateApproval: "[REQUIRED after stage 1] Stage N approved with !Proceed at [timestamp]"
+    previousStage: "[REQUIRED after stage 1] stage-N-name.yaml"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  - step: 1
+    action: "Review this comparison with Matthew"
+    status: "pending"
+  
+  - step: 2
+    action: "Prioritize LEAP improvements (LEAP-001 through LEAP-009)"
+    status: "pending"
+  
+  - step: 3
+    action: "Create/update stage templates in GoldSource/governance/templates/"
+    status: "pending"
+  
+  - step: 4
+    action: "Add validation rules to Factory startup"
+    status: "pending"

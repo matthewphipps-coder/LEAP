@@ -1,0 +1,186 @@
+# =============================================================================
+# TEMPLATE: Factory Run Comparison
+# =============================================================================
+# Use this template when comparing two or more factory runs to identify
+# deviations that require LEAP governance improvements.
+# =============================================================================
+# Location: LEAP_Governance/templates/factory-comparison.yaml
+# Output: FactoryTestRuns/factory-comparison-{runA}-vs-{runB}.yaml
+# =============================================================================
+
+metadata:
+  type: "factory-comparison"
+  name: "Factory Comparison: [Run A] vs [Run B]"
+  purpose: "Identify deviations between factory runs to improve LEAP governance"
+  version: "1.0.0"
+  created: "YYYY-MM-DD"
+  lastUpdated: "YYYY-MM-DD"
+  status: "in-progress"  # in-progress | complete
+  author: "[Author Name]"
+
+# =============================================================================
+# AI CONTEXT
+# =============================================================================
+# This section helps AI agents quickly understand the document's purpose.
+# LEAP needs this for: AI handoff, session continuity, quick orientation.
+
+aiContext:
+  whatThisIs: "Analysis of structural differences between two factory runs"
+  whyItMatters: "Inconsistencies between runs indicate missing templates/governance"
+  howToUse: "Review deviations, prioritize LEAP improvements, update templates"
+  outputOf: "Comparative analysis of stage artifacts from compared runs"
+  
+  # Quick reference for AI agents
+  keyQuestions:
+    - "Which run is more consistent with LEAP governance?"
+    - "What templates need to be created or updated?"
+    - "What backlog items should be created from findings?"
+
+# =============================================================================
+# COMPARED RUNS
+# =============================================================================
+# Document the factory runs being compared.
+
+comparedRuns:
+  runA:
+    factory: "[Factory Name/Version]"
+    demo: "[Demo Output Name]"
+    outputLocation: "[Path to demo output]"
+    workspaceLocation: "[Path to factory workspace]"
+    completedDate: "[ISO timestamp]"
+    testsRun: "[Number]"
+    testsPassed: "[Number]"
+  
+  runB:
+    factory: "[Factory Name/Version]"
+    demo: "[Demo Output Name]"
+    outputLocation: "[Path to demo output]"
+    workspaceLocation: "[Path to factory workspace]"
+    completedDate: "[ISO timestamp]"
+    testsRun: "[Number]"
+    testsPassed: "[Number]"
+
+  # Only include if comparing similar scenarios
+  commonScenario: "[Brief description of what both demos built]"
+  commonArchetype: "[Archetype used by both]"
+
+# =============================================================================
+# DEVIATION SUMMARY
+# =============================================================================
+# High-level overview of all deviations found.
+
+deviationSummary:
+  totalDeviations: 0
+  
+  bySeverity:
+    critical: 0   # Audit/compliance issues
+    high: 0       # Structural inconsistencies  
+    medium: 0     # Naming/organization differences
+    low: 0        # Quality/completeness variations
+  
+  byCategory: []
+    # Use this structure:
+    # - category: "Category Name"
+    #   count: 0
+    #   severity: "critical|high|medium|low"
+    #   description: "Brief description"
+
+# =============================================================================
+# CRITICAL DEVIATIONS
+# =============================================================================
+# Deviations that must be addressed for governance compliance.
+# Each deviation should link to a LEAP improvement recommendation.
+
+criticalDeviations: []
+  # Use this structure:
+  # - id: "DEV-001"
+  #   category: "Category"
+  #   severity: "critical|high|medium|low"
+  #   description: "What differs between runs"
+  #   v1_value: "What Run A has"
+  #   v2_value: "What Run B has"
+  #   impact: "Why this matters"
+  #   leapAction: "LEAP-XXX: Recommended improvement"
+
+# =============================================================================
+# STAGE-BY-STAGE DEVIATIONS
+# =============================================================================
+# Detailed comparison at each lifecycle stage.
+
+stageDeviations:
+  stage1_discovery: []
+  stage2_research: []
+  stage3_analysis: []
+  stage4_design: []
+  stage5_implementation: []
+  stage6_validation: []
+  stage7_testing: []
+  stage8_closure: []
+  
+  # Use this structure for each deviation:
+  # - field: "Field or section name"
+  #   v1_value: "Run A value"
+  #   v2_value: "Run B value"
+  #   note: "Observation or recommendation"
+
+# =============================================================================
+# RECOMMENDED LEAP IMPROVEMENTS
+# =============================================================================
+# Actionable items for LEAP backlog.
+
+recommendations:
+  critical: []
+  high: []
+  medium: []
+  low: []
+  
+  # Use this structure:
+  # - id: "LEAP-XXX"
+  #   name: "Improvement Name"
+  #   priority: "critical|high|medium|low"
+  #   description: "What needs to change"
+  #   rationale: "Why it matters"
+  #   effort: "small|medium|large"
+  #   deliverable: "What will be created/updated"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+# Track follow-up actions.
+
+nextSteps: []
+  # Use this structure:
+  # - step: 1
+  #   action: "Description of action"
+  #   status: "pending|in-progress|complete"
+  #   assignedTo: "[Optional]"
+
+# =============================================================================
+# TEMPLATE USAGE NOTES
+# =============================================================================
+# 
+# WHEN TO USE THIS TEMPLATE:
+# - After completing 2+ factory runs with similar scope
+# - When investigating factory inconsistencies
+# - During factory governance improvement phases
+#
+# HOW TO USE:
+# 1. Create file: FactoryTestRuns/factory-comparison-{runA}-vs-{runB}.yaml
+# 2. Read all stage artifacts from both runs
+# 3. Document deviations by category and severity
+# 4. Create LEAP improvement recommendations
+# 5. Review with Executive Authority
+#
+# AI-FRIENDLINESS FEATURES:
+# - aiContext section for quick orientation
+# - Consistent field names across all sections
+# - Severity ratings for prioritization
+# - Clear LEAP-XXX IDs for backlog tracking
+# - Stage-by-stage breakdown matches factory lifecycle
+#
+# WHAT LEAP NEEDS FROM THIS:
+# - Identification of missing templates
+# - Prioritized improvement backlog
+# - Evidence for governance changes
+# - Audit trail of factory evolution
+# =============================================================================

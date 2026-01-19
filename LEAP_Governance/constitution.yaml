@@ -13,12 +13,18 @@ preamble:
 
 documentHierarchy:
   masterContract: "constitution.yaml (this file - always wins)"
-  operationalProtocols:
+  
+  standingProtocols:  # Always in effect
     - "pulse-protocol.yaml - Development methodology"
     - "safety-protocol.yaml - Backup and deployment"
-    - "rrmd-protocol.yaml - Risk assessment"
-    - "bump-protocol.yaml - Agent recovery"
-    - "agent-persona.yaml - Peer review"
+    - "agent-persona.yaml - Peer review personas"
+    
+  triggeredWorkflows:  # Activated by command or condition
+    - "rrmd-protocol.yaml - Risk assessment (>3 files, core files, failures)"
+    - "bump-protocol.yaml - Agent recovery (!bump)"
+    - "newfactory-workflow.yaml - New factory (/newfactory)"
+    - "factory-review-workflow.yaml - Compare runs (after 2+ factory runs)"
+    
   reference:
     - "CURRENT_STATE.yaml - Current state tracker"
     - "INDEX.yaml - Governance entry point"

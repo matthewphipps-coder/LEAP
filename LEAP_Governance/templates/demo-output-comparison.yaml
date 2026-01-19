@@ -1,0 +1,226 @@
+# =============================================================================
+# TEMPLATE: Demo Output Comparison
+# =============================================================================
+# Use this template when comparing the actual code outputs from two or more
+# factory runs to identify code-level deviations requiring LEAP improvements.
+# =============================================================================
+# Location: LEAP_Governance/templates/demo-output-comparison.yaml
+# Output: FactoryTestRuns/demo-output-comparison-{demoA}-vs-{demoB}.yaml
+# =============================================================================
+
+metadata:
+  type: "demo-output-comparison"
+  name: "Demo Output Comparison: [Demo A] vs [Demo B]"
+  purpose: "Identify code-level deviations between factory outputs"
+  version: "1.0.0"
+  created: "YYYY-MM-DD"
+  lastUpdated: "YYYY-MM-DD"
+  status: "in-progress"  # in-progress | complete
+  author: "[Author Name]"
+
+# =============================================================================
+# AI CONTEXT
+# =============================================================================
+# Helps AI agents quickly understand document purpose.
+
+aiContext:
+  whatThisIs: "Comparison of actual demo code produced by multiple factory runs"
+  whyItMatters: "Code inconsistencies make demos harder to maintain and learn from"
+  howToUse: "Review deviations, update Gold Source standards, improve factory templates"
+  relatedDocument: "[Path to corresponding factory-comparison.yaml if exists]"
+
+# =============================================================================
+# COMPARED DEMOS
+# =============================================================================
+
+comparedDemos:
+  demoA:
+    name: "[Demo Name]"
+    location: "[Full path to demo output]"
+    totalFiles: 0
+    newFeatureFiles: 0
+    linesOfCode: 0
+  
+  demoB:
+    name: "[Demo Name]"
+    location: "[Full path to demo output]"
+    totalFiles: 0
+    newFeatureFiles: 0
+    linesOfCode: 0
+
+# =============================================================================
+# FILE STRUCTURE COMPARISON
+# =============================================================================
+# Compare directory layouts and file organization.
+
+fileStructureComparison:
+  
+  rootLevel:
+    demoA: []
+    demoB: []
+    deviation: "[Describe root-level differences]"
+  
+  featureFolder:
+    demoA:
+      path: "[Path]"
+      files: []
+    demoB:
+      path: "[Path]"
+      files: []
+    deviations: []
+  
+  coreFolder:
+    demoA: {}
+    demoB: {}
+    deviation: "[Describe differences]"
+  
+  uiComponents:
+    componentName:
+      demoA:
+        js: "[size]"
+        css: "[size]"
+      demoB:
+        js: "[size]"
+        css: "[size]"
+      deviation: "[Describe differences]"
+
+# =============================================================================
+# CODE ARCHITECTURE DEVIATIONS
+# =============================================================================
+# Compare actual code patterns, not just file structure.
+
+codeDeviations:
+
+  critical: []
+  high: []
+  medium: []
+  low: []
+  
+  # Use this structure for each deviation:
+  # - id: "CODE-XXX"
+  #   category: "Category Name"
+  #   description: "What differs"
+  #   demoA_value: "What Demo A has"
+  #   demoB_value: "What Demo B has"
+  #   impact: "Why this matters"
+  #   leapAction: "LEAP-XXX: Recommended improvement"
+
+# =============================================================================
+# COMMON DEVIATION CATEGORIES
+# =============================================================================
+# Reference list - delete or adapt as needed.
+
+deviationCategories:
+  - "Directory/File Naming"
+  - "State Management"
+  - "Function Naming/API"
+  - "HTML/CSS Patterns"
+  - "Mock Data Strategy"
+  - "Import Path Conventions"
+  - "Documentation"
+  - "Data Shapes/Schemas"
+
+# =============================================================================
+# DOCUMENTATION DEVIATIONS
+# =============================================================================
+
+documentationDeviations: []
+  # Use this structure:
+  # - id: "DOC-XXX"
+  #   description: "What differs"
+  #   demoA_value: "Demo A approach"
+  #   demoB_value: "Demo B approach"
+  #   leapAction: "Recommended fix"
+
+# =============================================================================
+# DEVIATION SUMMARY
+# =============================================================================
+
+deviationSummary:
+  total: 0
+  
+  bySeverity:
+    critical: 0
+    high: 0
+    medium: 0
+    low: 0
+  
+  byCategory: []
+    # - category: "Category Name"
+    #   count: 0
+    #   severity: "critical|high|medium|low"
+
+# =============================================================================
+# RECOMMENDED LEAP IMPROVEMENTS
+# =============================================================================
+
+recommendations:
+  critical: []
+  high: []
+  medium: []
+  low: []
+  
+  # Use this structure:
+  # - id: "LEAP-XXX"
+  #   name: "Improvement Name"
+  #   description: "What needs to change"
+  #   deliverable: "What will be created/updated"
+  #   effort: "small|medium|large"
+
+# =============================================================================
+# COMPARISON MATRIX
+# =============================================================================
+# Quick reference table for key differences.
+
+comparisonMatrix:
+  headers: ["Aspect", "Demo A", "Demo B", "Recommendation"]
+  rows: []
+    # - ["Aspect name", "Demo A value", "Demo B value", "What to standardize"]
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps: []
+  # - step: 1
+  #   action: "Description"
+  #   status: "pending|in-progress|complete"
+
+# =============================================================================
+# TEMPLATE USAGE NOTES
+# =============================================================================
+# 
+# WHEN TO USE THIS TEMPLATE:
+# - After completing 2+ factory runs that produced demo outputs
+# - When investigating code inconsistencies between demos
+# - To identify Gold Source improvements needed
+#
+# HOW TO USE:
+# 1. Create: FactoryTestRuns/demo-output-comparison-{demoA}-vs-{demoB}.yaml
+# 2. List all files in both demo outputs
+# 3. Compare key files: service.js, *-ui.js, index.html, README.md
+# 4. Document deviations by category and severity
+# 5. Create LEAP improvement recommendations
+# 6. Review with Executive Authority
+#
+# FOCUS AREAS FOR COMPARISON:
+# - Directory structure and naming (singular vs plural)
+# - File organization (separate files vs extending existing)
+# - State shapes and access patterns
+# - Function names and MODULE_CONTRACT exports
+# - HTML structure and CSS class naming
+# - Mock data schemas
+# - Documentation presence (README, functionality.yaml)
+#
+# AI-FRIENDLINESS FEATURES:
+# - aiContext section for quick orientation
+# - Consistent structure matching factory-comparison.yaml
+# - LEAP-XXX IDs for backlog tracking
+# - Comparison matrix for quick reference
+#
+# WHAT LEAP NEEDS FROM THIS:
+# - Code pattern standards to add to architectural-standards.yaml
+# - Templates to add to GoldSource/archetypes/
+# - Naming conventions to enforce
+# - Documentation requirements for demo outputs
+# =============================================================================

@@ -2,22 +2,25 @@ metadata:
   type: "tracking"
   name: "LEAP Feature Backlog"
   purpose: "Feature roadmap and priorities"
-  version: "2.0.0"
+  version: "3.0.0"
   created: "2026-01-16"
   lastUpdated: "2026-01-19"
   status: "active"
 
 summary:
-  totalItems: 6
+  totalItems: 22
   immediate: 3
-  shortTerm: 3
+  shortTerm: 19
   
-  note: "3 items added from Phase 15 deferred findings"
+  note: "16 items added from Factory v1.0.1 vs v1.0.2 comparison analysis"
+  
+  categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
 priorities:
   immediate:
     - id: "GOV-001"
       name: "AI Task Tracking Guidance"
+      category: "governance"
       priority: "immediate"
       status: "complete"
       description: "Add guidance that AI should NOT create separate task.md or tracking files"
@@ -30,6 +33,7 @@ priorities:
     
     - id: "GOV-002"
       name: "Gate Record Enforcement"
+      category: "governance"
       priority: "immediate"
       status: "complete"
       description: "Template referenced in pulse-protocol gateRecords section with full spec"
@@ -42,6 +46,7 @@ priorities:
     
     - id: "VISION-001"
       name: "Define LEAP Vision"
+      category: "governance"
       priority: "immediate"
       status: "complete"
       description: "Define what LEAP is - its purpose, target users, core functionality, and value proposition"
@@ -53,8 +58,12 @@ priorities:
       source: "Clean room rebuild - vision reset"
   
   shortTerm:
+    # -------------------------------------------------------------------------
+    # Previously existing items
+    # -------------------------------------------------------------------------
     - id: "ARCH-002"
       name: "MODULE_CONTRACT Validation"
+      category: "architecture"
       priority: "short-term"
       status: "proposed"
       description: "Add enforcement mechanism to validate MODULE_CONTRACT.provides matches actual exports"
@@ -66,8 +75,10 @@ priorities:
     
     - id: "ARCH-003"
       name: "ARCHITECTURE.yaml Path Cleanup"
+      category: "architecture"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-19"
       description: "Fix stale path references in ARCHITECTURE.yaml (e.g., DemoFactory/src/core/ → GoldSource/scaffold/core/)"
       rationale: "Cosmetic fix - old paths from pre-Gold Source restructure"
       estimatedEffort: "small"
@@ -77,6 +88,7 @@ priorities:
     
     - id: "USER-003"
       name: "NEXUS Branding Separation"
+      category: "user-branding"
       priority: "short-term"
       status: "proposed"
       description: "Decide if Gold Source scaffold should be NEXUS-branded or generic. Clarify LEAP vs Factory vs NEXUS product identity."
@@ -85,15 +97,221 @@ priorities:
       dependencies: []
       addedDate: "2026-01-19"
       source: "Phase 15 finding - deferred"
+    
+    # -------------------------------------------------------------------------
+    # Factory Governance Items (from factory comparison)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-001"
+      name: "Create Stage Artifact Templates"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Create mandatory YAML templates for each of the 8 factory stages"
+      rationale: "Both factory runs produced inconsistent artifact structures - templates will enforce consistency"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-002"
+      name: "Enforce Gate Approval Recording"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Require gateApproval field in metadata after stage 1"
+      rationale: "v1.0.1 lacked gate approval timestamps - creates audit trail for compliance"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-005"
+      name: "Require Wireframes in Design Stage"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Make wireframes mandatory for UI features in stage 4"
+      rationale: "v1.0.2 had wireframes, v1.0.1 did not - improves design clarity"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-006"
+      name: "Standardize Test Case ID Format"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Use consistent TC-001 format for test case IDs"
+      rationale: "v1.0.1 used 'T1 - Page Load', v1.0.2 used 'TC-001: Dashboard Load'"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-007"
+      name: "Add Dependency Graph to Design"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Require dependency graph section in stage 4 design"
+      rationale: "v1.0.2 had dependency graph, v1.0.1 did not - helps AI understand relationships"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-008"
+      name: "Require Complexity Estimates"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add complexity estimate section to design stage"
+      rationale: "v1.0.2 had complexity estimates, v1.0.1 did not - improves planning accuracy"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-009"
+      name: "Mandate Test Evidence Files"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Require screenshots and recordings in testing stage"
+      rationale: "v1.0.2 had video recording, v1.0.1 only screenshots - provides verification artifacts"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-001"]
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    # -------------------------------------------------------------------------
+    # Gold Source Scaffold Items (from demo output comparison)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-003"
+      name: "Standardize Feature Path Naming"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define whether features use singular or plural naming (e.g., incident/ vs incidents/)"
+      rationale: "v1.0.1 used singular, v1.0.2 used plural - AI cannot predict file locations"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-004"
+      name: "Standardize Mock Data Strategy"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define when to extend mock-data.js vs create feature-specific data files"
+      rationale: "v1.0.1 created separate file, v1.0.2 extended mock-data.js - inconsistent structure"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-012"
+      name: "Standardize State Shapes"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define recommended state structure for common patterns (nested vs sibling)"
+      rationale: "v1.0.1 used sibling state.incidentChat, v1.0.2 nested incidents.chat - harder to share learnings"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-016"
+      name: "Define Service Function Patterns"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Standard function names for load, open, close, send patterns"
+      rationale: "v1.0.1: loadIncidentData(), v1.0.2: loadIncidents() - cannot copy/paste between demos"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-017"
+      name: "Standardize Status/Enum Values"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define case conventions for status strings (lowercase vs Title Case)"
+      rationale: "v1.0.1: 'resolved' (lowercase), v1.0.2: 'Resolved' (Title Case) - status comparisons break"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    # -------------------------------------------------------------------------
+    # Demo Output Standards (from demo output comparison)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-014"
+      name: "Require functionality.yaml in Demos"
+      category: "demo-output"
+      priority: "short-term"
+      status: "proposed"
+      description: "Every demo output should include meta/functionality.yaml"
+      rationale: "v1.0.2 had functionality.yaml documenting features, v1.0.1 did not"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-015"
+      name: "Create README Template"
+      category: "demo-output"
+      priority: "short-term"
+      status: "proposed"
+      description: "Standardize demo README structure"
+      rationale: "v1.0.1 had 109-line README, v1.0.2 had 83-line README - formats differ significantly"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    # -------------------------------------------------------------------------
+    # Archetype/Domain Items (from demo output comparison)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-013"
+      name: "Create Component HTML Templates"
+      category: "archetype-domain"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define reusable HTML structures for cards, dialogs, lists"
+      rationale: "v1.0.1 and v1.0.2 had different card HTML structures - CSS patterns not reusable"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+    
+    - id: "LEAP-018"
+      name: "Create Domain Data Schemas"
+      category: "archetype-domain"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define incident, task, user data shapes in archetypes"
+      rationale: "v1.0.1: impactedServices (array), v1.0.2: affectedService (string) - cannot share mock data"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-19"
+      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
   
   mediumTerm: []
   future: []
 
 howToAdd:
   templateRef: "LEAP_Governance/templates/tracking.yaml"
+  categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
   template: |
     - id: "FEATURE-XXX"
       name: "Feature name"
+      category: "[category-id from backlog-categories.yaml]"
       priority: "immediate|short-term|medium-term|future"
       status: "proposed|approved|in-progress|complete"
       description: "What this feature does"
@@ -101,3 +319,4 @@ howToAdd:
       estimatedEffort: "small|medium|large"
       dependencies: []
       addedDate: "YYYY-MM-DD"
+      source: "[Reference to finding or conversation]"

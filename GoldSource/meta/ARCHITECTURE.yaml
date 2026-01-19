@@ -186,7 +186,7 @@ architecturalPatterns:
   stateManagement:
     name: "Centralized StateManager"
     pattern: "Pub/Sub with immutable updates"
-    location: "src/core/state.js"
+    location: "GoldSource/scaffold/core/state.js"
   
   aiFirstCode:
     name: "AI-First Code Standards"
@@ -229,7 +229,7 @@ extensionPoints:
   
   addingNewComponent:
     steps:
-      - "Create src/ui/components/[name]/ folder"
+      - "Create GoldSource/scaffold/ui/components/[name]/ folder"
       - "Create [name]-ui.js with AI-First headers"
       - "Create [name].css for styles"
       - "Register in app.js initialization"
@@ -237,7 +237,7 @@ extensionPoints:
   
   addingNewService:
     steps:
-      - "Create src/features/[name]/ folder"
+      - "Create GoldSource/scaffold/features/[name]/ folder"
       - "Create [name]-service.js with AI-First headers"
       - "Import in relevant UI components"
       - "Update this ARCHITECTURE.yaml"

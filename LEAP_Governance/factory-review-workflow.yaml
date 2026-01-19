@@ -1,0 +1,119 @@
+# =============================================================================
+# FACTORY REVIEW WORKFLOW
+# =============================================================================
+# Triggered after 2+ factory runs complete to compare outputs and identify
+# deviations that should be added to the LEAP backlog.
+# =============================================================================
+
+metadata:
+  name: "Factory Review Workflow"
+  trigger: "After 2+ factory runs with same scenario"
+  type: "workflow"
+  version: "1.0.0"
+  created: "2026-01-19"
+
+# =============================================================================
+# WHEN TO USE
+# =============================================================================
+
+whenToUse:
+  conditions:
+    - "Two or more factory runs have completed"
+    - "Runs built the same or similar feature"
+    - "You want to identify inconsistencies for LEAP improvement"
+  
+  notFor:
+    - "Comparing completely different features"
+    - "Single factory run (nothing to compare)"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  1_locateRuns:
+    action: "Identify completed factory runs to compare"
+    locations:
+      factoryWorkspaces: "~/Documents/DemoInstances/Factory-*/"
+      demoOutputs: "~/Documents/DemoOutput/NEXUS-*/"
+    gather:
+      - "Factory version (e.g., v1.0.1, v1.0.2)"
+      - "Feature name"
+      - "Completion date"
+
+  2_compareArtifacts:
+    action: "Compare factory stage artifacts (1-8)"
+    template: "LEAP_Governance/templates/factory-comparison.yaml"
+    output: "FactoryTestRuns/factory-comparison-{vA}-vs-{vB}.yaml"
+    focus:
+      - "Artifact structure consistency"
+      - "Metadata and gate tracking"
+      - "Section naming conventions"
+      - "Content completeness"
+
+  3_compareDemoCode:
+    action: "Compare actual demo code outputs"
+    template: "LEAP_Governance/templates/demo-output-comparison.yaml"
+    output: "FactoryTestRuns/demo-output-comparison-{vA}-vs-{vB}.yaml"
+    focus:
+      - "Directory structure"
+      - "File naming conventions"
+      - "Code patterns (state, functions, imports)"
+      - "Documentation (README, functionality.yaml)"
+
+  4_categorizeDeviations:
+    action: "Categorize deviations by root cause"
+    reference: "LEAP_Governance/tracking/backlog-categories.yaml"
+    categories:
+      - "factory-governance: Factory process needs improvement"
+      - "scaffold-conventions: Gold Source scaffold needs patterns"
+      - "demo-output: Demo output standards needed"
+      - "archetype-domain: Domain templates needed"
+
+  5_addToBacklog:
+    action: "Add LEAP improvement items to backlog"
+    location: "LEAP_Governance/tracking/backlog.yaml"
+    requirements:
+      - "Unique LEAP-XXX ID"
+      - "Category from backlog-categories.yaml"
+      - "Source reference to comparison document"
+      - "Clear rationale citing specific deviations"
+
+  6_reviewWithUser:
+    action: "Present findings for prioritization"
+    present:
+      - "Summary of deviations found"
+      - "New backlog items added"
+      - "Recommended priority order (if any)"
+    waitFor: "User direction on next phase"
+
+# =============================================================================
+# OUTPUT ARTIFACTS
+# =============================================================================
+
+outputs:
+  comparison:
+    - "FactoryTestRuns/factory-comparison-{vA}-vs-{vB}.yaml"
+    - "FactoryTestRuns/demo-output-comparison-{vA}-vs-{vB}.yaml"
+  
+  backlog:
+    - "Updated LEAP_Governance/tracking/backlog.yaml"
+  
+  templates:
+    - "LEAP_Governance/templates/factory-comparison.yaml"
+    - "LEAP_Governance/templates/demo-output-comparison.yaml"
+
+# =============================================================================
+# CONTINUOUS IMPROVEMENT
+# =============================================================================
+
+continuousImprovement:
+  purpose: "Each factory run comparison improves LEAP"
+  cycle:
+    - "Factory builds demo"
+    - "LEAP compares factory outputs"
+    - "Deviations become backlog items"
+    - "Backlog items improve LEAP"
+    - "Improved LEAP builds better factory"
+    - "Better factory produces more consistent demos"

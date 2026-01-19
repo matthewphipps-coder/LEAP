@@ -1,0 +1,373 @@
+# =============================================================================
+# DEMO OUTPUT COMPARISON: v1.0.1 vs v1.0.2
+# =============================================================================
+# Compares the actual demo code outputs to identify deviations requiring
+# LEAP improvements for more consistent factory outputs.
+# =============================================================================
+
+metadata:
+  type: "demo-output-comparison"
+  name: "Demo Output Comparison: NEXUS v1.0.1 vs v1.0.2"
+  purpose: "Identify code-level deviations between factory outputs"
+  version: "1.0.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "complete"
+  author: "LEAP AI Architect"
+
+aiContext:
+  whatThisIs: "Comparison of actual demo code produced by two factory runs"
+  whyItMatters: "Code inconsistencies make demos harder to maintain and learn from"
+  howToUse: "Review deviations, update Gold Source standards, improve factory templates"
+  relatedDocument: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+
+# =============================================================================
+# COMPARED DEMOS
+# =============================================================================
+
+comparedDemos:
+  demoA:
+    name: "NEXUS-v1.0.1-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.1-major-incident/"
+    totalFiles: 16
+    newFeatureFiles: 8
+    linesOfCode: ~1550
+  
+  demoB:
+    name: "NEXUS-v1.0.2-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.2-major-incident/"
+    totalFiles: 17
+    newFeatureFiles: 6
+    linesOfCode: ~1300
+
+# =============================================================================
+# FILE STRUCTURE COMPARISON
+# =============================================================================
+
+fileStructureComparison:
+  
+  rootLevel:
+    v1_0_1:
+      - "README.md (3.3 KB)"
+      - "index.html"
+      - "core/"
+      - "features/"
+      - "ui/"
+    v1_0_2:
+      - "README.md (2.5 KB)"
+      - "index.html"
+      - "core/"
+      - "features/"
+      - "ui/"
+      - "meta/  ★ EXTRA"
+    deviation: "v1.0.2 includes meta/ folder with functionality.yaml"
+  
+  featureFolder:
+    v1_0_1:
+      path: "features/incident/"
+      files:
+        - "incident-data.js (9.6 KB)"
+        - "incident-service.js (7.9 KB)"
+    v1_0_2:
+      path: "features/incidents/"
+      files:
+        - "incident-service.js (6.8 KB)"
+    deviations:
+      - "Directory naming: singular 'incident' vs plural 'incidents'"
+      - "v1.0.1 has separate incident-data.js, v1.0.2 extends mock-data.js"
+      - "Mock data location strategy differs"
+  
+  coreFolder:
+    v1_0_1:
+      mockDataSize: "5.2 KB"
+    v1_0_2:
+      mockDataSize: "15.6 KB"
+    deviation: "v1.0.2 mock-data.js is 3x larger (extended with incident data)"
+  
+  uiComponents:
+    incidentCards:
+      v1_0_1:
+        js: "6.8 KB (204 lines)"
+        css: "6.8 KB"
+      v1_0_2:
+        js: "6.0 KB (187 lines)"
+        css: "5.5 KB"
+      deviation: "v1.0.1 slightly larger with more helper functions"
+    
+    incidentDialog:
+      v1_0_1:
+        js: "12.2 KB"
+        css: "12.8 KB"
+      v1_0_2:
+        js: "13.3 KB"
+        css: "10.6 KB"
+      deviation: "v1.0.2 JS larger but CSS smaller"
+
+# =============================================================================
+# CODE ARCHITECTURE DEVIATIONS
+# =============================================================================
+
+codeDeviations:
+
+  critical:
+    - id: "CODE-001"
+      category: "Directory Naming"
+      description: "Feature folder naming inconsistency"
+      v1_0_1: "features/incident/ (singular)"
+      v1_0_2: "features/incidents/ (plural)"
+      impact: "AI agents cannot predict feature folder names"
+      leapAction: "Add naming convention to architectural-standards.yaml"
+
+    - id: "CODE-002"
+      category: "Mock Data Strategy"
+      description: "Different mock data organization"
+      v1_0_1: "Separate features/incident/incident-data.js"
+      v1_0_2: "Extended core/mock-data.js with incident data"
+      impact: "Inconsistent file organization between demos"
+      leapAction: "Define when to extend mock-data.js vs create new file"
+
+    - id: "CODE-003"
+      category: "State Structure"
+      description: "Different state namespaces for incident chat"
+      v1_0_1: |
+        state.incidents = { list, activeIncidentId }
+        state.incidentChat = { messages, isAgentTyping, context }  ★ SIBLING
+      v1_0_2: |
+        state.incidents = { 
+          list, selected, dialogOpen, 
+          chat: { messages, isAgentTyping }  ★ NESTED
+        }
+      impact: "State access patterns differ - harder to share learnings"
+      leapAction: "Define standard state shapes in architectural-standards.yaml"
+
+  high:
+    - id: "CODE-004"
+      category: "Function Naming"
+      description: "Different exported function names"
+      v1_0_1: "loadIncidentData(), sendIncidentChatMessage()"
+      v1_0_2: "loadIncidents(), sendIncidentAgentMessage()"
+      impact: "Cannot copy/paste between demos, harder to learn patterns"
+      leapAction: "Define function naming conventions"
+
+    - id: "CODE-005"
+      category: "Function Exports"
+      description: "Different MODULE_CONTRACT exports"
+      v1_0_1: "['loadIncidentData', 'openIncidentDialog', 'closeIncidentDialog', 'sendIncidentChatMessage', 'executeIncidentAction']"
+      v1_0_2: "['loadIncidents', 'getIncidentById', 'openIncidentDialog', 'closeIncidentDialog', 'sendIncidentAgentMessage']"
+      deviation: "v1.0.1 has executeIncidentAction, v1.0.2 has getIncidentById"
+      impact: "Different APIs for similar functionality"
+      leapAction: "Define service function patterns for common domains"
+
+    - id: "CODE-006"
+      category: "Feature Scope"
+      description: "v1.0.1 has action buttons feature that v1.0.2 lacks"
+      v1_0_1: "executeIncidentAction() handles Acknowledge/Escalate/Resolve"
+      v1_0_2: "No action button handler - actions suggested via chat only"
+      impact: "Different feature completeness despite similar requirements"
+      leapAction: "Standardize feature scope decision documentation"
+
+  medium:
+    - id: "CODE-007"
+      category: "Import Paths"
+      description: "Different import paths in UI components"
+      v1_0_1: "import { openIncidentDialog } from '../../../features/incident/incident-service.js'"
+      v1_0_2: "import { openIncidentDialog } from '../../../features/incidents/incident-service.js'"
+      impact: "Copy-paste between demos will fail"
+      leapAction: "Auto-generate imports based on naming conventions"
+
+    - id: "CODE-008"
+      category: "State Access Pattern"
+      description: "Different ways to access state"
+      v1_0_1: "getState('incidents.list')"
+      v1_0_2: "getState().incidents?.list"
+      impact: "Inconsistent code patterns"
+      leapAction: "Standardize state access patterns"
+
+    - id: "CODE-009"
+      category: "Status Values"
+      description: "Different status string conventions"
+      v1_0_1: "status !== 'resolved' (lowercase)"
+      v1_0_2: "status !== 'Resolved' (Title Case)"
+      impact: "Status comparisons may break across demos"
+      leapAction: "Define status value conventions"
+
+    - id: "CODE-010"
+      category: "Incident Card HTML"
+      description: "Different card HTML structure"
+      v1_0_1: "incident-card__header > id + severity badge"
+      v1_0_2: "incident-card__badge (standalone) + content section"
+      impact: "CSS patterns not reusable"
+      leapAction: "Create component HTML templates in Gold Source"
+
+    - id: "CODE-011"
+      category: "Incident Data Shape"
+      description: "Different incident object properties"
+      v1_0_1: "impactedServices (array)"
+      v1_0_2: "affectedService (string)"
+      impact: "Cannot share mock data or AI response logic"
+      leapAction: "Define incident data schema in archetypes"
+
+# =============================================================================
+# DOCUMENTATION DEVIATIONS
+# =============================================================================
+
+documentationDeviations:
+
+  - id: "DOC-001"
+    description: "README structure differs significantly"
+    v1_0_1: "109 lines, detailed project structure with tree diagram"
+    v1_0_2: "83 lines, simplified architecture diagram"
+    leapAction: "Create README template for demos"
+
+  - id: "DOC-002"
+    description: "meta/functionality.yaml presence"
+    v1_0_1: "Missing"
+    v1_0_2: "Present - documents all 6 features with files and usage"
+    leapAction: "Require functionality.yaml in all demos"
+
+  - id: "DOC-003"
+    description: "Sample incident data differs"
+    v1_0_1: "3 incidents (INC0001234-36)"
+    v1_0_2: "4 incidents (INC0012345-48)"
+    leapAction: "Use consistent incident ID ranges"
+
+# =============================================================================
+# SEVERITY SUMMARY
+# =============================================================================
+
+deviationSummary:
+  total: 25
+  
+  bySeverity:
+    critical: 3
+    high: 3
+    medium: 8
+    low: 11
+  
+  byCategory:
+    - category: "Directory/File Structure"
+      count: 4
+      severity: "critical"
+    - category: "State Management"
+      count: 3
+      severity: "high"
+    - category: "Function Naming/API"
+      count: 4
+      severity: "high"
+    - category: "HTML/CSS Patterns"
+      count: 5
+      severity: "medium"
+    - category: "Documentation"
+      count: 3
+      severity: "medium"
+    - category: "Data Shapes"
+      count: 3
+      severity: "medium"
+    - category: "Minor Conventions"
+      count: 3
+      severity: "low"
+
+# =============================================================================
+# RECOMMENDED LEAP IMPROVEMENTS
+# =============================================================================
+
+recommendations:
+
+  critical:
+    - id: "LEAP-010"
+      name: "Standardize Feature Directory Naming"
+      description: "Define singular vs plural naming for features/services"
+      deliverable: "Update architectural-standards.yaml"
+      effort: "small"
+
+    - id: "LEAP-011"
+      name: "Define Mock Data Strategy"
+      description: "When to extend mock-data.js vs create feature-specific data files"
+      deliverable: "Add guidance to architectural-standards.yaml"
+      effort: "small"
+
+    - id: "LEAP-012"
+      name: "Standardize State Shapes"
+      description: "Define recommended state structure for common patterns"
+      deliverable: "Add to architectural-standards.yaml or new state-patterns.yaml"
+      effort: "medium"
+
+  high:
+    - id: "LEAP-013"
+      name: "Create Component HTML Templates"
+      description: "Define reusable HTML structures for cards, dialogs, lists"
+      deliverable: "Add templates to GoldSource/archetypes/"
+      effort: "medium"
+
+    - id: "LEAP-014"
+      name: "Require functionality.yaml in Demos"
+      description: "Every demo output should include meta/functionality.yaml"
+      deliverable: "Add to factory closure checklist"
+      effort: "small"
+
+    - id: "LEAP-015"
+      name: "Create README Template"
+      description: "Standardize demo README structure"
+      deliverable: "Add GoldSource/scaffold/README.template.md"
+      effort: "small"
+
+  medium:
+    - id: "LEAP-016"
+      name: "Define Service Function Patterns"
+      description: "Standard function names for load, open, close, send patterns"
+      deliverable: "Add to architectural-standards.yaml"
+      effort: "small"
+
+    - id: "LEAP-017"
+      name: "Standardize Status/Enum Values"
+      description: "Define case conventions for status strings"
+      deliverable: "Add to architectural-standards.yaml"
+      effort: "small"
+
+    - id: "LEAP-018"
+      name: "Create Domain Data Schemas"
+      description: "Define incident, task, user data shapes in archetypes"
+      deliverable: "Add schemas to GoldSource/archetypes/itsm/"
+      effort: "medium"
+
+# =============================================================================
+# COMPARISON MATRIX
+# =============================================================================
+
+comparisonMatrix:
+  headers: ["Aspect", "v1.0.1", "v1.0.2", "Recommendation"]
+  rows:
+    - ["Feature folder", "incident/", "incidents/", "Use singular"]
+    - ["Mock data", "Separate file", "Extended mock-data.js", "Define strategy"]
+    - ["State for chat", "state.incidentChat", "state.incidents.chat", "Nested preferred"]
+    - ["Load function", "loadIncidentData()", "loadIncidents()", "loadIncidents()"]
+    - ["Action buttons", "Yes", "No (chat only)", "Document scope"]
+    - ["functionality.yaml", "Missing", "Present", "Always include"]
+    - ["README size", "109 lines", "83 lines", "Use template"]
+    - ["Incident count", "3", "4", "Consistent data"]
+    - ["Status case", "lowercase", "Title Case", "Pick one"]
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  - step: 1
+    action: "Review this comparison with Matthew"
+    status: "pending"
+  
+  - step: 2
+    action: "Consolidate with factory comparison findings"
+    status: "pending"
+  
+  - step: 3
+    action: "Prioritize LEAP-010 through LEAP-018"
+    status: "pending"
+  
+  - step: 4
+    action: "Update architectural-standards.yaml with conventions"
+    status: "pending"
+  
+  - step: 5
+    action: "Create/update archetypes with templates"
+    status: "pending"

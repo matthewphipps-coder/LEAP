@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-19T13:24:00Z"
-  version: "3.0.0"
+  lastUpdated: "2026-01-19T17:44:00Z"
+  version: "3.1.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -13,8 +13,8 @@ aiMustRead:
 projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
-  version: "v1.0.0-fresh"
-  currentFocus: "Factory Improvement"
+  version: "v1.1.0"
+  currentFocus: "Factory Consistency Improvements"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
@@ -24,7 +24,7 @@ currentPhase:
   stage: "closure"
   startedDate: "2026-01-19T13:24:00Z"
   
-  goal: "Incorporate lessons learned from first factory run into Gold Source"
+  goal: "Incorporate lessons learned from factory runs into Gold Source"
   
   stageArtifact: "docs/phases/phase-15/stage-8-closure.yaml"
   
@@ -35,24 +35,67 @@ currentPhase:
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "in-progress"
-  stage: "research"
+  status: "at-pause-point"
+  summary: "Factory comparison complete, governance gaps fixed, LEAP cycle documented"
   
-  summary:
-    accomplished:
-      - "Discovery complete: 17 findings documented"
-      - "Findings prioritized and grouped into workstreams"
+  recentWork:
+    date: "2026-01-19"
+    description: "Compared Factory v1.0.1 and v1.0.2 runs, fixed governance gaps, documented LEAP cycle"
     
-    context: "Research stage - determining phase scope"
-  
-  nextStage: "analysis"
+    factoryComparison:
+      factoryDeviations: 30
+      codeDeviations: 25
+      newBacklogItems: 16
+    
+    governanceGapsFixes:
+      - "INDEX.yaml updated (v1.2.0) - added protocols, workflows, tracking"
+      - "constitution.yaml - split standingProtocols/triggeredWorkflows"
+      - "agent-persona.yaml - removed stale lifecycle fields"
+      - "VISION.yaml - added leapCycle documenting 6-step process"
+      - "Deleted: templates/tracking.yaml, project-overview.yaml"
+      - "Created: factory-review-workflow.yaml"
+    
+    filesCreated:
+      - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      - "LEAP_Governance/templates/factory-comparison.yaml"
+      - "LEAP_Governance/templates/demo-output-comparison.yaml"
+      - "LEAP_Governance/tracking/backlog-categories.yaml"
+      - "LEAP_Governance/factory-review-workflow.yaml"
+    
+    backlogUpdated: "22 total items (4 complete, 18 proposed)"
 
-factoryRunCompleted:
-  demo: "NEXUS v0.0.1-firstTest"
-  location: "/Users/matthew.phipps/Documents/DemoOutput/Nexus 0.0.1-firstTest/"
-  factoryWorkspace: "/Users/matthew.phipps/Documents/DemoInstances/Factory-Test-001/"
-  duration: "27 minutes"
-  feedbackStatus: "Being incorporated into Phase 15"
+factoryRunsCompleted:
+  - demo: "NEXUS v0.0.1-firstTest"
+    location: "~/Documents/DemoOutput/Nexus 0.0.1-firstTest/"
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-Test-001/"
+    note: "First test run - ignored in comparison"
+  
+  - demo: "NEXUS v1.0.1-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.1-major-incident/"
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-v1.0.1-major-incident/"
+    testsRun: 10
+    testsPassed: 10
+  
+  - demo: "NEXUS v1.0.2-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.2-major-incident/"
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-v1.0.2-major-incident/"
+    testsRun: 8
+    testsPassed: 8
+
+backlogState:
+  totalItems: 22
+  byCategory:
+    factory-governance: 7
+    scaffold-conventions: 5
+    demo-output: 2
+    archetype-domain: 2
+    architecture: 2
+    user-branding: 1
+    governance: 3
+  
+  categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
+  backlogFile: "LEAP_Governance/tracking/backlog.yaml"
 
 references:
   governanceFiles:
@@ -61,12 +104,17 @@ references:
     - "safety-protocol.yaml - Backup and deployment"
     - "architectural-standards.yaml - Code patterns"
   
+  comparisonDocuments:
+    - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+    - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+  
   workflows:
     location: ".agent/workflows/"
     command: "ls .agent/workflows/"
 
 aiReminders:
-  - "Phase 15 is about IMPROVING the factory based on real usage"
-  - "First factory run completed - lessons must be captured"
+  - "Factory comparison complete - findings added to backlog"
+  - "16 new backlog items await prioritization"
+  - "Categories defined but NOT phased yet - preserves flexibility"
   - "Run !pulse at session start to reset context"
-  - "User has additional discoveries to add"
+

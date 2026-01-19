@@ -3,7 +3,7 @@
 
 metadata:
   purpose: "Guide AI to the right governance file"
-  version: "1.0.0"
+  version: "1.2.0"
 
 readFirst:
   newAgent: "checklists/new-agent.yaml"
@@ -15,7 +15,34 @@ beforeActions:
 
 whenConfused: "Run !pulse"
 
-fullDocumentation:
+# Core governance documents
+coreDocumentation:
   rules: "constitution.yaml"
   lifecycle: "pulse-protocol.yaml"
   safety: "safety-protocol.yaml"
+
+# Protocols referenced by constitution rules
+protocols:
+  riskAssessment: "rrmd-protocol.yaml"      # Rule 9
+  agentRecovery: "bump-protocol.yaml"       # Rule 12
+  peerReview: "agent-persona.yaml"          # Elite A-Team personas
+  
+# Workflows
+workflows:
+  newFactory: "newfactory-workflow.yaml"        # /newfactory command
+  factoryReview: "factory-review-workflow.yaml" # Compare runs, populate backlog
+
+# Tracking references
+tracking:
+  currentState: "tracking/CURRENT_STATE.yaml"
+  backlog: "tracking/backlog.yaml"
+  backlogCategories: "tracking/backlog-categories.yaml"
+  bugs: "tracking/bugs.yaml"
+
+# Factory test runs (at LEAP root, not in LEAP_Governance)
+factoryTestRuns:
+  location: "FactoryTestRuns/"
+  purpose: "Factory comparison documents and analysis"
+  templates:
+    - "templates/factory-comparison.yaml"
+    - "templates/demo-output-comparison.yaml"
