@@ -1,27 +1,35 @@
 metadata:
   type: "architecture"
-  name: "DemoFactory Architecture"
+  name: "GoldSource Architecture"
   purpose: "System architecture reference for AI comprehension"
-  version: "1.0.0"
+  version: "2.0.0"
   created: "2026-01-19"
   lastUpdated: "2026-01-19"
   status: "complete"
   verifiedWorking: true
-  note: "Prototype v1 verified - all components rendering correctly"
+  note: "Phase 14: Restructured as GoldSource with factory governance"
 
 # =============================================================================
 # SYSTEM OVERVIEW
 # =============================================================================
 
 systemOverview:
-  name: "DemoFactory Prototype v1"
-  purpose: "Build future-vision ServiceNow demos via AI-assisted development"
+  name: "GoldSource v2.0.0"
+  purpose: "Gold copy scaffold for DemoFactory - creates demos via AI-assisted development"
+  
+  structure:
+    scaffold: "GoldSource/scaffold/ - Core code components"
+    meta: "GoldSource/meta/ - Architecture and standards"
+    governance: "GoldSource/governance/ - Factory protocols and templates"
+    archetypes: "GoldSource/archetypes/ - UI pattern templates"
   
   entryPoints:
-    - file: "DemoFactory/src/index.html"
+    - file: "GoldSource/scaffold/index.html"
       purpose: "Main entry point - loads shell and initializes app"
-    - file: "DemoFactory/src/core/app.js"
+    - file: "GoldSource/scaffold/core/app.js"
       purpose: "Application orchestrator - initialization only"
+    - file: "GoldSource/governance/FACTORY_README.yaml"
+      purpose: "Entry point for Factory AI"
   
   archetype: "Agentic Dashboard"
   stack:
