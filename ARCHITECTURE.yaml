@@ -42,7 +42,7 @@ overview:
 folderStructure:
   
   Governance:
-    path: "Governance/"
+    path: "LEAP_Governance/"
     purpose: "LEAP governance rules, protocols, and templates"
     contents:
       - "constitution.yaml - Core rules"
@@ -83,8 +83,8 @@ lifecycle:
     7: "Testing - Verify it works"
     8: "Closure - Lessons learned"
   
-  protocol: "Governance/pulse-protocol.yaml"
-  currentState: "Governance/tracking/CURRENT_STATE.yaml"
+  protocol: "LEAP_Governance/pulse-protocol.yaml"
+  currentState: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
 
 # =============================================================================
 # KEY ENTRY POINTS (FOR AI)
@@ -94,17 +94,17 @@ entryPoints:
   
   startingNewSession:
     action: "Read CURRENT_STATE.yaml first"
-    location: "Governance/tracking/CURRENT_STATE.yaml"
+    location: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
   
   understandingRules:
     action: "Read constitution and protocols"
     files:
-      - "Governance/constitution.yaml"
-      - "Governance/pulse-protocol.yaml"
+      - "LEAP_Governance/constitution.yaml"
+      - "LEAP_Governance/pulse-protocol.yaml"
   
   creatingDemo:
     action: "Use /newfactory command"
-    workflow: "Governance/newfactory-workflow.yaml"
+    workflow: "LEAP_Governance/newfactory-workflow.yaml"
   
   understandingScaffold:
     action: "Read scaffold architecture"
@@ -126,4 +126,4 @@ feedbackLoop:
   
   artifacts:
     factoryWorkspace: "~/Documents/DemoInstances/Factory-*/stage-8-closure.yaml"
-    backlog: "Governance/tracking/backlog.yaml"
+    backlog: "LEAP_Governance/tracking/backlog.yaml"

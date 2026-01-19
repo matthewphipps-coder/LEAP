@@ -8,15 +8,15 @@ metadata:
 implementationPlan:
   
   create:
-    - file: "Governance/rrmd-protocol.yaml"
+    - file: "LEAP_Governance/rrmd-protocol.yaml"
       lines: 50
       content: "Rule 9 RRMD+ protocol extracted"
-    - file: "Governance/bump-protocol.yaml"
+    - file: "LEAP_Governance/bump-protocol.yaml"
       lines: 30
       content: "Rule 12 !bump protocol extracted"
   
   modify:
-    - file: "Governance/constitution.yaml"
+    - file: "LEAP_Governance/constitution.yaml"
       action: "Rewrite condensed version"
       targetLines: 200
       structure:

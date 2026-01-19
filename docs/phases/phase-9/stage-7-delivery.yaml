@@ -12,10 +12,10 @@ deliveryResults:
     stats: "9 files changed, 394 insertions, 723 deletions"
   
   newFiles:
-    - "Governance/rrmd-protocol.yaml (61 lines)"
-    - "Governance/bump-protocol.yaml (45 lines)"
+    - "LEAP_Governance/rrmd-protocol.yaml (61 lines)"
+    - "LEAP_Governance/bump-protocol.yaml (45 lines)"
   
   modifiedFiles:
-    - "Governance/constitution.yaml (755 → 130 lines)"
+    - "LEAP_Governance/constitution.yaml (755 → 130 lines)"
 
 nextStage: "closure"

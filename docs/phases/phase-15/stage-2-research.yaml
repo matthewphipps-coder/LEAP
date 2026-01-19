@@ -49,7 +49,7 @@ prioritization:
       items:
         - id: "USER-001"
           name: "/newfactory Command"
-          recommendation: "Create Governance/newfactory-workflow.yaml"
+          recommendation: "Create LEAP_Governance/newfactory-workflow.yaml"
           effort: "medium"
           
         - id: "USER-002"
@@ -148,7 +148,7 @@ phase15Scope:
     
     workstreams:
       A_factory_workflow:
-        - "Create Governance/newfactory-workflow.yaml"
+        - "Create LEAP_Governance/newfactory-workflow.yaml"
         - "Define factory onboarding prompt in FACTORY_README.yaml"
         - "Generate factory init prompt when /newfactory runs"
       

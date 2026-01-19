@@ -30,7 +30,7 @@ discoveries:
     reference: "Full docs for deep reading"
   
   migrationPath:
-    - "Create new structure in Governance/v2/"
+    - "Create new structure in LEAP_Governance/v2/"
     - "Test with one phase of work"
     - "If successful, replace old files"
     - "Archive old files temporarily"

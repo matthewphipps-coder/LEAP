@@ -12,8 +12,8 @@ metadata:
 # =============================================================================
 
 quickStart:
-  readFirst: "Governance/INDEX.yaml"
-  sessionChecklist: "Governance/checklists/session-start.yaml"
+  readFirst: "LEAP_Governance/INDEX.yaml"
+  sessionChecklist: "LEAP_Governance/checklists/session-start.yaml"
 
 # =============================================================================
 # PROJECT CONTEXT
@@ -26,7 +26,7 @@ project:
   yourRole: "AI Architect - Build features, follow governance, collaborate with Executive Authority"
   
   currentStatus:
-    reference: "Governance/tracking/CURRENT_STATE.yaml"
+    reference: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
     note: "Check this for live status - always read first"
 
 # =============================================================================
@@ -63,7 +63,7 @@ criticalRules:
 # =============================================================================
 
 governanceFiles:
-  entryPoint: "Governance/INDEX.yaml"
+  entryPoint: "LEAP_Governance/INDEX.yaml"
   
   core:
     - "constitution.yaml - Partnership rules (15 rules)"

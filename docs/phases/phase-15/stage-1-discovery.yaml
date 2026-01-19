@@ -189,7 +189,7 @@ userAdditions:
         - "Version number base"
       leapAsks:
         - "Vx.x.x-[name] format version string from user"
-    recommendation: "Create Governance/newfactory-workflow.yaml"
+    recommendation: "Create LEAP_Governance/newfactory-workflow.yaml"
 
   # ---------------------------------------------------------------------------
   # FACTORY ONBOARDING GAP

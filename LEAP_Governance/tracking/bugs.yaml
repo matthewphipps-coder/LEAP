@@ -21,7 +21,7 @@ activeBugs: []
 resolvedBugs: []
 
 howToLog:
-  templateRef: "Governance/templates/tracking.yaml"
+  templateRef: "LEAP_Governance/templates/tracking.yaml"
   template: |
     - id: "BUG-XXX"
       severity: "critical|high|medium|low"

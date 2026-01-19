@@ -68,7 +68,7 @@ riskAnalysis:
 
   workstream_A_factory_workflow:
     files:
-      - path: "Governance/newfactory-workflow.yaml"
+      - path: "LEAP_Governance/newfactory-workflow.yaml"
         action: "CREATE"
         risk: "none"
         
@@ -135,7 +135,7 @@ riskAnalysis:
 
 filesToModify:
   create:
-    - "Governance/newfactory-workflow.yaml"
+    - "LEAP_Governance/newfactory-workflow.yaml"
     - "GoldSource/governance/artifact-manifest.yaml"
   
   modify:

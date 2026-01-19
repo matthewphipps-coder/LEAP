@@ -127,7 +127,7 @@ userFindings:
     severity: "high"
     addressed: true
     addressedBy:
-      file: "Governance/newfactory-workflow.yaml"
+      file: "LEAP_Governance/newfactory-workflow.yaml"
       change: "Created complete /newfactory workflow with version logic and onboarding prompt"
   
   - id: "USER-002"
@@ -136,7 +136,7 @@ userFindings:
     addressed: true
     addressedBy:
       files:
-        - "Governance/newfactory-workflow.yaml"
+        - "LEAP_Governance/newfactory-workflow.yaml"
         - "GoldSource/governance/FACTORY_README.yaml"
       change: "Workflow generates onboarding prompt; FACTORY_README explains format"
   

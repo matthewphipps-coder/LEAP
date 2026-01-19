@@ -21,9 +21,9 @@ deliveryResults:
       - "stage-6-validation.yaml"
     
     newGovernanceFiles:
-      - "Governance/INDEX.yaml"
-      - "Governance/checklists/session-start.yaml"
-      - "Governance/checklists/before-file-op.yaml"
-      - "Governance/checklists/before-phase.yaml"
+      - "LEAP_Governance/INDEX.yaml"
+      - "LEAP_Governance/checklists/session-start.yaml"
+      - "LEAP_Governance/checklists/before-file-op.yaml"
+      - "LEAP_Governance/checklists/before-phase.yaml"
 
 nextStage: "closure"

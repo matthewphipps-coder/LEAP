@@ -21,7 +21,7 @@ currentState:
     - "ARCHITECTURE.yaml - Playing field description"
     - "DemoFactory/ - Contains scaffold (SHOULD BE GoldSource/)"
     - "DemoFactoryResources/ - Standards and functionality.yaml"
-    - "Governance/ - LEAP governance docs"
+    - "LEAP_Governance/ - LEAP governance docs"
     - "Tracking/ - CURRENT_STATE.yaml etc"
     - "docs/ - Phase documentation"
     - "templates/ - Various templates"

@@ -38,7 +38,7 @@ implementationOverview:
 # =============================================================================
 
 file1_newfactory_workflow:
-  path: "Governance/newfactory-workflow.yaml"
+  path: "LEAP_Governance/newfactory-workflow.yaml"
   action: "CREATE"
   purpose: "LEAP workflow for /newfactory command"
   
@@ -649,7 +649,7 @@ verificationPlan:
   functionalTest:
     description: "Run /newfactory workflow to test"
     steps:
-      - step: "Create Governance/newfactory-workflow.yaml"
+      - step: "Create LEAP_Governance/newfactory-workflow.yaml"
         verify: "File exists and is valid YAML"
       
       - step: "Test workflow conceptually"

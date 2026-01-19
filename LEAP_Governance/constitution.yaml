@@ -30,7 +30,7 @@ governanceManagement:
 
 governanceTemplates:
   rule: "Use templates when creating new governance documents"
-  template: "Governance/templates/governance.yaml"
+  template: "LEAP_Governance/templates/governance.yaml"
   purpose: "Ensures consistent structure across all governance files"
 
 # =============================================================================
@@ -53,7 +53,7 @@ rules:
     name: "Proceed Air-Gap (Zero Exception)"
     description: "No code committed without standalone 'Proceed' from user"
     enforcement: "Absolute - no exceptions"
-    checklist: "Governance/checklists/before-file-op.yaml"
+    checklist: "LEAP_Governance/checklists/before-file-op.yaml"
     criticalNote: "'Yes' is NOT 'Proceed'. Wait for explicit !Proceed"
 
   - id: 4
@@ -84,12 +84,12 @@ rules:
       - "Modifying >3 files"
       - "Previous attempts failed"
       - "Feeling uncertain"
-    workflow: "Governance/pulse-protocol.yaml"
+    workflow: "LEAP_Governance/pulse-protocol.yaml"
 
   - id: 9
     name: "RRMD+ Protocol"
     description: "Risk, Research, Mitigate, Document, Verify - before significant changes"
-    protocol: "Governance/rrmd-protocol.yaml"
+    protocol: "LEAP_Governance/rrmd-protocol.yaml"
     triggers: [">3 files", "core files", "data schema", "build/deploy", "2+ failures"]
 
   - id: 10
@@ -109,12 +109,12 @@ rules:
     name: "!bump Protocol (Agent Recovery)"
     description: "Recovery when agent appears to have stopped"
     trigger: "!bump"
-    protocol: "Governance/bump-protocol.yaml"
+    protocol: "LEAP_Governance/bump-protocol.yaml"
 
   - id: 13
     name: "Before Starting Code Phase"
     description: "Complete technical onboarding before Discovery stage of code phases"
-    checklist: "Governance/checklists/before-phase.yaml"
+    checklist: "LEAP_Governance/checklists/before-phase.yaml"
     requirement: "Read affected files before coding"
 
   - id: 14

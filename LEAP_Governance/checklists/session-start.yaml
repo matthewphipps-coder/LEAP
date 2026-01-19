@@ -13,7 +13,7 @@ metadata:
 orient:
   - step: 1
     action: "Read CURRENT_STATE.yaml"
-    location: "Governance/tracking/CURRENT_STATE.yaml"
+    location: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
     
   - step: 2
     action: "Check current phase and stage"
@@ -74,5 +74,5 @@ warnings:
   - "Do NOT write code without !Proceed"
   - "Wait for explicit direction"
 
-fullRules: "Governance/constitution.yaml"
-entryPoint: "Governance/INDEX.yaml"
+fullRules: "LEAP_Governance/constitution.yaml"
+entryPoint: "LEAP_Governance/INDEX.yaml"

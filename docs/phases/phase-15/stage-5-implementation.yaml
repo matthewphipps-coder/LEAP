@@ -36,7 +36,7 @@ preImplementation:
 # =============================================================================
 
 implementationOrder:
-  1: "Create Governance/newfactory-workflow.yaml"
+  1: "Create LEAP_Governance/newfactory-workflow.yaml"
   2: "Create GoldSource/governance/artifact-manifest.yaml"
   3: "Modify GoldSource/governance/FACTORY_README.yaml"
   4: "Modify GoldSource/governance/factory-protocol.yaml"
@@ -53,7 +53,7 @@ implementationOrder:
 # =============================================================================
 
 step1:
-  file: "Governance/newfactory-workflow.yaml"
+  file: "LEAP_Governance/newfactory-workflow.yaml"
   action: "CREATE"
   status: "pending"
   

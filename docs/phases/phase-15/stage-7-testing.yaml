@@ -26,7 +26,7 @@ yamlValidation:
   
   results:
     newFiles:
-      - file: "Governance/newfactory-workflow.yaml"
+      - file: "LEAP_Governance/newfactory-workflow.yaml"
         result: "PASS"
       - file: "GoldSource/governance/artifact-manifest.yaml"
         result: "PASS"
@@ -69,7 +69,7 @@ yamlValidation:
 # =============================================================================
 
 workflowReview:
-  file: "Governance/newfactory-workflow.yaml"
+  file: "LEAP_Governance/newfactory-workflow.yaml"
   
   checklist:
     - step: "1_askUser"

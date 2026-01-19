@@ -19,7 +19,7 @@ riskAssessment:
 implementationPlan:
   
   enhance:
-    - file: "Governance/checklists/session-start.yaml"
+    - file: "LEAP_Governance/checklists/session-start.yaml"
       currentLines: 27
       targetLines: 60
       changes:
