@@ -8,8 +8,8 @@
  * @modifyImpact [navigation display, active panel selection]
  */
 
-import { getState, subscribe, updateState } from '../../core/state.js';
-import { debug } from '../../core/logger.js';
+import { getState, subscribe, updateState } from '../../../core/state.js';
+import { debug } from '../../../core/logger.js';
 
 // Module contract
 export const MODULE_CONTRACT = {

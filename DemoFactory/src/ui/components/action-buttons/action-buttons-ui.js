@@ -8,9 +8,9 @@
  * @modifyImpact [action buttons display and functionality]
  */
 
-import { subscribe } from '../../core/state.js';
-import { executeAction } from '../../features/dashboard/dashboard-service.js';
-import { debug, info } from '../../core/logger.js';
+import { subscribe } from '../../../core/state.js';
+import { executeAction } from '../../../features/dashboard/dashboard-service.js';
+import { debug, info } from '../../../core/logger.js';
 
 // Module contract
 export const MODULE_CONTRACT = {

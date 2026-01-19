@@ -13,13 +13,13 @@ import { handleError } from './error-handler.js';
 import { getState, updateState, subscribe } from './state.js';
 import { getMockTasks, getMockMetrics, getMockNotifications } from './mock-data.js';
 
-// UI Components - will be imported after creation
-// import { initHeader } from '../ui/components/header/header-ui.js';
-// import { initNav } from '../ui/components/nav/nav-ui.js';
-// import { initFooter } from '../ui/components/footer/footer-ui.js';
-// import { initChatPanel } from '../ui/components/chat-panel/chat-panel-ui.js';
-// import { initDataCards } from '../ui/components/data-cards/data-cards-ui.js';
-// import { initActionButtons } from '../ui/components/action-buttons/action-buttons-ui.js';
+// UI Components
+import { initHeader } from '../ui/components/header/header-ui.js';
+import { initNav } from '../ui/components/nav/nav-ui.js';
+import { initFooter } from '../ui/components/footer/footer-ui.js';
+import { initChatPanel } from '../ui/components/chat-panel/chat-panel-ui.js';
+import { initDataCards } from '../ui/components/data-cards/data-cards-ui.js';
+import { initActionButtons } from '../ui/components/action-buttons/action-buttons-ui.js';
 
 // Module contract
 export const MODULE_CONTRACT = {
@@ -108,27 +108,14 @@ async function initUIComponents() {
     debug('Initializing UI components');
 
     // Shell components (locked)
-    // TODO: Uncomment after component files are created
-    // await initHeader();
-    // await initNav();
-    // await initFooter();
+    initHeader();
+    initNav();
+    initFooter();
 
     // Archetype components (flexible)
-    // await initChatPanel();
-    // await initDataCards();
-    // await initActionButtons();
-
-    // Placeholder: Add visual confirmation
-    const main = document.getElementById('main-content');
-    if (main) {
-        main.innerHTML = `
-      <div class="init-message">
-        <h2>🚀 ${APP_CONFIG.name}</h2>
-        <p>Archetype: ${APP_CONFIG.archetype}</p>
-        <p>Status: Core initialized, UI components pending</p>
-      </div>
-    `;
-    }
+    initDataCards();
+    initActionButtons();
+    initChatPanel();
 
     debug('UI components initialized');
 }

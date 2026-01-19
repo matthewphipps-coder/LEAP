@@ -8,9 +8,9 @@
  * @modifyImpact [chat interface display and interaction]
  */
 
-import { getState, subscribe } from '../../core/state.js';
-import { sendAgentMessage } from '../../features/dashboard/dashboard-service.js';
-import { debug } from '../../core/logger.js';
+import { getState, subscribe } from '../../../core/state.js';
+import { sendAgentMessage } from '../../../features/dashboard/dashboard-service.js';
+import { debug } from '../../../core/logger.js';
 
 // Module contract
 export const MODULE_CONTRACT = {

@@ -8,8 +8,8 @@
  * @modifyImpact [footer display]
  */
 
-import { getState, subscribe } from '../../core/state.js';
-import { debug } from '../../core/logger.js';
+import { getState, subscribe } from '../../../core/state.js';
+import { debug } from '../../../core/logger.js';
 
 // Module contract
 export const MODULE_CONTRACT = {
