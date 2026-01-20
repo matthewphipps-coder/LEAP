@@ -8,7 +8,7 @@
 metadata:
   specId: "SPEC-001"
   name: "Authentication System"
-  version: "3.1.0"
+  version: "3.2.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
@@ -423,14 +423,25 @@ approval:
   implementationApprovedDate: null
 
 # =============================================================================
-# REFERENCE IMPLEMENTATION - Working code from old NEXUS
+# LEGACY REFERENCE - Old NEXUS code (FOR UNDERSTANDING ONLY)
 # =============================================================================
-# ⚠️ COMPLIANCE WARNING: Old NEXUS code does NOT follow GoldSource standards.
-#    Use these snippets for LOGIC/PATTERNS only. DO NOT copy directly.
-# =============================================================================
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ ⚠️  THIS IS NOT CODE TO COPY                                              ┃
+# ┃                                                                           ┃
+# ┃ Purpose: Understand WHAT old NEXUS did (logic, flows, user experience)    ┃
+# ┃ Reality: Old NEXUS does NOT follow GoldSource/LEAP standards              ┃
+# ┃                                                                           ┃
+# ┃ LEAP phases will build COMPLETELY NEW compliant code based on:            ┃
+# ┃   - The REQUIREMENTS in this spec (scope, FR-xxx, NFR-xxx)                ┃
+# ┃   - GoldSource architectural-standards.yaml                               ┃
+# ┃   - AI-First headers, MODULE_CONTRACT, proper imports                     ┃
+# ┃                                                                           ┃
+# ┃ The code snippets below are for CONTEXT ONLY - to understand intent.      ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-referenceImplementation:
-  source: "NEXUS-v5.3.6-dev-20260112-1748/login.html and NEXUS-v6.8.0-pre-phase-20.4/"
+legacyReference:
+  source: "Old NEXUS (pre-LEAP, non-compliant)"
+  purpose: "Understand WHAT was built, not HOW to build it"
   
   # -------------------------------------------------------------------------
   # ⚠️ WHAT TO USE vs WHAT NOT TO COPY
