@@ -108,6 +108,42 @@ phaseA:
         - "Light theme overrides (.light-theme)"
       lines: "~120"
       lock: true
+    
+    # -------------------------------------------------------------------------
+    # UI: Button Patterns
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/styles/buttons.css"
+      action: "CREATE"
+      purpose: "Reusable button component patterns"
+      variants:
+        - "Primary (green accent, solid)"
+        - "Secondary (outline)"
+        - "Ghost (transparent)"
+        - "Danger (red)"
+      features:
+        - "Hover/focus states"
+        - "Disabled state"
+        - "Size variants (sm, md, lg)"
+      lines: "~60"
+      lock: true
+    
+    # -------------------------------------------------------------------------
+    # UI: Input Patterns
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/scaffold/ui/styles/inputs.css"
+      action: "CREATE"
+      purpose: "Reusable input component patterns"
+      types:
+        - "Text input"
+        - "Textarea"
+        - "Select/dropdown"
+      features:
+        - "Focus ring"
+        - "Error state"
+        - "Disabled state"
+        - "Glassmorphism style"
+      lines: "~60"
+      lock: true
 
   validation:
     - "variables.css loads without errors"
@@ -386,6 +422,20 @@ phaseD:
         - "Locked files list"
         - "Extension points"
       lines: "+50"
+    
+    # -------------------------------------------------------------------------
+    # META: Architecture Documentation
+    # -------------------------------------------------------------------------
+    - path: "GoldSource/meta/ARCHITECTURE.yaml"
+      action: "REWRITE"
+      purpose: "Update to reflect new scaffold structure"
+      updates:
+        - "New module structure (firebase, auth-service, theme-manager)"
+        - "Sidebar replaces nav, Canvas replaces data-cards"
+        - "Updated dependency map"
+        - "New extension points"
+        - "Removed references to old components (footer, chat-panel)"
+      lines: "~200"
 
   validation:
     - "Theme toggle works (dark ↔ light)"
@@ -398,16 +448,16 @@ phaseD:
 # =============================================================================
 
 fileSummary:
-  new: 12
+  new: 14
   modified: 3
-  rewritten: 5
-  total: 20
+  rewritten: 6
+  total: 23
   
   byPhase:
-    phaseA: 5
+    phaseA: 7
     phaseB: 4
     phaseC: 7
-    phaseD: 4
+    phaseD: 5
   
   locked:
     - "core/state.js"
@@ -415,6 +465,8 @@ fileSummary:
     - "core/constants.js"
     - "ui/styles/variables.css"
     - "ui/styles/base.css"
+    - "ui/styles/buttons.css"
+    - "ui/styles/inputs.css"
 
 # =============================================================================
 # NEXT STAGE

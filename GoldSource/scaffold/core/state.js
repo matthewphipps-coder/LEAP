@@ -1,209 +1,160 @@
 /**
  * @file state.js
- * @purpose StateManager - single source of truth for application state with pub/sub
+ * @purpose Minimal StateManager for scaffold shell - user, theme, sidebar
  * @layer core
  * @dependencies [logger.js]
- * @dependents [app.js, dashboard-service.js, all UI components]
+ * @dependents [app.js, all UI components]
  * @locked true
  * @modifyImpact [all components that read or subscribe to state]
  */
 
 import { debug, info, warn } from './logger.js';
 
-// Module contract
+// =============================================================================
+// MODULE CONTRACT
+// =============================================================================
+
 export const MODULE_CONTRACT = {
-    provides: ['getState', 'updateState', 'subscribe', 'unsubscribe', 'resetState'],
+    provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset'],
     requires: ['logger.js']
 };
 
-/**
- * @constant INITIAL_STATE
- * @purpose Define the default state structure for the application
- */
+// =============================================================================
+// INITIAL STATE - Minimal shell state only
+// =============================================================================
+
 const INITIAL_STATE = {
-    // User and session
-    user: {
-        isAuthenticated: true,  // Simulated auth for prototype
-        name: 'Demo User',
-        role: 'user'
-    },
-
-    // Dashboard data
-    dashboard: {
-        tasks: [],
-        metrics: {},
-        notifications: []
-    },
-
-    // Chat state
-    chat: {
-        messages: [],
-        isAgentTyping: false
-    },
-
-    // UI state
-    ui: {
-        theme: 'light',
-        sidebarOpen: true,
-        activePanel: 'dashboard'
-    }
+    user: null,                 // Set on auth: { uid, email, displayName, photoURL }
+    theme: 'dark',              // 'dark' or 'light'
+    sidebarCollapsed: false     // Sidebar expand/collapse state
 };
 
-// Private state - not directly accessible
-let currentState = JSON.parse(JSON.stringify(INITIAL_STATE));
+// Private state
+let state = { ...INITIAL_STATE };
 
-// Subscribers map: id -> callback
+// Subscribers: Map<id, callback>
 const subscribers = new Map();
-let subscriberId = 0;
+let nextId = 1;
+
+// =============================================================================
+// GETTERS
+// =============================================================================
 
 /**
  * @function getState
- * @purpose Retrieve current state or a specific path within state
- * @param {string} path - Optional dot-notation path (e.g., 'user.name')
- * @returns {any} The state value at the specified path, or full state if no path
- * @impacts [none - read only]
- * @sideEffects [none]
+ * @purpose Get entire state or specific key
+ * @param {string} key - Optional specific key to get
+ * @returns {any} State value
  */
-export function getState(path = null) {
-    if (!path) {
-        // Return deep copy to prevent mutation
-        return JSON.parse(JSON.stringify(currentState));
+export function getState(key = null) {
+    if (key === null) {
+        return { ...state };
     }
+    return state[key];
+}
 
-    // Navigate path
-    const keys = path.split('.');
-    let value = currentState;
+// =============================================================================
+// SETTERS
+// =============================================================================
 
-    for (const key of keys) {
-        if (value === undefined || value === null) {
-            warn('State path not found', { path });
-            return undefined;
-        }
-        value = value[key];
-    }
-
-    // Return deep copy for objects
-    return typeof value === 'object' && value !== null
-        ? JSON.parse(JSON.stringify(value))
-        : value;
+/**
+ * @function setUser
+ * @purpose Set authenticated user data
+ * @param {Object|null} user - User object or null on logout
+ */
+export function setUser(user) {
+    debug('State: setUser', { user: user?.email || null });
+    state.user = user;
+    notifySubscribers('setUser');
 }
 
 /**
- * @function updateState
- * @purpose Merge new state into current state and notify subscribers
- * @param {Object} newState - Partial state to merge (can be nested)
- * @param {string} source - Optional identifier for what triggered the update
- * @returns {void}
- * @impacts [all subscribed UI components will be notified]
- * @sideEffects [modifies currentState, triggers subscriber callbacks]
+ * @function setTheme
+ * @purpose Set theme preference
+ * @param {string} theme - 'dark' or 'light'
  */
-export function updateState(newState, source = 'unknown') {
-    debug('State update requested', { source, newState });
-
-    // Deep merge
-    currentState = deepMerge(currentState, newState);
-
-    info('State updated', { source, subscriberCount: subscribers.size });
-
-    // Notify all subscribers
-    notifySubscribers(source);
+export function setTheme(theme) {
+    if (theme !== 'dark' && theme !== 'light') {
+        warn('Invalid theme value', { theme });
+        return;
+    }
+    debug('State: setTheme', { theme });
+    state.theme = theme;
+    notifySubscribers('setTheme');
 }
+
+/**
+ * @function setSidebarCollapsed
+ * @purpose Set sidebar collapsed state
+ * @param {boolean} collapsed - Whether sidebar is collapsed
+ */
+export function setSidebarCollapsed(collapsed) {
+    debug('State: setSidebarCollapsed', { collapsed });
+    state.sidebarCollapsed = Boolean(collapsed);
+    notifySubscribers('setSidebarCollapsed');
+}
+
+// =============================================================================
+// SUBSCRIPTION
+// =============================================================================
 
 /**
  * @function subscribe
- * @purpose Register a callback to be notified on state changes
- * @param {Function} callback - Function to call on state change
- * @returns {number} Subscription ID for unsubscribing
- * @impacts [callback will be called on future state changes]
- * @sideEffects [adds entry to subscribers map]
+ * @purpose Register callback for state changes
+ * @param {Function} callback - Called with (state, source) on change
+ * @returns {number} Subscription ID
  */
 export function subscribe(callback) {
     if (typeof callback !== 'function') {
-        warn('Subscribe requires a function callback');
+        warn('Subscribe requires function');
         return null;
     }
-
-    const id = ++subscriberId;
+    const id = nextId++;
     subscribers.set(id, callback);
-
-    debug('New state subscriber', { id, totalSubscribers: subscribers.size });
-
+    debug('State subscriber added', { id });
     return id;
 }
 
 /**
  * @function unsubscribe
- * @purpose Remove a subscription by ID
+ * @purpose Remove subscription
  * @param {number} id - Subscription ID from subscribe()
- * @returns {boolean} True if unsubscribed, false if ID not found
- * @impacts [callback will no longer be called on state changes]
- * @sideEffects [removes entry from subscribers map]
+ * @returns {boolean} True if removed
  */
 export function unsubscribe(id) {
-    const existed = subscribers.delete(id);
-
-    if (existed) {
-        debug('Subscriber removed', { id, remainingSubscribers: subscribers.size });
-    } else {
-        warn('Unsubscribe failed - ID not found', { id });
+    const removed = subscribers.delete(id);
+    if (removed) {
+        debug('State subscriber removed', { id });
     }
-
-    return existed;
-}
-
-/**
- * @function resetState
- * @purpose Reset state to initial values
- * @param {string} source - What triggered the reset
- * @returns {void}
- * @impacts [all state returns to initial, all subscribers notified]
- * @sideEffects [replaces currentState, notifies subscribers]
- */
-export function resetState(source = 'manual') {
-    info('State reset', { source });
-    currentState = JSON.parse(JSON.stringify(INITIAL_STATE));
-    notifySubscribers(source);
+    return removed;
 }
 
 /**
  * @function notifySubscribers
- * @purpose Call all subscriber callbacks with current state
- * @param {string} source - What triggered the notification
- * @returns {void}
- * @impacts [all subscriber callbacks are invoked]
- * @sideEffects [executes subscriber callback functions]
+ * @purpose Notify all subscribers of state change
+ * @param {string} source - What triggered the change
  */
 function notifySubscribers(source) {
-    const state = getState();
-
+    const currentState = getState();
     subscribers.forEach((callback, id) => {
         try {
-            callback(state, source);
-        } catch (error) {
-            warn('Subscriber callback error', { id, error: error.message });
+            callback(currentState, source);
+        } catch (err) {
+            warn('Subscriber error', { id, error: err.message });
         }
     });
 }
 
+// =============================================================================
+// RESET
+// =============================================================================
+
 /**
- * @function deepMerge
- * @purpose Recursively merge source into target
- * @param {Object} target - Object to merge into
- * @param {Object} source - Object to merge from
- * @returns {Object} Merged object
- * @impacts [none - pure function]
- * @sideEffects [none]
+ * @function reset
+ * @purpose Reset state to initial values (for logout)
  */
-function deepMerge(target, source) {
-    const result = { ...target };
-
-    for (const key in source) {
-        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
-            result[key] = deepMerge(result[key] || {}, source[key]);
-        } else {
-            result[key] = source[key];
-        }
-    }
-
-    return result;
+export function reset() {
+    info('State reset');
+    state = { ...INITIAL_STATE };
+    notifySubscribers('reset');
 }

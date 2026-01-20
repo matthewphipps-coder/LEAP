@@ -1,0 +1,206 @@
+# =============================================================================
+# Demo Output Comparison: v2.0.0-major-incident vs v2.0.1-major-incident
+# =============================================================================
+# This document compares the actual code outputs from two factory runs
+# to identify patterns requiring standardization in LEAP governance.
+# =============================================================================
+
+metadata:
+  type: "demo-output-comparison"
+  name: "Demo Output Comparison: v2.0.0 vs v2.0.1"
+  purpose: "Identify code pattern deviations for LEAP governance improvement"
+  version: "1.0.0"
+  created: "2026-01-20T11:08:00Z"
+  status: "complete"
+  author: "AI Agent"
+  goldSourceVersion: "2.0.0"
+
+# =============================================================================
+# COMPARED DEMOS
+# =============================================================================
+
+comparedDemos:
+  demoA:
+    name: "NEXUS v2.0.0-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.0-major-incident/"
+    totalJsFiles: 19
+    totalCssFiles: 14
+    totalHtmlFiles: 2
+    totalNewLines: ~1310
+    
+  demoB:
+    name: "NEXUS v2.0.1-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.1-major-incident/"
+    totalJsFiles: 18
+    totalCssFiles: 14
+    totalHtmlFiles: 2
+    totalNewLines: ~900
+
+# =============================================================================
+# STRUCTURAL COMPARISON
+# =============================================================================
+
+structuralComparison:
+
+  folderStructure:
+    match: true
+    note: "Both have identical folder structure - features/incidents/, ui/components/incident-cards/, ui/components/incident-dialog/"
+  
+  pathNaming:
+    match: true
+    pattern: "plural"
+    note: "Both use features/incidents/ (plural) - LEAP-003 concern effectively resolved"
+  
+  fileDifference:
+    v2.0.0_only:
+      - "features/incidents/incident-ai-service.js (191 lines)"
+    v2.0.1_only: []
+    note: "v2.0.0 separates AI logic into dedicated service file"
+
+# =============================================================================
+# CODE PATTERN DEVIATIONS
+# =============================================================================
+
+deviations:
+
+  critical:
+  
+    - id: "CODE-001"
+      category: "data-schema"
+      severity: "high"
+      description: "Incident data object field names differ"
+      v1_fields: ["id", "title", "status", "duration", "affectedServices", "timeline[]", "commander", "slaBreach"]
+      v2_fields: ["id", "number", "short_description", "state", "assigned_to", "sys_created_on", "category"]
+      impact: "Cannot share mock data between demos, no interoperability"
+      leapAction: "LEAP-018 (Create Domain Data Schemas) becomes critical"
+      backlogUpdate: "Elevate priority of LEAP-018"
+
+    - id: "CODE-002"
+      category: "architecture"
+      severity: "high"
+      description: "AI service architecture fundamentally different"
+      v1_approach: "Separate incident-ai-service.js with askIncidentAI(), getMockResponse(), uses ai-service.js"
+      v2_approach: "AI_SUGGESTIONS object inline in incident-data.js with getAISuggestion()"
+      v1_lines: 191
+      v2_equivalent_lines: 120 (portion of incident-data.js)
+      impact: "Different integration patterns, different testability, different extensibility"
+      leapAction: "LEAP-027 (Define AI Service Pattern) is validated as necessary"
+
+  medium:
+  
+    - id: "CODE-003"
+      category: "event-handling"
+      severity: "medium"
+      description: "Event handling patterns differ"
+      v1_pattern: "Per-card event listeners with handler for both click and keydown"
+      v2_pattern: "Event delegation on container, click only"
+      v1_accessibility: "Keyboard accessible (Enter/Space support)"
+      v2_accessibility: "Mouse only"
+      impact: "v2.0.1 less accessible"
+      leapAction: "Add accessibility requirement to component patterns"
+      backlogCandidate: true
+
+    - id: "CODE-004"
+      category: "dialog-complexity"
+      severity: "medium"
+      description: "Dialog implementations have significant complexity difference"
+      v1_lines: 415
+      v2_lines: 298
+      v1_features: ["Full chat interface", "Chat history", "Message formatting", "Quick actions", "Typing indicator"]
+      v2_features: ["AI suggestion buttons", "Response display", "Typing animation"]
+      impact: "Different user experience quality"
+      note: "v2.0.0 more feature-rich, v2.0.1 more focused"
+
+    - id: "CODE-005"
+      category: "export-patterns"
+      severity: "medium"
+      description: "Dialog function naming and export pattern differs"
+      v1_exports: ["openDialog(incidentId)", "closeDialog()"]
+      v2_exports: ["initIncidentDialog()", "openIncidentDialog(incident)", "closeIncidentDialog()"]
+      impact: "Different initialization patterns - v2.0.1 has explicit init, v2.0.0 lazy creates on first open"
+      leapAction: "Standardize component initialization pattern"
+
+  low:
+  
+    - id: "CODE-006"
+      category: "css-class-naming"
+      severity: "low"
+      description: "CSS class naming mostly consistent"
+      match: true
+      note: "Both use BEM-lite pattern, minor variations in status class names"
+
+    - id: "CODE-007"
+      category: "logging"
+      severity: "low"
+      description: "Logging approach differs"
+      v1_pattern: "Uses info() and debug() from logger.js"
+      v2_pattern: "Uses debug() only from logger.js"
+      impact: "Minor - affects troubleshooting visibility"
+
+# =============================================================================
+# POSITIVE OBSERVATIONS
+# =============================================================================
+
+positiveObservations:
+  - "Both follow AI-First header pattern with MODULE_CONTRACT"
+  - "Both use relative imports correctly (../../../ for 3-level depth)"
+  - "Both use CSS variables from design system - no magic colors"
+  - "Both create proper DOM structure with unique IDs"
+  - "Both maintained BEM-lite CSS naming convention"
+  - "Path naming consistency achieved (plural: incidents/)"
+  - "Component co-location maintained (JS + CSS in same folder)"
+
+# =============================================================================
+# BACKLOG IMPACT
+# =============================================================================
+
+backlogImpact:
+
+  priorityElevation:
+    - id: "LEAP-018"
+      name: "Create Domain Data Schemas"
+      currentPriority: "short-term"
+      recommendedPriority: "high"
+      rationale: "CODE-001 shows different field names - demos can't share data"
+
+  validated:
+    - id: "LEAP-027"
+      name: "Define AI Service Pattern"
+      note: "CODE-002 confirms this is critical - need clear guidance"
+
+  newCandidates:
+    - id: "LEAP-030"
+      name: "Require Keyboard Accessibility in Components"
+      description: "All interactive components must support keyboard navigation (Enter/Space for buttons)"
+      rationale: "CODE-003 shows v2.0.1 lost keyboard accessibility"
+      effort: "small"
+      
+    - id: "LEAP-031"
+      name: "Standardize Component Initialization Pattern"
+      description: "Define when to use lazy init (v2.0.0) vs explicit init (v2.0.1) pattern"
+      rationale: "CODE-005 shows different initialization approaches"
+      effort: "small"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalDeviations: 7
+  critical: 2
+  medium: 3
+  low: 2
+  
+  keyFindings:
+    - "Data schema inconsistency prevents mock data reuse"
+    - "AI service architecture needs standardization (confirmed LEAP-027)"
+    - "Accessibility regression in v2.0.1"
+    - "Component initialization patterns need definition"
+    - "Path naming consistency ACHIEVED"
+  
+  overallAssessment: |
+    Both runs produced functional demos on Gold Source v2.0. The scaffold
+    architecture guided consistent folder structure and CSS patterns.
+    
+    Key gaps are in DATA SCHEMAS and AI SERVICE PATTERNS - both need
+    standardization before demos can share code or be compared fairly.

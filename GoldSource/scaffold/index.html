@@ -1,110 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!--
     @file index.html
-    @purpose Entry point - loads shell structure and initializes application
+    @purpose Main dashboard - header, sidebar, canvas layout
     @layer core
-    @dependencies [variables.css, base.css, shell.css, app.js]
+    @dependencies [variables.css, base.css, buttons.css, component CSS]
     @dependents []
-    @locked true
-    @modifyImpact [entire application structure and load order]
+    @locked false
+    @modifyImpact [dashboard layout and structure]
   -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DemoFactory Prototype - Agentic Dashboard">
-  
-  <title>DemoFactory - Agentic Dashboard</title>
-  
-  <!-- CSS Loading Order: variables first, then base, then shell, then components -->
-  <link rel="stylesheet" href="ui/styles/variables.css">
-  <link rel="stylesheet" href="ui/styles/base.css">
-  <link rel="stylesheet" href="ui/styles/shell.css">
-  
-  <!-- Component CSS - Shell -->
-  <link rel="stylesheet" href="ui/components/header/header.css">
-  <link rel="stylesheet" href="ui/components/nav/nav.css">
-  <link rel="stylesheet" href="ui/components/footer/footer.css">
-  
-  <!-- Component CSS - Archetype -->
-  <link rel="stylesheet" href="ui/components/chat-panel/chat-panel.css">
-  <link rel="stylesheet" href="ui/components/data-cards/data-cards.css">
-  <link rel="stylesheet" href="ui/components/action-buttons/action-buttons.css">
-  
-  <!-- Google Fonts - Inter -->
+  <meta name="description" content="NEXUS - AI-First Enterprise Dashboard">
+
+  <title>NEXUS</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="ui/styles/variables.css">
+  <link rel="stylesheet" href="ui/styles/base.css">
+  <link rel="stylesheet" href="ui/styles/buttons.css">
+  <link rel="stylesheet" href="ui/styles/inputs.css">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="ui/components/header/header.css">
+  <link rel="stylesheet" href="ui/components/sidebar/sidebar.css">
+  <link rel="stylesheet" href="ui/components/canvas/canvas.css">
 </head>
+
 <body>
-  <!-- App Shell Structure - Locked -->
-  <div class="app-shell">
-    
-    <!-- Header - Locked component -->
-    <header class="app-header" id="app-header">
-      <div class="app-header__logo">
-        <div class="app-header__logo-icon">🚀</div>
-        <span>DemoFactory</span>
-      </div>
-      <div class="app-header__spacer"></div>
-      <div class="app-header__actions" id="header-actions">
-        <!-- Header actions rendered by header-ui.js -->
-      </div>
+  <!-- Dashboard Shell -->
+  <div class="dashboard-shell" id="dashboard-shell">
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <!-- Rendered by header-ui.js -->
     </header>
-    
-    <!-- Body: Nav + Main Content -->
-    <div class="app-body">
-      
-      <!-- Navigation - Locked component -->
-      <nav class="app-nav" id="app-nav">
-        <!-- Navigation rendered by nav-ui.js -->
-        <div class="app-nav__section">
-          <div class="app-nav__section-title">Dashboard</div>
-          <ul class="app-nav__list">
-            <li class="app-nav__item">
-              <a href="#" class="app-nav__link app-nav__link--active">
-                <span class="app-nav__link-icon">📊</span>
-                <span>Overview</span>
-              </a>
-            </li>
-            <li class="app-nav__item">
-              <a href="#" class="app-nav__link">
-                <span class="app-nav__link-icon">📋</span>
-                <span>Tasks</span>
-              </a>
-            </li>
-            <li class="app-nav__item">
-              <a href="#" class="app-nav__link">
-                <span class="app-nav__link-icon">💬</span>
-                <span>Agent Chat</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      
-      <!-- Main Content - Flexible area for archetype components -->
-      <main class="app-main" id="main-content">
-        <div class="app-main__container">
-          <!-- Content rendered by dashboard components -->
-        </div>
+
+    <!-- Main Body: Sidebar + Canvas -->
+    <div class="dashboard-body">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Rendered by sidebar-ui.js -->
+      </aside>
+
+      <!-- Canvas (Main Content Area) -->
+      <main class="canvas" id="canvas">
+        <!-- Rendered by canvas-ui.js -->
       </main>
-      
+
     </div>
-    
-    <!-- Footer - Locked component -->
-    <footer class="app-footer" id="app-footer">
-      <div class="app-footer__left">
-        <span>DemoFactory Prototype v0.1.0</span>
-      </div>
-      <div class="app-footer__right">
-        <span>Archetype: Agentic Dashboard</span>
-      </div>
-    </footer>
-    
+
   </div>
-  
-  <!-- Application JavaScript - ES Modules -->
+
+  <!-- Application JavaScript -->
   <script type="module" src="core/app.js"></script>
 </body>
+
 </html>

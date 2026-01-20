@@ -1,0 +1,122 @@
+# =============================================================================
+# STAGE 7: TESTING - Phase 18: NexusReturns
+# =============================================================================
+# Purpose: Browser-based verification of all features
+# =============================================================================
+
+metadata:
+  phase: 18
+  name: "NexusReturns"
+  stage: 7
+  stageName: "testing"
+  created: "2026-01-19T23:54:17Z"
+  status: "complete"
+  author: "AI Architect"
+  gateApproval: "!Proceed received 2026-01-19T23:54:17Z"
+
+# =============================================================================
+# TEST RESULTS
+# =============================================================================
+
+testEnvironment:
+  server: "python3 -m http.server 5173"
+  browser: "Chrome"
+  user: "matthew.phipps@servicenow.com"
+  firebaseProject: "zentask-bee2a"
+
+testResults:
+  
+  loginPage:
+    url: "http://localhost:5173/login.html"
+    tests:
+      - name: "Glassmorphism design"
+        status: "PASS"
+      - name: "NEXUS gradient heading"
+        status: "PASS"
+      - name: "Email/Password fields present"
+        status: "PASS"
+      - name: "Login/Signup mode toggle"
+        status: "PASS"
+  
+  dashboard:
+    url: "http://localhost:5173/index.html"
+    tests:
+      - name: "Header with NEXUS logo"
+        status: "PASS"
+      - name: "User avatar and name displayed"
+        status: "PASS"
+      - name: "Theme toggle button works"
+        status: "PASS"
+      - name: "Logout button visible"
+        status: "PASS"
+      - name: "Sidebar with Overview nav"
+        status: "PASS"
+      - name: "Sidebar collapse/expand"
+        status: "PASS"
+      - name: "Canvas welcome message"
+        status: "PASS"
+  
+  themeSystem:
+    tests:
+      - name: "Dark to light toggle"
+        status: "PASS"
+      - name: "Light to dark toggle"
+        status: "PASS"
+      - name: "Text readability in both modes"
+        status: "PASS"
+      - name: "Theme persists on reload"
+        status: "PASS"
+
+# =============================================================================
+# BUGS FIXED DURING TESTING
+# =============================================================================
+
+bugsFixed:
+  - id: "BUG-P18-001"
+    issue: "Components used wrong import paths"
+    fix: "Changed ../../core/ to ../../../core/ in header-ui.js, sidebar-ui.js, canvas-ui.js"
+  
+  - id: "BUG-P18-002"
+    issue: "Theme toggle did nothing"
+    fix: "Replaced require() with ES module imports in app.js"
+    governance: "Added esModuleRules to architectural-standards.yaml"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalTests: 15
+  passed: 15
+  failed: 0
+  
+  bugsFound: 2
+  bugsFixed: 2
+  
+  overallStatus: "PASS"
+
+# =============================================================================
+# EVIDENCE
+# =============================================================================
+
+evidence:
+  screenshots:
+    - name: "Login page"
+      path: "login_page_final_1768866917714.png"
+    - name: "Dashboard (dark)"
+      path: "dashboard_dark_mode_final_1768866972850.png"
+    - name: "Dashboard (light)"
+      path: "dashboard_light_mode_1768866946514.png"
+  recording: "stage7_full_test_1768866882288.webp"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "closure"
+  number: 8
+  requires: "!Proceed"
+  focus: "Lessons learned, documentation finalization, phase wrap-up"
+
+testingComplete: true

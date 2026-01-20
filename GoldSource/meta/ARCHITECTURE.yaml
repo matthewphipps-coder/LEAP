@@ -1,13 +1,17 @@
+# =============================================================================
+# ARCHITECTURE - GoldSource Scaffold v2.0
+# =============================================================================
+# AI-First Code: System architecture reference for AI comprehension
+# =============================================================================
+
 metadata:
   type: "architecture"
   name: "GoldSource Architecture"
-  purpose: "System architecture reference for AI comprehension"
   version: "2.0.0"
   created: "2026-01-19"
   lastUpdated: "2026-01-19"
   status: "complete"
-  verifiedWorking: true
-  note: "Phase 14: Restructured as GoldSource with factory governance"
+  phase: "18 - NexusReturns"
 
 # =============================================================================
 # SYSTEM OVERVIEW
@@ -15,90 +19,119 @@ metadata:
 
 systemOverview:
   name: "GoldSource v2.0.0"
-  purpose: "Gold copy scaffold for DemoFactory - creates demos via AI-assisted development"
-  
-  structure:
-    scaffold: "GoldSource/scaffold/ - Core code components"
-    meta: "GoldSource/meta/ - Architecture and standards"
-    governance: "GoldSource/governance/ - Factory protocols and templates"
-    archetypes: "GoldSource/archetypes/ - UI pattern templates"
-  
-  entryPoints:
-    - file: "GoldSource/scaffold/index.html"
-      purpose: "Main entry point - loads shell and initializes app"
-    - file: "GoldSource/scaffold/core/app.js"
-      purpose: "Application orchestrator - initialization only"
-    - file: "GoldSource/governance/FACTORY_README.yaml"
-      purpose: "Entry point for Factory AI"
-  
+  purpose: "Gold Source scaffold for DemoFactory - AI-First enterprise dashboard"
   archetype: "Agentic Dashboard"
+  
   stack:
     structure: "HTML5"
     logic: "Vanilla JS (ES Modules)"
-    styling: "CSS variables"
+    styling: "CSS custom properties"
+    auth: "Firebase Authentication"
+    database: "Firestore"
     build: "None (static files, requires local server for ES modules)"
+  
+  entryPoints:
+    - file: "login.html"
+      purpose: "Authentication entry point"
+    - file: "index.html"
+      purpose: "Main dashboard"
+    - file: "core/app.js"
+      purpose: "Application bootstrap"
 
 # =============================================================================
-# MODULE STRUCTURE
+# FOLDER STRUCTURE
 # =============================================================================
 
-moduleStructure:
+folderStructure:
+  scaffold:
+    core:
+      location: "scaffold/core/"
+      purpose: "Core infrastructure - locked foundation"
+      files:
+        - "app.js - Application bootstrap"
+        - "state.js - State manager (LOCKED)"
+        - "firebase.js - Firebase init (LOCKED)"
+        - "auth-service.js - Authentication"
+        - "theme-manager.js - Theme toggle"
+        - "constants.js - App constants (LOCKED)"
+        - "logger.js - Logging (LOCKED)"
+    
+    features:
+      location: "scaffold/features/"
+      purpose: "Feature modules - extensible"
+      files:
+        - "ai/ai-service.js - AI provider interface"
+    
+    ui:
+      location: "scaffold/ui/"
+      purpose: "UI components and styles"
+      subfolders:
+        styles:
+          locked: true
+          files: ["variables.css", "base.css", "buttons.css", "inputs.css"]
+        components:
+          locked: false
+          folders:
+            - "header/ - Top navigation (LOCKED)"
+            - "sidebar/ - Left navigation"
+            - "canvas/ - Main content area"
   
-  core:
-    location: "GoldSource/scaffold/core/"
-    purpose: "Locked infrastructure - foundation for all demos"
-    locked: true
-    modules:
-      - file: "app.js"
-        purpose: "Orchestrator - calls init functions"
-        dependents: ["index.html"]
-      - file: "state.js"
-        purpose: "StateManager - single source of truth"
-        dependents: ["all UI components", "dashboard-service.js"]
-      - file: "mock-data.js"
-        purpose: "Mock data patterns"
-        dependents: ["dashboard-service.js"]
-      - file: "error-handler.js"
-        purpose: "Error handling framework"
-        dependents: ["app.js"]
-      - file: "logger.js"
-        purpose: "Logging/observability"
-        dependents: ["all modules"]
+  meta:
+    location: "meta/"
+    purpose: "Documentation and standards"
+    files:
+      - "ARCHITECTURE.yaml (this file)"
+      - "architectural-standards.yaml"
+      - "functionality.yaml"
+      - "design-system.yaml"
+
+# =============================================================================
+# MODULE DEPENDENCY MAP
+# =============================================================================
+
+dependencyMap:
   
-  features:
-    location: "GoldSource/scaffold/features/"
-    purpose: "Feature-specific business logic (Service layer)"
-    locked: false
-    modules:
-      - file: "dashboard/dashboard-service.js"
-        purpose: "Dashboard business logic"
-        dependencies: ["state.js", "mock-data.js", "logger.js"]
-        dependents: ["chat-panel-ui.js", "action-buttons-ui.js"]
+  coreModules:
+    "logger.js":
+      imports: []
+      exportedTo: ["state.js", "auth-service.js", "theme-manager.js", "app.js", "all UI components"]
+    
+    "constants.js":
+      imports: []
+      exportedTo: ["app.js"]
+    
+    "state.js":
+      imports: ["logger.js"]
+      exportedTo: ["app.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js", "canvas-ui.js"]
+    
+    "firebase.js":
+      imports: ["config.js (external)"]
+      exportedTo: ["auth-service.js"]
+    
+    "auth-service.js":
+      imports: ["firebase.js", "state.js", "logger.js"]
+      exportedTo: ["app.js", "login.js", "header-ui.js"]
+    
+    "theme-manager.js":
+      imports: ["state.js", "logger.js"]
+      exportedTo: ["app.js", "header-ui.js"]
+    
+    "app.js":
+      imports: ["logger.js", "state.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js", "canvas-ui.js"]
+      exportedTo: ["index.html"]
   
-  ui:
-    location: "GoldSource/scaffold/ui/"
-    purpose: "UI components and styles"
-    subfolders:
-      styles:
-        location: "GoldSource/scaffold/ui/styles/"
-        locked: true
-        files: ["variables.css", "base.css", "shell.css"]
-      components:
-        location: "GoldSource/scaffold/ui/components/"
-        locked: "varies by component"
-        folders:
-          - name: "header"
-            locked: true
-          - name: "nav"
-            locked: true
-          - name: "footer"
-            locked: true
-          - name: "chat-panel"
-            locked: false
-          - name: "data-cards"
-            locked: false
-          - name: "action-buttons"
-            locked: false
+  featureModules:
+    "ai-service.js":
+      imports: ["logger.js"]
+      exportedTo: ["future chat components"]
+  
+  uiModules:
+    "header-ui.js":
+      imports: ["state.js", "auth-service.js"]
+    "sidebar-ui.js":
+      imports: ["state.js"]
+    "canvas-ui.js":
+      imports: ["state.js"]
 
 # =============================================================================
 # DATA FLOW
@@ -109,11 +142,11 @@ dataFlow:
   
   flow:
     - step: 1
-      from: "User Action / AI Command"
+      from: "User Action"
       to: "UI Event Handler"
     - step: 2
       from: "UI Event Handler"
-      to: "Service Layer"
+      to: "Service Layer (if needed)"
     - step: 3
       from: "Service Layer"
       to: "StateManager"
@@ -124,102 +157,33 @@ dataFlow:
       from: "UI Components"
       to: "DOM Update"
   
-  diagram: |
-    User/AI --> UI Handler --> Service --> StateManager --> UI --> DOM
-                                              ↑                    ↓
-                                              └────────────────────┘
-
-# =============================================================================
-# DEPENDENCY MAP (Actual Imports)
-# =============================================================================
-
-dependencyMap:
-  note: "Verified from actual implementation"
-  
-  coreModules:
-    "logger.js":
-      imports: []
-      exportedTo: ["error-handler.js", "state.js", "mock-data.js", "app.js", "all *-ui.js", "dashboard-service.js"]
-    "error-handler.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js"]
-    "state.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js", "dashboard-service.js", "header-ui.js", "nav-ui.js", "footer-ui.js", "chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
-    "mock-data.js":
-      imports: ["logger.js"]
-      exportedTo: ["app.js", "dashboard-service.js"]
-    "app.js":
-      imports: ["logger.js", "error-handler.js", "state.js", "mock-data.js", "header-ui.js", "nav-ui.js", "footer-ui.js", "chat-panel-ui.js", "data-cards-ui.js", "action-buttons-ui.js"]
-      exportedTo: ["index.html (via script tag)"]
-  
-  featureModules:
-    "dashboard-service.js":
-      imports: ["state.js", "mock-data.js", "logger.js"]
-      exportedTo: ["chat-panel-ui.js", "action-buttons-ui.js"]
-  
-  uiModules:
-    "header-ui.js":
-      imports: ["state.js", "logger.js"]
-    "nav-ui.js":
-      imports: ["state.js", "logger.js"]
-    "footer-ui.js":
-      imports: ["state.js", "logger.js"]
-    "chat-panel-ui.js":
-      imports: ["state.js", "dashboard-service.js", "logger.js"]
-    "data-cards-ui.js":
-      imports: ["state.js", "logger.js"]
-    "action-buttons-ui.js":
-      imports: ["state.js", "dashboard-service.js", "logger.js"]
-
-# =============================================================================
-# ARCHITECTURAL PATTERNS
-# =============================================================================
-
-architecturalPatterns:
-  
-  triadPattern:
-    name: "Service / UI / Style Separation"
-    reference: "architectural-standards.yaml > separationOfConcerns"
-    enforcement: "Every feature has -service.js, -ui.js, and .css files"
-  
-  stateManagement:
-    name: "Centralized StateManager"
-    pattern: "Pub/Sub with immutable updates"
-    location: "GoldSource/scaffold/core/state.js"
-  
-  aiFirstCode:
-    name: "AI-First Code Standards"
-    reference: "architectural-standards.yaml > aiFirstCodeStandards"
-    enforcement: "All files have headers, annotations, and module contracts"
-  
-  lockedComponents:
-    name: "Locked vs Flexible"
-    description: "Factory provides locked scaffold; AI customizes flexible content"
-    locked: ["GoldSource/scaffold/core/*", "GoldSource/scaffold/ui/styles/*", "header", "nav", "footer"]
-    flexible: ["chat-panel", "data-cards", "action-buttons"]
+  authFlow:
+    - "login.js → auth-service.js → Firebase Auth"
+    - "auth-service.js → state.js (setUser)"
+    - "app.js watches auth state → init UI or redirect"
 
 # =============================================================================
 # CSS ARCHITECTURE
 # =============================================================================
 
 cssArchitecture:
-  
   loadingOrder:
-    - file: "variables.css"
-      purpose: "CSS custom properties (colors, spacing, typography)"
-    - file: "base.css"
-      purpose: "Reset and global base styles"
-    - file: "shell.css"
-      purpose: "Header, nav, footer layout"
-    - file: "component CSS files"
-      purpose: "Component-specific styles"
+    - "variables.css - CSS custom properties"
+    - "base.css - Reset and global styles"
+    - "buttons.css - Button patterns"
+    - "inputs.css - Input patterns"
+    - "component CSS files - Per-component styles"
   
-  variableHierarchy:
-    colors: "--color-*"
-    spacing: "--spacing-*"
+  variableNaming:
+    colors: "--bg-*, --accent-*, --text-*, --glass-*"
+    spacing: "--space-*"
     typography: "--font-*, --text-*"
-    layout: "--layout-*"
+    layout: "--header-height, --sidebar-width"
+  
+  theming:
+    default: "Dark theme"
+    override: ".light-theme class on body"
+    persistence: "localStorage"
 
 # =============================================================================
 # EXTENSION POINTS
@@ -229,21 +193,38 @@ extensionPoints:
   
   addingNewComponent:
     steps:
-      - "Create GoldSource/scaffold/ui/components/[name]/ folder"
-      - "Create [name]-ui.js with AI-First headers"
-      - "Create [name].css for styles"
-      - "Register in app.js initialization"
+      - "Create ui/components/{name}/ folder"
+      - "Create {name}-ui.js with MODULE_CONTRACT"
+      - "Create {name}.css for styles"
+      - "Import and call init{Name}() in app.js"
+      - "Add CSS link to index.html"
       - "Update this ARCHITECTURE.yaml"
   
-  addingNewService:
+  addingNewFeature:
     steps:
-      - "Create GoldSource/scaffold/features/[name]/ folder"
-      - "Create [name]-service.js with AI-First headers"
-      - "Import in relevant UI components"
-      - "Update this ARCHITECTURE.yaml"
+      - "Create features/{name}/ folder"
+      - "Create {name}-service.js with MODULE_CONTRACT"
+      - "Import service in relevant UI components"
+      - "Update functionality.yaml"
   
-  addingNewArchetype:
-    steps:
-      - "Document archetype in DemoFactoryResources/"
-      - "Create archetype-specific components"
-      - "Add to templates/ for demo creators"
+  addingNewNavItem:
+    location: "sidebar-ui.js"
+    pattern: "Add to nav-list in initSidebar()"
+
+# =============================================================================
+# LOCKED FILES (DO NOT MODIFY)
+# =============================================================================
+
+lockedFiles:
+  core:
+    - "state.js"
+    - "firebase.js"
+    - "constants.js"
+    - "logger.js"
+  styles:
+    - "variables.css"
+    - "base.css"
+    - "buttons.css"
+    - "inputs.css"
+  
+  reason: "These form the stable foundation. Factory should extend, not modify."

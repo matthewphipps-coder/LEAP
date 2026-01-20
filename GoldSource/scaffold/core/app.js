@@ -1,163 +1,106 @@
 /**
  * @file app.js
- * @purpose Application orchestrator - initializes all modules and coordinates startup
+ * @purpose Application bootstrap and orchestration
  * @layer core
- * @dependencies [logger.js, error-handler.js, state.js, mock-data.js, all UI components]
+ * @dependencies [logger.js, state.js, auth-service.js, theme-manager.js, all UI components]
  * @dependents [index.html]
- * @locked true
- * @modifyImpact [application startup sequence, module initialization order]
+ * @locked false
+ * @modifyImpact [application initialization flow]
  */
 
-import { info, debug, error as logError } from './logger.js';
-import { handleError } from './error-handler.js';
-import { getState, updateState, subscribe } from './state.js';
-import { getMockTasks, getMockMetrics, getMockNotifications } from './mock-data.js';
-
-// UI Components
+import { info, error as logError } from './logger.js';
+import { getState } from './state.js';
+import { setupAuthListener, logout } from './auth-service.js';
+import { initTheme, setTheme, getTheme } from './theme-manager.js';
 import { initHeader } from '../ui/components/header/header-ui.js';
-import { initNav } from '../ui/components/nav/nav-ui.js';
-import { initFooter } from '../ui/components/footer/footer-ui.js';
-import { initChatPanel } from '../ui/components/chat-panel/chat-panel-ui.js';
-import { initDataCards } from '../ui/components/data-cards/data-cards-ui.js';
-import { initActionButtons } from '../ui/components/action-buttons/action-buttons-ui.js';
+import { initSidebar } from '../ui/components/sidebar/sidebar-ui.js';
+import { initCanvas } from '../ui/components/canvas/canvas-ui.js';
 
-// Module contract
+// =============================================================================
+// MODULE CONTRACT
+// =============================================================================
+
 export const MODULE_CONTRACT = {
-    provides: ['initApp', 'getAppState'],
-    requires: ['logger.js', 'error-handler.js', 'state.js', 'mock-data.js']
+    provides: ['initApp'],
+    requires: ['logger.js', 'state.js', 'auth-service.js', 'theme-manager.js', 'header-ui.js', 'sidebar-ui.js', 'canvas-ui.js']
 };
 
-/**
- * @constant APP_CONFIG
- * @purpose Application configuration constants
- */
-const APP_CONFIG = {
-    name: 'DemoFactory Prototype',
-    version: '0.1.0',
-    archetype: 'Agentic Dashboard'
-};
+// =============================================================================
+// INITIALIZATION
+// =============================================================================
 
 /**
  * @function initApp
- * @purpose Initialize the application - entry point called from index.html
- * @returns {Promise<void>}
- * @impacts [entire application starts up, all modules initialized]
- * @sideEffects [initializes state, renders UI, sets up event listeners]
+ * @purpose Bootstrap the application
  */
-export async function initApp() {
-    info(`Initializing ${APP_CONFIG.name} v${APP_CONFIG.version}`);
+async function initApp() {
+    info('App: Initializing NEXUS');
 
     try {
-        // Step 1: Load initial data into state
-        await loadInitialData();
+        // 1. Initialize theme (before rendering)
+        initTheme();
 
-        // Step 2: Initialize UI components
-        await initUIComponents();
+        // 2. Set up auth listener and wait for auth state
+        setupAuthListener((user) => {
+            if (!user) {
+                // Not authenticated, redirect to login
+                info('App: No user, redirecting to login');
+                window.location.href = 'login.html';
+                return;
+            }
 
-        // Step 3: Set up global event handlers
-        setupGlobalHandlers();
-
-        info('Application initialized successfully');
+            // User is authenticated, initialize UI
+            info('App: User authenticated, initializing UI', { email: user.email });
+            initializeUI(user);
+        });
 
     } catch (err) {
-        handleError(err, {
-            silent: false,
-            recover: () => {
-                logError('Application failed to initialize');
-            }
-        });
+        logError('App: Initialization failed', { error: err.message });
     }
 }
 
 /**
- * @function loadInitialData
- * @purpose Load mock data into state for initial render
- * @returns {Promise<void>}
- * @impacts [state is populated with initial data]
- * @sideEffects [calls updateState with mock data]
+ * @function initializeUI
+ * @purpose Initialize all UI components after auth confirmed
+ * @param {Object} user - Authenticated user object
  */
-async function loadInitialData() {
-    debug('Loading initial data');
+function initializeUI(user) {
+    info('App: Initializing UI components');
 
-    const tasks = getMockTasks();
-    const metrics = getMockMetrics();
-    const notifications = getMockNotifications();
+    // Initialize shell components
+    initHeader(user, handleLogout, handleThemeToggle);
+    initSidebar();
+    initCanvas();
 
-    updateState({
-        dashboard: {
-            tasks,
-            metrics,
-            notifications
-        }
-    }, 'app.loadInitialData');
+    info('App: Initialization complete');
+}
 
-    debug('Initial data loaded', {
-        taskCount: tasks.length,
-        notificationCount: notifications.length
-    });
+// =============================================================================
+// EVENT HANDLERS
+// =============================================================================
+
+/**
+ * @function handleLogout
+ * @purpose Handle logout button click
+ */
+function handleLogout() {
+    logout();
 }
 
 /**
- * @function initUIComponents
- * @purpose Initialize all UI components in correct order
- * @returns {Promise<void>}
- * @impacts [all UI components are rendered]
- * @sideEffects [DOM is populated with component HTML]
+ * @function handleThemeToggle
+ * @purpose Handle theme toggle
  */
-async function initUIComponents() {
-    debug('Initializing UI components');
-
-    // Shell components (locked)
-    initHeader();
-    initNav();
-    initFooter();
-
-    // Archetype components (flexible)
-    initDataCards();
-    initActionButtons();
-    initChatPanel();
-
-    debug('UI components initialized');
+function handleThemeToggle() {
+    const currentTheme = getTheme();
+    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
 }
 
-/**
- * @function setupGlobalHandlers
- * @purpose Set up application-wide event handlers
- * @returns {void}
- * @impacts [global events are handled]
- * @sideEffects [attaches event listeners to window/document]
- */
-function setupGlobalHandlers() {
-    debug('Setting up global handlers');
+// =============================================================================
+// START APPLICATION
+// =============================================================================
 
-    // Handle uncaught errors
-    window.addEventListener('error', (event) => {
-        handleError(event.error || event.message, { silent: true });
-    });
-
-    // Handle unhandled promise rejections
-    window.addEventListener('unhandledrejection', (event) => {
-        handleError(event.reason, { silent: true });
-    });
-
-    // Subscribe to state changes for debugging
-    subscribe((state, source) => {
-        debug('State changed', { source });
-    });
-}
-
-/**
- * @function getAppState
- * @purpose Convenience function to get current application state
- * @returns {Object} Current state
- * @impacts [none - read only]
- * @sideEffects [none]
- */
-export function getAppState() {
-    return getState();
-}
-
-// Auto-initialize when DOM is ready
+// Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {

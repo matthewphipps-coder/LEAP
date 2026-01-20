@@ -1,124 +1,116 @@
 /**
  * @file header-ui.js
- * @purpose Header component rendering - user info, notifications, theme toggle
+ * @purpose Header component - logo, user avatar, theme toggle, logout
  * @layer ui
- * @dependencies [state.js, logger.js]
+ * @dependencies [state.js, auth-service.js]
  * @dependents [app.js]
- * @locked true
- * @modifyImpact [header display, user actions in header]
+ * @locked false
+ * @modifyImpact [header appearance and actions]
  */
 
-import { getState, subscribe, updateState } from '../../../core/state.js';
-import { debug } from '../../../core/logger.js';
+import { getState, subscribe } from '../../../core/state.js';
+import { createUserAvatarHTML } from '../../../core/auth-service.js';
 
-// Module contract
+// =============================================================================
+// MODULE CONTRACT
+// =============================================================================
+
 export const MODULE_CONTRACT = {
-    provides: ['initHeader', 'renderHeader'],
-    requires: ['state.js', 'logger.js']
+  provides: ['initHeader', 'updateUserDisplay'],
+  requires: ['state.js', 'auth-service.js']
 };
 
-// DOM references
-let headerActionsEl = null;
+// =============================================================================
+// HEADER INITIALIZATION
+// =============================================================================
 
 /**
  * @function initHeader
- * @purpose Initialize header component and set up subscriptions
- * @returns {void}
- * @impacts [header is rendered and reactive to state changes]
- * @sideEffects [subscribes to state, attaches event listeners]
+ * @purpose Initialize header component
+ * @param {Object} user - Current user object
+ * @param {Function} onLogout - Logout callback
+ * @param {Function} onThemeToggle - Theme toggle callback
  */
-export function initHeader() {
-    debug('Initializing header component');
+export function initHeader(user, onLogout, onThemeToggle) {
+  const headerEl = document.getElementById('header');
+  if (!headerEl) return;
 
-    headerActionsEl = document.getElementById('header-actions');
-
-    if (!headerActionsEl) {
-        debug('Header actions element not found');
-        return;
-    }
-
-    // Initial render
-    renderHeader();
-
-    // Subscribe to state changes
-    subscribe((state, source) => {
-        if (source.includes('user') || source.includes('ui.theme')) {
-            renderHeader();
-        }
-    });
-
-    // Set up event delegation
-    headerActionsEl.addEventListener('click', handleHeaderClick);
-}
-
-/**
- * @function renderHeader
- * @purpose Render header actions based on current state
- * @returns {void}
- * @impacts [header actions DOM is updated]
- * @sideEffects [modifies headerActionsEl innerHTML]
- */
-export function renderHeader() {
-    if (!headerActionsEl) return;
-
-    const state = getState();
-    const { user, ui } = state;
-    const isDark = ui.theme === 'dark';
-
-    headerActionsEl.innerHTML = `
-    <button class="btn btn-secondary header-action" id="theme-toggle" title="Toggle theme">
-      ${isDark ? '☀️' : '🌙'}
-    </button>
-    <button class="btn btn-secondary header-action" id="notifications-btn" title="Notifications">
-      🔔
-    </button>
-    <div class="header-user">
-      <span class="header-user__name">${user.name}</span>
-      <div class="header-user__avatar">${user.name.charAt(0)}</div>
+  headerEl.innerHTML = `
+    <div class="header-content">
+      <!-- Logo -->
+      <div class="header-brand">
+        <span class="header-logo">NEXUS</span>
+      </div>
+      
+      <!-- Spacer -->
+      <div class="header-spacer"></div>
+      
+      <!-- Actions -->
+      <div class="header-actions">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="btn btn-ghost btn-icon" title="Toggle theme">
+          <span class="theme-icon">🌙</span>
+        </button>
+        
+        <!-- User Avatar -->
+        <div class="header-user" id="header-user">
+          <div class="user-avatar">
+            ${createUserAvatarHTML(user)}
+          </div>
+          <span class="user-name">${user?.displayName || 'User'}</span>
+        </div>
+        
+        <!-- Logout -->
+        <button id="logout-btn" class="btn btn-ghost btn-icon" title="Sign out">
+          <span>⎋</span>
+        </button>
+      </div>
     </div>
   `;
 
-    debug('Header rendered');
-}
+  // Bind events
+  document.getElementById('logout-btn')?.addEventListener('click', onLogout);
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    onThemeToggle();
+    updateThemeIcon();
+  });
 
-/**
- * @function handleHeaderClick
- * @purpose Handle clicks on header action buttons
- * @param {Event} event - Click event
- * @returns {void}
- * @impacts [may update state based on clicked action]
- * @sideEffects [may trigger state updates]
- */
-function handleHeaderClick(event) {
-    const target = event.target.closest('button');
-    if (!target) return;
-
-    const id = target.id;
-
-    if (id === 'theme-toggle') {
-        toggleTheme();
-    } else if (id === 'notifications-btn') {
-        debug('Notifications clicked');
-        // TODO: Open notifications panel
+  // Subscribe to state changes
+  subscribe((state, source) => {
+    if (source === 'setTheme') {
+      updateThemeIcon();
     }
+  });
+
+  // Set initial theme icon
+  updateThemeIcon();
 }
 
 /**
- * @function toggleTheme
- * @purpose Toggle between light and dark theme
- * @returns {void}
- * @impacts [UI theme changes, all components affected]
- * @sideEffects [updates state, modifies document data-theme attribute]
+ * @function updateThemeIcon
+ * @purpose Update theme toggle icon based on current theme
  */
-function toggleTheme() {
-    const currentTheme = getState('ui.theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+function updateThemeIcon() {
+  const icon = document.querySelector('.theme-icon');
+  const theme = getState('theme');
+  if (icon) {
+    icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+  }
+}
 
-    // Update document attribute for CSS
-    document.documentElement.setAttribute('data-theme', newTheme);
-
-    // Update state
-    updateState({ ui: { theme: newTheme } }, 'header.toggleTheme');
-
-    debug('Theme toggled', { newTheme });
+/**
+ * @function updateUserDisplay
+ * @purpose Update user display in header
+ * @param {Object} user - User object
+ */
+export function updateUserDisplay(user) {
+  const userEl = document.getElementById('header-user');
+  if (userEl && user) {
+    userEl.innerHTML = `
+      <div class="user-avatar">
+        ${createUserAvatarHTML(user)}
+      </div>
+      <span class="user-name">${user.displayName || 'User'}</span>
+    `;
+  }
 }

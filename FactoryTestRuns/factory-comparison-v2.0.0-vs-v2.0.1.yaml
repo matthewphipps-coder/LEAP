@@ -1,0 +1,205 @@
+# =============================================================================
+# Factory Comparison: v2.0.0-major-incident vs v2.0.1-major-incident
+# =============================================================================
+# This document compares two factory runs on Gold Source v2.0 scaffold
+# to identify deviations requiring LEAP governance improvements.
+# =============================================================================
+
+metadata:
+  type: "factory-comparison"
+  name: "Factory Comparison: v2.0.0 vs v2.0.1"
+  purpose: "Identify deviations between factory runs to improve LEAP governance"
+  version: "1.0.0"
+  created: "2026-01-20T11:00:00Z"
+  status: "complete"
+  author: "AI Agent"
+  goldSourceVersion: "2.0.0"
+
+# =============================================================================
+# COMPARED RUNS
+# =============================================================================
+
+comparedRuns:
+  runA:
+    factory: "Factory-v2.0.0-major-incident"
+    demo: "NEXUS v2.0.0-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v2.0.0-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v2.0.0-major-incident/"
+    completedDate: "2026-01-20T10:29:01Z"
+    filesCreated: 6
+    filesModified: 2
+    totalNewLines: ~1310
+    bugsFound: 1
+    bugsFixed: 1
+    
+  runB:
+    factory: "Factory-v2.0.1-major-incident"
+    demo: "NEXUS v2.0.1-major-incident"
+    outputLocation: "~/Documents/DemoOutput/NEXUS-v2.0.1-major-incident/"
+    workspaceLocation: "~/Documents/DemoInstances/Factory-v2.0.1-major-incident/"
+    completedDate: "2026-01-20T10:56:43Z"
+    filesCreated: 5
+    filesModified: 2
+    totalNewLines: ~900
+    bugsFound: 0
+    bugsFixed: 0
+
+  commonScenario: "Major incident cards with pop-open dialog for AI agent assisted work"
+  commonArchetype: "agentic-dashboard"
+
+# =============================================================================
+# DEVIATION SUMMARY
+# =============================================================================
+
+deviationSummary:
+  totalDeviations: 5
+  
+  bySeverity:
+    high: 1
+    medium: 3
+    low: 1
+  
+  overallAssessment: |
+    Both runs successfully completed all 8 stages and produced working demos.
+    Key structural consistency: BOTH used plural naming (incidents/) - unlike
+    previous runs (v1.0.2 vs v1.0.3) where naming varied.
+    
+    Main deviation is in AI service architecture - isolated module vs inline.
+
+# =============================================================================
+# DEVIATIONS BY CATEGORY
+# =============================================================================
+
+deviations:
+
+  scaffoldConventions:
+  
+    - id: "DEV-001"
+      category: "scaffold-conventions"
+      severity: "high"
+      description: "AI service architecture differs"
+      v1_value: "Created separate incident-ai-service.js (6787 bytes) with dedicated wrapper"
+      v2_value: "Inline AI suggestions in incident-data.js (9104 bytes combined)"
+      impact: "Different patterns for AI integration - harder to standardize"
+      leapAction: "Define AI service pattern: when to use dedicated service vs inline"
+      backlogCandidate: true
+    
+    - id: "DEV-002"
+      category: "scaffold-conventions"
+      severity: "low"
+      description: "Path naming consistency IMPROVED"
+      v1_value: "features/incidents/ (plural)"
+      v2_value: "features/incidents/ (plural)"
+      impact: "POSITIVE - Both runs used same naming convention"
+      leapAction: "No action needed - naming consistency achieved"
+      note: "This was a deviation in v1.0.2 vs v1.0.3, now resolved"
+
+  factoryGovernance:
+  
+    - id: "DEV-003"
+      category: "factory-governance"
+      severity: "medium"
+      description: "Discovery artifact structure differs"
+      v1_value: "142 lines, detailed scenario interpretation, 4 features with details"
+      v2_value: "105 lines, structured requirements format, 4 features with user flows"
+      impact: "Different documentation depth and format"
+      leapAction: "No immediate action - both formats are valid"
+    
+    - id: "DEV-004"
+      category: "factory-governance"
+      severity: "medium"
+      description: "Design artifact detail level varies"
+      v1_value: "287 lines with code snippets and specifications"
+      v2_value: "207 lines with structural descriptions"
+      impact: "v2.0.0 more detailed, v2.0.1 more concise"
+      leapAction: "Consider defining minimum design spec requirements"
+    
+    - id: "DEV-005"
+      category: "factory-governance"
+      severity: "medium"
+      description: "File count differs"
+      v1_value: "6 new files created"
+      v2_value: "5 new files created"
+      impact: "Different modularization approaches"
+      leapAction: "Related to DEV-001 - AI service pattern decision"
+
+# =============================================================================
+# POSITIVE OBSERVATIONS (Both Runs)
+# =============================================================================
+
+positiveObservations:
+  - "Both runs completed all 8 stages successfully"
+  - "Both used plural naming (incidents/) - LEAP-003 concern addressed"
+  - "Both created same component structure (incident-cards/, incident-dialog/)"
+  - "Both leveraged existing data-cards and design system patterns"
+  - "Both maintained AI-First headers and MODULE_CONTRACT patterns"
+  - "Both recommend adding modal/dialog component to Gold Source (GS-001)"
+  - "Path import lessons learned captured by v2.0.0 (LL-001)"
+
+# =============================================================================
+# COMMON RECOMMENDATIONS (Both Runs)
+# =============================================================================
+
+commonRecommendations:
+  - id: "CR-001"
+    recommendation: "Add modal/dialog component to Gold Source scaffold"
+    mentionedBy: ["v2.0.0 (GS-001)", "v2.0.1 (scaffoldSuggestions)"]
+    priority: "Medium"
+    rationale: "Common pattern needed in most demos"
+    backlogCandidate: true
+  
+  - id: "CR-002"
+    recommendation: "Add path depth documentation to ARCHITECTURE.yaml"
+    mentionedBy: ["v2.0.0 (GS-002)"]
+    priority: "High"
+    rationale: "Prevents import path errors in future runs"
+    backlogCandidate: true
+
+# =============================================================================
+# BACKLOG RECOMMENDATIONS
+# =============================================================================
+
+backlogRecommendations:
+
+  new:
+    - id: "LEAP-027"
+      name: "Define AI Service Pattern"
+      priority: "medium"
+      description: "Standardize when to use dedicated AI service wrapper vs inline AI logic"
+      rationale: "DEV-001 shows v2.0.0 separated concern, v2.0.1 combined into data file"
+      effort: "small"
+      
+    - id: "LEAP-028"
+      name: "Add Modal/Dialog Component to Gold Source"
+      priority: "medium"
+      description: "Create reusable modal/dialog component in scaffold"
+      rationale: "CR-001 - recommended by both factory runs"
+      effort: "medium"
+      
+    - id: "LEAP-029"
+      name: "Add Path Depth Table to ARCHITECTURE.yaml"
+      priority: "high"
+      description: "Document relative path depths for all folder locations"
+      rationale: "CR-002 - prevents import path errors"
+      effort: "small"
+
+  resolved:
+    - id: "LEAP-003"
+      name: "Standardize Feature Path Naming"
+      status: "RESOLVED"
+      note: "Both runs used consistent plural naming (incidents/) - no deviation"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  - step: 1
+    action: "Review this comparison with Executive Authority"
+    status: "pending"
+  - step: 2
+    action: "Add approved recommendations to LEAP backlog"
+    status: "pending"
+  - step: 3
+    action: "Update CURRENT_STATE.yaml with new factory runs"
+    status: "pending"

@@ -1,16 +1,16 @@
 /**
  * @file base.css
- * @purpose Global reset and base styles - foundation for all components
+ * @purpose CSS reset, base element styles, light theme overrides
  * @layer core
  * @dependencies [variables.css]
- * @dependents [all component CSS files]
+ * @dependents [all pages, all components]
  * @locked true
- * @modifyImpact [all element default styling]
+ * @modifyImpact [base styling for all elements]
  */
 
-/* ==========================================================================
-   CSS RESET - Modern reset for consistent baseline
-   ========================================================================== */
+/* =============================================================================
+   CSS RESET
+   ============================================================================= */
 
 *,
 *::before,
@@ -24,22 +24,25 @@ html {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
 }
 
+/* =============================================================================
+   BODY DEFAULTS
+   ============================================================================= */
+
 body {
-    font-family: var(--font-family-sans);
+    font-family: var(--font-body);
+    font-weight: var(--font-regular);
     font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: var(--line-height-normal);
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
     min-height: 100vh;
 }
 
-/* ==========================================================================
-   TYPOGRAPHY - Base text styles
-   ========================================================================== */
+/* =============================================================================
+   TYPOGRAPHY
+   ============================================================================= */
 
 h1,
 h2,
@@ -47,118 +50,89 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-weight: var(--font-medium);
+    line-height: 1.2;
+    color: var(--text-primary);
 }
 
 h1 {
-    font-size: var(--text-4xl);
-}
-
-h2 {
     font-size: var(--text-3xl);
 }
 
-h3 {
+h2 {
     font-size: var(--text-2xl);
 }
 
-h4 {
+h3 {
     font-size: var(--text-xl);
 }
 
-h5 {
+h4 {
     font-size: var(--text-lg);
 }
 
-h6 {
+h5 {
     font-size: var(--text-base);
 }
 
+h6 {
+    font-size: var(--text-sm);
+}
+
 p {
-    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
 }
 
 a {
-    color: var(--color-primary);
+    color: var(--accent-primary);
     text-decoration: none;
     transition: color var(--transition-fast);
 }
 
 a:hover {
-    color: var(--color-primary-hover);
     text-decoration: underline;
 }
 
-/* ==========================================================================
+/* =============================================================================
    LISTS
-   ========================================================================== */
+   ============================================================================= */
 
 ul,
 ol {
-    list-style-position: inside;
-    margin-bottom: var(--spacing-md);
+    padding-left: var(--space-lg);
+    color: var(--text-secondary);
 }
 
 li {
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--space-xs);
 }
 
-/* ==========================================================================
-   FORMS - Base form element styles
-   ========================================================================== */
+/* =============================================================================
+   UTILITY CLASSES
+   ============================================================================= */
 
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
 }
 
-button {
-    cursor: pointer;
-    border: none;
-    background: none;
+.text-primary {
+    color: var(--text-primary);
 }
 
-input,
-textarea,
-select {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+.text-secondary {
+    color: var(--text-secondary);
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-primary-light);
+.text-accent {
+    color: var(--accent-primary);
 }
 
-/* ==========================================================================
-   IMAGES & MEDIA
-   ========================================================================== */
-
-img,
-video {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* ==========================================================================
-   UTILITY CLASSES - Common patterns
-   ========================================================================== */
-
-.sr-only {
+.visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -170,99 +144,33 @@ video {
     border: 0;
 }
 
-.text-muted {
-    color: var(--color-text-muted);
+/* =============================================================================
+   SCROLLBAR STYLING (Dark theme)
+   ============================================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-.text-secondary {
-    color: var(--color-text-secondary);
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.text-center {
-    text-align: center;
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: var(--radius-full);
 }
 
-.text-right {
-    text-align: right;
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
 }
 
-/* ==========================================================================
-   BUTTON VARIANTS - Base button styles
-   ========================================================================== */
+/* =============================================================================
+   FOCUS STATES (Accessibility)
+   ============================================================================= */
 
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-weight: var(--font-weight-medium);
-    border-radius: var(--border-radius-md);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-}
-
-.btn-primary {
-    background-color: var(--color-primary);
-    color: var(--color-text-inverse);
-}
-
-.btn-primary:hover {
-    background-color: var(--color-primary-hover);
-}
-
-.btn-secondary {
-    background-color: var(--color-secondary-light);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border);
-}
-
-.btn-secondary:hover {
-    background-color: var(--color-gray-200);
-}
-
-/* ==========================================================================
-   CARD - Base card component
-   ========================================================================== */
-
-.card {
-    background-color: var(--color-bg-primary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-lg);
-    box-shadow: var(--shadow-sm);
-}
-
-/* ==========================================================================
-   ANIMATION HELPERS
-   ========================================================================== */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(10px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn var(--transition-normal) ease-out;
-}
-
-.animate-slide-up {
-    animation: slideUp var(--transition-normal) ease-out;
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }

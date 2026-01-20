@@ -123,6 +123,51 @@ enforcementForAIAgents:
   consequence: "Failure to follow these rules will result in code rejection"
   motto: "Keep the Zen in the codebase as much as the UI"
 
+# =============================================================================
+# PHASE 18 CONVENTIONS (NexusReturns)
+# =============================================================================
+
+phase18Conventions:
+  name: "Scaffold v2.0 Conventions"
+  addedDate: "2026-01-19"
+  
+  pathNaming:
+    features: "Singular (features/incident/, not incidents/)"
+    components: "kebab-case (header-ui.js, not headerUI.js)"
+    services: "{feature}-service.js pattern"
+  
+  componentStructure:
+    pattern: "{name}-ui.js + {name}.css co-located"
+    location: "ui/components/{name}/"
+  
+  lockedFiles:
+    description: "Files that Factory CANNOT modify"
+    list:
+      - "core/state.js"
+      - "core/firebase.js"
+      - "core/constants.js"
+      - "core/logger.js"
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+      - "ui/styles/buttons.css"
+      - "ui/styles/inputs.css"
+  
+  extensionPoints:
+    description: "Where Factory CAN add features"
+    list:
+      - "features/* - new feature modules"
+      - "ui/components/* - new components"
+      - "index.html - add component containers and CSS links"
+      - "core/app.js - register new components (import and init)"
+  
+  esModuleRules:
+    description: "Scaffold uses ES Modules - NO CommonJS"
+    rules:
+      - "NEVER use require() - it does not work in browser ES modules"
+      - "ALWAYS use import/export at top of file"
+      - "Dynamic imports: use import() if needed"
+    learnedFrom: "Phase 18 bug - require() in app.js broke theme toggle"
+
 agentEngagementRules:
   name: "The Pair Protocol"
   purpose: "Ensure high-fidelity collaboration between User and AI"

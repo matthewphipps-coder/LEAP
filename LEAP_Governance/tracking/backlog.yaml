@@ -4,15 +4,22 @@ metadata:
   purpose: "Feature roadmap and priorities"
   version: "3.0.0"
   created: "2026-01-16"
-  lastUpdated: "2026-01-19"
+  lastUpdated: "2026-01-20"
   status: "active"
 
 summary:
-  totalItems: 30
-  immediate: 3
-  shortTerm: 27
+  totalItems: 39
+  immediate: 8
+  shortTerm: 31
+  mediumTerm: 0
+  future: 0
   
-  note: "21 items added from Factory comparison analyses and process improvements"
+  statusBreakdown:
+    complete: 12
+    proposed: 27
+    inProgress: 0
+  
+  note: "Counts verified 2026-01-20T12:14:00Z (excludes howToAdd template)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -119,6 +126,27 @@ priorities:
       addedDate: "2026-01-19"
       source: "Phase 17 lesson learned"
       acceptanceCriteria: ["constitution.yaml governanceManagement section includes Governance Is Code principle", "scope explicitly limited to LEAP_Governance (not GoldSource)"]
+    
+    - id: "LEAP-033"
+      name: "Implement Stage-Scoped Governance"
+      category: "factory-governance"
+      priority: "immediate"
+      status: "proposed"
+      description: "Replace upfront governance reading with stage-specific governance files that bundle rules, examples, role ownership, and exit checklists"
+      rationale: |
+        Factory runs v2.0.0 and v2.0.1 showed compliance theater - artifacts claimed wireframes that don't exist, 
+        naming rules violated, documentation not updated. Root cause: AI reads 1000+ lines upfront, forgets by Stage 5.
+        Solution: Deliver governance at point of relevance with verification methods.
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "Governance compliance audit discussion - 2026-01-20"
+      acceptanceCriteria:
+        - "8 stage-scoped governance files created (one per stage)"
+        - "Each file contains: rules with examples, role assignments, exit checklist"
+        - "Exit checklists include verification method (not just 'check X')"
+        - "Factory protocol updated to require reading stage governance at entry"
+        - "Test run demonstrates improved compliance"
   
   shortTerm:
     # -------------------------------------------------------------------------
@@ -218,6 +246,7 @@ priorities:
     # -------------------------------------------------------------------------
     # Factory Governance Items (from factory comparison)
     # -------------------------------------------------------------------------
+
     - id: "LEAP-001"
       name: "Create Stage Artifact Templates"
       category: "factory-governance"
@@ -494,6 +523,36 @@ priorities:
         - "Comparison template created for demo-vs-goldsource analysis"
         - "Focus areas defined: locked files, naming conventions, structural patterns"
     
+    - id: "LEAP-027"
+      name: "Define AI Service Pattern"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Standardize when to use dedicated AI service wrapper vs inline AI logic in feature modules"
+      rationale: "v2.0.0 created separate incident-ai-service.js, v2.0.1 inlined AI suggestions into data file - need clear guidance"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml (DEV-001)"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes AI service pattern guidance"
+        - "Clear criteria for dedicated service vs inline approach"
+    
+    - id: "LEAP-029"
+      name: "Add Path Depth Table to ARCHITECTURE.yaml"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Document relative path depths for all folder locations in Gold Source scaffold"
+      rationale: "v2.0.0 had import path errors due to undocumented depth - core=1, features/name=2, ui/components/name=3"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml (CR-002)"
+      acceptanceCriteria:
+        - "GoldSource/meta/ARCHITECTURE.yaml includes pathDepths section"
+        - "All folder locations documented with correct relative depth"
+    
     - id: "LEAP-025"
       name: "Formalize Backlog Deduplication Step"
       category: "factory-test-runs"
@@ -509,6 +568,36 @@ priorities:
         - "factory-review-workflow.yaml Step 5 includes deduplication checklist"
         - "Outcomes defined: Duplicate (don't add), Overlapping (merge), New (add)"
         - "Decision documentation required for each finding"
+  
+    - id: "LEAP-030"
+      name: "Require Keyboard Accessibility in Components"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "All interactive components must support keyboard navigation (Enter/Space for click targets)"
+      rationale: "v2.0.1 lost keyboard accessibility that v2.0.0 had - accessibility regression"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-003)"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes accessibility requirements section"
+        - "Component template includes keyboard handler example"
+    
+    - id: "LEAP-031"
+      name: "Standardize Component Initialization Pattern"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Define when to use lazy init (create on first use) vs explicit init (init function called at startup)"
+      rationale: "v2.0.0 used lazy dialog creation, v2.0.1 used explicit initIncidentDialog() - need clear guidance"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-005)"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes component initialization guidance"
+        - "Clear criteria for lazy vs explicit init pattern"
   
   mediumTerm: []
   future: []

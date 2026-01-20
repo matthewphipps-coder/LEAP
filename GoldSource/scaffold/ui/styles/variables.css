@@ -1,167 +1,103 @@
 /**
  * @file variables.css
- * @purpose CSS custom properties - colors, spacing, typography for consistent theming
+ * @purpose CSS custom properties - design tokens from design-system.yaml
  * @layer core
  * @dependencies []
- * @dependents [base.css, shell.css, all component CSS files]
+ * @dependents [base.css, buttons.css, inputs.css, all component CSS]
  * @locked true
  * @modifyImpact [all visual styling across application]
  */
 
+/* =============================================================================
+   DARK THEME (Default)
+   ============================================================================= */
+
 :root {
-  /* ==========================================================================
-     COLOR PALETTE - Brand-safe colors
-     ========================================================================== */
+  /* Brand Colors */
+  --bg-primary: #0a0a0c;
+  --accent-primary: #62d84e;
+  --accent-glow: rgba(98, 216, 78, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
   
-  /* Primary colors */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-light: #dbeafe;
+  /* Semantic Colors */
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
   
-  /* Secondary colors */
-  --color-secondary: #64748b;
-  --color-secondary-hover: #475569;
-  --color-secondary-light: #f1f5f9;
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 20px;
   
-  /* Accent colors */
-  --color-accent: #8b5cf6;
-  --color-accent-hover: #7c3aed;
+  /* Typography */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   
-  /* Status colors */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
   
-  /* Neutral colors */
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
   
-  /* ==========================================================================
-     SEMANTIC COLORS - Light theme (default)
-     ========================================================================== */
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
   
-  --color-bg-primary: var(--color-white);
-  --color-bg-secondary: var(--color-gray-50);
-  --color-bg-tertiary: var(--color-gray-100);
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
   
-  --color-text-primary: var(--color-gray-900);
-  --color-text-secondary: var(--color-gray-600);
-  --color-text-muted: var(--color-gray-400);
-  --color-text-inverse: var(--color-white);
+  /* Shadows */
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 10px var(--accent-glow);
+  --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   
-  --color-border: var(--color-gray-200);
-  --color-border-strong: var(--color-gray-300);
+  /* Transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 300ms ease-out;
+  --transition-slow: 500ms ease-out;
   
-  /* ==========================================================================
-     SPACING SCALE - Consistent spacing units
-     ========================================================================== */
+  /* Layout */
+  --header-height: 64px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 64px;
   
-  --spacing-xs: 0.25rem;   /* 4px */
-  --spacing-sm: 0.5rem;    /* 8px */
-  --spacing-md: 1rem;      /* 16px */
-  --spacing-lg: 1.5rem;    /* 24px */
-  --spacing-xl: 2rem;      /* 32px */
-  --spacing-2xl: 3rem;     /* 48px */
-  --spacing-3xl: 4rem;     /* 64px */
-  
-  /* ==========================================================================
-     TYPOGRAPHY - Font families and sizes
-     ========================================================================== */
-  
-  /* Font families */
-  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: 'Fira Code', 'Consolas', monospace;
-  
-  /* Font sizes */
-  --text-xs: 0.75rem;      /* 12px */
-  --text-sm: 0.875rem;     /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.25rem;      /* 20px */
-  --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 1.875rem;    /* 30px */
-  --text-4xl: 2.25rem;     /* 36px */
-  
-  /* Font weights */
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  
-  /* Line heights */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  
-  /* ==========================================================================
-     LAYOUT - Common layout values
-     ========================================================================== */
-  
-  --layout-header-height: 64px;
-  --layout-footer-height: 48px;
-  --layout-sidebar-width: 280px;
-  --layout-sidebar-collapsed: 64px;
-  --layout-max-content-width: 1200px;
-  
-  /* ==========================================================================
-     BORDERS & SHADOWS
-     ========================================================================== */
-  
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
-  --border-radius-full: 9999px;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
-  /* ==========================================================================
-     TRANSITIONS
-     ========================================================================== */
-  
-  --transition-fast: 150ms ease-in-out;
-  --transition-normal: 250ms ease-in-out;
-  --transition-slow: 350ms ease-in-out;
-  
-  /* ==========================================================================
-     Z-INDEX SCALE
-     ========================================================================== */
-  
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-fixed: 300;
-  --z-modal-backdrop: 400;
-  --z-modal: 500;
-  --z-tooltip: 600;
-  --z-notification: 700;
+  /* Z-Index */
+  --z-sidebar: 100;
+  --z-header: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-notification: 500;
 }
 
-/* ==========================================================================
-   DARK THEME - Color overrides
-   ========================================================================== */
+/* =============================================================================
+   LIGHT THEME (Override with .light-theme on body)
+   ============================================================================= */
 
-[data-theme="dark"] {
-  --color-bg-primary: var(--color-gray-900);
-  --color-bg-secondary: var(--color-gray-800);
-  --color-bg-tertiary: var(--color-gray-700);
+.light-theme {
+  --bg-primary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
   
-  --color-text-primary: var(--color-gray-50);
-  --color-text-secondary: var(--color-gray-300);
-  --color-text-muted: var(--color-gray-500);
+  --glass-bg: rgba(0, 0, 0, 0.02);
+  --glass-border: rgba(0, 0, 0, 0.08);
   
-  --color-border: var(--color-gray-700);
-  --color-border-strong: var(--color-gray-600);
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }

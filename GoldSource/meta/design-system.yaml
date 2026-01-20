@@ -1,0 +1,132 @@
+# =============================================================================
+# DESIGN SYSTEM - GoldSource v2.0
+# =============================================================================
+# AI-First Code: Single source of truth for all design tokens
+# =============================================================================
+
+metadata:
+  type: "design-system"
+  name: "GoldSource Design System"
+  version: "2.0.0"
+  created: "2026-01-19"
+  status: "active"
+
+# =============================================================================
+# COLOR PALETTE
+# =============================================================================
+
+colors:
+  
+  primary:
+    background: "#0a0a0c"
+    accent: "#62d84e"
+    textPrimary: "#ffffff"
+    textSecondary: "#94a3b8"
+  
+  semantic:
+    success: "#22c55e"
+    error: "#ef4444"
+    warning: "#f59e0b"
+    info: "#3b82f6"
+  
+  glass:
+    background: "rgba(255, 255, 255, 0.05)"
+    border: "rgba(255, 255, 255, 0.1)"
+    blur: "20px"
+  
+  lightTheme:
+    background: "#f8fafc"
+    textPrimary: "#0f172a"
+    textSecondary: "#64748b"
+    glass:
+      background: "rgba(0, 0, 0, 0.02)"
+      border: "rgba(0, 0, 0, 0.08)"
+
+# =============================================================================
+# TYPOGRAPHY
+# =============================================================================
+
+typography:
+  
+  fonts:
+    heading: "Outfit"
+    body: "Inter"
+    googleFontsUrl: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+  
+  weights:
+    light: 300
+    regular: 400
+    medium: 500
+    semibold: 600
+  
+  sizes:
+    xs: "0.75rem"    # 12px
+    sm: "0.875rem"   # 14px
+    base: "1rem"     # 16px
+    lg: "1.125rem"   # 18px
+    xl: "1.25rem"    # 20px
+    2xl: "1.5rem"    # 24px
+    3xl: "2rem"      # 32px
+
+# =============================================================================
+# SPACING
+# =============================================================================
+
+spacing:
+  unit: "4px"
+  scale:
+    xs: "4px"
+    sm: "8px"
+    md: "16px"
+    lg: "24px"
+    xl: "32px"
+    2xl: "48px"
+
+# =============================================================================
+# BORDERS & RADIUS
+# =============================================================================
+
+borders:
+  radius:
+    sm: "8px"
+    md: "12px"
+    lg: "24px"
+    full: "9999px"
+
+# =============================================================================
+# SHADOWS
+# =============================================================================
+
+shadows:
+  card: "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+  glow: "0 0 10px var(--accent-glow)"
+  subtle: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+
+# =============================================================================
+# ANIMATIONS
+# =============================================================================
+
+animations:
+  duration:
+    fast: "150ms"
+    normal: "300ms"
+    slow: "500ms"
+  easing:
+    default: "ease-out"
+    bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+
+# =============================================================================
+# GLASSMORPHISM
+# =============================================================================
+
+glassmorphism:
+  backdrop: "blur(20px)"
+  background: "var(--glass-bg)"
+  border: "1px solid var(--glass-border)"
+  pattern: |
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+    }
