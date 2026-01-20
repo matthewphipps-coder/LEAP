@@ -21,7 +21,7 @@ currentPhase:
   number: "22"
   name: "DesignSystemEnhancement"
   status: "in-progress"
-  stage: "research"
+  stage: "validation"
   startedDate: "2026-01-20T21:57:00Z"
   completedDate: null
   
@@ -30,7 +30,7 @@ currentPhase:
   functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
   backlogId: "LEAP-036"
   
-  stageArtifact: "docs/phases/phase-22/stage-4-design.yaml"
+  stageArtifact: "docs/phases/phase-22/stage-6-validation.yaml"
   
   discoveryFindings:
     plasmaBubbles:
