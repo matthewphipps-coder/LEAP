@@ -16,11 +16,11 @@ summary:
   
   statusBreakdown:
     complete: 32
-    proposed: 8
+    proposed: 3
     inProgress: 0
-    superseded: 1
+    superseded: 6
   
-  note: "Counts verified 2026-01-20T18:04:37Z - ARCH-002 superseded (no recurrence in Factory runs)"
+  note: "Counts verified 2026-01-20T18:10:35Z - Superseded 5 items after relevance analysis (GOV-008, GOV-011, USER-003, LEAP-013, LEAP-018)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -174,7 +174,9 @@ priorities:
       name: "Define Automated Validation Checks"
       category: "governance"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "Existing browser console checks + overkill for demo factory"
       description: "Add automated quality gates to validation stage: lint checks, console error detection, structured test commands"
       rationale: "Industry standards include automated quality gates. Manual-only validation doesn't scale and allows human error."
       acceptanceCriteria:
@@ -186,12 +188,15 @@ priorities:
       dependencies: []
       addedDate: "2026-01-20"
       source: "Critical Review: LEAP vs Industry Standards"
+      supersessionNote: "Console error checking already done via browser_subagent in testing stage. Lint/npm tooling not present in scaffold. Overkill for demo factory context."
     
     - id: "GOV-011"
       name: "Define Rollback Procedure"
       category: "governance"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "Git-based recovery is obvious and already documented"
       description: "Add explicit rollback procedure to safety-protocol.yaml with triggers, steps, and recovery guidance"
       rationale: "LEAP has backups and allows backward movement, but no explicit procedure for HOW to recover when validation fails or Hard Stop invoked."
       acceptanceCriteria:
@@ -203,6 +208,7 @@ priorities:
       dependencies: []
       addedDate: "2026-01-20"
       source: "Critical Review: LEAP vs Industry Standards"
+      supersessionNote: "LEAP uses git for all changes. Rollback = git checkout or git revert. Constitution already allows backward stage movement. Documenting obvious git procedures adds minimal value."
     
     # -------------------------------------------------------------------------
     # Previously existing items
@@ -239,13 +245,16 @@ priorities:
       name: "NEXUS Branding Separation"
       category: "user-branding"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "Practical non-issue - not blocking workflows"
       description: "Decide if Gold Source scaffold should be NEXUS-branded or generic. Clarify LEAP vs Factory vs NEXUS product identity."
       rationale: "NEXUS branding appears across all three layers causing confusion"
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
       source: "Phase 15 finding - deferred"
+      supersessionNote: "Branding confusion is cosmetic. Factory runs work correctly. No user-facing issues reported. Lower priority than functional improvements."
     
     # -------------------------------------------------------------------------
     # Factory Governance Items (from factory comparison)
@@ -466,25 +475,31 @@ priorities:
       name: "Create Component HTML Templates"
       category: "archetype-domain"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "No recurrence in v2.0.x runs - Factory generates components correctly"
       description: "Define reusable HTML structures for cards, dialogs, lists"
       rationale: "v1.0.1 and v1.0.2 had different card HTML structures - CSS patterns not reusable"
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
       source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      supersessionNote: "Issue from v1.0.x era. Recent runs (v2.0.0, v2.0.1, v2.0.2) show Factory AI generates consistent component structures without templates."
     
     - id: "LEAP-018"
       name: "Create Domain Data Schemas"
       category: "archetype-domain"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "No recurrence in v2.0.x runs - Factory follows existing patterns"
       description: "Define incident, task, user data shapes in archetypes"
       rationale: "v1.0.1: impactedServices (array), v1.0.2: affectedService (string) - cannot share mock data"
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
       source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      supersessionNote: "Issue from v1.0.x era. Recent runs show Factory AI reads existing data patterns and follows them consistently."
     
     # -------------------------------------------------------------------------
     # From v1.0.2 vs v1.0.3 Comparison
