@@ -710,19 +710,20 @@ priorities:
       category: "scaffold-conventions"
       priority: "short-term"
       status: "proposed"
-      description: "Complete auth system: login, signup with profile creation, password reset, accessibility, keyboard support"
-      rationale: "Current scaffold has basic auth but missing user profile creation, error mapping, ARIA labels, and keyboard support"
+      description: "Complete auth system: user profile creation, password reset, domain validation, accessibility"
+      rationale: "Current scaffold has working login/signup but missing 5 key features per SPEC-001 analysis"
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "Sprint Functional Spec SPEC-001"
+      source: "Sprint Functional Spec SPEC-001 v3.2"
       functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-001-authentication.yaml"
       acceptanceCriteria:
-        - "Signup creates user profile in Firestore /users/{uid}"
-        - "All forms support Enter key submission"
-        - "ARIA labels on all form inputs"
-        - "Loading states during auth operations"
-        - "Firebase error codes mapped to user-friendly messages"
+        - "FR-001: Signup creates user profile in Firestore /users/{uid}"
+        - "FR-002: Forgot Password link added to login.html"
+        - "FR-003/FR-004: Password reset shows inline success/error messages (no alert())"
+        - "FR-005: Domain validation restricts to @servicenow.com by default"
+        - "FR-006: ARIA labels on all form inputs + role='alert' on error container"
+
   
   mediumTerm: []
   future: []
