@@ -125,5 +125,6 @@ handoff:
 # =============================================================================
 
 executiveSignOff:
-  required: true
-  status: "pending"
+  status: "granted"
+  grantedBy: "Matthew Phipps"
+  grantedAt: "2026-01-20T17:55:14Z"
