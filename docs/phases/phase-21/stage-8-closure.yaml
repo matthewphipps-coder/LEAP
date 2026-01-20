@@ -115,10 +115,9 @@ handoff:
     This will test whether Factory AI correctly uses the new template sections.
   
   remainingBacklog:
-    governance: ["GOV-007", "GOV-008", "GOV-011"]
-    factoryTestRuns: ["LEAP-024", "LEAP-025"]
-    architecture: ["ARCH-002", "USER-003"]
-    archetypeDomain: ["LEAP-013", "LEAP-018"]
+    proposed:
+      - "GOV-007 - Add Security Governance Layer"
+    note: "GOV-008, GOV-011, LEAP-024, LEAP-025, ARCH-002, USER-003, LEAP-013, LEAP-018 superseded/completed post-Phase 21"
 
 # =============================================================================
 # EXECUTIVE SIGN-OFF
