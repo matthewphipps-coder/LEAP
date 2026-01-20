@@ -203,10 +203,12 @@ factoryRunsCompleted:
 
 backlogState:
   totalItems: 41
-  complete: 32  # LEAP-033 changed from superseded to complete
+  complete: 34
   inProgress: 0
-  proposed: 9
-  superseded: 0
+  proposed: 1
+  superseded: 6
+  
+  note: "Synced 2026-01-20T18:19:29Z - Session cleanup complete"
   
   phase21Complete:
     implemented:
