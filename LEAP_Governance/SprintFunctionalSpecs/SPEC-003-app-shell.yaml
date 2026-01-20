@@ -1,0 +1,454 @@
+# =============================================================================
+# SPRINT FUNCTIONAL SPEC: Extensible App Shell
+# =============================================================================
+# Source: GoldSource scaffold analysis + user requirements
+# Purpose: Make index.html a proper extensible scaffold for demos
+# =============================================================================
+
+metadata:
+  specId: "SPEC-003"
+  name: "Extensible App Shell"
+  version: "1.0.0"
+  created: "2026-01-20"
+  lastUpdated: "2026-01-20"
+  status: "draft"
+  effort: "medium"
+  
+  # Backlog linkage
+  backlogId: "LEAP-037"  # To be created
+  targetPhase: null
+
+# =============================================================================
+# CURRENT STATE - What already exists in GoldSource scaffold
+# =============================================================================
+
+currentState:
+  summary: "GoldSource has basic shell but lacks extensibility for customer demos"
+  
+  alreadyImplemented:
+    - feature: "Header component"
+      location: "ui/components/header/header-ui.js"
+      status: "⚠️ Basic"
+      note: "Has logo text, theme toggle, user avatar, logout"
+    
+    - feature: "Sidebar with collapse"
+      location: "ui/components/sidebar/sidebar-ui.js"  
+      status: "⚠️ Basic"
+      note: "Can collapse/expand but only 1 hardcoded nav item"
+    
+    - feature: "Canvas area"
+      location: "ui/components/canvas/canvas-ui.js"
+      status: "⚠️ Basic"
+      note: "Single content area, no page system"
+  
+  missingFeatures:
+    - feature: "Customer logo slot"
+      impact: "Can't brand header for customer demos"
+      priority: "must-have"
+    
+    - feature: "Page switcher/tabs"
+      impact: "Can only show one view, can't add Reports/Calendar/etc"
+      priority: "must-have"
+    
+    - feature: "Extensible sidebar"
+      impact: "Hard to add new nav items for demos"
+      priority: "must-have"
+    
+    - feature: "AI search box"
+      impact: "No floating search/command palette"
+      priority: "should-have"
+    
+    - feature: "Settings page"
+      impact: "No way to configure app settings"
+      priority: "should-have"
+
+# =============================================================================
+# SCOPE DEFINITION
+# =============================================================================
+
+scope:
+  problem: |
+    GoldSource index.html is a basic shell that requires significant edits
+    to create different demo scenarios. Key limitations:
+    1. Header is static - hardcoded logo, no search, no page navigation
+    2. Sidebar has only 1 nav item - hard to extend
+    3. Single canvas area - no multi-page support
+    4. No settings capability
+    
+  goal: |
+    Transform index.html into an extensible scaffold where:
+    - Demos can swap customer logo with 1 image change
+    - New pages (Reports, Calendar, CSR, etc) can be added via config
+    - Sidebar nav items can be added via config
+    - AI search box and settings are ready-to-use slots
+    
+  notInScope:
+    - Actual settings page implementation (just the slot/shell)
+    - AI search functionality (just the UI slot)
+    - Specific page implementations (just the page system)
+    - Mobile responsive overhaul
+  
+  successCriteria:
+    - Header has customer logo slot (image, not text)
+    - Header has page switcher tabs
+    - Header has AI search box slot (floating)
+    - Header has settings button that opens settings panel
+    - Sidebar nav items defined in config (add via array)
+    - Page system allows multiple views (switch via tabs)
+    - Demo can add new page with minimal code
+
+# =============================================================================
+# FUNCTIONAL REQUIREMENTS
+# =============================================================================
+
+requirements:
+  
+  functional:
+    # --- Header Enhancement ---
+    - id: "FR-001"
+      name: "Customer Logo Slot"
+      description: "Replaceable customer logo in header"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED - uses text 'NEXUS'"
+      acceptance: |
+        - Header has <img> element for logo
+        - Default logo is NEXUS/ServiceNow brand
+        - Logo can be swapped via single image file change
+        - Consider: logo in /assets/logo.png or config
+      uiDetails:
+        html: |
+          <div class="header-brand">
+            <img src="assets/logo.png" alt="Logo" class="header-logo-img" />
+            <!-- Optional text fallback -->
+            <span class="header-logo-text">NEXUS</span>
+          </div>
+    
+    - id: "FR-002"
+      name: "Page Switcher Tabs"
+      description: "Tab bar in header to switch between pages"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Header has tab bar between logo and actions
+        - Tabs defined via configuration (array of pages)
+        - Active tab highlighted
+        - Clicking tab switches page in canvas
+        - Default pages: Dashboard, (others via config)
+      uiDetails:
+        html: |
+          <nav class="page-tabs" id="page-tabs">
+            <button class="page-tab page-tab--active" data-page="dashboard">
+              <span class="page-tab-icon">📊</span>
+              <span class="page-tab-label">Dashboard</span>
+            </button>
+            <button class="page-tab" data-page="reports">
+              <span class="page-tab-icon">📈</span>
+              <span class="page-tab-label">Reports</span>
+            </button>
+          </nav>
+        js: |
+          // Page config (can be in constants.js or page-config.js)
+          const PAGES = [
+            { id: 'dashboard', label: 'Dashboard', icon: '📊', default: true },
+            { id: 'reports', label: 'Reports', icon: '📈' },
+            // Add more pages here
+          ];
+    
+    - id: "FR-003"
+      name: "AI Search Box"
+      description: "Floating search/command input in header"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Search box in header center area
+        - Glassmorphism styled
+        - Placeholder: "Ask anything..." or "⌘K to search"
+        - Click expands to wider input
+        - Escape collapses
+        - Actual search logic is NOT in scope (just UI slot)
+      uiDetails:
+        html: |
+          <div class="ai-search" id="ai-search">
+            <button class="ai-search-trigger">
+              <span class="search-icon">🔍</span>
+              <span class="search-hint">Ask anything...</span>
+              <span class="search-shortcut">⌘K</span>
+            </button>
+            <!-- Expanded state shows input -->
+          </div>
+    
+    - id: "FR-004"
+      name: "Settings Button & Panel"
+      description: "Settings icon that opens settings panel"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Settings icon (gear) in header actions
+        - Click opens slide-out panel or modal
+        - Panel has slots for settings sections
+        - Sections can be added via config
+        - Default sections: Theme, Account (minimal)
+        - Panel close on escape or outside click
+      uiDetails:
+        html: |
+          <button id="settings-btn" class="btn btn-ghost btn-icon" title="Settings">
+            <span>⚙️</span>
+          </button>
+          
+          <aside id="settings-panel" class="settings-panel settings-panel--hidden">
+            <header class="settings-header">
+              <h2>Settings</h2>
+              <button class="settings-close">✕</button>
+            </header>
+            <div class="settings-content" id="settings-content">
+              <!-- Sections rendered here -->
+            </div>
+          </aside>
+
+    # --- Sidebar Enhancement ---
+    - id: "FR-005"
+      name: "Extensible Sidebar Navigation"
+      description: "Sidebar nav items defined via configuration"
+      priority: "must-have"
+      currentState: "PARTIAL - has nav but hardcoded"
+      acceptance: |
+        - Nav items defined in config array
+        - Each item: id, label, icon, optional badge
+        - Active item tracks current page
+        - Grouped by sections (optional)
+        - Adding new item = add to config array
+      uiDetails:
+        js: |
+          // Sidebar config (can be in constants.js)
+          const SIDEBAR_NAV = [
+            { section: 'Main', items: [
+              { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+              { id: 'cards', label: 'Cards', icon: '🃏', badge: '3' },
+            ]},
+            { section: 'Tools', items: [
+              { id: 'reports', label: 'Reports', icon: '📈' },
+              { id: 'calendar', label: 'Calendar', icon: '📅' },
+            ]},
+          ];
+    
+    - id: "FR-006"
+      name: "Floating Sidebar Style"
+      description: "Sidebar floats over content when expanded"
+      priority: "should-have"
+      currentState: "PARTIAL - collapses but pushes content"
+      acceptance: |
+        - Collapsed: slim icon-only bar (fixed position)
+        - Expanded: overlays on hover/click, doesn't push content
+        - Glass effect on expanded sidebar
+        - Smooth animation
+      cssNotes: |
+        - Use position: fixed for sidebar
+        - Expand on hover or toggle click
+        - z-index above content
+        - backdrop-filter for glass effect
+
+    # --- Page System ---
+    - id: "FR-007"
+      name: "Multi-Page Canvas System"
+      description: "Canvas area supports multiple page views"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED - single canvas"
+      acceptance: |
+        - Canvas has page containers (one per page)
+        - Only active page visible
+        - Page switching via tab clicks or programmatic
+        - Each page can have its own initialization
+        - Pages lazy-load (don't render until first visit)
+      uiDetails:
+        html: |
+          <main class="canvas" id="canvas">
+            <div class="page page--active" id="page-dashboard" data-page="dashboard">
+              <!-- Dashboard content -->
+            </div>
+            <div class="page" id="page-reports" data-page="reports">
+              <!-- Reports content (hidden until tab clicked) -->
+            </div>
+          </main>
+        js: |
+          // Page router (simple client-side)
+          function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => {
+              p.classList.remove('page--active');
+            });
+            // Show target page
+            document.getElementById(`page-${pageId}`)?.classList.add('page--active');
+            // Update tab state
+            updateActiveTab(pageId);
+            // Lazy init if first visit
+            initPageIfNeeded(pageId);
+          }
+    
+    - id: "FR-008"
+      name: "Page Registration Pattern"
+      description: "Pattern for demos to register new pages"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Pages registered via function call or config
+        - Each page has: id, label, icon, initFn, renderFn
+        - Framework handles tab creation and routing
+        - Demo just provides the page logic
+      uiDetails:
+        js: |
+          // Demo registers a page
+          registerPage({
+            id: 'incidents',
+            label: 'Incidents',
+            icon: '🚨',
+            init: () => { /* one-time setup */ },
+            render: (container) => { /* render content */ }
+          });
+
+# =============================================================================
+# TECHNICAL APPROACH
+# =============================================================================
+
+technicalApproach:
+  
+  affectedFiles:
+    new:
+      - file: "core/page-router.js"
+        purpose: "Client-side page switching logic"
+      - file: "core/constants.js"
+        purpose: "Configuration for pages, nav items, etc."
+      - file: "ui/components/settings/settings-ui.js"
+        purpose: "Settings panel component"
+      - file: "ui/components/settings/settings.css"
+        purpose: "Settings panel styles"
+      - file: "ui/components/search/search-ui.js"
+        purpose: "AI search box component"
+      - file: "ui/components/search/search.css"
+        purpose: "AI search styles"
+    
+    modify:
+      - file: "index.html"
+        changes:
+          - "Add page containers in canvas"
+          - "Update structure for new components"
+      
+      - file: "ui/components/header/header-ui.js"
+        changes:
+          - "Add logo image slot"
+          - "Add page tabs"
+          - "Add search trigger"
+          - "Add settings button"
+      
+      - file: "ui/components/header/header.css"
+        changes:
+          - "Styles for tabs, search, settings button"
+      
+      - file: "ui/components/sidebar/sidebar-ui.js"
+        changes:
+          - "Render nav from config"
+          - "Track active page"
+      
+      - file: "ui/components/sidebar/sidebar.css"
+        changes:
+          - "Floating/overlay style option"
+      
+      - file: "core/app.js"
+        changes:
+          - "Import and initialize page router"
+          - "Initialize new components"
+    
+    delete: []
+  
+  dependencies:
+    - "No new external dependencies"
+  
+  patterns:
+    - "AI-First headers on new files"
+    - "Config-driven rendering (nav, pages)"
+    - "Lazy page initialization"
+    - "Event delegation for tab clicks"
+    - "State management via state.js"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verification:
+  
+  manualTests:
+    - id: "MT-001"
+      name: "Customer Logo Display"
+      description: "Verify logo image renders in header"
+      steps:
+        - "Open index.html"
+        - "Observe header logo area"
+      expectedResult: "Logo image visible (or fallback text)"
+    
+    - id: "MT-002"
+      name: "Page Tab Switching"
+      description: "Verify clicking tabs switches pages"
+      steps:
+        - "Click on different page tabs"
+        - "Observe canvas content change"
+      expectedResult: "Page content changes, tab highlights"
+    
+    - id: "MT-003"
+      name: "Sidebar Nav Items"
+      description: "Verify sidebar shows configured nav items"
+      steps:
+        - "Open sidebar (if collapsed)"
+        - "Observe nav items"
+      expectedResult: "Multiple nav items from config"
+    
+    - id: "MT-004"
+      name: "Settings Panel"
+      description: "Verify settings panel opens/closes"
+      steps:
+        - "Click settings icon"
+        - "Observe panel"
+        - "Click close or outside"
+      expectedResult: "Panel opens with sections, closes properly"
+    
+    - id: "MT-005"
+      name: "Add New Page"
+      description: "Verify adding a page is simple"
+      steps:
+        - "Add entry to PAGES config"
+        - "Create page container in canvas"
+        - "Refresh"
+      expectedResult: "New tab appears, clicking shows new page"
+
+# =============================================================================
+# APPROVAL
+# =============================================================================
+
+approval:
+  specApprovedBy: null
+  specApprovedDate: null
+  implementationApprovedBy: null
+  implementationApprovedDate: null
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  designPhilosophy: |
+    The app shell should be a TEMPLATE, not a finished product.
+    Demos should be able to:
+    - Swap logo (1 file change)
+    - Add pages (1 config entry + content)
+    - Add sidebar items (1 config entry)
+    - Add settings sections (1 config entry)
+    
+  extensibilityPrinciple: |
+    "If a demo needs to modify 5+ files to add a feature,
+     the scaffold isn't extensible enough."
+    
+  futureEnhancements:
+    - "Breadcrumb navigation"
+    - "Notification center"
+    - "User dropdown menu"
+    - "Keyboard shortcuts (⌘K for search)"
+    - "Command palette"
+    - "Page transition animations"
