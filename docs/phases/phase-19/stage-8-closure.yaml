@@ -143,8 +143,9 @@ nextSteps:
 # =============================================================================
 
 executiveSignOff:
-  status: "pending"
-  requiredFrom: "Matthew Phipps (Executive Authority)"
+  status: "granted"
+  grantedBy: "Matthew Phipps (Executive Authority)"
+  grantedAt: "2026-01-20T13:39:53Z"
   artifacts:
     - "GoldSource/governance/FACTORY_TASK_TEMPLATE.md"
     - "GoldSource/governance/FACTORY_README.yaml (lines 97-109)"
