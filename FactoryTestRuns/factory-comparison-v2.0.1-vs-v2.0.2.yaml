@@ -1,0 +1,196 @@
+# =============================================================================
+# FACTORY COMPARISON: v2.0.1 vs v2.0.2
+# =============================================================================
+# Purpose: Compare factory runs to identify improvements from FACTORY_TASK_TEMPLATE.md
+# Created: 2026-01-20T15:06:00Z
+# =============================================================================
+
+metadata:
+  type: "comparison"
+  name: "Factory Run Comparison"
+  version1: "NEXUS v2.0.1-major-incident"
+  version2: "NEXUS v2.0.2-major-incident"
+  scenario: "Major Incident View with AI Agent Support"
+  created: "2026-01-20"
+  comparisonType: "factory-artifacts"
+
+# =============================================================================
+# KEY FINDING: FACTORY_TASK_TEMPLATE.md VALIDATION
+# =============================================================================
+
+templateValidation:
+  templateUsed: true
+  evidence:
+    - "task.md found in v2.0.2 factory workspace (5744 bytes)"
+    - "task.md follows FACTORY_TASK_TEMPLATE.md structure exactly"
+    - "All 8 stages have checkboxes marked complete"
+    - "Reading guide sections (📖) present at each stage"
+    - "Critical reminders (⚠️) present for key compliance areas"
+  
+  v201:
+    taskMd: false
+    note: "v2.0.1 did not have task.md - predates Phase 19"
+  
+  v202:
+    taskMd: true
+    size: "5744 bytes"
+    allStagesChecked: true
+
+# =============================================================================
+# COMPLIANCE IMPROVEMENTS
+# =============================================================================
+
+complianceImprovements:
+
+  pathNaming:
+    issue: "LEAP-003: Standardize Feature Path Naming"
+    v201: "features/incidents/ (PLURAL - violates convention)"
+    v202: "features/incident/ (SINGULAR - follows convention)"
+    verdict: "FIXED ✅"
+    evidence:
+      v201: "stage-5-implementation.yaml shows 'features/incidents/incident-data.js'"
+      v202: "stage-5-implementation.yaml shows 'features/incident/incident-service.js'"
+
+  functionalityYaml:
+    issue: "Update meta/functionality.yaml with new features"
+    v201: "meta/ folder MISSING from demo output"
+    v202: "meta/functionality.yaml present and updated with INCIDENT-001"
+    verdict: "FIXED ✅"
+    evidence:
+      v201: "ls shows no meta/ directory in demo output"
+      v202: "functionality.yaml has 177 lines, includes INCIDENT-001 feature"
+
+  wireframeLocation:
+    issue: "Wireframes saved to factory workspace (not brain/)"
+    v201: "No wireframes in factory workspace (8 files only)"
+    v202: "wireframe-incident-cards.png, wireframe-incident-dialog.png in factory workspace"
+    verdict: "FIXED ✅"
+    evidence:
+      v201: "ls shows only stage artifacts, no wireframes"
+      v202: "ls shows wireframe-incident-cards.png (530KB), wireframe-incident-dialog.png (547KB)"
+
+  testEvidence:
+    issue: "LEAP-009: Mandate Test Evidence Files"
+    v201: "No test evidence in factory workspace"
+    v202: "test-screenshot-dialog.png, test-recording.webp in factory workspace"
+    verdict: "FIXED ✅"
+    evidence:
+      v201: "No screenshots or recordings in factory workspace"
+      v202: "test-screenshot-dialog.png (92KB), test-recording.webp (481KB)"
+
+  currentStateYaml:
+    issue: "Initialize CURRENT_STATE.yaml in factory workspace"
+    v201: "No CURRENT_STATE.yaml"
+    v202: "CURRENT_STATE.yaml present (1716 bytes)"
+    verdict: "FIXED ✅"
+
+# =============================================================================
+# ARTIFACT STRUCTURE COMPARISON
+# =============================================================================
+
+artifactComparison:
+
+  v201:
+    totalFiles: 8
+    stageArtifacts: 8
+    wireframes: 0
+    testEvidence: 0
+    currentState: false
+    taskMd: false
+
+  v202:
+    totalFiles: 14
+    stageArtifacts: 8
+    wireframes: 2
+    testEvidence: 2
+    currentState: true
+    taskMd: true
+
+  improvement: "+6 files (+75% more complete)"
+
+# =============================================================================
+# DEMO OUTPUT COMPARISON
+# =============================================================================
+
+demoOutputComparison:
+
+  structure:
+    v201:
+      folders: ["core", "features", "ui"]
+      metaFolder: false
+      readme: true
+    v202:
+      folders: ["core", "features", "meta", "ui"]
+      metaFolder: true
+      readme: true
+
+  naming:
+    v201: "features/incidents/ (plural)"
+    v202: "features/incident/ (singular)"
+
+  documentation:
+    v201: "README.md only"
+    v202: "README.md + meta/functionality.yaml"
+
+# =============================================================================
+# BROWSER TEST RESULTS
+# =============================================================================
+
+browserTestResults:
+  version: "v2.0.2"
+  testDate: "2026-01-20T15:06:00Z"
+  
+  results:
+    pageLoad: "PASS - No console errors"
+    incidentCards: "PASS - 4 cards displayed correctly"
+    incidentDialog: "PASS - Opens with full details"
+    dialogClose: "PASS - Closes correctly"
+    actionButtons: "PASS - All 4 buttons present"
+    
+  screenshots:
+    - "nexus_demo_final_state_*.png"
+  
+  recordings:
+    - "nexus_v202_test_*.webp"
+
+# =============================================================================
+# CONCLUSION
+# =============================================================================
+
+conclusion:
+  templateEffectiveness: "HIGH"
+  
+  summary: |
+    FACTORY_TASK_TEMPLATE.md achieved its intended purpose. The v2.0.2 factory run
+    shows significant compliance improvements over v2.0.1:
+    
+    1. Path naming follows singular convention (features/incident/)
+    2. Wireframes saved to factory workspace (not brain/)
+    3. Test evidence saved to factory workspace
+    4. meta/functionality.yaml present and updated
+    5. CURRENT_STATE.yaml initialized
+    6. task.md used as working checklist throughout
+    
+    The reading guide approach successfully reminded the AI of governance rules
+    at point of need, resulting in better compliance without requiring the AI
+    to remember 1000+ lines of governance read upfront.
+  
+  backlogImpact:
+    resolved:
+      - id: "LEAP-003"
+        note: "Singular path naming followed in v2.0.2"
+      - id: "LEAP-009"
+        note: "Test evidence saved correctly in v2.0.2"
+    
+    remaining:
+      - "Continue monitoring future runs for consistency"
+
+# =============================================================================
+# RECOMMENDATIONS
+# =============================================================================
+
+recommendations:
+  - "Mark FACTORY_TASK_TEMPLATE.md validation as successful"
+  - "Update CURRENT_STATE.yaml with v2.0.2 factory run completion"
+  - "Consider closing LEAP-003 and LEAP-009 after one more successful run"
+  - "Monitor future runs for continued compliance"

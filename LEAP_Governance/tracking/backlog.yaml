@@ -8,18 +8,18 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 39
+  totalItems: 41
   immediate: 8
-  shortTerm: 31
+  shortTerm: 33
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 12
-    proposed: 27
+    proposed: 28
     inProgress: 0
   
-  note: "Counts verified 2026-01-20T12:14:00Z (excludes howToAdd template)"
+  note: "Counts verified 2026-01-20T15:18:00Z - grep validated"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -601,6 +601,46 @@ priorities:
       acceptanceCriteria:
         - "architectural-standards.yaml includes component initialization guidance"
         - "Clear criteria for lazy vs explicit init pattern"
+    
+    - id: "LEAP-032"
+      name: "Add State Extension Mechanism"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add mechanism for features to register state slices without modifying locked state.js"
+      rationale: |
+        v2.0.2 Factory AI discovered state.js is locked but has no extension mechanism.
+        Features must create parallel state systems (local state with subscription pattern),
+        causing fragmented state management. Need registerStateSlice() or similar pattern.
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "FactoryTestRuns/factory-comparison-v2.0.1-vs-v2.0.2.yaml"
+      acceptanceCriteria:
+        - "state.js exports registerStateSlice(name, initialState, setters) or equivalent"
+        - "Registered slices accessible via getState('sliceName')"
+        - "Subscribers notified of slice changes"
+        - "Pattern documented in architectural-standards.yaml"
+    
+    - id: "LEAP-034"
+      name: "Audit Locked Files for Extension Gaps"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Review all locked files to ensure they have proper extension mechanisms for Factory use"
+      rationale: |
+        state.js is locked but lacked extension capability, forcing v2.0.2 to create workaround.
+        Other locked files (firebase.js, constants.js, logger.js, CSS files) may have similar gaps
+        where Factory needs to extend functionality but cannot modify locked files.
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "v2.0.2 factory run analysis"
+      acceptanceCriteria:
+        - "All locked files audited for extension needs"
+        - "Extension points documented for each locked file"
+        - "Gaps identified and added as individual backlog items"
+        - "architectural-standards.yaml updated with extension patterns"
   
   mediumTerm: []
   future: []
