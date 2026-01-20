@@ -1,0 +1,571 @@
+# =============================================================================
+# SPRINT FUNCTIONAL SPEC: Design System Enhancement
+# =============================================================================
+# Source: Old NEXUS STYLE_GUIDE.md, FUNCTIONALITY.md, NEXUS_VISUAL_SPEC.md
+# Purpose: Make GoldSource scaffold visually "WOW" for demos
+# =============================================================================
+
+metadata:
+  specId: "SPEC-002"
+  name: "Design System Enhancement"
+  version: "1.0.0"
+  created: "2026-01-20"
+  lastUpdated: "2026-01-20"
+  status: "draft"
+  effort: "medium"
+  
+  # Backlog linkage
+  backlogId: "LEAP-036"  # To be created
+  targetPhase: null
+
+# =============================================================================
+# CURRENT STATE - What already exists in GoldSource scaffold
+# =============================================================================
+
+currentState:
+  summary: "GoldSource has solid foundation but lacks the visual polish and delight that makes demos impressive"
+  
+  alreadyImplemented:
+    - feature: "CSS Variables"
+      location: "ui/styles/variables.css"
+      status: "✅ Working"
+      note: "Colors, spacing, typography, shadows, transitions"
+    
+    - feature: "Glassmorphism utility class"
+      location: "ui/styles/base.css (.glass)"
+      status: "✅ Working"
+      note: "Basic glass effect with blur"
+    
+    - feature: "Button variants"
+      location: "ui/styles/buttons.css"
+      status: "✅ Working"
+      note: "Primary, secondary, ghost, danger + sizes"
+    
+    - feature: "Input styling"
+      location: "ui/styles/inputs.css"
+      status: "✅ Working"
+      note: "Form inputs, labels, focus states"
+    
+    - feature: "Dark/Light theme"
+      location: "variables.css + theme-manager.js"
+      status: "✅ Working"
+      note: "Theme toggle with persistence"
+  
+  missingFeatures:
+    - feature: "Entrance animations"
+      impact: "Cards appear instantly - no visual delight"
+      priority: "must-have"
+    
+    - feature: "Hover lift effect"
+      impact: "Interactive elements feel flat"
+      priority: "must-have"
+    
+    - feature: "Micro-interactions"
+      impact: "Buttons don't feel responsive"
+      priority: "should-have"
+    
+    - feature: "Loading state pattern"
+      impact: "No visual feedback during async operations"
+      priority: "must-have"
+    
+    - feature: "Empty state pattern"
+      impact: "Empty containers have no guidance"
+      priority: "must-have"
+    
+    - feature: "Error state pattern"
+      impact: "Errors lack visual styling"
+      priority: "should-have"
+    
+    - feature: "Priority colors"
+      impact: "No visual hierarchy for urgency"
+      priority: "should-have"
+    
+    - feature: "Confetti/celebration effect"
+      impact: "Completions lack reward feeling"
+      priority: "nice-to-have"
+
+# =============================================================================
+# SCOPE DEFINITION
+# =============================================================================
+
+scope:
+  problem: |
+    GoldSource scaffold is functional but visually basic.
+    Demos built on it lack the "wow" factor that impresses stakeholders.
+    Missing: animations, hover effects, loading states, empty states, and polish.
+    
+  goal: |
+    Enhance GoldSource design system so every demo looks premium out-of-the-box.
+    Focus on: motion, micro-interactions, state patterns, visual hierarchy.
+    Result: Demos that feel alive, responsive, and delightful.
+  
+  notInScope:
+    - Complete theme redesign (colors already good)
+    - Brand customization (beyond current accent color system)
+    - Card type specific styling (separate spec)
+    - Complex animation library dependencies
+    - Mobile-first responsive overhaul
+  
+  successCriteria:
+    - Cards fade in with staggered animation on load
+    - Interactive elements lift on hover
+    - Buttons have satisfying click feedback
+    - Loading states show spinner + message
+    - Empty states show icon + message
+    - Priority colors differentiate urgency levels
+
+# =============================================================================
+# FUNCTIONAL REQUIREMENTS
+# =============================================================================
+
+requirements:
+  
+  functional:
+    # --- Animations ---
+    - id: "FR-001"
+      name: "Card Entrance Animation"
+      description: "Cards animate in with fadeInUp effect, staggered"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - @keyframes fadeInUp defined in animations.css
+        - Cards use animation-delay for stagger (50-100ms increments)
+        - Animation: 0.6s ease-out
+        - Start: opacity 0, translateY(20px)
+        - End: opacity 1, translateY(0)
+      uiDetails:
+        cssCode: |
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px) scale(0.98);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          
+          .animate-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+          }
+    
+    - id: "FR-002"
+      name: "Hover Lift Effect"
+      description: "Cards and interactive containers lift slightly on hover"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - .hover-lift class available
+        - On hover: translateY(-4px) scale(1.02)
+        - Subtle shadow increase
+        - Transition: 0.3s ease-out
+      uiDetails:
+        cssCode: |
+          .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        box-shadow 0.3s ease-out;
+          }
+          
+          .hover-lift:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+          }
+    
+    - id: "FR-003"
+      name: "Button Press Feedback"
+      description: "Buttons show satisfying press animation"
+      priority: "should-have"
+      currentState: "PARTIAL - has hover, no active state"
+      acceptance: |
+        - On :active, button scales down slightly (0.97)
+        - Quick snap back (0.1s)
+        - Works with all button variants
+      uiDetails:
+        cssCode: |
+          .btn:active:not(:disabled) {
+            transform: scale(0.97);
+            transition: transform 0.1s ease-out;
+          }
+    
+    # --- State Patterns ---
+    - id: "FR-004"
+      name: "Loading State Pattern"
+      description: "Reusable loading spinner with optional message"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - .loading-state container class
+        - Animated spinner (CSS only, no library)
+        - Optional text message below spinner
+        - Centered in container
+      uiDetails:
+        html: |
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        css: |
+          .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-md);
+            padding: var(--space-xl);
+            color: var(--text-secondary);
+          }
+          
+          .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+          
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+    
+    - id: "FR-005"
+      name: "Empty State Pattern"
+      description: "Reusable empty state with icon and message"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - .empty-state container class
+        - Large icon/emoji slot
+        - Primary message (heading)
+        - Secondary message (optional hint)
+        - Centered, subtle styling
+      uiDetails:
+        html: |
+          <div class="empty-state">
+            <span class="empty-icon">🌊</span>
+            <p class="empty-title">No items yet</p>
+            <p class="empty-hint">Create your first item to get started</p>
+          </div>
+        css: |
+          .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-2xl);
+            text-align: center;
+          }
+          
+          .empty-icon {
+            font-size: 48px;
+            opacity: 0.5;
+          }
+          
+          .empty-title {
+            font-size: var(--text-lg);
+            color: var(--text-primary);
+            margin: 0;
+          }
+          
+          .empty-hint {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin: 0;
+          }
+    
+    - id: "FR-006"
+      name: "Error State Pattern"
+      description: "Reusable error display with icon and action"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - .error-state container class
+        - Red-tinted glass background
+        - Error icon
+        - Message + optional retry button
+      uiDetails:
+        html: |
+          <div class="error-state">
+            <span class="error-icon">⚠️</span>
+            <p class="error-message">Something went wrong</p>
+            <button class="btn btn-secondary btn-sm">Retry</button>
+          </div>
+        css: |
+          .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            border-radius: var(--radius-md);
+          }
+          
+          .error-icon {
+            font-size: 24px;
+          }
+          
+          .error-message {
+            color: var(--error);
+            margin: 0;
+          }
+    
+    # --- Visual Hierarchy ---
+    - id: "FR-007"
+      name: "Priority Color System"
+      description: "CSS variables and utility classes for priority levels"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - --priority-low (blue), --priority-medium (yellow), --priority-high (red)
+        - Utility classes: .priority-low, .priority-medium, .priority-high
+        - Applies to text, border, or background based on modifier
+      uiDetails:
+        cssVariables: |
+          :root {
+            --priority-low: #38bdf8;      /* Sky blue */
+            --priority-medium: #fbbf24;   /* Amber */
+            --priority-high: #fb7185;     /* Rose/pink */
+            --priority-urgent: #ef4444;   /* Red */
+          }
+        cssClasses: |
+          .priority-low { color: var(--priority-low); }
+          .priority-medium { color: var(--priority-medium); }
+          .priority-high { color: var(--priority-high); }
+          .priority-urgent { color: var(--priority-urgent); }
+          
+          .priority-dot-low { background: var(--priority-low); }
+          .priority-dot-medium { background: var(--priority-medium); }
+          .priority-dot-high { background: var(--priority-high); }
+    
+    # --- Glassmorphism Enhancement ---
+    - id: "FR-008"
+      name: "Glass Variations"
+      description: "Multiple glass effect intensities"
+      priority: "should-have"
+      currentState: "PARTIAL - only one .glass class"
+      acceptance: |
+        - .glass-subtle (less blur, more transparent)
+        - .glass (standard - current)
+        - .glass-heavy (more blur, more opaque)
+      uiDetails:
+        css: |
+          .glass-subtle {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          }
+          
+          .glass-heavy {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+          }
+    
+    # --- Optional Delight ---
+    - id: "FR-009"
+      name: "Confetti Celebration Effect"
+      description: "Trigger confetti on task completion or XP gain"
+      priority: "nice-to-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - confetti.js utility module (can use canvas-confetti CDN)
+        - triggerConfetti() function exported
+        - Fires from multiple points
+        - XP-scaled intensity (more XP = more particles)
+      implementation: |
+        Option A: Use canvas-confetti library (CDN)
+        Option B: Simple custom canvas implementation
+        Either way, export as features/effects/confetti.js
+
+# =============================================================================
+# TECHNICAL APPROACH
+# =============================================================================
+
+technicalApproach:
+  
+  affectedFiles:
+    new:
+      - file: "ui/styles/animations.css"
+        purpose: "All animation keyframes and utility classes"
+      - file: "ui/styles/states.css"
+        purpose: "Loading, empty, error state patterns"
+      - file: "features/effects/confetti.js"
+        purpose: "Optional confetti celebration effect"
+    
+    modify:
+      - file: "ui/styles/variables.css"
+        changes:
+          - "Add priority color variables"
+          - "Add animation timing variables"
+      
+      - file: "ui/styles/buttons.css"
+        changes:
+          - "Add :active press feedback"
+      
+      - file: "ui/styles/base.css"
+        changes:
+          - "Import animations.css and states.css"
+          - "Add glass-subtle and glass-heavy variants"
+      
+      - file: "index.html (or main entry)"
+        changes:
+          - "Link new CSS files"
+    
+    delete: []
+  
+  dependencies:
+    - "No new JS dependencies for core features"
+    - "Optional: canvas-confetti (CDN) for FR-009"
+  
+  patterns:
+    - "AI-First headers on new files"
+    - "CSS custom properties for all values"
+    - "Utility class approach (composable)"
+    - "No inline styles"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verification:
+  
+  manualTests:
+    - id: "MT-001"
+      name: "Card Entrance Animation"
+      description: "Verify cards animate in on page load"
+      steps:
+        - "Open index.html in browser"
+        - "Observe card appear behavior"
+      expectedResult: "Cards fade in from below with slight stagger"
+    
+    - id: "MT-002"
+      name: "Hover Lift Effect"
+      description: "Verify interactive elements lift on hover"
+      steps:
+        - "Hover over a card with .hover-lift class"
+        - "Observe transform"
+      expectedResult: "Card lifts up, shadow increases"
+    
+    - id: "MT-003"
+      name: "Button Press Feedback"
+      description: "Verify button has press animation"
+      steps:
+        - "Click and hold a button"
+        - "Observe scale change"
+      expectedResult: "Button scales down slightly while pressed"
+    
+    - id: "MT-004"
+      name: "Loading State"
+      description: "Verify loading state renders properly"
+      steps:
+        - "Add .loading-state HTML to a container"
+        - "Observe spinner animation"
+      expectedResult: "Spinner rotates smoothly, text displays below"
+    
+    - id: "MT-005"
+      name: "Empty State"
+      description: "Verify empty state styling"
+      steps:
+        - "Add .empty-state HTML to a container"
+        - "Observe layout"
+      expectedResult: "Centered icon, title, and hint text"
+
+# =============================================================================
+# APPROVAL
+# =============================================================================
+
+approval:
+  specApprovedBy: null
+  specApprovedDate: null
+  implementationApprovedBy: null
+  implementationApprovedDate: null
+
+# =============================================================================
+# LEGACY REFERENCE - Old NEXUS code (FOR UNDERSTANDING ONLY)
+# =============================================================================
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃ ⚠️  THIS IS NOT CODE TO COPY                                              ┃
+# ┃                                                                           ┃
+# ┃ Purpose: Understand WHAT old NEXUS did (visual effects, patterns)         ┃
+# ┃ Reality: Old NEXUS does NOT follow GoldSource/LEAP standards              ┃
+# ┃                                                                           ┃
+# ┃ LEAP phases will build COMPLETELY NEW compliant code based on:            ┃
+# ┃   - The REQUIREMENTS in this spec (FR-xxx)                                ┃
+# ┃   - GoldSource architectural-standards.yaml                               ┃
+# ┃   - AI-First headers, proper file organization                            ┃
+# ┃                                                                           ┃
+# ┃ The references below are for CONTEXT ONLY - to understand intent.         ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+legacyReference:
+  source: "Old NEXUS STYLE_GUIDE.md and FUNCTIONALITY.md (pre-LEAP, non-compliant)"
+  purpose: "Understand WHAT visual effects made NEXUS impressive"
+  
+  keyPatterns:
+    - name: "Card hover effect"
+      code: |
+        .task-item:hover {
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+          border-color: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.05);
+        }
+    
+    - name: "Entrance animation"
+      code: |
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        .task-item {
+          animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+    
+    - name: "Confetti trigger concept"
+      note: "Used canvas-confetti library, triggered on task completion"
+      
+    - name: "Glass variations"
+      code: |
+        /* Subtle: blur(8px), rgba(2, 6, 23, 0.3) */
+        /* Standard: blur(12px), rgba(2, 6, 23, 0.4) */
+        /* Heavy: blur(20px), rgba(2, 6, 23, 0.6) */
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  extractedFrom:
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/STYLE_GUIDE.md"
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/FUNCTIONALITY.md"
+  
+  designPhilosophy: |
+    NEXUS visual design was built on these principles:
+    - "Glass morphism everywhere"
+    - "Smooth transitions on all interactions"
+    - "Micro-animations for delight"
+    - "The interface should feel alive"
+  
+  lockedFiles: |
+    variables.css and base.css are marked @locked but need minor additions.
+    Implementation should ADD new properties, not modify existing ones,
+    or propose unlocking if significant changes needed.
+  
+  futureEnhancements:
+    - "Skeleton loading states"
+    - "Page transition animations"
+    - "Scroll-triggered animations"
+    - "Reduced motion accessibility preference"
