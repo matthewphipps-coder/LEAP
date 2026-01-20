@@ -15,12 +15,12 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 31
+    complete: 32
     proposed: 9
     inProgress: 0
-    superseded: 1
+    superseded: 0
   
-  note: "Counts verified 2026-01-20T17:45:00Z - Phase 21 Implementation complete (8 items + 2 verified already done)"
+  note: "Counts verified 2026-01-20T17:57:44Z - LEAP-033 changed from superseded to complete"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -132,9 +132,9 @@ priorities:
       name: "Implement Stage-Scoped Governance"
       category: "factory-governance"
       priority: "immediate"
-      status: "superseded"
-      supersededBy: "Phase 19 - Factory Task Template"
-      supersededDate: "2026-01-20"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 19"
       description: "Replace upfront governance reading with stage-specific governance files that bundle rules, examples, role ownership, and exit checklists"
       rationale: |
         Factory runs v2.0.0 and v2.0.1 showed compliance theater - artifacts claimed wireframes that don't exist, 
@@ -144,7 +144,7 @@ priorities:
       dependencies: []
       addedDate: "2026-01-20"
       source: "Governance compliance audit discussion - 2026-01-20"
-      supersessionNote: |
+      completionNote: |
         Phase 19 implemented a lighter solution: FACTORY_TASK_TEMPLATE.md uses reading guide approach.
         Template points AI to relevant docs at each stage rather than creating 8 separate governance files.
         Achieves same goal (governance at point of need) with ~150 lines instead of 2100+.

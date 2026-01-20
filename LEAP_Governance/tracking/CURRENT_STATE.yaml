@@ -203,10 +203,10 @@ factoryRunsCompleted:
 
 backlogState:
   totalItems: 41
-  complete: 31  # Phase 21 added +10 (8 implemented + 2 verified already done)
+  complete: 32  # LEAP-033 changed from superseded to complete
   inProgress: 0
   proposed: 9
-  superseded: 1
+  superseded: 0
   
   phase21Complete:
     implemented:
