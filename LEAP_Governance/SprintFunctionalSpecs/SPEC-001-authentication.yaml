@@ -8,7 +8,7 @@
 metadata:
   specId: "SPEC-001"
   name: "Authentication System"
-  version: "3.0.0"
+  version: "3.1.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
@@ -425,9 +425,74 @@ approval:
 # =============================================================================
 # REFERENCE IMPLEMENTATION - Working code from old NEXUS
 # =============================================================================
+# ⚠️ COMPLIANCE WARNING: Old NEXUS code does NOT follow GoldSource standards.
+#    Use these snippets for LOGIC/PATTERNS only. DO NOT copy directly.
+# =============================================================================
 
 referenceImplementation:
   source: "NEXUS-v5.3.6-dev-20260112-1748/login.html and NEXUS-v6.8.0-pre-phase-20.4/"
+  
+  # -------------------------------------------------------------------------
+  # ⚠️ WHAT TO USE vs WHAT NOT TO COPY
+  # -------------------------------------------------------------------------
+  complianceWarning:
+    purpose: "Old NEXUS code is for understanding LOGIC only - not for copy/paste"
+    
+    useForLogicPatterns:
+      - "User profile creation flow (what data to store)"
+      - "Domain validation check (how to validate email)"
+      - "Password reset flow (Firebase API calls)"
+      - "Error code mapping (which codes to handle)"
+      - "Enter key handling (event pattern)"
+    
+    doNotCopy:
+      - issue: "Inline Firebase config"
+        oldCode: "const firebaseConfig = { apiKey: ... }"
+        correctApproach: "Import from core/firebase.js (already exists in GoldSource)"
+      
+      - issue: "CDN imports"
+        oldCode: "import { ... } from 'https://www.gstatic.com/firebasejs/...'"
+        correctApproach: "Import from core/firebase.js or core/auth-service.js"
+      
+      - issue: "No AI-First headers"
+        oldCode: "// Login Page UI Logic"
+        correctApproach: |
+          /**
+           * @file login.js
+           * @purpose [description]
+           * @layer page
+           * @dependencies [list]
+           * @dependents [list]
+           * @locked false
+           * @modifyImpact [impact]
+           */
+      
+      - issue: "No MODULE_CONTRACT"
+        oldCode: "(none)"
+        correctApproach: |
+          export const MODULE_CONTRACT = {
+              provides: ['handleSubmit', 'toggleMode', 'handleForgotPassword'],
+              requires: ['auth-service.js', 'firebase.js']
+          };
+      
+      - issue: "alert() for success messages"
+        oldCode: "alert(`Password reset email sent to ${email}.`)"
+        correctApproach: "Use inline success message with CSS class toggle"
+      
+      - issue: "Inline styles in HTML"
+        oldCode: "<div style='...'>"
+        correctApproach: "Use GoldSource design system CSS variables and classes"
+    
+    goldSourcePatterns:
+      - "Import auth from core/firebase.js: import { auth, db } from './core/firebase.js'"
+      - "Import Firebase functions from auth-service.js (which re-exports from Firebase SDK)"
+      - "Use serverTimestamp() from Firestore instead of new Date().toISOString()"
+      - "All new functions need JSDoc with @function, @purpose, @param, @returns"
+      - "Console logging uses core/logger.js: info(), logError()"
+  
+  # -------------------------------------------------------------------------
+  # CODE SNIPPETS - Adapt to GoldSource patterns, don't copy verbatim
+  # -------------------------------------------------------------------------
   
   # User Profile Creation on Signup (lines 316-331 in old NEXUS)
   userProfileCreation: |
