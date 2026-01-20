@@ -1,0 +1,225 @@
+# =============================================================================
+# PHASE 21: STANDARDS & TEMPLATES
+# STAGE 2: RESEARCH
+# =============================================================================
+
+metadata:
+  phase: 21
+  phaseName: "StandardsAndTemplates"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-20T17:33:00Z"
+  status: "complete"
+  gateApproval: "Stage 1 approved with !Proceed at 2026-01-20T17:32:57Z"
+  previousStage: "stage-1-discovery.yaml"
+
+# =============================================================================
+# RESEARCH OBJECTIVE
+# =============================================================================
+
+researchObjective: "Read target files, verify 'already done' claims, identify exact changes needed"
+
+# =============================================================================
+# SUB-PHASE A: FACTORY STAGE TEMPLATES
+# =============================================================================
+
+subPhaseA:
+  name: "Factory Stage Templates"
+  filesReviewed:
+    - file: "GoldSource/governance/templates/stage-3-analysis.yaml"
+      lines: 101
+      currentState: |
+        - Has approachOptions section (lines 56-70) with option A/B structure, pros/cons/recommended
+        - Format already includes: option, name, description, pros, cons, recommended
+      gap: |
+        LEAP-021: Format is close but not standardized as APPROACH-A/B/C with explicit naming
+        Could enhance with clearer top-level labels
+      verdict: "Minor enhancement needed - rename labels for clarity"
+    
+    - file: "GoldSource/governance/templates/stage-4-design.yaml"
+      lines: 115
+      currentState: |
+        - Has wireframes section (lines 39-49)
+        - Has filesToModify/filesToCreate sections
+        - Has implementationSteps section
+        - Has scopeChanges section
+        - Has traceabilityReview section
+      gaps:
+        - "LEAP-007: NO dependencyGraph section - NEEDS ADDING"
+        - "LEAP-008: NO complexityEstimates section - NEEDS ADDING"
+      verdict: "Two new sections needed"
+    
+    - file: "GoldSource/governance/templates/stage-6-validation.yaml"
+      lines: 81
+      currentState: |
+        - Has featureValidation section (lines 38-54) with checklist
+        - Has documentationValidation section (lines 59-67)
+        - Has deploymentReadiness section (lines 72-76)
+      gap: |
+        LEAP-022: Has basic checklist but lacks:
+        - Detailed field-by-field validation matrix
+        - Data model validation section
+        - Structured comparison format
+      verdict: "Enhance featureValidation section with detailed matrix"
+    
+    - file: "GoldSource/governance/templates/stage-7-testing.yaml"
+      lines: 83
+      currentState: |
+        - Has deployment section (lines 36-41)
+        - Has testCases section (lines 45-65) with TC-001 format
+        - Has summary section (lines 70-73)
+        - Has issuesFound section (lines 75-78)
+      gap: |
+        LEAP-009: NO testEvidence section - NEEDS ADDING
+        Missing: screenshots, recordings, storage location
+      verdict: "New testEvidence section needed with storage location"
+
+# =============================================================================
+# SUB-PHASE B: SCAFFOLD CONVENTIONS - 'ALREADY DONE' VERIFICATION
+# =============================================================================
+
+subPhaseB:
+  name: "Scaffold Conventions"
+  alreadyDoneVerification:
+    
+    LEAP-003:
+      claim: "Phase 19 note claims already in architectural-standards.yaml pathNaming.features"
+      verified: true
+      evidence: |
+        Line 134-137 of architectural-standards.yaml:
+        pathNaming:
+          features: "Singular (features/incident/, not incidents/)"
+          components: "kebab-case (header-ui.js, not headerUI.js)"
+          services: "{feature}-service.js pattern"
+      verdict: "ALREADY COMPLETE - no action needed"
+      recommendation: "Mark as complete, no changes required"
+    
+    LEAP-019:
+      claim: "Phase 19 note claims in demo-rules.yaml scaffoldRules.flexible"
+      verified: "PARTIAL"
+      evidence: |
+        demo-rules.yaml lines 48-70 has scaffoldRules section with:
+        - locked: list of what cannot be modified
+        - flexible: list of what can be modified
+        - addNew: allows new components at ui/components/[new-name]/
+      gap: |
+        MISSING: Explicit decision tree for "create new" vs "modify existing"
+        The current list tells WHAT is flexible, not WHEN to create vs modify
+      verdict: "PARTIAL - needs decision tree added to architectural-standards.yaml"
+      recommendation: "Add componentCreationPolicy section"
+    
+    LEAP-030:
+      claim: "Not previously claimed - new item"
+      verified: false
+      evidence: |
+        Searched architectural-standards.yaml for "accessibility" or "keyboard" - NOT FOUND
+        No accessibility requirements documented
+      verdict: "NOT IN PLACE - needs adding"
+      recommendation: "Add accessibility requirements section"
+
+# =============================================================================
+# SUB-PHASE C: DEMO OUTPUT
+# =============================================================================
+
+subPhaseC:
+  name: "Demo Output"
+  alreadyDoneVerification:
+    
+    LEAP-014:
+      claim: "May already be in artifact-manifest.yaml and lifecycle-stages.yaml"
+      verified: true
+      evidence: |
+        artifact-manifest.yaml lines 72-76:
+        functionalityYaml:
+          location: "demoOutput"
+          naming: "meta/functionality.yaml"
+          note: "Updated in Stage 5, validated in Stage 6"
+        
+        lifecycle-stages.yaml Stage 5 outputs (lines 106-108):
+        outputs:
+          - "stage-5-implementation.yaml (in factory workspace)"
+          - "Working demo code"
+          - "Updated functionality.yaml in demo"
+      verdict: "ALREADY COMPLETE - functionality.yaml is already required"
+      recommendation: "Mark as complete, no changes required"
+    
+    LEAP-015:
+      claim: "Check if README template exists"
+      verified: false
+      evidence: |
+        Listed GoldSource/governance/templates/ - NO README.md template found
+        Files present: 9 stage templates + CURRENT_STATE.yaml template
+        demo-rules.yaml line 141 requires "README.md for completed demo" but no template provided
+      gap: "Template does not exist - Factory AI has no guidance on README structure"
+      verdict: "NOT IN PLACE - needs creating"
+      recommendation: "Create README.md template with standard sections"
+
+# =============================================================================
+# FINAL SCOPE ADJUSTMENT
+# =============================================================================
+
+scopeAdjustment:
+  originalItems: 10
+  
+  alreadyComplete:
+    count: 2
+    items:
+      - id: "LEAP-003"
+        name: "Standardize Feature Path Naming"
+        reason: "Already in architectural-standards.yaml phase18Conventions.pathNaming"
+      - id: "LEAP-014"
+        name: "Require functionality.yaml in Demos"
+        reason: "Already in artifact-manifest.yaml and lifecycle-stages.yaml"
+  
+  itemsNeedingWork:
+    count: 8
+    items:
+      # Factory Stage Templates (5)
+      - id: "LEAP-007"
+        change: "Add dependencyGraph section to stage-4-design.yaml"
+      - id: "LEAP-008"
+        change: "Add complexityEstimates section to stage-4-design.yaml"
+      - id: "LEAP-009"
+        change: "Add testEvidence section to stage-7-testing.yaml"
+      - id: "LEAP-021"
+        change: "Enhance approachOptions format in stage-3-analysis.yaml"
+      - id: "LEAP-022"
+        change: "Add detailed validationMatrix to stage-6-validation.yaml"
+      # Scaffold Conventions (2)
+      - id: "LEAP-019"
+        change: "Add componentCreationPolicy decision tree to architectural-standards.yaml"
+      - id: "LEAP-030"
+        change: "Add accessibility requirements section to architectural-standards.yaml"
+      # Demo Output (1)
+      - id: "LEAP-015"
+        change: "Create README.md template in GoldSource/governance/templates/"
+
+# =============================================================================
+# RESEARCH FINDINGS SUMMARY
+# =============================================================================
+
+findings:
+  - finding: "2 of 10 items already complete"
+    significance: "Scope reduced to 8 items"
+    implication: "Phase 21 is smaller than expected"
+  
+  - finding: "All Factory template changes are additions, not restructuring"
+    significance: "Low risk - no breaking changes"
+    implication: "Can batch all 5 template changes"
+  
+  - finding: "Scaffold conventions need 2 new sections in same file"
+    significance: "Can batch together"
+    implication: "Single edit to architectural-standards.yaml"
+  
+  - finding: "README template creation is standalone work"
+    significance: "Independent of other items"
+    implication: "Can be done in any order"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Risk assessment and implementation approach - likely low risk given all are documentation additions"

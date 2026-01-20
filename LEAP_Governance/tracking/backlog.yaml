@@ -15,12 +15,12 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 21
-    proposed: 19
+    complete: 31
+    proposed: 9
     inProgress: 0
     superseded: 1
   
-  note: "Counts verified 2026-01-20T17:12:00Z - Pulse check (42 id: lines but 1 is nested reference)"
+  note: "Counts verified 2026-01-20T17:45:00Z - Phase 21 Implementation complete (8 items + 2 verified already done)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -308,7 +308,9 @@ priorities:
       name: "Add Dependency Graph to Design"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Require dependency graph section in stage 4 design"
       rationale: "v1.0.2 had dependency graph, v1.0.1 did not - helps AI understand relationships"
       estimatedEffort: "small"
@@ -320,7 +322,9 @@ priorities:
       name: "Require Complexity Estimates"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Add complexity estimate section to design stage"
       rationale: "v1.0.2 had complexity estimates, v1.0.1 did not - improves planning accuracy"
       estimatedEffort: "small"
@@ -332,7 +336,9 @@ priorities:
       name: "Mandate Test Evidence Files"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Require screenshots and recordings in testing stage, with defined storage location"
       rationale: "v1.0.2 had video recording in workspace, v1.0.1 only screenshots, v1.0.3 stored artifacts elsewhere - need consistent placement"
       estimatedEffort: "small"
@@ -341,7 +347,6 @@ priorities:
       source:
         - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
         - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-007)"
-      phase19Note: "Addressed by Factory Task Template Stage 7 reading guide - explicit reminder to save evidence to FACTORY_WORKSPACE"
     
     # -------------------------------------------------------------------------
     # Gold Source Scaffold Items (from demo output comparison)
@@ -350,7 +355,9 @@ priorities:
       name: "Standardize Feature Path Naming"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21 (verified already done)"
       description: "Define whether features use singular or plural naming (e.g., incident/ vs incidents/)"
       rationale: "v1.0.1 used singular, v1.0.2 used plural, v1.0.3 used singular again - AI cannot predict file locations"
       estimatedEffort: "small"
@@ -359,7 +366,7 @@ priorities:
       source:
         - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
         - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-002)"
-      phase19Note: "Addressed by Factory Task Template Stage 5 reading guide - AI reads architectural-standards.yaml which defines singular path naming"
+      verificationNote: "Already in architectural-standards.yaml phase18Conventions.pathNaming (line 135): 'Singular (features/incident/, not incidents/)'"
     
     - id: "LEAP-004"
       name: "Standardize Mock Data Strategy"
@@ -424,19 +431,24 @@ priorities:
       name: "Require functionality.yaml in Demos"
       category: "demo-output"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21 (verified already done)"
       description: "Every demo output should include meta/functionality.yaml"
       rationale: "v1.0.2 had functionality.yaml documenting features, v1.0.1 did not"
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
       source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      verificationNote: "Already in artifact-manifest.yaml (lines 72-76) and lifecycle-stages.yaml Stage 5 outputs"
     
     - id: "LEAP-015"
       name: "Create README Template"
       category: "demo-output"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Standardize demo README structure"
       rationale: "v1.0.1 had 109-line README, v1.0.2 had 83-line README - formats differ significantly"
       estimatedEffort: "small"
@@ -478,7 +490,9 @@ priorities:
       name: "Component Creation vs Modification Policy"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Define when factory agents should create new components vs modify existing flexible components"
       rationale: "v1.0.2 created new incident-cards component, v1.0.3 modified existing data-cards - need clear decision criteria"
       estimatedEffort: "small"
@@ -488,13 +502,14 @@ priorities:
       acceptanceCriteria:
         - "architectural-standards.yaml includes component creation decision tree"
         - "Clear criteria for 'create new' vs 'modify existing'"
-      phase19Note: "Partially addressed by Factory Task Template - AI now reads demo-rules.yaml at Stage 5 which has scaffoldRules.flexible section"
     
     - id: "LEAP-021"
       name: "Standardize Analysis Approach Format"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Update stage-3-analysis template with consistent approach comparison structure"
       rationale: "v1.0.2 used optionA/optionB within sections, v1.0.3 used APPROACH-A/B/C as top-level - inconsistent structure"
       estimatedEffort: "small"
@@ -508,7 +523,9 @@ priorities:
       name: "Enhance Validation Matrix Template"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "Adopt v1.0.3's detailed field-by-field validation approach as standard"
       rationale: "v1.0.3 had thorough validation matrix with data model check, v1.0.2 had basic requirements list"
       estimatedEffort: "small"
@@ -589,7 +606,9 @@ priorities:
       name: "Require Keyboard Accessibility in Components"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 21"
       description: "All interactive components must support keyboard navigation (Enter/Space for click targets)"
       rationale: "v2.0.1 lost keyboard accessibility that v2.0.0 had - accessibility regression"
       estimatedEffort: "small"

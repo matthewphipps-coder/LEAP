@@ -72,6 +72,35 @@ summary:
   passed: "[number]"
   failed: "[number]"
 
+# =============================================================================
+# TEST EVIDENCE (LEAP-009)
+# =============================================================================
+testEvidence:
+  description: "Screenshots and recordings documenting test execution"
+  storageLocation: "[FACTORY_WORKSPACE]/evidence/"
+  
+  required:
+    screenshots:
+      mandatory: true
+      naming: "TC-[id]-[description].png"
+      examples:
+        - "TC-001-dashboard-load.png"
+        - "TC-002-card-click.png"
+    
+    recordings:
+      mandatory: "For complex flows"
+      naming: "[feature]-demo.webp"
+      when: "Multi-step interactions, animations, state changes"
+      examples:
+        - "incident-dialog-flow.webp"
+        - "card-interaction.webp"
+  
+  artifacts:
+    - type: "[screenshot|recording]"
+      file: "[filename]"
+      testCase: "[TC-XXX]"
+      description: "[what it shows]"
+
 issuesFound:
   - issue: "[Issue]"
     severity: "[low|medium|high]"

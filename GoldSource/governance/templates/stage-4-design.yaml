@@ -49,6 +49,41 @@ wireframes:
       description: "[What it shows]"
 
 # =============================================================================
+# DEPENDENCY GRAPH (LEAP-007)
+# =============================================================================
+dependencyGraph:
+  description: "Show component/file relationships for this feature"
+  format: "Parent → Child pattern showing data flow"
+  
+  graph:
+    - from: "[source component/file]"
+      to: "[dependent component/file]"
+      type: "[imports|calls|updates|renders]"
+  
+  example: |
+    incident-service.js → incident-cards-ui.js (calls)
+    incident-data.js → incident-service.js (imports)
+    state.js → incident-service.js (subscribes)
+
+# =============================================================================
+# COMPLEXITY ESTIMATES (LEAP-008)
+# =============================================================================
+complexityEstimates:
+  description: "Effort estimate for implementation"
+  
+  overall: "[small|medium|large]"
+  
+  breakdown:
+    - component: "[component name]"
+      effort: "[small|medium|large]"
+      reason: "[why this effort level]"
+  
+  definitions:
+    small: "< 1 hour, straightforward changes"
+    medium: "1-3 hours, some complexity or multiple files"
+    large: "> 3 hours, significant changes or new patterns"
+
+# =============================================================================
 # FILES TO MODIFY/CREATE
 # =============================================================================
 filesToModify:

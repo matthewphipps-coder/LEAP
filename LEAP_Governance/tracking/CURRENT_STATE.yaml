@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-20T17:07:00Z"
-  version: "4.1.0"
+  lastUpdated: "2026-01-20T17:25:00Z"
+  version: "4.2.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -14,129 +14,139 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Phase 20 Complete - Select next phase"
+  currentFocus: "Phase 21: Standards & Templates - Discovery stage"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "20"
-  name: "ScaffoldFoundation"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-20T16:26:00Z"
-  completedDate: "2026-01-20T17:07:00Z"
+  number: "21"
+  name: "StandardsAndTemplates"
+  status: "in-progress"
+  stage: "testing"
+  startedDate: "2026-01-20T17:24:00Z"
   
-  goal: "Strengthen scaffold foundation with extension mechanisms and codify conventions for Factory consistency"
+  goal: "Complete documentation standards for Factory templates, scaffold conventions, and demo output requirements"
   
-  stageArtifact: "docs/phases/phase-20/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-21/stage-7-testing.yaml"
+  
+  researchFindings:
+    originalScope: 10
+    alreadyComplete: 2
+    itemsNeedingWork: 8
+    completedItems: ["LEAP-003 (path naming)", "LEAP-014 (functionality.yaml)"]
   
   previousPhase:
-    number: "19"
-    name: "FactoryTaskTemplate"
+    number: "20"
+    name: "ScaffoldFoundation"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
   
-  # Combined Sprint 1+2: Foundation Unblock + Convention Codification
+  # Sprint: Standards & Templates (10 items, all documentation)
   sprintScope:
-    name: "Scaffold Foundation & Conventions"
-    approach: "Combined Sprint - 9 backlog items in single phase"
-    rationale: "All items are scaffold-conventions category, most update same artifacts"
+    name: "Standards & Templates"
+    approach: "Documentation sprint - all small effort items"
+    rationale: "Natural grouping: Factory templates + scaffold rules + demo output"
     
     items:
-      # Foundation (unblock)
-      - id: "LEAP-032"
-        name: "Add State Extension Mechanism"
-        effort: "Medium"
-        type: "code-change"
-        target: "GoldSource/scaffold/core/state.js"
-      
-      - id: "LEAP-034"
-        name: "Audit Locked Files for Extension Gaps"
-        effort: "Medium"
-        type: "documentation"
-        target: "GoldSource/meta/architectural-standards.yaml"
-      
-      - id: "LEAP-029"
-        name: "Add Path Depth Table"
+      # Sub-Phase A: Factory Stage Templates
+      - id: "LEAP-007"
+        name: "Add Dependency Graph to Design"
         effort: "Small"
         type: "documentation"
-        target: "GoldSource/meta/ARCHITECTURE.yaml"
+        target: "GoldSource/governance/templates/stage-4-design.yaml"
       
-      # Conventions (documentation)
-      - id: "LEAP-004"
-        name: "Mock Data Strategy"
+      - id: "LEAP-008"
+        name: "Require Complexity Estimates"
         effort: "Small"
         type: "documentation"
-        target: "GoldSource/meta/architectural-standards.yaml"
+        target: "GoldSource/governance/templates/stage-4-design.yaml"
       
-      - id: "LEAP-012"
-        name: "State Shapes Pattern"
-        effort: "Medium"
-        type: "documentation"
-        target: "GoldSource/meta/architectural-standards.yaml"
-      
-      - id: "LEAP-016"
-        name: "Service Function Patterns (enhance)"
+      - id: "LEAP-009"
+        name: "Mandate Test Evidence Files"
         effort: "Small"
         type: "documentation"
-        target: "GoldSource/meta/architectural-standards.yaml"
+        target: "GoldSource/governance/templates/stage-7-testing.yaml"
       
-      - id: "LEAP-017"
-        name: "Status/Enum Values"
+      - id: "LEAP-021"
+        name: "Standardize Analysis Approach Format"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/governance/templates/stage-3-analysis.yaml"
+      
+      - id: "LEAP-022"
+        name: "Enhance Validation Matrix Template"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/governance/templates/stage-6-validation.yaml"
+      
+      # Sub-Phase B: Scaffold Conventions
+      - id: "LEAP-003"
+        name: "Standardize Feature Path Naming"
         effort: "Small"
         type: "documentation"
         target: "GoldSource/meta/architectural-standards.yaml"
       
-      - id: "LEAP-027"
-        name: "AI Service Pattern"
+      - id: "LEAP-019"
+        name: "Component Creation vs Modification Policy"
         effort: "Small"
         type: "documentation"
         target: "GoldSource/meta/architectural-standards.yaml"
       
-      - id: "LEAP-031"
-        name: "Component Initialization Pattern"
+      - id: "LEAP-030"
+        name: "Require Keyboard Accessibility"
         effort: "Small"
         type: "documentation"
         target: "GoldSource/meta/architectural-standards.yaml"
+      
+      # Sub-Phase C: Demo Output
+      - id: "LEAP-014"
+        name: "Require functionality.yaml in Demos"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/governance/lifecycle-stages.yaml"
+      
+      - id: "LEAP-015"
+        name: "Create README Template"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/governance/templates/README.md"
     
     subPhases:
       A: 
-        name: "Extension Points"
-        items: ["LEAP-032", "LEAP-034", "LEAP-029"]
-        focus: "Enable Factory to extend scaffold properly"
+        name: "Factory Stage Templates"
+        items: ["LEAP-007", "LEAP-008", "LEAP-009", "LEAP-021", "LEAP-022"]
+        focus: "Enhance stage templates with missing sections"
       B:
-        name: "Data Patterns"
-        items: ["LEAP-004", "LEAP-012", "LEAP-017"]
-        focus: "How to structure data"
+        name: "Scaffold Conventions"
+        items: ["LEAP-003", "LEAP-019", "LEAP-030"]
+        focus: "Clarify rules Factory AI should follow"
       C:
-        name: "Code Patterns"
-        items: ["LEAP-016", "LEAP-027", "LEAP-031"]
-        focus: "How to write code"
+        name: "Demo Output"
+        items: ["LEAP-014", "LEAP-015"]
+        focus: "Define what demos must include"
     
     validation:
-      method: "Factory run after sprint completion"
-      goal: "Create feature using new state extension mechanism"
-      validates: "Extension mechanism works AND conventions are followed"
+      method: "Factory run v2.0.3 after sprint completion"
+      goal: "Validate documentation is actionable"
+      validates: "Templates used correctly AND conventions followed"
 
 currentActivity:
-  status: "phase-20-research"
-  summary: "Completed Research stage - audited all 8 locked files, designed state extension mechanism"
+  status: "phase-21-discovery"
+  summary: "Discovery stage - 10 backlog items documented with research questions"
   
   recentWork:
     date: "2026-01-20"
-    session: "Phase 20 Research"
-    description: "Audited locked files, designed registerStateSlice() API, documented path depths and convention patterns"
+    session: "Phase 21 Discovery"
+    description: "Created stage-1-discovery.yaml with full scope, sub-phases, and 'already done' verification plan"
     
     sessionChanges:
       filesModified:
         - "LEAP_Governance/tracking/CURRENT_STATE.yaml"
       filesCreated:
-        - "docs/phases/phase-20/stage-2-research.yaml"
+        - "docs/phases/phase-21/stage-1-discovery.yaml"
       keyDecisions:
-        - "Only state.js needs extension mechanism (other locked files are fine)"
-        - "registerStateSlice(name, initialState, setters) API design"
-        - "Namespaced slices via getState('sliceName')"
-        - "Path depths documented: core=1, features/{name}=2, ui/components/{name}=3"
-        - "All 6 convention patterns researched with recommendations"
+        - "10 documentation items in single phase"
+        - "3 sub-phases: Factory Templates (5), Scaffold Conventions (3), Demo Output (2)"
+        - "3 items need 'already done' verification in Research stage"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
@@ -187,34 +197,35 @@ factoryRunsCompleted:
     addedDate: "2026-01-20"
     note: "First run using FACTORY_TASK_TEMPLATE.md - compliance validated"
   
-  nextRun: "v2.0.3 - validate Phase 20 scaffold improvements"
+  nextRun: "v2.0.3 - validate Phase 21 documentation improvements"
 
 backlogState:
   totalItems: 41
-  complete: 21  # Phase 20 completed +9 items
-  inProgress: 0
-  proposed: 19
+  complete: 21
+  inProgress: 10  # Phase 21 scope
+  proposed: 9
   superseded: 1
   
-  phase20Scope:
-    complete:
-      - "LEAP-032 - State Extension Mechanism"
-      - "LEAP-034 - Audit Locked Files"
-      - "LEAP-029 - Path Depth Table"
-      - "LEAP-004 - Mock Data Strategy"
-      - "LEAP-012 - State Shapes Pattern"
-      - "LEAP-016 - Service Function Patterns"
-      - "LEAP-017 - Status/Enum Values"
-      - "LEAP-027 - AI Service Pattern"
-      - "LEAP-031 - Component Initialization Pattern"
+  phase21Scope:
+    inProgress:
+      - "LEAP-007 - Add Dependency Graph to Design"
+      - "LEAP-008 - Require Complexity Estimates"
+      - "LEAP-009 - Mandate Test Evidence Files"
+      - "LEAP-021 - Standardize Analysis Approach Format"
+      - "LEAP-022 - Enhance Validation Matrix Template"
+      - "LEAP-003 - Standardize Feature Path Naming"
+      - "LEAP-019 - Component Creation vs Modification Policy"
+      - "LEAP-030 - Require Keyboard Accessibility"
+      - "LEAP-014 - Require functionality.yaml in Demos"
+      - "LEAP-015 - Create README Template"
     
-    previouslyVerified:
+    alreadyDoneVerification:
       - id: "LEAP-003"
-        reason: "Already in architectural-standards.yaml pathNaming.features"
-      - id: "LEAP-021"
-        reason: "Already in stage-3-analysis.yaml template approachOptions"
+        claim: "Phase 19 note claims already in architectural-standards.yaml"
+      - id: "LEAP-019"
+        claim: "Phase 19 note claims in demo-rules.yaml"
       - id: "LEAP-014"
-        reason: "Already required in artifact-manifest.yaml and lifecycle-stages.yaml"
+        claim: "May already be in artifact-manifest.yaml"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
   backlogFile: "LEAP_Governance/tracking/backlog.yaml"
@@ -226,18 +237,23 @@ references:
     - "safety-protocol.yaml - Backup and deployment"
     - "architectural-standards.yaml - Code patterns"
   
-  phase20Targets:
-    codeChange:
-      - "GoldSource/scaffold/core/state.js"
-    documentation:
-      - "GoldSource/meta/ARCHITECTURE.yaml"
+  phase21Targets:
+    factoryTemplates:
+      - "GoldSource/governance/templates/stage-3-analysis.yaml"
+      - "GoldSource/governance/templates/stage-4-design.yaml"
+      - "GoldSource/governance/templates/stage-6-validation.yaml"
+      - "GoldSource/governance/templates/stage-7-testing.yaml"
+    scaffoldConventions:
       - "GoldSource/meta/architectural-standards.yaml"
+    demoOutput:
+      - "GoldSource/governance/lifecycle-stages.yaml"
+      - "GoldSource/governance/templates/README.md"
 
 aiReminders:
-  - "Phase 20 IN PROGRESS - Scaffold Foundation & Conventions"
-  - "9 backlog items in combined Sprint 1+2"
-  - "ONLY code change: LEAP-032 (state extension mechanism)"
-  - "All other items are documentation updates to architectural-standards.yaml"
-  - "Sub-phases: A (Extension Points), B (Data Patterns), C (Code Patterns)"
-  - "Validation: Factory run after sprint to test state extension"
+  - "Phase 21 IN PROGRESS - Standards & Templates"
+  - "10 documentation items (all Small effort)"
+  - "NO code changes - docs only"
+  - "Sub-phases: A (Factory Templates), B (Scaffold Conventions), C (Demo Output)"
+  - "3 items need 'already done' verification in Research stage"
+  - "Validation: Factory run v2.0.3 after sprint"
   - "7 factory runs complete (v0.0.1 → v2.0.2)"

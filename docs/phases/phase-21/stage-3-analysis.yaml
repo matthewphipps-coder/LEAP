@@ -1,0 +1,139 @@
+# =============================================================================
+# PHASE 21: STANDARDS & TEMPLATES
+# STAGE 3: ANALYSIS
+# =============================================================================
+
+metadata:
+  phase: 21
+  phaseName: "StandardsAndTemplates"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-20T17:37:00Z"
+  status: "complete"
+  gateApproval: "Stage 2 approved with !Proceed at 2026-01-20T17:37:29Z"
+  previousStage: "stage-2-research.yaml"
+
+analysisObjective: "Risk assessment and implementation approach for 8 documentation items"
+
+# =============================================================================
+# RISKS
+# =============================================================================
+
+risks:
+  - id: "RISK-001"
+    name: "Template Breaking Changes"
+    probability: "low"
+    impact: "low"
+    description: "New sections could break existing factory runs if format is incompatible"
+    mitigation: "All changes are ADDITIONS - existing sections unchanged"
+  
+  - id: "RISK-002"
+    name: "Documentation Inconsistency"
+    probability: "low"
+    impact: "medium"
+    description: "New sections might use different patterns than existing sections"
+    mitigation: "Follow existing template patterns (mandatory fields, examples, structure)"
+  
+  - id: "RISK-003"
+    name: "Missing Coverage"
+    probability: "low"
+    impact: "low"
+    description: "Might miss edge cases in decision trees or requirements"
+    mitigation: "Factory run v2.0.3 will validate - can iterate"
+
+overallRiskLevel: "LOW"
+riskRationale: "All changes are documentation additions with no code changes or breaking modifications"
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+
+approachOptions:
+  - option: "A"
+    name: "Batch by File"
+    description: "Group changes by target file - update each file once with all relevant items"
+    pros: "Efficient, single edit per file, easier to review"
+    cons: "Must track which items affect which files"
+    recommended: true
+  
+  - option: "B"
+    name: "Item by Item"
+    description: "Complete each backlog item sequentially, one at a time"
+    pros: "Clear tracking, easy to mark items complete"
+    cons: "Multiple edits to same files, less efficient"
+    recommended: false
+
+recommendedApproach:
+  option: "A"
+  rationale: |
+    Batch by file is more efficient:
+    - stage-4-design.yaml: LEAP-007 + LEAP-008 (2 items, 1 edit)
+    - stage-7-testing.yaml: LEAP-009 (1 item, 1 edit)
+    - stage-3-analysis.yaml: LEAP-021 (1 item, 1 edit)
+    - stage-6-validation.yaml: LEAP-022 (1 item, 1 edit)
+    - architectural-standards.yaml: LEAP-019 + LEAP-030 (2 items, 1 edit)
+    - README.md template: LEAP-015 (1 item, create new file)
+    Total: 6 file operations for 8 items
+
+# =============================================================================
+# RRMD+ DECISION
+# =============================================================================
+
+rrmdDecision:
+  required: false
+  triggers:
+    moreThan3Files: true  # 6 files, but all are documentation
+    coreFiles: false
+    dataSchema: false
+    buildDeploy: false
+    previousFailures: false
+  rationale: |
+    Although >3 files, RRMD+ is NOT required because:
+    - All changes are YAML/MD documentation, not code
+    - No locked files being modified
+    - All changes are additive sections
+    - Low risk of regression
+
+# =============================================================================
+# IMPLEMENTATION BATCHES
+# =============================================================================
+
+implementationBatches:
+  batch1:
+    name: "Factory Stage Templates"
+    files:
+      - file: "stage-3-analysis.yaml"
+        items: ["LEAP-021"]
+        change: "Enhance approachOptions with APPROACH-A/B/C labels"
+      - file: "stage-4-design.yaml"
+        items: ["LEAP-007", "LEAP-008"]
+        change: "Add dependencyGraph and complexityEstimates sections"
+      - file: "stage-6-validation.yaml"
+        items: ["LEAP-022"]
+        change: "Add detailed validationMatrix section"
+      - file: "stage-7-testing.yaml"
+        items: ["LEAP-009"]
+        change: "Add testEvidence section with storage location"
+  
+  batch2:
+    name: "Scaffold Conventions"
+    files:
+      - file: "architectural-standards.yaml"
+        items: ["LEAP-019", "LEAP-030"]
+        change: "Add componentCreationPolicy and accessibilityRequirements sections"
+  
+  batch3:
+    name: "Demo Output"
+    files:
+      - file: "templates/README.md"
+        items: ["LEAP-015"]
+        change: "Create new README template file"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  requires: "!Proceed"
+  focus: "Detailed implementation plan with exact sections to add"

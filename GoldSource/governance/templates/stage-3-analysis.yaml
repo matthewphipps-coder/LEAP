@@ -53,6 +53,15 @@ risks:
 # =============================================================================
 # APPROACH OPTIONS
 # =============================================================================
+# APPROACH FORMAT (LEAP-021):
+# Use consistent APPROACH-A/B/C naming. Each option MUST include:
+# - option: Letter identifier (A, B, C...)
+# - name: Descriptive name
+# - description: What this approach does
+# - pros: Benefits
+# - cons: Drawbacks
+# - recommended: true|false
+# =============================================================================
 
 approachOptions:
   - option: "A"

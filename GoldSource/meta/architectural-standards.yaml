@@ -620,3 +620,90 @@ codePatterns:
           populateDialog(dialog, incident);
           dialog.showModal();
         }
+
+# =============================================================================
+# COMPONENT CREATION POLICY (Phase 21 - LEAP-019)
+# =============================================================================
+
+componentCreationPolicy:
+  name: "Create vs Modify Decision Tree"
+  purpose: "When to create new components vs modify existing flexible ones"
+  addedDate: "2026-01-20"
+  source: "Phase 21 - StandardsAndTemplates"
+  
+  decisionTree:
+    createNew:
+      when:
+        - "Feature has unique visual design not matching existing components"
+        - "Feature has distinct interaction patterns"
+        - "Feature would require >50% rewrite of existing component"
+        - "Feature serves different domain (e.g., incidents vs tasks)"
+      location: "ui/components/{new-name}/"
+      naming: "{name}-ui.js + {name}.css"
+    
+    modifyExisting:
+      when:
+        - "Feature is variation of existing component (e.g., different card type)"
+        - "Feature extends existing behavior with <50% changes"
+        - "Feature uses same visual patterns with different data"
+      flexibleComponents:
+        - "ui/components/chat-panel/* - Chat interface"
+        - "ui/components/data-cards/* - Data display"
+        - "ui/components/action-buttons/* - Quick actions"
+      reference: "demo-rules.yaml scaffoldRules.flexible"
+  
+  examples:
+    createNew:
+      - scenario: "Incident management with cards, dialogs, status badges"
+        reason: "Unique domain with specific data model and interactions"
+        result: "Create features/incident/, ui/components/incident-cards/"
+    
+    modifyExisting:
+      - scenario: "New card type for tasks"
+        reason: "Same visual pattern as data-cards, different data"
+        result: "Modify ui/components/data-cards/ with new render function"
+
+# =============================================================================
+# ACCESSIBILITY REQUIREMENTS (Phase 21 - LEAP-030)
+# =============================================================================
+
+accessibilityRequirements:
+  name: "Accessibility Standards"
+  purpose: "Ensure all components support keyboard navigation and assistive technology"
+  addedDate: "2026-01-20"
+  source: "Phase 21 - StandardsAndTemplates"
+  
+  keyboardNavigation:
+    required: true
+    rule: "All interactive elements must be keyboard accessible"
+    
+    requirements:
+      - element: "Clickable elements (cards, buttons, links)"
+        requirement: "Must support Enter and Space key activation"
+        implementation: |
+          element.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleClick(e);
+            }
+          });
+      
+      - element: "Focus indicators"
+        requirement: "Visible focus state for all interactive elements"
+        implementation: "Use CSS :focus-visible for focus styling"
+      
+      - element: "Tab order"
+        requirement: "Logical tab order matching visual layout"
+        implementation: "Use natural DOM order, avoid positive tabindex"
+  
+  ariaLabels:
+    required: "For non-text interactive elements"
+    examples:
+      - element: "Icon buttons"
+        label: "aria-label=\"Close dialog\""
+      - element: "Status badges"
+        label: "aria-label=\"Status: Active\""
+  
+  colorContrast:
+    requirement: "WCAG 2.1 AA minimum (4.5:1 for text, 3:1 for UI)"
+    note: "Base theme variables already meet this requirement"

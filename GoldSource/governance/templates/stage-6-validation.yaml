@@ -54,6 +54,36 @@ featureValidation:
     allAccountedFor: "[true|false]"
 
 # =============================================================================
+# DETAILED VALIDATION MATRIX (LEAP-022)
+# =============================================================================
+validationMatrix:
+  description: "Field-by-field validation of implemented features"
+  
+  featureChecks:
+    - feature: "[Feature name from Discovery]"
+      requirements:
+        - requirement: "[Specific requirement]"
+          implemented: "[true|false]"
+          location: "[file:line or component]"
+          verified: "[how verified]"
+  
+  dataModelChecks:
+    description: "Verify data structures match design"
+    checks:
+      - entity: "[data type, e.g., Incident]"
+        fields:
+          - field: "[field name]"
+            expectedType: "[string|number|array|object]"
+            actualType: "[what was implemented]"
+            matches: "[true|false]"
+  
+  integrationChecks:
+    - check: "[Integration point]"
+      expected: "[Expected behavior]"
+      actual: "[Actual behavior]"
+      status: "[pass|fail]"
+
+# =============================================================================
 # DOCUMENTATION VALIDATION
 # =============================================================================
 documentationValidation:
