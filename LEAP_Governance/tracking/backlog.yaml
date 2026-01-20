@@ -8,19 +8,19 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 45
+  totalItems: 46
   immediate: 8
-  shortTerm: 37
+  shortTerm: 38
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 35
-    proposed: 4
+    proposed: 5
     inProgress: 0
     superseded: 6
   
-  note: "Added LEAP-038 (Data Conventions) 2026-01-20 - linked to SPEC-004"
+  note: "Added LEAP-039 (Design System Phase 2) 2026-01-20 - deferred items from SPEC-002"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -783,6 +783,27 @@ priorities:
         - "FR-002: User preferences stored in Firestore"
         - "FR-003: Ring-fenced data convention documented"
         - "FR-005: Theme preference syncs across devices"
+
+    - id: "LEAP-039"
+      name: "Design System Enhancement (Phase 2)"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Deferred visual polish from SPEC-002: State patterns, confetti, glass variations"
+      rationale: "6 items deferred from SPEC-002 Phase 1 to reduce scope - captured here for future implementation"
+      estimatedEffort: "medium"
+      dependencies: ["LEAP-036"]  # Phase 1 complete
+      addedDate: "2026-01-20"
+      source: "Sprint Functional Spec SPEC-002 DEFER items"
+      functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
+      deferredFrom: "Phase 22 (SPEC-002 Phase 1)"
+      acceptanceCriteria:
+        - "DEFER-001: Loading State Pattern (.loading skeleton)"
+        - "DEFER-002: Empty State Pattern (.empty-state)"
+        - "DEFER-003: Error State Pattern (.error-state)"
+        - "DEFER-004: Priority Color System (card severity colors)"
+        - "DEFER-005: Glass Variations (.glass-subtle, .glass-heavy)"
+        - "DEFER-006: Confetti Celebration (canvas-confetti integration)"
   
   mediumTerm: []
   future: []

@@ -14,7 +14,7 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Phase 22 - Design System Enhancement (SPEC-002)"
+  currentFocus: "Between phases - Phase 22 complete, selecting next"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
