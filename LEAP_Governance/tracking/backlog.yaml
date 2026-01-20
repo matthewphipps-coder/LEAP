@@ -15,9 +15,9 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 34
+    complete: 35
     proposed: 4
-    inProgress: 1
+    inProgress: 0
     superseded: 6
   
   note: "Added LEAP-038 (Data Conventions) 2026-01-20 - linked to SPEC-004"
@@ -728,8 +728,9 @@ priorities:
       name: "Design System Enhancement (Phase 1)"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "in-progress"
-      phaseStarted: "Phase 22"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 22"
       description: "Core visual polish: plasma bubbles background, light theme glass fix, animation utilities"
       rationale: "GoldSource scaffold looks static - demos need animated background and working light theme"
       estimatedEffort: "small"
@@ -740,7 +741,7 @@ priorities:
       acceptanceCriteria:
         - "FR-001: Animated plasma bubbles in background (both themes)"
         - "FR-002: Light theme glass fix (not washed out)"
-        - "FR-006: Brand color system (2 vars control entire app)"
+        - "FR-006: Brand color system (3 vars control entire app)"
         - "FR-003: .animate-in utility class"
         - "FR-004: .hover-lift utility class"
         - "FR-005: Button :active press feedback"
