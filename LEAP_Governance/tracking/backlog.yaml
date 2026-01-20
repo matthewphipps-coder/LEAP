@@ -8,19 +8,19 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 41
+  totalItems: 42
   immediate: 8
-  shortTerm: 33
+  shortTerm: 34
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 34
-    proposed: 1
+    proposed: 2
     inProgress: 0
     superseded: 6
   
-  note: "Counts verified 2026-01-20T18:16:36Z - LEAP-024, LEAP-025 completed (factory-review-workflow updates)"
+  note: "Added LEAP-035 (Authentication System) 2026-01-20 - linked to SPEC-001"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -704,6 +704,25 @@ priorities:
         - "Extension points documented for each locked file"
         - "Gaps identified and added as individual backlog items"
         - "architectural-standards.yaml updated with extension patterns"
+    
+    - id: "LEAP-035"
+      name: "Authentication System Enhancement"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Complete auth system: login, signup with profile creation, password reset, accessibility, keyboard support"
+      rationale: "Current scaffold has basic auth but missing user profile creation, error mapping, ARIA labels, and keyboard support"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "Sprint Functional Spec SPEC-001"
+      functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-001-authentication.yaml"
+      acceptanceCriteria:
+        - "Signup creates user profile in Firestore /users/{uid}"
+        - "All forms support Enter key submission"
+        - "ARIA labels on all form inputs"
+        - "Loading states during auth operations"
+        - "Firebase error codes mapped to user-friendly messages"
   
   mediumTerm: []
   future: []

@@ -1,0 +1,369 @@
+# =============================================================================
+# SPRINT FUNCTIONAL SPEC: Authentication System
+# =============================================================================
+# Source: Old NEXUS LOGIN_CODE_REVIEW.md, FUNCTIONALITY.md
+# Purpose: Complete auth specification for GoldSource scaffold enhancement
+# =============================================================================
+
+metadata:
+  specId: "SPEC-001"
+  name: "Authentication System"
+  version: "1.0.0"
+  created: "2026-01-20"
+  lastUpdated: "2026-01-20"
+  status: "draft"
+  
+  # Backlog linkage
+  backlogId: "LEAP-035"  # To be created
+  targetPhase: null
+
+# =============================================================================
+# SCOPE DEFINITION
+# =============================================================================
+
+scope:
+  problem: |
+    The GoldSource scaffold has basic Firebase auth but it's incomplete. 
+    Missing: proper signup flow with user profile creation, password reset, 
+    domain validation, accessibility, keyboard support, and robust error handling.
+    
+  goal: |
+    A complete, production-ready authentication system that:
+    - Handles login, signup, and password reset flows
+    - Creates user profiles in Firestore on signup
+    - Validates email domains (configurable)
+    - Meets accessibility standards
+    - Provides excellent UX with keyboard support and loading states
+  
+  notInScope:
+    - Social auth (Google, Microsoft, etc.)
+    - Multi-factor authentication
+    - Session timeout / forced re-auth
+    - Admin user management UI
+    - Email verification flow (Firebase handles this)
+  
+  successCriteria:
+    - User can sign up with email/password and profile is created in Firestore
+    - User can log in and is redirected to index.html
+    - User can request password reset and receives email
+    - All forms support Enter key submission
+    - Screen readers can navigate the login page
+    - Error messages are clear and specific per error type
+
+# =============================================================================
+# FUNCTIONAL REQUIREMENTS
+# =============================================================================
+
+requirements:
+  
+  functional:
+    # --- Login Flow ---
+    - id: "FR-001"
+      name: "Email/Password Login"
+      description: "User can log in with email and password via Firebase Auth"
+      priority: "must-have"
+      acceptance: "User enters valid credentials → redirected to index.html"
+      source: "Old NEXUS FUNCTIONALITY.md line 27-31"
+    
+    - id: "FR-002"
+      name: "Login Error Handling"
+      description: "Display specific error messages for different failure modes"
+      priority: "must-have"
+      acceptance: |
+        - Wrong password: "Incorrect password. Please try again."
+        - User not found: "No account found with this email."
+        - Too many attempts: "Too many failed attempts. Please try again later."
+        - Invalid email: "Please enter a valid email address."
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 344-357"
+    
+    - id: "FR-003"
+      name: "Auto-redirect if Authenticated"
+      description: "If user is already logged in, redirect to index.html automatically"
+      priority: "must-have"
+      acceptance: "Visiting login.html while authenticated → immediate redirect"
+      source: "Old NEXUS FUNCTIONALITY.md line 30"
+    
+    # --- Signup Flow ---
+    - id: "FR-004"
+      name: "Email/Password Signup"
+      description: "User can create new account with email and password"
+      priority: "must-have"
+      acceptance: "User signs up → account created → profile doc created → redirected"
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 329-338"
+    
+    - id: "FR-005"
+      name: "User Profile Creation"
+      description: "On signup, create user document in Firestore /users/{uid}"
+      priority: "must-have"
+      acceptance: |
+        Document created with:
+        - uid: Firebase user ID
+        - email: User email
+        - displayName: Extracted from email (before @)
+        - role: "member" (default)
+        - createdAt: Timestamp
+        - xp: 0
+      source: "Old NEXUS FUNCTIONALITY.md line 43-47"
+    
+    - id: "FR-006"
+      name: "Password Validation"
+      description: "Password must be at least 6 characters (Firebase minimum)"
+      priority: "must-have"
+      acceptance: "Short password shows error before submission"
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 313"
+    
+    - id: "FR-007"
+      name: "Domain Validation (Configurable)"
+      description: "Optionally restrict signups to specific email domains"
+      priority: "should-have"
+      acceptance: |
+        - If domain whitelist defined: reject non-matching emails
+        - If no whitelist: allow any email domain
+        - Config in constants.js or similar
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 308"
+    
+    # --- Password Reset ---
+    - id: "FR-008"
+      name: "Password Reset Request"
+      description: "User can request password reset email"
+      priority: "must-have"
+      acceptance: |
+        - Click 'Forgot Password' link
+        - Enter email
+        - Firebase sends reset email
+        - Success message shown inline (not alert)
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 262-277"
+    
+    - id: "FR-009"
+      name: "Password Reset Error Handling"
+      description: "Handle reset errors gracefully"
+      priority: "must-have"
+      acceptance: |
+        - User not found: "No account found with this email."
+        - Invalid email: "Please enter a valid email address."
+        - Too many requests: "Too many attempts. Please try again later."
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 206-210"
+    
+    # --- Mode Switching ---
+    - id: "FR-010"
+      name: "Login/Signup Toggle"
+      description: "User can switch between login and signup modes on same page"
+      priority: "must-have"
+      acceptance: |
+        - Toggle link below form: "Don't have an account? Sign up"
+        - Clicking toggles form mode
+        - Button text changes: "Sign In" ↔ "Create Account"
+        - Subtitle changes: "Sign in to continue" ↔ "Create your account"
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 288-295"
+    
+    # --- Session Management ---
+    - id: "FR-011"
+      name: "Session Persistence"
+      description: "Auth session persists across browser sessions"
+      priority: "must-have"
+      acceptance: "User closes browser, reopens → still logged in"
+      source: "Old NEXUS FUNCTIONALITY.md line 31"
+    
+    - id: "FR-012"
+      name: "Logout Flow"
+      description: "User can log out and is redirected to login page"
+      priority: "must-have"
+      acceptance: "Click logout → sign out from Firebase → redirect to login.html"
+      existingImplementation: "Already in auth-service.js logout()"
+  
+  # --- Non-Functional Requirements ---
+  nonFunctional:
+    
+    - id: "NFR-001"
+      category: "accessibility"
+      name: "Keyboard Navigation"
+      description: "All forms support Enter key submission from any input"
+      acceptance: |
+        - Enter in email field → submits form
+        - Enter in password field → submits form
+        - Tab navigation works correctly
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 77-88"
+    
+    - id: "NFR-002"
+      category: "accessibility"
+      name: "ARIA Labels"
+      description: "All inputs have proper ARIA labels for screen readers"
+      acceptance: |
+        - aria-label on all inputs
+        - aria-required on required fields
+        - role="alert" and aria-live="polite" on error message container
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 142-161"
+    
+    - id: "NFR-003"
+      category: "accessibility"
+      name: "Focus Management"
+      description: "Focus moves appropriately on mode switch and errors"
+      acceptance: |
+        - Switch to signup mode → focus moves to email input
+        - Error displayed → focus moves to error or first invalid field
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 152-154"
+    
+    - id: "NFR-004"
+      category: "ux"
+      name: "Loading States"
+      description: "Show loading indicator during auth operations"
+      acceptance: |
+        - Submit button shows "Signing in..." or "Creating account..."
+        - Button disabled during operation
+        - Password reset shows "Sending..."
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 318-321"
+    
+    - id: "NFR-005"
+      category: "ux"
+      name: "Inline Error Messages"
+      description: "Use inline styled messages, not browser alert()"
+      acceptance: "No alert() calls for any messages (success or error)"
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 133-135"
+    
+    - id: "NFR-006"
+      category: "maintainability"
+      name: "Error Code Mapping"
+      description: "Map Firebase error codes to user-friendly messages"
+      acceptance: |
+        Centralized error mapping function that handles:
+        - auth/user-not-found
+        - auth/wrong-password
+        - auth/invalid-email
+        - auth/email-already-in-use
+        - auth/weak-password
+        - auth/too-many-requests
+      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 148-149"
+
+# =============================================================================
+# TECHNICAL APPROACH
+# =============================================================================
+
+technicalApproach:
+  
+  affectedFiles:
+    modify:
+      - "login.html - Add ARIA labels, improve structure"
+      - "login.js - Add keyboard support, loading states, error mapping"
+      - "core/auth-service.js - Ensure signup creates user profile"
+    new:
+      - "core/auth-errors.js - Centralized Firebase error code mapping (optional, could be in login.js)"
+    delete: []
+  
+  dependencies:
+    - "Firebase Auth SDK (already present)"
+    - "Firebase Firestore SDK (already present)"
+    - "core/firebase.js (already present)"
+  
+  patterns:
+    - "AI-First headers on all modified files"
+    - "MODULE_CONTRACT exports"
+    - "No modification of locked files (firebase.js is LOCKED)"
+  
+  risks:
+    - risk: "Breaking existing login flow"
+      mitigation: "Incremental changes, test after each modification"
+    - risk: "Domain validation blocking legitimate users"
+      mitigation: "Make domain validation opt-in via config constant"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verification:
+  
+  manualTests:
+    - id: "MT-001"
+      name: "Login Flow"
+      description: "Test complete login flow"
+      steps:
+        - "Navigate to login.html"
+        - "Enter valid test credentials"
+        - "Press Enter (not click)"
+        - "Verify redirect to index.html"
+      expectedResult: "Redirected to dashboard"
+    
+    - id: "MT-002"
+      name: "Signup Flow"
+      description: "Test account creation"
+      steps:
+        - "Navigate to login.html"
+        - "Click 'Sign up' toggle"
+        - "Enter new email and password"
+        - "Submit form"
+        - "Verify redirect and check Firestore for user doc"
+      expectedResult: "Account created, user doc exists in /users/{uid}"
+    
+    - id: "MT-003"
+      name: "Password Reset"
+      description: "Test password reset request"
+      steps:
+        - "Navigate to login.html"
+        - "Click 'Forgot Password'"
+        - "Enter email"
+        - "Submit"
+      expectedResult: "Inline success message shown, email received"
+    
+    - id: "MT-004"
+      name: "Keyboard Navigation"
+      description: "Test keyboard support"
+      steps:
+        - "Navigate to login.html"
+        - "Tab through all focusable elements"
+        - "Press Enter in password field"
+      expectedResult: "All elements focusable, Enter submits form"
+    
+    - id: "MT-005"
+      name: "Error Handling"
+      description: "Test error messages"
+      steps:
+        - "Enter wrong password → verify specific error"
+        - "Enter non-existent email → verify specific error"
+        - "Enter short password on signup → verify specific error"
+      expectedResult: "Each error shows appropriate message, not generic text"
+  
+  browserTests:
+    - id: "BT-001"
+      description: "Verify login page loads without console errors"
+      steps:
+        - "Open login.html in browser"
+        - "Check browser console"
+      expectedResult: "No JavaScript errors"
+    
+    - id: "BT-002"
+      description: "Verify ARIA labels present"
+      steps:
+        - "Open login.html"
+        - "Inspect email input"
+        - "Verify aria-label attribute exists"
+      expectedResult: "aria-label present on all inputs"
+
+# =============================================================================
+# APPROVAL
+# =============================================================================
+
+approval:
+  specApprovedBy: null
+  specApprovedDate: null
+  implementationApprovedBy: null
+  implementationApprovedDate: null
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  extractedFrom:
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-stable/LOGIN_CODE_REVIEW.md"
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/FUNCTIONALITY.md"
+  
+  existingScaffoldState: |
+    Current GoldSource scaffold has:
+    - login.html with basic form (needs ARIA)
+    - login.js with login/signup logic (needs keyboard, loading states)
+    - auth-service.js with login/signup/logout functions (needs profile creation check)
+    
+  futureEnhancements:
+    - "Social login (Google, Microsoft)"
+    - "Email verification requirement"
+    - "Remember me checkbox"
+    - "Biometric auth (WebAuthn)"
