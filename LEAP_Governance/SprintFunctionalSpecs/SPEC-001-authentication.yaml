@@ -8,14 +8,74 @@
 metadata:
   specId: "SPEC-001"
   name: "Authentication System"
-  version: "1.0.0"
+  version: "2.0.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
+  effort: "medium"  # Well-scoped, builds on existing foundation
   
   # Backlog linkage
-  backlogId: "LEAP-035"  # To be created
+  backlogId: "LEAP-035"
   targetPhase: null
+
+# =============================================================================
+# CURRENT STATE - What already exists in GoldSource scaffold
+# =============================================================================
+
+currentState:
+  summary: "Basic login/signup works but missing user profiles, password reset, domain validation, and accessibility"
+  
+  alreadyImplemented:
+    - feature: "Login/Signup Toggle"
+      location: "login.js toggleMode()"
+      status: "✅ Working"
+      note: "Switches form mode, updates button text and subtitle"
+    
+    - feature: "Loading States"
+      location: "login.js handleSubmit()"
+      status: "✅ Working"
+      note: "Button shows 'Signing in...' or 'Creating account...', disabled during submission"
+    
+    - feature: "Error Code Mapping"
+      location: "login.js getErrorMessage()"
+      status: "✅ Working"
+      note: "Maps 7 Firebase error codes to user-friendly messages"
+    
+    - feature: "Password Validation"
+      location: "login.js lines 76-79"
+      status: "✅ Working"
+      note: "Checks minimum 6 characters before submission"
+    
+    - feature: "Auto-redirect if Authenticated"
+      location: "login.js lines 46-51"
+      status: "✅ Working"
+      note: "Uses setupAuthListener to redirect to index.html if already logged in"
+    
+    - feature: "Firebase Auth integration"
+      location: "core/auth-service.js"
+      status: "✅ Working"
+      note: "login(), signup(), logout() functions exist"
+  
+  missingFeatures:
+    - feature: "User Profile Creation on Signup"
+      impact: "No user doc in Firestore - can't store user settings/XP"
+      priority: "must-have"
+    
+    - feature: "Password Reset Flow"
+      impact: "Users can't recover accounts"
+      priority: "must-have"
+    
+    - feature: "Domain Validation"
+      impact: "Anyone can sign up - no corporate restriction"
+      priority: "should-have"
+    
+    - feature: "ARIA Labels"
+      impact: "Screen readers can't navigate form properly"
+      priority: "must-have"
+    
+    - feature: "Forgot Password Link"
+      impact: "UI element missing from login.html"
+      priority: "must-have"
 
 # =============================================================================
 # SCOPE DEFINITION
@@ -23,17 +83,16 @@ metadata:
 
 scope:
   problem: |
-    The GoldSource scaffold has basic Firebase auth but it's incomplete. 
-    Missing: proper signup flow with user profile creation, password reset, 
-    domain validation, accessibility, keyboard support, and robust error handling.
+    GoldSource scaffold login works but:
+    1. Signup doesn't create user profile in Firestore
+    2. No password reset flow
+    3. No domain validation for corporate use
+    4. Missing accessibility (ARIA labels)
+    5. No "Forgot Password" link in UI
     
   goal: |
-    A complete, production-ready authentication system that:
-    - Handles login, signup, and password reset flows
-    - Creates user profiles in Firestore on signup
-    - Validates email domains (configurable)
-    - Meets accessibility standards
-    - Provides excellent UX with keyboard support and loading states
+    Complete the auth system by adding the missing features.
+    Focus on: user profiles, password reset, domain validation, accessibility.
   
   notInScope:
     - Social auth (Google, Microsoft, etc.)
@@ -41,14 +100,14 @@ scope:
     - Session timeout / forced re-auth
     - Admin user management UI
     - Email verification flow (Firebase handles this)
+    - Redesigning the login UI
   
   successCriteria:
-    - User can sign up with email/password and profile is created in Firestore
-    - User can log in and is redirected to index.html
-    - User can request password reset and receives email
-    - All forms support Enter key submission
-    - Screen readers can navigate the login page
-    - Error messages are clear and specific per error type
+    - Signup creates user document in Firestore /users/{uid}
+    - "Forgot Password" link works with inline success/error messages
+    - Domain validation blocks non-@servicenow.com emails (by default)
+    - All form inputs have ARIA labels
+    - Error message container has role="alert"
 
 # =============================================================================
 # FUNCTIONAL REQUIREMENTS
@@ -57,182 +116,190 @@ scope:
 requirements:
   
   functional:
-    # --- Login Flow ---
+    # --- NEW: User Profile Creation (most important gap) ---
     - id: "FR-001"
-      name: "Email/Password Login"
-      description: "User can log in with email and password via Firebase Auth"
+      name: "User Profile Creation on Signup"
+      description: "Create user document in Firestore when user signs up"
       priority: "must-have"
-      acceptance: "User enters valid credentials → redirected to index.html"
-      source: "Old NEXUS FUNCTIONALITY.md line 27-31"
-    
-    - id: "FR-002"
-      name: "Login Error Handling"
-      description: "Display specific error messages for different failure modes"
-      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
       acceptance: |
-        - Wrong password: "Incorrect password. Please try again."
-        - User not found: "No account found with this email."
-        - Too many attempts: "Too many failed attempts. Please try again later."
-        - Invalid email: "Please enter a valid email address."
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 344-357"
-    
-    - id: "FR-003"
-      name: "Auto-redirect if Authenticated"
-      description: "If user is already logged in, redirect to index.html automatically"
-      priority: "must-have"
-      acceptance: "Visiting login.html while authenticated → immediate redirect"
-      source: "Old NEXUS FUNCTIONALITY.md line 30"
-    
-    # --- Signup Flow ---
-    - id: "FR-004"
-      name: "Email/Password Signup"
-      description: "User can create new account with email and password"
-      priority: "must-have"
-      acceptance: "User signs up → account created → profile doc created → redirected"
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 329-338"
-    
-    - id: "FR-005"
-      name: "User Profile Creation"
-      description: "On signup, create user document in Firestore /users/{uid}"
-      priority: "must-have"
-      acceptance: |
-        Document created with:
+        After signup(), create doc in /users/{uid} with:
         - uid: Firebase user ID
         - email: User email
         - displayName: Extracted from email (before @)
-        - role: "member" (default)
-        - createdAt: Timestamp
+        - role: "member"
+        - createdAt: serverTimestamp()
         - xp: 0
-      source: "Old NEXUS FUNCTIONALITY.md line 43-47"
+      implementation: "Add to auth-service.js signup() function"
     
-    - id: "FR-006"
-      name: "Password Validation"
-      description: "Password must be at least 6 characters (Firebase minimum)"
+    # --- NEW: Password Reset ---
+    - id: "FR-002"
+      name: "Forgot Password Link"
+      description: "Add 'Forgot Password?' link to login.html"
       priority: "must-have"
-      acceptance: "Short password shows error before submission"
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 313"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Link appears below password field
+        - Clicking prompts for email (use existing email field value)
+        - Triggers Firebase sendPasswordResetEmail()
+      uiDetails:
+        linkText: "Forgot Password?"
+        linkPosition: "Below password input, right-aligned"
+        linkStyle: "var(--text-secondary), underline on hover"
     
-    - id: "FR-007"
-      name: "Domain Validation (Configurable)"
-      description: "Optionally restrict signups to specific email domains"
+    - id: "FR-003"
+      name: "Password Reset Success Message"
+      description: "Show inline success message after sending reset email"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: "Inline message: '✅ Password reset email sent to {email}'"
+      uiDetails:
+        messageStyle: "Green text/border (success variant of existing error styling)"
+        noAlert: "MUST NOT use alert() - use inline styled message"
+    
+    - id: "FR-004"
+      name: "Password Reset Error Handling"
+      description: "Handle reset errors with specific messages"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        Error messages:
+        - auth/user-not-found: "No account found with this email."
+        - auth/invalid-email: "Please enter a valid email address."
+        - auth/too-many-requests: "Too many attempts. Please try again later."
+    
+    # --- NEW: Domain Validation ---
+    - id: "FR-005"
+      name: "Email Domain Validation"
+      description: "Restrict signups to @servicenow.com emails by default"
       priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
       acceptance: |
-        - If domain whitelist defined: reject non-matching emails
-        - If no whitelist: allow any email domain
-        - Config in constants.js or similar
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 308"
+        - Default whitelist: ["@servicenow.com"]
+        - Configurable in constants.js: ALLOWED_EMAIL_DOMAINS
+        - Set to empty array [] to allow any domain
+        - Check on signup BEFORE calling Firebase
+        - Error: "Please use your @servicenow.com email address."
+      implementation: |
+        In constants.js:
+        export const ALLOWED_EMAIL_DOMAINS = ['@servicenow.com'];
+        
+        In login.js before signup():
+        if (!validateEmailDomain(email)) {
+          showError('Please use your @servicenow.com email address.');
+          return;
+        }
     
-    # --- Password Reset ---
-    - id: "FR-008"
-      name: "Password Reset Request"
-      description: "User can request password reset email"
+    # --- NEW: Accessibility ---
+    - id: "FR-006"
+      name: "ARIA Labels on Form Inputs"
+      description: "Add accessibility attributes to all form elements"
       priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
       acceptance: |
-        - Click 'Forgot Password' link
-        - Enter email
-        - Firebase sends reset email
-        - Success message shown inline (not alert)
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 262-277"
+        Email input:
+        - aria-label="Email address"
+        - aria-required="true"
+        
+        Password input:
+        - aria-label="Password"
+        - aria-required="true"
+        
+        Error container:
+        - role="alert"
+        - aria-live="polite"
+      implementation: "HTML attribute changes in login.html"
+    
+    # --- ALREADY WORKING (no changes needed) ---
+    - id: "FR-007"
+      name: "Login/Signup Toggle"
+      description: "User can switch between login and signup modes"
+      priority: "must-have"
+      currentState: "ALREADY IMPLEMENTED"
+      note: "No changes needed - works correctly in login.js"
+    
+    - id: "FR-008"
+      name: "Loading States"
+      description: "Button shows loading text during auth operations"
+      priority: "must-have"
+      currentState: "ALREADY IMPLEMENTED"
+      note: "No changes needed - shows 'Signing in...' / 'Creating account...'"
     
     - id: "FR-009"
-      name: "Password Reset Error Handling"
-      description: "Handle reset errors gracefully"
-      priority: "must-have"
-      acceptance: |
-        - User not found: "No account found with this email."
-        - Invalid email: "Please enter a valid email address."
-        - Too many requests: "Too many attempts. Please try again later."
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 206-210"
-    
-    # --- Mode Switching ---
-    - id: "FR-010"
-      name: "Login/Signup Toggle"
-      description: "User can switch between login and signup modes on same page"
-      priority: "must-have"
-      acceptance: |
-        - Toggle link below form: "Don't have an account? Sign up"
-        - Clicking toggles form mode
-        - Button text changes: "Sign In" ↔ "Create Account"
-        - Subtitle changes: "Sign in to continue" ↔ "Create your account"
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 288-295"
-    
-    # --- Session Management ---
-    - id: "FR-011"
-      name: "Session Persistence"
-      description: "Auth session persists across browser sessions"
-      priority: "must-have"
-      acceptance: "User closes browser, reopens → still logged in"
-      source: "Old NEXUS FUNCTIONALITY.md line 31"
-    
-    - id: "FR-012"
-      name: "Logout Flow"
-      description: "User can log out and is redirected to login page"
-      priority: "must-have"
-      acceptance: "Click logout → sign out from Firebase → redirect to login.html"
-      existingImplementation: "Already in auth-service.js logout()"
-  
-  # --- Non-Functional Requirements ---
-  nonFunctional:
-    
-    - id: "NFR-001"
-      category: "accessibility"
-      name: "Keyboard Navigation"
-      description: "All forms support Enter key submission from any input"
-      acceptance: |
-        - Enter in email field → submits form
-        - Enter in password field → submits form
-        - Tab navigation works correctly
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 77-88"
-    
-    - id: "NFR-002"
-      category: "accessibility"
-      name: "ARIA Labels"
-      description: "All inputs have proper ARIA labels for screen readers"
-      acceptance: |
-        - aria-label on all inputs
-        - aria-required on required fields
-        - role="alert" and aria-live="polite" on error message container
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 142-161"
-    
-    - id: "NFR-003"
-      category: "accessibility"
-      name: "Focus Management"
-      description: "Focus moves appropriately on mode switch and errors"
-      acceptance: |
-        - Switch to signup mode → focus moves to email input
-        - Error displayed → focus moves to error or first invalid field
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 152-154"
-    
-    - id: "NFR-004"
-      category: "ux"
-      name: "Loading States"
-      description: "Show loading indicator during auth operations"
-      acceptance: |
-        - Submit button shows "Signing in..." or "Creating account..."
-        - Button disabled during operation
-        - Password reset shows "Sending..."
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 318-321"
-    
-    - id: "NFR-005"
-      category: "ux"
-      name: "Inline Error Messages"
-      description: "Use inline styled messages, not browser alert()"
-      acceptance: "No alert() calls for any messages (success or error)"
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 133-135"
-    
-    - id: "NFR-006"
-      category: "maintainability"
       name: "Error Code Mapping"
-      description: "Map Firebase error codes to user-friendly messages"
-      acceptance: |
-        Centralized error mapping function that handles:
-        - auth/user-not-found
-        - auth/wrong-password
-        - auth/invalid-email
-        - auth/email-already-in-use
-        - auth/weak-password
-        - auth/too-many-requests
-      source: "Old NEXUS LOGIN_CODE_REVIEW.md line 148-149"
+      description: "Firebase errors mapped to user-friendly messages"
+      priority: "must-have"
+      currentState: "ALREADY IMPLEMENTED"
+      note: "getErrorMessage() handles 7 error codes"
+    
+    - id: "FR-010"
+      name: "Auto-redirect if Authenticated"
+      description: "Redirect to dashboard if already logged in"
+      priority: "must-have"
+      currentState: "ALREADY IMPLEMENTED"
+      note: "setupAuthListener handles this"
+
+# =============================================================================
+# UI DETAILS - Specific visual/interaction requirements
+# =============================================================================
+
+uiDetails:
+  
+  forgotPasswordLink:
+    position: "Below password input, aligned right"
+    html: |
+      <div class="forgot-password-container">
+        <button type="button" id="forgot-btn" class="forgot-link">
+          Forgot Password?
+        </button>
+      </div>
+    css: |
+      .forgot-password-container {
+        text-align: right;
+        margin-top: calc(-1 * var(--space-sm));
+        margin-bottom: var(--space-sm);
+      }
+      .forgot-link {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: var(--text-sm);
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .forgot-link:hover {
+        color: var(--accent-primary);
+      }
+      .forgot-link:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+  
+  successMessage:
+    description: "Reuse existing error div but with success styling"
+    css: |
+      .login-error.success {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success, #10b981);
+        color: var(--success, #10b981);
+      }
+    usage: |
+      // Show success
+      errorDiv.textContent = '✅ Password reset email sent!';
+      errorDiv.classList.add('visible', 'success');
+      
+      // Show error (existing)
+      errorDiv.classList.remove('success');
+      errorDiv.classList.add('visible');
+  
+  loadingStateForReset:
+    buttonText: "Sending..."
+    behavior: |
+      forgotBtn.disabled = true;
+      forgotBtn.textContent = 'Sending...';
+      // After complete:
+      forgotBtn.disabled = false;
+      forgotBtn.textContent = 'Forgot Password?';
 
 # =============================================================================
 # TECHNICAL APPROACH
@@ -242,28 +309,48 @@ technicalApproach:
   
   affectedFiles:
     modify:
-      - "login.html - Add ARIA labels, improve structure"
-      - "login.js - Add keyboard support, loading states, error mapping"
-      - "core/auth-service.js - Ensure signup creates user profile"
-    new:
-      - "core/auth-errors.js - Centralized Firebase error code mapping (optional, could be in login.js)"
+      - file: "login.html"
+        changes:
+          - "Add ARIA labels to email and password inputs"
+          - "Add role='alert' aria-live='polite' to error div"
+          - "Add Forgot Password link after password input"
+          - "Add CSS for forgot-link and success message styling"
+      
+      - file: "login.js"
+        changes:
+          - "Add forgotBtn element reference"
+          - "Add password reset handler"
+          - "Add domain validation check before signup"
+          - "Import sendPasswordResetEmail from Firebase"
+      
+      - file: "core/auth-service.js"
+        changes:
+          - "Add user profile creation in signup() function"
+          - "Import serverTimestamp from Firestore"
+          - "Add createUserProfile() helper function"
+      
+      - file: "core/constants.js"
+        changes:
+          - "Add ALLOWED_EMAIL_DOMAINS constant"
+    
+    new: []
     delete: []
   
   dependencies:
     - "Firebase Auth SDK (already present)"
     - "Firebase Firestore SDK (already present)"
-    - "core/firebase.js (already present)"
+    - "core/firebase.js (LOCKED - do not modify)"
   
   patterns:
-    - "AI-First headers on all modified files"
-    - "MODULE_CONTRACT exports"
-    - "No modification of locked files (firebase.js is LOCKED)"
+    - "AI-First headers on modified files"
+    - "MODULE_CONTRACT exports maintained"
+    - "No modification of locked files"
   
   risks:
     - risk: "Breaking existing login flow"
-      mitigation: "Incremental changes, test after each modification"
-    - risk: "Domain validation blocking legitimate users"
-      mitigation: "Make domain validation opt-in via config constant"
+      mitigation: "Test login after each change"
+    - risk: "Domain validation too restrictive"
+      mitigation: "Clear error message, configurable in constants.js"
 
 # =============================================================================
 # VERIFICATION PLAN
@@ -273,69 +360,57 @@ verification:
   
   manualTests:
     - id: "MT-001"
-      name: "Login Flow"
-      description: "Test complete login flow"
+      name: "User Profile Creation"
+      description: "Verify signup creates Firestore document"
       steps:
-        - "Navigate to login.html"
-        - "Enter valid test credentials"
-        - "Press Enter (not click)"
-        - "Verify redirect to index.html"
-      expectedResult: "Redirected to dashboard"
+        - "Go to login.html"
+        - "Click 'Sign up'"
+        - "Enter new @servicenow.com email and password"
+        - "Submit"
+        - "Open Firebase Console → Firestore → /users collection"
+        - "Find document with matching uid"
+      expectedResult: "Document exists with uid, email, displayName, role, createdAt, xp"
     
     - id: "MT-002"
-      name: "Signup Flow"
-      description: "Test account creation"
+      name: "Password Reset Flow"
+      description: "Test complete password reset"
       steps:
-        - "Navigate to login.html"
-        - "Click 'Sign up' toggle"
-        - "Enter new email and password"
-        - "Submit form"
-        - "Verify redirect and check Firestore for user doc"
-      expectedResult: "Account created, user doc exists in /users/{uid}"
-    
-    - id: "MT-003"
-      name: "Password Reset"
-      description: "Test password reset request"
-      steps:
-        - "Navigate to login.html"
-        - "Click 'Forgot Password'"
-        - "Enter email"
-        - "Submit"
+        - "Go to login.html"
+        - "Enter valid email in email field"
+        - "Click 'Forgot Password?'"
+        - "Observe loading state ('Sending...')"
+        - "Observe success message"
+        - "Check email inbox"
       expectedResult: "Inline success message shown, email received"
     
-    - id: "MT-004"
-      name: "Keyboard Navigation"
-      description: "Test keyboard support"
+    - id: "MT-003"
+      name: "Domain Validation"
+      description: "Test email domain restriction"
       steps:
-        - "Navigate to login.html"
-        - "Tab through all focusable elements"
-        - "Press Enter in password field"
-      expectedResult: "All elements focusable, Enter submits form"
+        - "Go to login.html"
+        - "Click 'Sign up'"
+        - "Enter non-@servicenow.com email (e.g., test@gmail.com)"
+        - "Submit"
+      expectedResult: "Error: 'Please use your @servicenow.com email address.'"
     
-    - id: "MT-005"
-      name: "Error Handling"
-      description: "Test error messages"
+    - id: "MT-004"
+      name: "ARIA Labels"
+      description: "Verify accessibility attributes"
       steps:
-        - "Enter wrong password → verify specific error"
-        - "Enter non-existent email → verify specific error"
-        - "Enter short password on signup → verify specific error"
-      expectedResult: "Each error shows appropriate message, not generic text"
+        - "Open login.html in browser"
+        - "Right-click email input → Inspect"
+        - "Check for aria-label attribute"
+        - "Check error div for role='alert'"
+      expectedResult: "All ARIA attributes present"
   
   browserTests:
     - id: "BT-001"
-      description: "Verify login page loads without console errors"
+      name: "No Console Errors"
       steps:
-        - "Open login.html in browser"
-        - "Check browser console"
+        - "Load login.html"
+        - "Open browser console"
+        - "Perform login and signup flows"
       expectedResult: "No JavaScript errors"
-    
-    - id: "BT-002"
-      description: "Verify ARIA labels present"
-      steps:
-        - "Open login.html"
-        - "Inspect email input"
-        - "Verify aria-label attribute exists"
-      expectedResult: "aria-label present on all inputs"
 
 # =============================================================================
 # APPROVAL
@@ -356,12 +431,12 @@ notes:
     - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-stable/LOGIN_CODE_REVIEW.md"
     - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/FUNCTIONALITY.md"
   
-  existingScaffoldState: |
-    Current GoldSource scaffold has:
-    - login.html with basic form (needs ARIA)
-    - login.js with login/signup logic (needs keyboard, loading states)
-    - auth-service.js with login/signup/logout functions (needs profile creation check)
-    
+  screenshotsAvailable: false
+  screenshotsNote: "No login screenshots found in NEXUS archive - generate wireframes during Design stage if needed"
+  
+  domainValidationDefault: "@servicenow.com"
+  domainValidationConfig: "Set ALLOWED_EMAIL_DOMAINS = [] in constants.js to allow any domain"
+  
   futureEnhancements:
     - "Social login (Google, Microsoft)"
     - "Email verification requirement"
