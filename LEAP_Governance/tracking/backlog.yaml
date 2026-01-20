@@ -18,8 +18,9 @@ summary:
     complete: 21
     proposed: 19
     inProgress: 0
+    superseded: 1
   
-  note: "Counts verified 2026-01-20T17:01:00Z - Phase 20 complete (+9 items)"
+  note: "Counts verified 2026-01-20T17:12:00Z - Pulse check (42 id: lines but 1 is nested reference)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
