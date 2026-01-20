@@ -16,11 +16,11 @@ summary:
   
   statusBreakdown:
     complete: 32
-    proposed: 9
+    proposed: 8
     inProgress: 0
-    superseded: 0
+    superseded: 1
   
-  note: "Counts verified 2026-01-20T17:57:44Z - LEAP-033 changed from superseded to complete"
+  note: "Counts verified 2026-01-20T18:04:37Z - ARCH-002 superseded (no recurrence in Factory runs)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -211,13 +211,16 @@ priorities:
       name: "MODULE_CONTRACT Validation"
       category: "architecture"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededDate: "2026-01-20"
+      supersededBy: "Practical non-recurrence + Phase 19 reading guides"
       description: "Add enforcement mechanism to validate MODULE_CONTRACT.provides matches actual exports"
       rationale: "Factory modified mock-data.js but didn't update MODULE_CONTRACT - need automated check"
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
       source: "Phase 15 finding - deferred"
+      supersessionNote: "No recurrence in 5+ Factory runs (v1.0.2, v1.0.3, v2.0.0, v2.0.1, v2.0.2). MODULE_CONTRACT pattern maintained without explicit enforcement."
     
     - id: "ARCH-003"
       name: "ARCHITECTURE.yaml Path Cleanup"
