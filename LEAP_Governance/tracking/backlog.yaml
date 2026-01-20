@@ -8,9 +8,9 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 27
+  totalItems: 30
   immediate: 3
-  shortTerm: 24
+  shortTerm: 27
   
   note: "21 items added from Factory comparison analyses and process improvements"
   
@@ -121,6 +121,60 @@ priorities:
       acceptanceCriteria: ["constitution.yaml governanceManagement section includes Governance Is Code principle", "scope explicitly limited to LEAP_Governance (not GoldSource)"]
   
   shortTerm:
+    # -------------------------------------------------------------------------
+    # Security & Quality Gaps (from Critical Review 2026-01-20)
+    # -------------------------------------------------------------------------
+    - id: "GOV-007"
+      name: "Add Security Governance Layer"
+      category: "governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add security-focused governance: Security Champion persona, RRMD+ security triggers, security review checklist, Constitution Rule 16"
+      rationale: "Industry standards (2025-2026) require explicit security review for AI-generated code. LEAP's current governance doesn't address security vulnerabilities."
+      acceptanceCriteria:
+        - "Security Champion persona (#7) added to agent-persona.yaml"
+        - "RRMD+ protocol includes security triggers (auth/data/API changes)"
+        - "Security checklist created for pre-deployment gate"
+        - "Constitution Rule 16: Security Review Gate added"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "Critical Review: LEAP vs Industry Standards"
+    
+    - id: "GOV-008"
+      name: "Define Automated Validation Checks"
+      category: "governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add automated quality gates to validation stage: lint checks, console error detection, structured test commands"
+      rationale: "Industry standards include automated quality gates. Manual-only validation doesn't scale and allows human error."
+      acceptanceCriteria:
+        - "pulse-protocol.yaml validation stage includes automatedChecks section"
+        - "Quality gate defined: all automated checks pass before delivery"
+        - "Console error check via browser_subagent documented"
+        - "Optional test commands documented for scaffold (npm run lint, npm test)"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "Critical Review: LEAP vs Industry Standards"
+    
+    - id: "GOV-011"
+      name: "Define Rollback Procedure"
+      category: "governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add explicit rollback procedure to safety-protocol.yaml with triggers, steps, and recovery guidance"
+      rationale: "LEAP has backups and allows backward movement, but no explicit procedure for HOW to recover when validation fails or Hard Stop invoked."
+      acceptanceCriteria:
+        - "safety-protocol.yaml includes rollbackProcedure section"
+        - "Triggers defined (validation failure, Hard Stop)"
+        - "Explicit recovery steps documented"
+        - "Prevent-reoccurrence guidance added"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-20"
+      source: "Critical Review: LEAP vs Industry Standards"
+    
     # -------------------------------------------------------------------------
     # Previously existing items
     # -------------------------------------------------------------------------
