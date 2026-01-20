@@ -8,7 +8,7 @@
 metadata:
   specId: "SPEC-001"
   name: "Authentication System"
-  version: "2.0.0"
+  version: "3.0.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
@@ -423,6 +423,122 @@ approval:
   implementationApprovedDate: null
 
 # =============================================================================
+# REFERENCE IMPLEMENTATION - Working code from old NEXUS
+# =============================================================================
+
+referenceImplementation:
+  source: "NEXUS-v5.3.6-dev-20260112-1748/login.html and NEXUS-v6.8.0-pre-phase-20.4/"
+  
+  # User Profile Creation on Signup (lines 316-331 in old NEXUS)
+  userProfileCreation: |
+    if (isSignUpMode) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Add user to database with default role
+        try {
+            await setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                role: 'member',
+                createdAt: new Date().toISOString()
+            });
+        } catch (dbErr) {
+            console.error("DB Init Error (Non-Fatal):", dbErr);
+            // Continue login even if DB write fails (Role defaults to member anyway)
+        }
+    }
+  
+  # Domain Validation (lines 301-303 in old NEXUS)
+  domainValidation: |
+    if (!email.toLowerCase().endsWith('@servicenow.com')) {
+        showError('Only @servicenow.com emails are allowed.');
+        return;
+    }
+  
+  # Forgot Password Flow (lines 370-385 in old NEXUS)
+  forgotPassword: |
+    forgotBtn.addEventListener('click', async () => {
+        const email = emailInput.value.trim();
+        if (!email) {
+            showError("Please enter your email address first.");
+            return;
+        }
+        try {
+            await sendPasswordResetEmail(auth, email);
+            // NOTE: Old NEXUS used alert() - replace with inline message
+            // alert(`Password reset email sent to ${email}. Check your inbox!`);
+            showSuccess(`✅ Password reset email sent to ${email}!`);
+        } catch (err) {
+            console.error(err);
+            let msg = err.message;
+            if (err.code === 'auth/user-not-found') msg = "No user found with this email.";
+            showError(msg);
+        }
+    });
+  
+  # Enter Key Support (lines 362-368 in old NEXUS)
+  enterKeySupport: |
+    emailInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSubmit();
+    });
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSubmit();
+    });
+  
+  # ARIA Labels on Error Container (line 251 in old NEXUS login.html)
+  ariaLabels: |
+    <div id="error-msg" class="error-message" role="alert" aria-live="polite"></div>
+  
+  # Forgot Password UI (lines 196-214 in old NEXUS login.html)
+  forgotPasswordCSS: |
+    .forgot-container {
+        text-align: right;
+        margin-bottom: 15px;
+        margin-top: -10px;
+    }
+
+    #forgot-btn {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+        cursor: pointer;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+
+    #forgot-btn:hover {
+        color: rgba(255, 255, 255, 0.7);
+    }
+  
+  # Domain Notice UI (lines 228-230 in old NEXUS login.html)
+  domainNotice: |
+    <div class="domain-notice">
+        Registration restricted to @servicenow.com emails.
+    </div>
+  
+  # auth-service.js initializeUser helper (lines 87-104 in old NEXUS)
+  initializeUserHelper: |
+    export async function initializeUser(uid, email, db, setDoc, doc, getDoc) {
+        try {
+            const userDoc = await getDoc(doc(db, "users", uid));
+            if (!userDoc.exists()) {
+                await setDoc(doc(db, "users", uid), {
+                    email,
+                    role: 'member',
+                    xp: 0,
+                    createdAt: new Date().toISOString()
+                });
+                log('✅ New user initialized:', email);
+            }
+            return { success: true };
+        } catch (error) {
+            logError('Error initializing user:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+# =============================================================================
 # NOTES
 # =============================================================================
 
@@ -430,6 +546,9 @@ notes:
   extractedFrom:
     - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-stable/LOGIN_CODE_REVIEW.md"
     - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/FUNCTIONALITY.md"
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v5.3.6-dev-20260112-1748/login.html"
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v6.8.0-pre-phase-20.4/login.js"
+    - "/Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS-v6.8.0-pre-phase-20.4/src/core/auth-service.js"
   
   screenshotsAvailable: false
   screenshotsNote: "No login screenshots found in NEXUS archive - generate wireframes during Design stage if needed"
@@ -437,8 +556,16 @@ notes:
   domainValidationDefault: "@servicenow.com"
   domainValidationConfig: "Set ALLOWED_EMAIL_DOMAINS = [] in constants.js to allow any domain"
   
+  keyDiscoveries:
+    - "Old NEXUS used alert() for password reset success - replace with inline message"
+    - "User profile creation is NON-FATAL - continues even if Firestore write fails"
+    - "Enter key support uses 'keypress' event, not form's native submit"
+    - "Domain validation happens BEFORE calling Firebase (client-side)"
+    - "Error container has role='alert' and aria-live='polite' for screen readers"
+  
   futureEnhancements:
     - "Social login (Google, Microsoft)"
     - "Email verification requirement"
     - "Remember me checkbox"
     - "Biometric auth (WebAuthn)"
+
