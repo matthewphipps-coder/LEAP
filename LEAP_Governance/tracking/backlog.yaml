@@ -15,11 +15,11 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 12
-    proposed: 28
+    complete: 21
+    proposed: 19
     inProgress: 0
   
-  note: "Counts verified 2026-01-20T15:18:00Z - grep validated"
+  note: "Counts verified 2026-01-20T17:01:00Z - Phase 20 complete (+9 items)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -364,7 +364,9 @@ priorities:
       name: "Standardize Mock Data Strategy"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Define when to extend mock-data.js vs create feature-specific data files"
       rationale: "v1.0.1 created separate file, v1.0.2 extended mock-data.js - inconsistent structure"
       estimatedEffort: "small"
@@ -376,7 +378,9 @@ priorities:
       name: "Standardize State Shapes"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Define recommended state structure for common patterns (nested vs sibling)"
       rationale: "v1.0.1 used sibling state.incidentChat, v1.0.2 nested incidents.chat - harder to share learnings"
       estimatedEffort: "medium"
@@ -388,7 +392,9 @@ priorities:
       name: "Define Service Function Patterns"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Standard function names for load, open, close, send patterns"
       rationale: "v1.0.1: loadIncidentData(), v1.0.2: loadIncidents() - cannot copy/paste between demos"
       estimatedEffort: "small"
@@ -400,7 +406,9 @@ priorities:
       name: "Standardize Status/Enum Values"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Define case conventions for status strings (lowercase vs Title Case)"
       rationale: "v1.0.1: 'resolved' (lowercase), v1.0.2: 'Resolved' (Title Case) - status comparisons break"
       estimatedEffort: "small"
@@ -530,7 +538,9 @@ priorities:
       name: "Define AI Service Pattern"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Standardize when to use dedicated AI service wrapper vs inline AI logic in feature modules"
       rationale: "v2.0.0 created separate incident-ai-service.js, v2.0.1 inlined AI suggestions into data file - need clear guidance"
       estimatedEffort: "small"
@@ -545,7 +555,9 @@ priorities:
       name: "Add Path Depth Table to ARCHITECTURE.yaml"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Document relative path depths for all folder locations in Gold Source scaffold"
       rationale: "v2.0.0 had import path errors due to undocumented depth - core=1, features/name=2, ui/components/name=3"
       estimatedEffort: "small"
@@ -591,7 +603,9 @@ priorities:
       name: "Standardize Component Initialization Pattern"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Define when to use lazy init (create on first use) vs explicit init (init function called at startup)"
       rationale: "v2.0.0 used lazy dialog creation, v2.0.1 used explicit initIncidentDialog() - need clear guidance"
       estimatedEffort: "small"
@@ -606,7 +620,9 @@ priorities:
       name: "Add State Extension Mechanism"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Add mechanism for features to register state slices without modifying locked state.js"
       rationale: |
         v2.0.2 Factory AI discovered state.js is locked but has no extension mechanism.
@@ -626,7 +642,9 @@ priorities:
       name: "Audit Locked Files for Extension Gaps"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Phase 20"
       description: "Review all locked files to ensure they have proper extension mechanisms for Factory use"
       rationale: |
         state.js is locked but lacked extension capability, forcing v2.0.2 to create workaround.

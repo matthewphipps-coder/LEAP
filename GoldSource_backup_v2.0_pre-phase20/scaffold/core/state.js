@@ -15,15 +15,9 @@ import { debug, info, warn } from './logger.js';
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
+    provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset'],
     requires: ['logger.js']
 };
-
-// =============================================================================
-// SLICE REGISTRY - Extension point for feature state
-// =============================================================================
-
-const slices = {};
 
 // =============================================================================
 // INITIAL STATE - Minimal shell state only
@@ -42,50 +36,6 @@ let state = { ...INITIAL_STATE };
 const subscribers = new Map();
 let nextId = 1;
 
-/**
- * @function registerStateSlice
- * @purpose Register a feature's state slice - extension point for locked state.js
- * @param {string} name - Unique slice name (e.g., 'incidents', 'chat')
- * @param {Object} initialState - Initial state for this slice
- * @param {Object} setterDefs - Object of setter functions { name: (state, payload) => newState }
- * @returns {Object} { get[Name], set[Name], ... } - Getter and wrapped setters
- * @example
- *   const { getIncidents, setIncidents, setLoading } = registerStateSlice('incidents', 
- *     { items: [], loading: false },
- *     { setIncidents: (s, items) => ({...s, items}), setLoading: (s, v) => ({...s, loading: v}) }
- *   );
- */
-export function registerStateSlice(name, initialState, setterDefs = {}) {
-    // Check for collision
-    if (slices[name]) {
-        warn(`State slice '${name}' already registered, returning existing`);
-        return slices[name].api;
-    }
-    
-    // Initialize slice state
-    slices[name] = {
-        state: { ...initialState },
-        api: {}
-    };
-    
-    // Create getter
-    const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
-    const getterName = `get${capitalize(name)}`;
-    slices[name].api[getterName] = () => ({ ...slices[name].state });
-    
-    // Create wrapped setters that notify subscribers
-    Object.entries(setterDefs).forEach(([setterName, setterFn]) => {
-        slices[name].api[setterName] = (payload) => {
-            debug(`Slice ${name}: ${setterName}`, { payload });
-            slices[name].state = setterFn(slices[name].state, payload);
-            notifySubscribers(`${name}.${setterName}`);
-        };
-    });
-    
-    debug(`State slice registered: ${name}`, { keys: Object.keys(slices[name].state) });
-    return slices[name].api;
-}
-
 // =============================================================================
 // GETTERS
 // =============================================================================
@@ -98,32 +48,8 @@ export function registerStateSlice(name, initialState, setterDefs = {}) {
  */
 export function getState(key = null) {
     if (key === null) {
-        // Return core state merged with all slice states
-        const allState = { ...state };
-        Object.entries(slices).forEach(([name, slice]) => {
-            allState[name] = { ...slice.state };
-        });
-        return allState;
+        return { ...state };
     }
-    
-    // Check if key is a slice name
-    if (slices[key]) {
-        return { ...slices[key].state };
-    }
-    
-    // Check if key is slice.property (e.g., 'incidents.items')
-    if (key.includes('.')) {
-        const [sliceName, ...propPath] = key.split('.');
-        if (slices[sliceName]) {
-            let value = slices[sliceName].state;
-            for (const prop of propPath) {
-                value = value?.[prop];
-            }
-            return value;
-        }
-    }
-    
-    // Fall back to core state
     return state[key];
 }
 

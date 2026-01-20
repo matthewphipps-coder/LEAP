@@ -1,0 +1,313 @@
+# =============================================================================
+# PHASE 20: SCAFFOLD FOUNDATION & CONVENTIONS
+# STAGE 3: ANALYSIS
+# =============================================================================
+
+metadata:
+  phase: 20
+  phaseName: "ScaffoldFoundation"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-20T16:45:00Z"
+  previousStage: "stage-2-research.yaml"
+  gateApproval:
+    from: "research"
+    to: "analysis"
+    approvedAt: "2026-01-20T16:45:09Z"
+    approver: "Matthew Phipps"
+  status: "in-progress"
+
+# =============================================================================
+# RRMD+ ASSESSMENT
+# =============================================================================
+
+rrmdAssessment:
+  triggered: true
+  reason: "Modifying core file (state.js) - Constitution Rule 9 trigger"
+  
+  # ---------------------------------------------------------------------------
+  # RISK IDENTIFICATION
+  # ---------------------------------------------------------------------------
+  
+  risks:
+    - id: "RISK-001"
+      name: "Break existing state consumers"
+      severity: "HIGH"
+      likelihood: "LOW"
+      
+      description: |
+        Modifying state.js could break components that depend on current API:
+        - header-ui.js, sidebar-ui.js, canvas-ui.js use getState, subscribe
+        - auth-service.js uses setUser
+        - theme-manager.js uses setTheme
+        
+      mitigation:
+        strategy: "Backwards compatible extension"
+        details: |
+          - Keep ALL existing exports unchanged
+          - Add NEW exports only (registerStateSlice)
+          - Existing code continues to work with zero changes
+        verification: "Browser test existing functionality after change"
+    
+    - id: "RISK-002"
+      name: "Subscriber notification fragmentation"
+      severity: "MEDIUM"
+      likelihood: "MEDIUM"
+      
+      description: |
+        If slice changes don't properly notify subscribers, some components
+        may miss state updates, causing stale UI.
+        
+      mitigation:
+        strategy: "Unified notification"
+        details: |
+          - Slice setters call same notifySubscribers() function
+          - Source parameter indicates which slice/setter triggered
+          - All subscribers see all changes (can filter by source)
+        verification: "Test subscriber receives slice updates"
+    
+    - id: "RISK-003"
+      name: "Slice naming collision"
+      severity: "LOW"
+      likelihood: "LOW"
+      
+      description: |
+        Two features could try to register same slice name.
+        
+      mitigation:
+        strategy: "Runtime warning"
+        details: |
+          - Check if slice name already exists on registration
+          - Log warning if collision detected
+          - Return existing slice getters/setters (no crash)
+        verification: "Test duplicate registration handling"
+    
+    - id: "RISK-004"
+      name: "GoldSource backup not created"
+      severity: "HIGH"
+      likelihood: "LOW"
+      
+      description: |
+        If backup not created before implementation and changes break scaffold,
+        recovery requires manual git operations.
+        
+      mitigation:
+        strategy: "Pre-implementation backup"
+        details: |
+          - Create GoldSource_backup_v2.0_pre-phase20 BEFORE Stage 5
+          - User requirement from session start
+        verification: "Verify backup exists before implementation gate"
+
+  # ---------------------------------------------------------------------------
+  # RESEARCH SUMMARY
+  # ---------------------------------------------------------------------------
+  
+  researchSummary:
+    filesReviewed: 8
+    keyFindings:
+      - "Only state.js needs extension mechanism"
+      - "Other locked files are used as-is or extend via CSS cascade"
+      - "registerStateSlice() API design complete"
+      - "Path depths documented for import safety"
+      - "All 6 convention patterns have recommendations"
+
+  # ---------------------------------------------------------------------------
+  # RRMD+ DECISION
+  # ---------------------------------------------------------------------------
+  
+  rrmdDecision:
+    proceed: true
+    rationale: |
+      All risks have viable mitigations:
+      - RISK-001 mitigated by backwards compatible design
+      - RISK-002 mitigated by unified notification
+      - RISK-003 mitigated by collision detection
+      - RISK-004 mitigated by backup requirement
+      
+      Benefits outweigh risks:
+      - Enables Factory to add feature state properly
+      - Eliminates state fragmentation pattern
+      - Single code change, 7 documentation updates
+      
+    conditions:
+      - "Create backup before implementation"
+      - "Run browser tests after state.js change"
+      - "Verify existing functionality unaffected"
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+
+approachOptions:
+
+  optionA:
+    name: "Slice Registration API"
+    description: "Add registerStateSlice() to state.js"
+    
+    implementation:
+      file: "GoldSource/scaffold/core/state.js"
+      changes:
+        - "Add slices = {} registry"
+        - "Add registerStateSlice(name, initialState, setters)"
+        - "Modify getState() to check slices"
+        - "Auto-wrap setters to call notifySubscribers"
+      linesAdded: "~50"
+      backwardsCompatible: true
+    
+    pros:
+      - "Clean API for feature state"
+      - "Backwards compatible with existing code"
+      - "Single source of truth for all state"
+      - "Subscribers notified of all changes"
+    
+    cons:
+      - "Modifies locked file"
+      - "Requires careful implementation"
+    
+    verdict: "RECOMMENDED"
+
+  optionB:
+    name: "Feature State Adapter"
+    description: "Create separate feature-state.js that wraps core state"
+    
+    implementation:
+      file: "GoldSource/scaffold/core/feature-state.js (NEW)"
+      changes:
+        - "Create new file that imports from state.js"
+        - "Provides registerStateSlice() API"
+        - "Maintains separate slice registry"
+        - "Proxies to core state for notifications"
+    
+    pros:
+      - "Doesn't modify locked file"
+      - "Clear separation of concerns"
+    
+    cons:
+      - "Two state files adds complexity"
+      - "Features must know which to import"
+      - "Subscriber notification more complex"
+      - "getState() won't include slices without modification anyway"
+    
+    verdict: "NOT RECOMMENDED - adds complexity without benefit"
+
+  optionC:
+    name: "Document Workaround Pattern"
+    description: "Don't add extension mechanism, document local state pattern"
+    
+    implementation:
+      changes:
+        - "Document subscriber-based local state pattern"
+        - "Features create own state with own subscribers"
+        - "No modification to state.js"
+    
+    pros:
+      - "No locked file changes"
+      - "Already proven in v2.0.2"
+    
+    cons:
+      - "State fragmentation continues"
+      - "Each feature reinvents state management"
+      - "No unified getState() access"
+      - "Doesn't solve the underlying problem"
+    
+    verdict: "NOT RECOMMENDED - perpetuates fragmentation"
+
+  selectedApproach: "optionA"
+  selectionRationale: |
+    Option A (Slice Registration API) is recommended because:
+    1. Directly solves state extension gap
+    2. Backwards compatible - no breaking changes
+    3. Unified state access via getState()
+    4. Proper solution vs workarounds
+    
+    The modification of a locked file is warranted because:
+    - We are the Gold Source maintainers, not Factory
+    - This is a scaffold improvement, not a demo feature
+    - Governance applies (full lifecycle stages)
+    - Backup will be created before implementation
+
+# =============================================================================
+# SCOPE CONFIRMATION
+# =============================================================================
+
+scopeConfirmation:
+  
+  codeChanges:
+    count: 1
+    files:
+      - file: "GoldSource/scaffold/core/state.js"
+        change: "Add registerStateSlice() API"
+        linesEstimate: "+50"
+        risk: "LOW (backwards compatible)"
+  
+  documentationChanges:
+    count: 8
+    files:
+      - file: "GoldSource/meta/ARCHITECTURE.yaml"
+        section: "pathDepths"
+        backlogItem: "LEAP-029"
+      
+      - file: "GoldSource/meta/architectural-standards.yaml"
+        sections:
+          - section: "stateExtensionPattern"
+            backlogItem: "LEAP-032"
+          - section: "lockedFileExtensionPoints"
+            backlogItem: "LEAP-034"
+          - section: "mockDataStrategy"
+            backlogItem: "LEAP-004"
+          - section: "stateShapesPattern"
+            backlogItem: "LEAP-012"
+          - section: "statusEnumConventions"
+            backlogItem: "LEAP-017"
+          - section: "serviceFunctionPatterns (enhance)"
+            backlogItem: "LEAP-016"
+          - section: "aiServicePattern"  
+            backlogItem: "LEAP-027"
+          - section: "componentInitPattern"
+            backlogItem: "LEAP-031"
+
+  implementationOrder:
+    1: "Create backup: GoldSource_backup_v2.0_pre-phase20"
+    2: "LEAP-029: Add pathDepths to ARCHITECTURE.yaml"
+    3: "LEAP-032: Implement registerStateSlice() in state.js"
+    4: "LEAP-034: Document locked file extension points"
+    5: "LEAP-004, 012, 017: Add data pattern conventions"
+    6: "LEAP-016, 027, 031: Add code pattern conventions"
+    7: "Browser test to verify no regressions"
+
+# =============================================================================
+# ANALYSIS COMPLETION
+# =============================================================================
+
+analysisCompletion:
+  
+  checklist:
+    - item: "Risks identified"
+      status: "complete"
+      count: 4
+    
+    - item: "RRMD+ decision made"
+      status: "complete"
+      decision: "Proceed with conditions"
+    
+    - item: "Approach options identified"
+      status: "complete"
+      selected: "Option A - Slice Registration API"
+    
+    - item: "Implementation order defined"
+      status: "complete"
+      steps: 7
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  requires: "!Proceed"
+  focus: "Create detailed implementation plan with exact code changes"
+  
+  keyDeliverables:
+    - "Exact registerStateSlice() implementation code"
+    - "Exact documentation additions for each backlog item"
+    - "File modification list with line numbers"

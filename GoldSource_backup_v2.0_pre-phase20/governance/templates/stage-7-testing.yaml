@@ -1,0 +1,82 @@
+# =============================================================================
+# STAGE 7: TESTING TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 7
+  stageName: "testing"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 6 approved with !Proceed at [timestamp]"
+  previousStage: "stage-6-validation.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 7"
+    - "stageName: testing"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-6-validation.yaml"
+  
+  content:
+    - "deployment: Server started and accessible"
+    - "testCases: At least core tests executed"
+    - "summary: Total/passed/failed counts"
+
+testingObjective: "Verify demo works as intended"
+
+# =============================================================================
+# DEPLOYMENT (Required before testing)
+# =============================================================================
+deployment:
+  requirement: "Start local server before testing"
+  command: "python3 -m http.server 8080"
+  directory: "[DEMO_OUTPUT]"
+  url: "http://localhost:8080"
+  status: "[running|not-started]"
+
+# =============================================================================
+# TEST CASES
+# =============================================================================
+# Test ID Convention:
+#   TC-001 to TC-099: Core test cases
+#   TC-100 to TC-199: Edge cases
+# =============================================================================
+testCases:
+  
+  coreTests:
+    - id: "TC-001"  # TC = Test Case, numbering from 001
+      name: "[Test name]"
+      steps: ["[Step 1]", "[Step 2]"]
+      expected: "[Expected result]"
+      actual: "[Actual result]"
+      result: "[pass|fail]"
+  
+  edgeCases:
+    - id: "TC-101"  # TC-1xx reserved for edge cases
+      name: "[Edge case]"
+      expected: "[Expected]"
+      actual: "[Actual]"
+      result: "[pass|fail]"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+summary:
+  totalTests: "[number]"
+  passed: "[number]"
+  failed: "[number]"
+
+issuesFound:
+  - issue: "[Issue]"
+    severity: "[low|medium|high]"
+    resolved: "[true|false]"
+
+nextStage:
+  name: "closure"
+  requires: "!Proceed"

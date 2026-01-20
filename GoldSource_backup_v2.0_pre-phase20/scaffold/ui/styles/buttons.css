@@ -1,0 +1,118 @@
+/**
+ * @file buttons.css
+ * @purpose Reusable button component patterns
+ * @layer core
+ * @dependencies [variables.css]
+ * @dependents [login page, header, all UI components]
+ * @locked true
+ * @modifyImpact [all buttons across application]
+ */
+
+/* =============================================================================
+   BASE BUTTON
+   ============================================================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    line-height: 1;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =============================================================================
+   BUTTON VARIANTS
+   ============================================================================= */
+
+/* Primary - Green accent, solid */
+.btn-primary {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Secondary - Outline style */
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--glass-bg);
+    border-color: var(--accent-primary);
+}
+
+/* Ghost - Transparent, no border */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+    color: var(--text-primary);
+    background: var(--glass-bg);
+}
+
+/* Danger - Red for destructive actions */
+.btn-danger {
+    background: var(--error);
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+/* =============================================================================
+   BUTTON SIZES
+   ============================================================================= */
+
+.btn-sm {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+}
+
+.btn-lg {
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--text-base);
+}
+
+/* =============================================================================
+   ICON BUTTON
+   ============================================================================= */
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: var(--radius-full);
+}
+
+.btn-icon.btn-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-icon.btn-lg {
+    width: 48px;
+    height: 48px;
+}

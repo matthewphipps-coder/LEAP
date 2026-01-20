@@ -1,0 +1,533 @@
+# =============================================================================
+# PHASE 20: SCAFFOLD FOUNDATION & CONVENTIONS
+# STAGE 4: DESIGN
+# =============================================================================
+
+metadata:
+  phase: 20
+  phaseName: "ScaffoldFoundation"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-20T16:50:00Z"
+  previousStage: "stage-3-analysis.yaml"
+  gateApproval:
+    from: "analysis"
+    to: "design"
+    approvedAt: "2026-01-20T16:50:50Z"
+    approver: "Matthew Phipps"
+  status: "in-progress"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  
+  summary: |
+    Phase 20 implements 9 backlog items across 3 files:
+    - 1 code change to state.js (registerStateSlice API)
+    - 8 documentation sections across 2 YAML files
+    
+    All changes are backwards compatible with existing scaffold code.
+
+  # ---------------------------------------------------------------------------
+  # PRE-IMPLEMENTATION: BACKUP
+  # ---------------------------------------------------------------------------
+  
+  step0:
+    name: "Create GoldSource Backup"
+    priority: "CRITICAL - Must complete BEFORE any other steps"
+    command: "cp -r GoldSource GoldSource_backup_v2.0_pre-phase20"
+    verification: "ls -la | grep GoldSource"
+
+  # ---------------------------------------------------------------------------
+  # STEP 1: PATH DEPTHS (LEAP-029)
+  # ---------------------------------------------------------------------------
+  
+  step1:
+    backlogItem: "LEAP-029"
+    name: "Add Path Depth Table to ARCHITECTURE.yaml"
+    file: "GoldSource/meta/ARCHITECTURE.yaml"
+    location: "After lockedFiles section (line ~231)"
+    
+    addContent: |
+      # =============================================================================
+      # PATH DEPTHS (for correct relative imports)
+      # =============================================================================
+      
+      pathDepths:
+        purpose: "Document relative path depths to prevent import 404 errors"
+        reference: "Count '../' needed to reach scaffold/ root"
+        
+        locations:
+          - path: "scaffold/core/"
+            depth: 1
+            toCore: "./"
+            example: "import { x } from './logger.js'"
+          
+          - path: "scaffold/features/{name}/"
+            depth: 2
+            toCore: "../../core/"
+            example: "import { x } from '../../core/state.js'"
+          
+          - path: "scaffold/ui/components/{name}/"
+            depth: 3
+            toCore: "../../../core/"
+            example: "import { x } from '../../../core/state.js'"
+          
+          - path: "scaffold/ui/styles/"
+            depth: 2
+            note: "CSS files - no JS imports"
+        
+        factoryGuidance: |
+          When creating new feature or component files:
+          1. Identify folder depth from table above
+          2. Use corresponding toCore prefix for state.js, logger.js imports
+          3. UI components at depth 3 need '../../../core/' prefix
+
+  # ---------------------------------------------------------------------------
+  # STEP 2: STATE EXTENSION (LEAP-032) - THE CODE CHANGE
+  # ---------------------------------------------------------------------------
+  
+  step2:
+    backlogItem: "LEAP-032"
+    name: "Implement registerStateSlice() in state.js"
+    file: "GoldSource/scaffold/core/state.js"
+    type: "code-modification"
+    
+    changes:
+      - location: "After MODULE_CONTRACT (line ~20)"
+        add: |
+          // =============================================================================
+          // SLICE REGISTRY - Extension point for feature state
+          // =============================================================================
+          
+          const slices = {};
+      
+      - location: "After INITIAL_STATE section (line ~33)"
+        add: |
+          /**
+           * @function registerStateSlice
+           * @purpose Register a feature's state slice - extension point for locked state.js
+           * @param {string} name - Unique slice name (e.g., 'incidents', 'chat')
+           * @param {Object} initialState - Initial state for this slice
+           * @param {Object} setterDefs - Object of setter functions { name: (state, payload) => newState }
+           * @returns {Object} { get[Name], set[Name], ... } - Getter and wrapped setters
+           * @example
+           *   const { getIncidents, setIncidents, setLoading } = registerStateSlice('incidents', 
+           *     { items: [], loading: false },
+           *     { setIncidents: (s, items) => ({...s, items}), setLoading: (s, v) => ({...s, loading: v}) }
+           *   );
+           */
+          export function registerStateSlice(name, initialState, setterDefs = {}) {
+              // Check for collision
+              if (slices[name]) {
+                  warn(`State slice '${name}' already registered, returning existing`);
+                  return slices[name].api;
+              }
+              
+              // Initialize slice state
+              slices[name] = {
+                  state: { ...initialState },
+                  api: {}
+              };
+              
+              // Create getter
+              const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
+              const getterName = `get${capitalize(name)}`;
+              slices[name].api[getterName] = () => ({ ...slices[name].state });
+              
+              // Create wrapped setters that notify subscribers
+              Object.entries(setterDefs).forEach(([setterName, setterFn]) => {
+                  slices[name].api[setterName] = (payload) => {
+                      debug(`Slice ${name}: ${setterName}`, { payload });
+                      slices[name].state = setterFn(slices[name].state, payload);
+                      notifySubscribers(`${name}.${setterName}`);
+                  };
+              });
+              
+              debug(`State slice registered: ${name}`, { keys: Object.keys(slices[name].state) });
+              return slices[name].api;
+          }
+      
+      - location: "Modify getState function (lines 49-54)"
+        before: |
+          export function getState(key = null) {
+              if (key === null) {
+                  return { ...state };
+              }
+              return state[key];
+          }
+        after: |
+          export function getState(key = null) {
+              if (key === null) {
+                  // Return core state merged with all slice states
+                  const allState = { ...state };
+                  Object.entries(slices).forEach(([name, slice]) => {
+                      allState[name] = { ...slice.state };
+                  });
+                  return allState;
+              }
+              
+              // Check if key is a slice name
+              if (slices[key]) {
+                  return { ...slices[key].state };
+              }
+              
+              // Check if key is slice.property (e.g., 'incidents.items')
+              if (key.includes('.')) {
+                  const [sliceName, ...propPath] = key.split('.');
+                  if (slices[sliceName]) {
+                      let value = slices[sliceName].state;
+                      for (const prop of propPath) {
+                          value = value?.[prop];
+                      }
+                      return value;
+                  }
+              }
+              
+              // Fall back to core state
+              return state[key];
+          }
+      
+      - location: "Update MODULE_CONTRACT (line ~18)"
+        before: |
+          export const MODULE_CONTRACT = {
+              provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset'],
+              requires: ['logger.js']
+          };
+        after: |
+          export const MODULE_CONTRACT = {
+              provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
+              requires: ['logger.js']
+          };
+
+  # ---------------------------------------------------------------------------
+  # STEP 3: LOCKED FILE EXTENSION POINTS (LEAP-034)
+  # ---------------------------------------------------------------------------
+  
+  step3:
+    backlogItem: "LEAP-034"
+    name: "Document Locked File Extension Points"
+    file: "GoldSource/meta/architectural-standards.yaml"
+    location: "After phase18Conventions section (line ~170)"
+    
+    addContent: |
+      # =============================================================================
+      # LOCKED FILE EXTENSION POINTS
+      # =============================================================================
+      
+      lockedFileExtensions:
+        name: "Locked File Extension Points"
+        purpose: "Document how Factory can extend locked files without modification"
+        addedDate: "2026-01-20"
+        source: "Phase 20 - ScaffoldFoundation"
+        
+        files:
+          stateJs:
+            file: "core/state.js"
+            extensionMechanism: "registerStateSlice()"
+            usage: |
+              Features register their state via:
+              const { getMyFeature, setItems } = registerStateSlice('myFeature', 
+                { items: [], loading: false },
+                { setItems: (s, v) => ({...s, items: v}) }
+              );
+            accessVia: "getState('myFeature') or getState('myFeature.items')"
+          
+          firebaseJs:
+            file: "core/firebase.js"
+            extensionMechanism: "None needed"
+            usage: "Import auth, db directly: import { auth, db } from '../../core/firebase.js'"
+          
+          constantsJs:
+            file: "core/constants.js"
+            extensionMechanism: "None needed"
+            usage: "Define feature constants in features/{name}/constants.js"
+          
+          loggerJs:
+            file: "core/logger.js"
+            extensionMechanism: "None needed"
+            usage: "Import functions directly: import { debug, info, warn } from '../../core/logger.js'"
+          
+          cssFiles:
+            files: ["variables.css", "base.css", "buttons.css", "inputs.css"]
+            extensionMechanism: "CSS Cascade"
+            usage: |
+              Add new variables or override in component CSS files.
+              Later stylesheets override earlier ones.
+              Feature-specific styles go in ui/components/{name}/{name}.css
+
+  # ---------------------------------------------------------------------------
+  # STEP 4: DATA PATTERNS (LEAP-004, LEAP-012, LEAP-017)
+  # ---------------------------------------------------------------------------
+  
+  step4:
+    backlogItems: ["LEAP-004", "LEAP-012", "LEAP-017"]
+    name: "Add Data Pattern Conventions"
+    file: "GoldSource/meta/architectural-standards.yaml"
+    location: "After lockedFileExtensions section"
+    
+    addContent: |
+      # =============================================================================
+      # DATA PATTERNS
+      # =============================================================================
+      
+      dataPatterns:
+        name: "Data Structure Conventions"
+        purpose: "Ensure consistent data handling across Factory runs"
+        addedDate: "2026-01-20"
+        source: "Phase 20 - ScaffoldFoundation"
+        
+        mockDataStrategy:
+          backlogItem: "LEAP-004"
+          pattern: "Feature-specific data files"
+          location: "features/{name}/{name}-data.js"
+          
+          decisionTree:
+            createNewFile:
+              - "Data is specific to one feature"
+              - "Data has complex structure (nested objects, arrays)"
+              - "Data might be replaced with API calls later"
+            
+            useConstants:
+              - "Data is simple enum or status list"
+              - "Data is shared across multiple features"
+              - "Data is configuration, not mock content"
+          
+          example: |
+            // features/incident/incident-data.js
+            export const MOCK_INCIDENTS = [
+              { id: 'INC001', title: 'Server Outage', status: 'active' },
+              // ...
+            ];
+        
+        stateShapes:
+          backlogItem: "LEAP-012"
+          pattern: "Nested via slices"
+          
+          recommended:
+            structure: "Slice as namespace"
+            example: |
+              registerStateSlice('incidents', {
+                items: [],
+                selected: null,
+                loading: false,
+                filters: { status: 'all' }
+              });
+            access: "getState('incidents.items')"
+          
+          avoid:
+            structure: "Flat sibling keys"
+            example: "incidentItems, incidentSelected, incidentLoading"
+            reason: "No clear ownership, naming collision risk"
+        
+        statusEnumValues:
+          backlogItem: "LEAP-017"
+          pattern: "lowercase strings"
+          
+          examples:
+            correct: ["active", "resolved", "critical", "pending", "closed"]
+            incorrect: ["Active", "RESOLVED", "Critical"]
+          
+          rationale:
+            - "Simpler string comparisons (no case sensitivity)"
+            - "Matches HTML data attributes"
+            - "JavaScript convention"
+
+  # ---------------------------------------------------------------------------
+  # STEP 5: CODE PATTERNS (LEAP-016, LEAP-027, LEAP-031)
+  # ---------------------------------------------------------------------------
+  
+  step5:
+    backlogItems: ["LEAP-016", "LEAP-027", "LEAP-031"]
+    name: "Add Code Pattern Conventions"
+    file: "GoldSource/meta/architectural-standards.yaml"
+    location: "After dataPatterns section"
+    
+    addContent: |
+      # =============================================================================
+      # CODE PATTERNS
+      # =============================================================================
+      
+      codePatterns:
+        name: "Code Structure Conventions"
+        purpose: "Ensure consistent coding patterns across Factory runs"
+        addedDate: "2026-01-20"
+        source: "Phase 20 - ScaffoldFoundation"
+        
+        serviceFunctionPatterns:
+          backlogItem: "LEAP-016"
+          purpose: "Extend existing naming conventions with action prefixes"
+          
+          additionalPrefixes:
+            - prefix: "load{Entity}..."
+              use: "Async data fetching"
+              examples: ["loadIncidents()", "loadUserProfile()", "loadMessages()"]
+            
+            - prefix: "open{Thing}..."
+              use: "Show UI elements"
+              examples: ["openDialog()", "openPanel()", "openModal()"]
+            
+            - prefix: "close{Thing}..."
+              use: "Hide UI elements"
+              examples: ["closeDialog()", "closePanel()", "closeModal()"]
+            
+            - prefix: "send{Action}..."
+              use: "Dispatch actions/requests"
+              examples: ["sendMessage()", "sendNotification()", "sendRequest()"]
+            
+            - prefix: "init{Component}..."
+              use: "Initialize component"
+              examples: ["initHeader()", "initSidebar()", "initIncidentCards()"]
+        
+        aiServicePattern:
+          backlogItem: "LEAP-027"
+          purpose: "When to use dedicated AI service vs inline AI logic"
+          
+          useDedicatedService:
+            when:
+              - "Multiple features use AI"
+              - "AI logic is complex (conversation, context)"
+              - "AI results need caching"
+              - "AI has specific error handling"
+            location: "features/ai/ai-service.js or features/{name}/{name}-ai-service.js"
+            pattern: |
+              // features/ai/ai-service.js
+              export async function generateSuggestion(context) {
+                // AI API call with error handling, caching, etc.
+              }
+          
+          useInlineApproach:
+            when:
+              - "Single feature uses AI once"
+              - "Simple prompt/response pattern"
+              - "Prototype or demo only"
+            pattern: |
+              // Inline in feature service
+              async function getAISuggestion(input) {
+                return await fetch('/api/ai', { body: input });
+              }
+        
+        componentInitPattern:
+          backlogItem: "LEAP-031"
+          purpose: "When to use lazy init vs explicit init"
+          
+          useExplicitInit:
+            when:
+              - "Component always visible on page load"
+              - "Component is part of shell (header, sidebar, canvas)"
+              - "Component needs state subscription at startup"
+            pattern: |
+              // app.js
+              import { initHeader } from './ui/components/header/header-ui.js';
+              initHeader(user, onLogout, onThemeToggle);
+          
+          useLazyInit:
+            when:
+              - "Component is modal/dialog (created when opened)"
+              - "Component is dynamic list item"
+              - "Component is conditionally shown"
+            pattern: |
+              // Create on first open
+              function openIncidentDialog(incident) {
+                let dialog = document.getElementById('incident-dialog');
+                if (!dialog) {
+                  dialog = createIncidentDialog(); // Creates DOM
+                  document.body.appendChild(dialog);
+                }
+                populateDialog(dialog, incident);
+                dialog.showModal();
+              }
+
+# =============================================================================
+# FILES TO MODIFY
+# =============================================================================
+
+filesToModify:
+  
+  - file: "GoldSource/scaffold/core/state.js"
+    currentLines: 161
+    estimatedNewLines: "~210"
+    type: "code-modification"
+    backlogItem: "LEAP-032"
+    
+  - file: "GoldSource/meta/ARCHITECTURE.yaml"
+    currentLines: 231
+    estimatedNewLines: "~255"
+    type: "documentation"
+    backlogItem: "LEAP-029"
+    
+  - file: "GoldSource/meta/architectural-standards.yaml"
+    currentLines: 419
+    estimatedNewLines: "~620"
+    type: "documentation"
+    backlogItems: ["LEAP-034", "LEAP-004", "LEAP-012", "LEAP-017", "LEAP-016", "LEAP-027", "LEAP-031"]
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  
+  step1:
+    name: "Backup Verification"
+    command: "ls -la /Users/matthew.phipps/Documents/LEAP | grep GoldSource"
+    expected: "GoldSource_backup_v2.0_pre-phase20 directory exists"
+  
+  step2:
+    name: "Syntax Verification"
+    commands:
+      - "cat GoldSource/scaffold/core/state.js | head -50"
+    expected: "No syntax errors, registerStateSlice exported"
+  
+  step3:
+    name: "Browser Test - Existing Functionality"
+    method: "browser_subagent"
+    steps:
+      - "Navigate to http://127.0.0.1:5500/GoldSource/scaffold/index.html"
+      - "Check console for errors"
+      - "Verify header, sidebar, canvas render"
+      - "Click theme toggle - verify works"
+    expected: "No console errors, existing UI works unchanged"
+  
+  step4:
+    name: "Browser Test - State Extension"
+    method: "browser console verification"
+    steps:
+      - "Open browser console"
+      - "Execute: import { registerStateSlice, getState } from './core/state.js'"
+      - "Execute: const api = registerStateSlice('test', { count: 0 }, { setCount: (s,v) => ({...s, count:v}) })"
+      - "Execute: api.setCount(42)"
+      - "Execute: getState('test.count')"
+    expected: "Returns 42"
+
+# =============================================================================
+# EXECUTIVE AUTHORIZATION REQUEST
+# =============================================================================
+
+authorizationRequest:
+  requestedBy: "AI Architect"
+  requestedAt: "2026-01-20T16:50:00Z"
+  
+  summary: |
+    Requesting authorization to proceed to Implementation stage.
+    
+    Changes:
+    - Modify 1 locked file (state.js) - backwards compatible
+    - Add documentation to 2 YAML files
+    - Create backup before any changes
+    
+    Risks mitigated per RRMD+ assessment in stage-3-analysis.yaml
+  
+  requires: "!Proceed from Executive"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"
+  criticalReminder: "CREATE BACKUP BEFORE ANY FILE CHANGES"
+  firstStep: "cp -r GoldSource GoldSource_backup_v2.0_pre-phase20"
