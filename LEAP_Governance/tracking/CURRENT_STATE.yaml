@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-20T15:18:00Z"
-  version: "3.9.0"
+  lastUpdated: "2026-01-20T16:26:00Z"
+  version: "4.0.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -14,45 +14,125 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Between phases - Phase 19 complete"
+  currentFocus: "Phase 20 - Scaffold Foundation & Conventions"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "19"
-  name: "FactoryTaskTemplate"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-20T13:08:00Z"
-  completedDate: "2026-01-20T13:37:00Z"
+  number: "20"
+  name: "ScaffoldFoundation"
+  status: "in-progress"
+  stage: "discovery"
+  startedDate: "2026-01-20T16:26:00Z"
   
-  goal: "Create Factory Task Template to bake stage-specific requirements into AI's working checklist from session start"
+  goal: "Strengthen scaffold foundation with extension mechanisms and codify conventions for Factory consistency"
   
-  stageArtifact: "docs/phases/phase-19/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-20/stage-1-discovery.yaml"
   
   previousPhase:
-    number: "18"
-    name: "NexusReturns"
+    number: "19"
+    name: "FactoryTaskTemplate"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
+  
+  # Combined Sprint 1+2: Foundation Unblock + Convention Codification
+  sprintScope:
+    name: "Scaffold Foundation & Conventions"
+    approach: "Combined Sprint - 9 backlog items in single phase"
+    rationale: "All items are scaffold-conventions category, most update same artifacts"
+    
+    items:
+      # Foundation (unblock)
+      - id: "LEAP-032"
+        name: "Add State Extension Mechanism"
+        effort: "Medium"
+        type: "code-change"
+        target: "GoldSource/scaffold/core/state.js"
+      
+      - id: "LEAP-034"
+        name: "Audit Locked Files for Extension Gaps"
+        effort: "Medium"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-029"
+        name: "Add Path Depth Table"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/ARCHITECTURE.yaml"
+      
+      # Conventions (documentation)
+      - id: "LEAP-004"
+        name: "Mock Data Strategy"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-012"
+        name: "State Shapes Pattern"
+        effort: "Medium"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-016"
+        name: "Service Function Patterns (enhance)"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-017"
+        name: "Status/Enum Values"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-027"
+        name: "AI Service Pattern"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+      
+      - id: "LEAP-031"
+        name: "Component Initialization Pattern"
+        effort: "Small"
+        type: "documentation"
+        target: "GoldSource/meta/architectural-standards.yaml"
+    
+    subPhases:
+      A: 
+        name: "Extension Points"
+        items: ["LEAP-032", "LEAP-034", "LEAP-029"]
+        focus: "Enable Factory to extend scaffold properly"
+      B:
+        name: "Data Patterns"
+        items: ["LEAP-004", "LEAP-012", "LEAP-017"]
+        focus: "How to structure data"
+      C:
+        name: "Code Patterns"
+        items: ["LEAP-016", "LEAP-027", "LEAP-031"]
+        focus: "How to write code"
+    
+    validation:
+      method: "Factory run after sprint completion"
+      goal: "Create feature using new state extension mechanism"
+      validates: "Extension mechanism works AND conventions are followed"
 
 currentActivity:
-  status: "between-phases"
-  summary: "Factory v2.0.2 run validated FACTORY_TASK_TEMPLATE.md effectiveness. Compliance significantly improved."
+  status: "phase-20-discovery"
+  summary: "Beginning Phase 20 Discovery for Scaffold Foundation & Conventions sprint"
   
   recentWork:
     date: "2026-01-20"
-    session: "Factory v2.0.2 Validation"
-    description: "Ran Factory v2.0.2 to validate Phase 19 template, compared against v2.0.1, identified state extension gap"
+    session: "Phase 20 Planning"
+    description: "Analyzed scaffold iteration strategy, verified backlog items against artifacts, planned combined Sprint 1+2"
     
     sessionChanges:
-      filesCreated:
-        - "FactoryTestRuns/factory-comparison-v2.0.1-vs-v2.0.2.yaml"
       filesModified:
         - "LEAP_Governance/tracking/CURRENT_STATE.yaml"
-        - "LEAP_Governance/tracking/backlog.yaml"
       keyDecisions:
-        - "FACTORY_TASK_TEMPLATE.md validated as effective"
-        - "Added LEAP-032 (state extension) and LEAP-034 (audit locked files)"
+        - "Combined Sprint 1 (Foundation) + Sprint 2 (Conventions) into Phase 20"
+        - "9 backlog items targeting scaffold-conventions category"
+        - "LEAP-003, LEAP-021, LEAP-014 verified as already addressed"
+        - "Focus on making scaffold extensible before adding features"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
@@ -103,24 +183,34 @@ factoryRunsCompleted:
     addedDate: "2026-01-20"
     note: "First run using FACTORY_TASK_TEMPLATE.md - compliance validated"
   
-  nextRun: "v2.0.3 - continue template validation"
+  nextRun: "v2.0.3 - validate Phase 20 scaffold improvements"
 
 backlogState:
   totalItems: 41
-  complete: 12
-  inProgress: 0
-  proposed: 28
+  complete: 15  # Added 3: LEAP-003, LEAP-021, LEAP-014 verified as already addressed
+  inProgress: 9  # Phase 20 sprint items
+  proposed: 16  # Reduced from 28
   superseded: 1
   
-  phase19Impact:
-    superseded: ["LEAP-033"]
-    addressed: ["LEAP-003", "LEAP-009", "LEAP-019"]
-    validated: true
-    validationNote: "v2.0.2 run confirmed: singular paths, functionality.yaml updated, wireframes/evidence in workspace"
-  
-  v202Findings:
-    added: ["LEAP-032", "LEAP-034"]
-    note: "State extension gap discovered - locked state.js lacks extension mechanism"
+  phase20Scope:
+    inProgress:
+      - "LEAP-032 - State Extension Mechanism"
+      - "LEAP-034 - Audit Locked Files"
+      - "LEAP-029 - Path Depth Table"
+      - "LEAP-004 - Mock Data Strategy"
+      - "LEAP-012 - State Shapes Pattern"
+      - "LEAP-016 - Service Function Patterns"
+      - "LEAP-017 - Status/Enum Values"
+      - "LEAP-027 - AI Service Pattern"
+      - "LEAP-031 - Component Initialization Pattern"
+    
+    verifiedComplete:
+      - id: "LEAP-003"
+        reason: "Already in architectural-standards.yaml pathNaming.features"
+      - id: "LEAP-021"
+        reason: "Already in stage-3-analysis.yaml template approachOptions"
+      - id: "LEAP-014"
+        reason: "Already required in artifact-manifest.yaml and lifecycle-stages.yaml"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
   backlogFile: "LEAP_Governance/tracking/backlog.yaml"
@@ -132,12 +222,18 @@ references:
     - "safety-protocol.yaml - Backup and deployment"
     - "architectural-standards.yaml - Code patterns"
   
-  phase19Deliverables:
-    - "GoldSource/governance/FACTORY_TASK_TEMPLATE.md"
-    - "docs/phases/phase-19/"
+  phase20Targets:
+    codeChange:
+      - "GoldSource/scaffold/core/state.js"
+    documentation:
+      - "GoldSource/meta/ARCHITECTURE.yaml"
+      - "GoldSource/meta/architectural-standards.yaml"
 
 aiReminders:
-  - "Phase 19 FactoryTaskTemplate VALIDATED - v2.0.2 run shows compliance improvements"
-  - "FACTORY_TASK_TEMPLATE.md reading guide approach works"
-  - "LEAP-003/009 addressed but keep proposed until one more run confirms"
+  - "Phase 20 IN PROGRESS - Scaffold Foundation & Conventions"
+  - "9 backlog items in combined Sprint 1+2"
+  - "ONLY code change: LEAP-032 (state extension mechanism)"
+  - "All other items are documentation updates to architectural-standards.yaml"
+  - "Sub-phases: A (Extension Points), B (Data Patterns), C (Code Patterns)"
+  - "Validation: Factory run after sprint to test state extension"
   - "7 factory runs complete (v0.0.1 → v2.0.2)"
