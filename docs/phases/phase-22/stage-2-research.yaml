@@ -1,0 +1,198 @@
+# =============================================================================
+# PHASE 22: DESIGN SYSTEM ENHANCEMENT
+# STAGE 2: RESEARCH
+# =============================================================================
+
+metadata:
+  phase: 22
+  phaseName: "DesignSystemEnhancement"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-20T22:50:00Z"
+  status: "complete"
+
+# =============================================================================
+# RESEARCH SCOPE
+# =============================================================================
+
+researchScope:
+  objective: "Examine GoldSource CSS structure using Discovery findings"
+  
+  filesExamined:
+    - "ui/styles/variables.css"
+    - "ui/styles/base.css" 
+    - "ui/styles/buttons.css"
+    - "index.html"
+  
+  discoveryArtifact: "docs/phases/phase-22/stage-1-discovery.yaml"
+
+# =============================================================================
+# FINDINGS: VARIABLES.CSS
+# =============================================================================
+
+variablesCss:
+  path: "ui/styles/variables.css"
+  locked: true
+  lines: 104
+  
+  existing:
+    brandColors:
+      - "--accent-primary: #62d84e"
+      - "--accent-glow: rgba(98, 216, 78, 0.2)"
+    glass:
+      - "--glass-bg: rgba(255, 255, 255, 0.05)"
+      - "--glass-border: rgba(255, 255, 255, 0.1)"
+      - "--glass-blur: 20px"
+    lightThemeGlass:
+      - "--glass-bg: rgba(0, 0, 0, 0.02)"
+      - "--glass-border: rgba(0, 0, 0, 0.08)"
+  
+  missing:
+    brandColors:
+      - "--brand-primary (new, replaces reliance on accent-primary)"
+      - "--brand-secondary (new, purple accent)"
+      - "--brand-accent (new, cyan highlight)"
+    plasma:
+      - "--plasma-1, --plasma-2, --plasma-3 (derived from brand colors)"
+    glass:
+      - "--glass-shadow (dark theme shadow)"
+      - "Updated glass-bg opacity from 0.05 to 0.08"
+      - "Updated light theme glass-bg from 0.02 to 0.88"
+  
+  modificationPlan:
+    action: "Add new variables section for brand colors and plasma"
+    location: "After Brand Colors section (line 21)"
+    lightTheme: "Update .light-theme section with corrected glass values"
+
+# =============================================================================
+# FINDINGS: BASE.CSS
+# =============================================================================
+
+baseCss:
+  path: "ui/styles/base.css"
+  locked: true
+  lines: 176
+  
+  existing:
+    glassClass:
+      location: "Lines 116-121"
+      current: |
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+        }
+  
+  missing:
+    - "No box-shadow on .glass"
+    - "No light theme override for .glass inside base.css"
+  
+  modificationPlan:
+    action: "Add box-shadow to .glass, add light theme override"
+    reason: "Discovery validated 85% dark glass with shadow"
+
+# =============================================================================
+# FINDINGS: BUTTONS.CSS
+# =============================================================================
+
+buttonsCss:
+  path: "ui/styles/buttons.css"
+  locked: true
+  lines: 118
+  
+  existing:
+    - ".btn with transitions"
+    - ".btn-primary, .btn-secondary, etc."
+    - "hover states defined"
+  
+  missing:
+    - "No :active state for press feedback (FR-005)"
+  
+  modificationPlan:
+    action: "Add .btn:active:not(:disabled) with scale(0.97)"
+    location: "After .btn:disabled (around line 35)"
+
+# =============================================================================
+# FINDINGS: INDEX.HTML
+# =============================================================================
+
+indexHtml:
+  path: "index.html"
+  locked: false
+  
+  existing:
+    cssOrder:
+      - "variables.css"
+      - "base.css"
+      - "buttons.css"
+      - "inputs.css"
+      - "(component CSS)"
+  
+  missing:
+    - "plasma.css not linked"
+    - "animations.css not linked"
+    - "No plasma background divs in body"
+  
+  modificationPlan:
+    action: "Add plasma.css + animations.css links after inputs.css"
+    plasmaDiv: "Add .plasma-background div at start of body"
+
+# =============================================================================
+# NEW FILES REQUIRED
+# =============================================================================
+
+newFiles:
+  - file: "ui/styles/plasma.css"
+    purpose: "Plasma bubble background effect"
+    contents:
+      - ".plasma-background container"
+      - ".plasma-bubble base styling"
+      - ".b1, .b2, .b3, .b4 specific bubble styles"
+      - "@keyframes for slow floating"
+      - ".light-theme overrides"
+    locked: false
+  
+  - file: "ui/styles/animations.css"
+    purpose: "Reusable animation utilities"
+    contents:
+      - ".animate-in fade-up entrance"
+      - ".hover-lift card hover effect"
+      - "@keyframes fadeInUp"
+    locked: false
+
+# =============================================================================
+# INTEGRATION SUMMARY
+# =============================================================================
+
+integrationSummary:
+  conflicts: "None - all changes are additive"
+  
+  fileChanges:
+    modify:
+      - file: "variables.css"
+        changes: "Add brand colors, plasma vars, update glass"
+      - file: "base.css"
+        changes: "Add shadow to .glass, light theme override"
+      - file: "buttons.css"
+        changes: "Add :active press feedback"
+      - file: "index.html"
+        changes: "Link new CSS files, add plasma div"
+    create:
+      - "plasma.css"
+      - "animations.css"
+  
+  lockedFileWarning: |
+    variables.css, base.css, buttons.css are marked @locked true.
+    Per LEAP governance, locked files should be extended not modified.
+    However, SPEC-002 explicitly requires changes to design tokens.
+    Recommendation: Proceed with modification per spec authorization.
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Gap analysis - exact changes needed, risk assessment, RRMD+ decision"
