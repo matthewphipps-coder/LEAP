@@ -168,13 +168,13 @@ factoryRunsCompleted:
   nextRun: "TBD - Factory stable, consider new scenario or archetype"
 
 backlogState:
-  totalItems: 41
-  complete: 34
+  totalItems: 48
+  complete: 35
   inProgress: 0
-  proposed: 1
+  proposed: 7
   superseded: 6
   
-  note: "Synced 2026-01-20T18:19:29Z - Session cleanup complete"
+  note: "Synced 2026-01-20T23:45:00Z - Added LEAP-040 (Theme Docs) and LEAP-041 (Login Cleanup)"
   
   phase21Complete:
     implemented:
