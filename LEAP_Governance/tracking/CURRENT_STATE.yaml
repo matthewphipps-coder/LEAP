@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-20T12:14:00Z"
-  version: "3.6.0"
+  lastUpdated: "2026-01-20T13:08:00Z"
+  version: "3.7.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -14,45 +14,41 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Rebuilding Gold Source scaffold properly"
+  currentFocus: "Improving Factory AI compliance through task template"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "18"
-  name: "NexusReturns"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-20T00:02:44Z"
+  number: "19"
+  name: "FactoryTaskTemplate"
+  status: "in-progress"
+  stage: "delivery"
+  startedDate: "2026-01-20T13:08:00Z"
   
-  goal: "Rebuild Gold Source scaffold with proper AI-First architecture, design system, and stable foundation"
+  goal: "Create Factory Task Template to bake stage-specific requirements into AI's working checklist from session start"
   
-  stageArtifact: "docs/phases/phase-18/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-19/stage-7-delivery.yaml"
   
   previousPhase:
-    number: "17"
-    name: "Governance Process Improvements"
+    number: "18"
+    name: "NexusReturns"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "between-phases"
-  summary: "Phase 18 complete. Factory runs v2.0.0 and v2.0.1 completed on rebuilt scaffold. Governance compliance audited."
+  status: "discovery"
+  summary: "Starting Phase 19 to address Factory AI compliance issues. Research identified root cause: AI creates one task.md at session start, forgets governance details by later stages."
   
   recentWork:
     date: "2026-01-20"
-    session: "Factory Test Runs and Governance Audit"
-    description: "Ran two baseline factory tests on rebuilt scaffold, compared outputs, identified compliance theater, designed stage-scoped governance solution"
+    session: "Phase 19 Discovery"
+    description: "Researching Factory compliance issues to design lightweight solution"
     
     sessionChanges:
       filesCreated:
-        - "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml"
-        - "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml"
-        - "FactoryTestRuns/governance-compliance-audit-v2.0.0-v2.0.1.yaml"
-        - "GoldSource/governance/stage-governance/stage-5-implementation-governance.yaml"
+        - "docs/phases/phase-19/stage-1-discovery.yaml"
       keyDecisions:
-        - "Stage-scoped governance needed to prevent compliance theater"
-        - "Each stage gets its own governance file with rules, examples, and exit checklist"
-        - "LEAP-033 created as immediate priority"
+        - "Factory Task Template approach (lighter than full stage-scoped governance)"
+        - "Supersedes LEAP-033 with simpler solution"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
@@ -113,9 +109,10 @@ backlogState:
     - "GOV-001 through GOV-006, VISION-001 (governance)"
     - "ARCH-003, LEAP-001, LEAP-002, LEAP-005, LEAP-006 (factory)"
   
-  relevantToPhase18:
+  relevantToPhase19:
+    - "LEAP-033: Stage-Scoped Governance (to be superseded)"
     - "LEAP-003: Standardize Feature Path Naming"
-    - "LEAP-004: Standardize Mock Data Strategy"
+    - "LEAP-009: Mandate Test Evidence Files"
     - "LEAP-019: Component Creation vs Modification Policy"
   
   categoriesFile: "LEAP_Governance/tracking/backlog-categories.yaml"
@@ -128,22 +125,14 @@ references:
     - "safety-protocol.yaml - Backup and deployment"
     - "architectural-standards.yaml - Code patterns"
   
-  phase18Sources:
-    - "Old NEXUS archive: /Users/matthew.phipps/Documents/AGY_ARCHIVE/NEXUS/NEXUS"
-    - "Old functionality.yaml (567 lines, outdated but conceptually useful)"
-  
-  comparisonDocuments:
-    - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
-    - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
-    - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml"
-    - "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml"
-    - "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml"
+  phase19Sources:
     - "FactoryTestRuns/governance-compliance-audit-v2.0.0-v2.0.1.yaml"
+    - "GoldSource/governance/FACTORY_README.yaml"
+    - "GoldSource/governance/lifecycle-stages.yaml"
 
 aiReminders:
-  - "Phase 18 NexusReturns is COMPLETE - scaffold rebuilt"
-  - "Factory runs v2.0.0 and v2.0.1 completed and compared"
-  - "Critical finding: Compliance theater detected - governance not actually followed"
-  - "Solution: Stage-scoped governance (LEAP-033 - immediate priority)"
-  - "Prototype created: stage-5-implementation-governance.yaml"
-  - "Next: Implement remaining 7 stage governance files OR start new phase"
+  - "Phase 19 FactoryTaskTemplate is IN PROGRESS"
+  - "Currently in Stage 1: Discovery"
+  - "Root cause: AI creates one task.md at start, forgets details by later stages"
+  - "Solution: Factory Task Template bakes requirements into the checklist"
+  - "Lighter approach than LEAP-033's full stage-scoped governance"

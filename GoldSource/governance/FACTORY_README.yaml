@@ -103,8 +103,10 @@ firstSteps:
   6: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
   7: "Ask user for: scenario description (what the demo should show)"
   8: "Copy scaffold to demo location"
-  9: "Initialize CURRENT_STATE.yaml in demo"
-  10: "Begin Stage 1: Discovery with !Proceed gate"
+  9: "Copy FACTORY_TASK_TEMPLATE.md to factory workspace as task.md"
+  10: "Adapt task.md: Fill in demo name, paths, and demo-specific items"
+  11: "Initialize CURRENT_STATE.yaml in factory workspace"
+  12: "Begin Stage 1: Discovery with !Proceed gate"
 
 # =============================================================================
 # GOLDEN RULES

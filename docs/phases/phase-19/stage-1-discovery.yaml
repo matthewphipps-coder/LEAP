@@ -1,0 +1,123 @@
+# =============================================================================
+# PHASE 19: FACTORY TASK TEMPLATE
+# STAGE 1: DISCOVERY
+# =============================================================================
+
+metadata:
+  phase: 19
+  phaseName: "FactoryTaskTemplate"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-20T13:08:00Z"
+  status: "complete"
+  author: "AI Architect"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: "Factory AI forgets stage-specific governance requirements during execution"
+  
+  symptoms:
+    - "Wireframes generated but saved to wrong location (brain/, artifacts/)"
+    - "Test screenshots/recordings not saved to factory workspace"
+    - "Path naming rule violated (plural instead of singular)"
+    - "functionality.yaml not updated in demo output"
+  
+  observedIn:
+    - "Factory runs v2.0.0 and v2.0.1"
+    - "Documented in governance-compliance-audit-v2.0.0-v2.0.1.yaml"
+  
+  complianceRate: "93% on formal checks, but 'compliance theater' detected"
+
+# =============================================================================
+# ROOT CAUSE ANALYSIS
+# =============================================================================
+
+rootCauseAnalysis:
+  
+  finding: "AI creates one task.md at session start that drives all 8 stages"
+  
+  workflow:
+    sessionStart:
+      - "Read FACTORY_README.yaml"
+      - "Read factory-protocol.yaml"
+      - "Read lifecycle-stages.yaml"
+      - "Read demo-rules.yaml"
+      - "Create ONE task.md for entire build"
+    
+    duringStages:
+      - "Follow the task.md created at session start"
+      - "Create stage artifacts as evidence (templates)"
+      - "!Proceed gates between stages"
+  
+  problem: |
+    Stage-specific requirements (wireframe locations, path naming, test evidence storage)
+    are in governance files read at session start. By Stage 4-7, these details are 
+    forgotten because they weren't baked into the initial task.md.
+  
+  keyInsight: |
+    Templates are retrospective (evidence of what was done).
+    The task.md is prospective (plan for what to do).
+    Requirements must be in the plan, not just referenced in evidence templates.
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  inScope:
+    - "Create Factory Task Template that becomes AI's working checklist"
+    - "Bake stage-specific requirements into the template"
+    - "Update FACTORY_README.yaml to require using the template"
+    - "Address related backlog items (LEAP-003, LEAP-009, LEAP-019)"
+    - "Supersede LEAP-033 (full stage-scoped governance) with lighter approach"
+  
+  outOfScope:
+    - "Automated enforcement/validation tooling"
+    - "Changes to Factory stage templates (artifact templates)"
+    - "Changes to LEAP governance (this is Gold Source only)"
+
+# =============================================================================
+# BACKLOG ITEMS ADDRESSED
+# =============================================================================
+
+backlogItemsAddressed:
+  
+  superseded:
+    - id: "LEAP-033"
+      name: "Implement Stage-Scoped Governance"
+      reason: "Factory Task Template achieves same goal with ~100 lines instead of 2100"
+  
+  addressed:
+    - id: "LEAP-003"
+      name: "Standardize Feature Path Naming"
+      how: "Path naming rule baked into Stage 5 section of template"
+    
+    - id: "LEAP-009"
+      name: "Mandate Test Evidence Files"
+      how: "Location requirement baked into Stage 7 section of template"
+    
+    - id: "LEAP-019"
+      name: "Component Creation vs Modification Policy"
+      how: "Guidance added to Stage 5 section of template"
+
+# =============================================================================
+# QUESTIONS FOR RESEARCH
+# =============================================================================
+
+questionsForResearch:
+  - "What specific items should each stage section contain?"
+  - "Should the template be YAML (structured) or Markdown (flexible)?"
+  - "How should the AI be instructed to adapt the template?"
+  - "What's the minimum viable content that addresses the compliance gaps?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  focus: "Review governance files to identify exact requirements for each stage section"
+  requires: "!Proceed"
