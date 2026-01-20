@@ -1,0 +1,150 @@
+# =============================================================================
+# FUNCTIONALITY - GoldSource Scaffold v2.0
+# =============================================================================
+# Purpose: Document what the scaffold can do (for AI reference)
+# =============================================================================
+
+metadata:
+  type: "reference"
+  name: "GoldSource Scaffold Functionality"
+  version: "2.0.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "active"
+  phase: "18 - NexusReturns"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalFeatures: 6
+  locked: 3
+  extensible: 3
+
+# =============================================================================
+# AUTHENTICATION
+# =============================================================================
+
+features:
+
+  - id: "AUTH-001"
+    name: "Email/Password Authentication"
+    status: "implemented"
+    description: "Firebase authentication with login and signup"
+    files:
+      - "core/firebase.js"
+      - "core/auth-service.js"
+      - "login.html"
+      - "login.js"
+    capabilities:
+      - "Login with email/password"
+      - "Signup with email/password"
+      - "Logout"
+      - "Auth state persistence"
+      - "Redirect to login if not authenticated"
+    extensionPoint: false
+
+# =============================================================================
+# DASHBOARD SHELL
+# =============================================================================
+
+  - id: "SHELL-001"
+    name: "Dashboard Layout"
+    status: "implemented"
+    description: "Header + Sidebar + Canvas layout"
+    files:
+      - "index.html"
+      - "core/app.js"
+      - "ui/components/header/*"
+      - "ui/components/sidebar/*"
+      - "ui/components/canvas/*"
+    capabilities:
+      - "Fixed header with logo, user avatar, theme toggle, logout"
+      - "Collapsible sidebar with navigation"
+      - "Canvas area (empty, ready for cards)"
+    extensionPoint: true
+    extensionNotes: "Factory can add components to canvas, nav items to sidebar"
+
+# =============================================================================
+# THEME SYSTEM
+# =============================================================================
+
+  - id: "THEME-001"
+    name: "Dark/Light Theme Toggle"
+    status: "implemented"
+    description: "Simple theme switching with persistence"
+    files:
+      - "core/theme-manager.js"
+      - "ui/styles/variables.css"
+    capabilities:
+      - "Dark theme (default)"
+      - "Light theme via toggle"
+      - "Persists to localStorage"
+      - "Respects system preference on first load"
+    designDecision: "Intentionally simple - no brand themes, no color mixing"
+    extensionPoint: false
+
+# =============================================================================
+# STATE MANAGEMENT
+# =============================================================================
+
+  - id: "STATE-001"
+    name: "Minimal State Manager"
+    status: "implemented"
+    description: "Centralized state for shell (user, theme, sidebar)"
+    files:
+      - "core/state.js"
+    capabilities:
+      - "User state (uid, email, displayName, photoURL)"
+      - "Theme state (dark/light)"
+      - "Sidebar collapsed state"
+      - "Subscribe/unsubscribe pattern"
+    extensionPoint: true
+    extensionNotes: "Factory can add feature-specific state slices"
+
+# =============================================================================
+# AI SERVICE
+# =============================================================================
+
+  - id: "AI-001"
+    name: "AI Provider Interface"
+    status: "implemented"
+    description: "Unified Gemini/Claude API interface"
+    files:
+      - "features/ai/ai-service.js"
+    capabilities:
+      - "askAI(prompt, provider) - unified interface"
+      - "askGemini(prompt) - Google Gemini"
+      - "askClaude(prompt) - Anthropic Claude"
+      - "API key management (localStorage)"
+    note: "Service only - not wired to UI yet"
+    extensionPoint: true
+    extensionNotes: "Factory can add chat UI that uses this service"
+
+# =============================================================================
+# DESIGN SYSTEM
+# =============================================================================
+
+  - id: "DESIGN-001"
+    name: "Design Token System"
+    status: "implemented"
+    description: "CSS custom properties for consistent styling"
+    files:
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+      - "ui/styles/buttons.css"
+      - "ui/styles/inputs.css"
+      - "meta/design-system.yaml"
+    capabilities:
+      - "Colors (brand, semantic, glass)"
+      - "Typography (Outfit headings, Inter body)"
+      - "Spacing scale"
+      - "Border radius"
+      - "Shadows"
+      - "Transitions"
+      - "Glassmorphism utilities"
+      - "Button variants (primary, secondary, ghost, danger)"
+      - "Input patterns (text, textarea, select)"
+    extensionPoint: false
+    locked: true

@@ -1,0 +1,82 @@
+# =============================================================================
+# STAGE 8: CLOSURE TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 8
+  stageName: "closure"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 7 approved with !Proceed at [timestamp]"
+  previousStage: "stage-7-testing.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before sign-off
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 8"
+    - "stageName: closure"
+    - "created: ISO timestamp"
+    - "status: complete (before sign-off)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-7-testing.yaml"
+  
+  content:
+    - "summary: What was built"
+    - "lessonsLearned: At least one lesson"
+    - "signOff: Approved by human"
+
+closureObjective: "Finalize demo and capture lessons learned"
+
+# =============================================================================
+# DEMO SUMMARY
+# =============================================================================
+summary:
+  whatWasBuilt: "[Brief description]"
+  keyFeatures: ["[Feature 1]", "[Feature 2]"]
+  filesCreated: "[number]"
+  filesModified: "[number]"
+  duration: "[total time]"
+
+# =============================================================================
+# LESSONS LEARNED (Be specific!)
+# =============================================================================
+lessonsLearned:
+  
+  whatWorkedWell:
+    - "[Specific thing that worked]"
+  
+  whatCouldImprove:
+    - "[Specific improvement]"
+  
+  frictionPoints:
+    description: "Where did you struggle or slow down?"
+    points:
+      - "[Specific friction point]"
+      - "[What caused confusion]"
+  
+  feedbackForGoldSource:
+    - "[Specific suggestion]"
+
+# =============================================================================
+# SCOPE CHANGES (from Discovery)
+# =============================================================================
+scopeChanges:
+  intentionallyDeferred:
+    - feature: "[Feature descoped]"
+      reason: "[Why]"
+  
+  notImplemented:
+    - feature: "[Feature from Discovery not done]"
+      explanation: "[Why]"
+
+# =============================================================================
+# SIGN-OFF
+# =============================================================================
+signOff:
+  demoLocation: "[path]"
+  runCommand: "python3 -m http.server 8080"
+  status: "pending"
+  approvedBy: "[name]"

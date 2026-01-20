@@ -1,0 +1,67 @@
+# =============================================================================
+# STAGE 5: IMPLEMENTATION TEMPLATE
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 5
+  stageName: "implementation"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 4 approved with !Proceed at [timestamp]"
+  previousStage: "stage-4-design.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 5"
+    - "stageName: implementation"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-4-design.yaml"
+  
+  content:
+    - "filesCreated: List of new files"
+    - "filesModified: List of modified files"
+    - "functionalityUpdate: Demo functionality.yaml updated"
+
+implementationObjective: "Build the demo based on design"
+
+# =============================================================================
+# FILES CHANGED
+# =============================================================================
+filesCreated:
+  - "[path/to/file1]"
+
+filesModified:
+  - "[path/to/file]"
+
+# =============================================================================
+# FUNCTIONALITY.YAML UPDATE (Required)
+# =============================================================================
+functionalityUpdate:
+  description: "Update the demo's functionality.yaml with new capabilities"
+  location: "[DEMO_OUTPUT]/meta/functionality.yaml"
+  
+  newCapabilities:
+    - name: "[New feature name]"
+      description: "[What it does]"
+      addedBy: "Factory - [demo name]"
+  
+  note: |
+    This updates the DEMO's functionality.yaml, not the Gold Source.
+    LEAP will review and decide if any should be promoted to Gold Source.
+
+# =============================================================================
+# COMMITS
+# =============================================================================
+commits:
+  - hash: "[commit hash]"
+    message: "[commit message]"
+
+nextStage:
+  name: "validation"
+  requires: "!Proceed"
