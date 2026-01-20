@@ -1,29 +1,80 @@
 # =============================================================================
 # SPRINT FUNCTIONAL SPEC: Design System Enhancement
 # =============================================================================
-# Source: Old NEXUS STYLE_GUIDE.md, FUNCTIONALITY.md, NEXUS_VISUAL_SPEC.md
+# Source: Old NEXUS STYLE_GUIDE.md, FUNCTIONALITY.md, index.css plasma bubbles
 # Purpose: Make GoldSource scaffold visually "WOW" for demos
 # =============================================================================
 
 metadata:
   specId: "SPEC-002"
   name: "Design System Enhancement"
-  version: "1.0.0"
+  version: "2.0.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
-  effort: "medium"
+  effort: "small"  # REDUCED - focus on core visual polish only
   
   # Backlog linkage
-  backlogId: "LEAP-036"  # To be created
+  backlogId: "LEAP-036"
   targetPhase: null
+
+# =============================================================================
+# ⚠️ KNOWN ISSUES FROM OLD NEXUS - DO NOT REPEAT
+# =============================================================================
+
+knownIssues:
+  - id: "ISSUE-001"
+    title: "Theme toggle broke NEXUS when retro-fitted"
+    description: |
+      In old NEXUS, theme toggle was added later and broke several elements.
+      Root cause: CSS targeting was inconsistent, some elements used hardcoded
+      colors instead of CSS variables.
+    prevention: |
+      - ALL colors MUST use CSS variables (--bg-*, --text-*, --glass-*)
+      - NO hardcoded color values in any CSS
+      - Test both themes after every change
+      - Theme-specific overrides ONLY in .light-theme {} block
+  
+  - id: "ISSUE-002"
+    title: "Light theme + glass = washed out"
+    description: |
+      Glassmorphism looks great on dark backgrounds but becomes too transparent
+      and washed out on light backgrounds.
+    prevention: |
+      - Light theme needs DIFFERENT glass values (more opaque, darker tint)
+      - .light-theme .glass must override with adjusted opacity
+      - Consider using solid light backgrounds instead of glass in light mode
+    cssExample: |
+      /* Dark theme glass (default) */
+      .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+      }
+      
+      /* Light theme glass - MORE opaque, DARK tint */
+      .light-theme .glass {
+        background: rgba(0, 0, 0, 0.03);  /* Dark tint instead of white */
+        backdrop-filter: blur(12px);       /* Less blur */
+        border-color: rgba(0, 0, 0, 0.08); /* Visible border */
+      }
+
+  - id: "ISSUE-003"
+    title: "Cards not fully defined in GoldSource yet"
+    description: |
+      SPEC-002 references card animations but GoldSource scaffold doesn't
+      have card components defined. Card types will be a separate spec.
+    resolution: |
+      - This spec provides UTILITY CLASSES (.animate-in, .hover-lift)
+      - These classes can be applied to ANY element, not just cards
+      - Future card spec will USE these utilities
+      - No dependency blocker - utilities work independently
 
 # =============================================================================
 # CURRENT STATE - What already exists in GoldSource scaffold
 # =============================================================================
 
 currentState:
-  summary: "GoldSource has solid foundation but lacks the visual polish and delight that makes demos impressive"
+  summary: "GoldSource has solid foundation but lacks animated background and visual delight"
   
   alreadyImplemented:
     - feature: "CSS Variables"
@@ -33,18 +84,13 @@ currentState:
     
     - feature: "Glassmorphism utility class"
       location: "ui/styles/base.css (.glass)"
-      status: "✅ Working"
-      note: "Basic glass effect with blur"
+      status: "⚠️ Partial"
+      note: "Works for dark theme only - light theme is washed out"
     
     - feature: "Button variants"
       location: "ui/styles/buttons.css"
       status: "✅ Working"
       note: "Primary, secondary, ghost, danger + sizes"
-    
-    - feature: "Input styling"
-      location: "ui/styles/inputs.css"
-      status: "✅ Working"
-      note: "Form inputs, labels, focus states"
     
     - feature: "Dark/Light theme"
       location: "variables.css + theme-manager.js"
@@ -52,84 +98,181 @@ currentState:
       note: "Theme toggle with persistence"
   
   missingFeatures:
-    - feature: "Entrance animations"
-      impact: "Cards appear instantly - no visual delight"
+    - feature: "Animated background (plasma bubbles)"
+      impact: "Index page looks static and flat"
       priority: "must-have"
+    
+    - feature: "Light theme glass fix"
+      impact: "Light mode looks washed out"
+      priority: "must-have"
+    
+    - feature: "Entrance animations"
+      impact: "Elements appear instantly - no visual delight"
+      priority: "should-have"
     
     - feature: "Hover lift effect"
       impact: "Interactive elements feel flat"
-      priority: "must-have"
-    
-    - feature: "Micro-interactions"
-      impact: "Buttons don't feel responsive"
       priority: "should-have"
     
-    - feature: "Loading state pattern"
+    - feature: "Loading/Empty state patterns"
       impact: "No visual feedback during async operations"
-      priority: "must-have"
-    
-    - feature: "Empty state pattern"
-      impact: "Empty containers have no guidance"
-      priority: "must-have"
-    
-    - feature: "Error state pattern"
-      impact: "Errors lack visual styling"
       priority: "should-have"
-    
-    - feature: "Priority colors"
-      impact: "No visual hierarchy for urgency"
-      priority: "should-have"
-    
-    - feature: "Confetti/celebration effect"
-      impact: "Completions lack reward feeling"
-      priority: "nice-to-have"
 
 # =============================================================================
-# SCOPE DEFINITION
+# SCOPE DEFINITION - REDUCED FOR PHASE 1
 # =============================================================================
 
 scope:
   problem: |
     GoldSource scaffold is functional but visually basic.
-    Demos built on it lack the "wow" factor that impresses stakeholders.
-    Missing: animations, hover effects, loading states, empty states, and polish.
+    Two main issues:
+    1. No animated background - looks static compared to old NEXUS
+    2. Light theme glass is washed out and unusable
     
   goal: |
-    Enhance GoldSource design system so every demo looks premium out-of-the-box.
-    Focus on: motion, micro-interactions, state patterns, visual hierarchy.
-    Result: Demos that feel alive, responsive, and delightful.
+    PHASE 1: Core visual polish that makes biggest impact with least risk.
+    Focus on: Animated background + light theme fix + basic utility classes.
+    Defer to future: State patterns, confetti, complex animations.
   
   notInScope:
-    - Complete theme redesign (colors already good)
-    - Brand customization (beyond current accent color system)
-    - Card type specific styling (separate spec)
-    - Complex animation library dependencies
-    - Mobile-first responsive overhaul
+    - Card type specific styling (separate SPEC-003)
+    - Confetti/celebration effects (defer)
+    - Complex staggered animations (defer)
+    - Priority color system (defer to card spec)
+    - Error/Empty/Loading state patterns (defer)
   
   successCriteria:
-    - Cards fade in with staggered animation on load
-    - Interactive elements lift on hover
-    - Buttons have satisfying click feedback
-    - Loading states show spinner + message
-    - Empty states show icon + message
-    - Priority colors differentiate urgency levels
+    - Index page has animated plasma bubbles in background
+    - Light theme glass looks solid, not washed out
+    - .animate-in and .hover-lift utility classes available
+    - Button has :active press feedback
+    - Both themes tested and working with all changes
 
 # =============================================================================
-# FUNCTIONAL REQUIREMENTS
+# FUNCTIONAL REQUIREMENTS - REDUCED SCOPE
 # =============================================================================
 
 requirements:
   
   functional:
-    # --- Animations ---
+    # --- PHASE 1 PRIORITY: Visual Impact ---
+    
     - id: "FR-001"
-      name: "Card Entrance Animation"
-      description: "Cards animate in with fadeInUp effect, staggered"
+      name: "Animated Background (Plasma Bubbles)"
+      description: "Floating, morphing colored orbs in the background"
       priority: "must-have"
       currentState: "NOT IMPLEMENTED"
       acceptance: |
+        - 2-4 plasma bubble divs positioned absolute in body or main container
+        - Each bubble: different size, color (purple, cyan, pink, indigo)
+        - Slow floating animation (12-18s cycles)
+        - blur(25-40px) for glow effect
+        - mix-blend-mode: screen for color mixing
+        - Does NOT interfere with page content (z-index behind content)
+        - Works in both dark AND light themes
+      uiDetails:
+        html: |
+          <div class="plasma-background">
+            <div class="plasma-bubble b1"></div>
+            <div class="plasma-bubble b2"></div>
+            <div class="plasma-bubble b3"></div>
+          </div>
+        css: |
+          .plasma-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+          }
+          
+          .plasma-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(30px);
+            mix-blend-mode: screen;
+            opacity: 0.6;
+          }
+          
+          .b1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%);
+            top: -100px;
+            left: -100px;
+            animation: bubbleFloat 15s ease-in-out infinite alternate;
+          }
+          
+          .b2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent 70%);
+            bottom: 10%;
+            right: -50px;
+            animation: bubbleFloat 12s ease-in-out infinite alternate-reverse;
+          }
+          
+          .b3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(232, 121, 249, 0.4), transparent 60%);
+            top: 40%;
+            left: 30%;
+            animation: bubbleFloat 18s ease-in-out infinite alternate;
+          }
+          
+          @keyframes bubbleFloat {
+            0% { transform: translateY(0) translateX(0) scale(1); }
+            100% { transform: translateY(40px) translateX(20px) scale(1.1); }
+          }
+          
+          /* Light theme: reduce intensity */
+          .light-theme .plasma-bubble {
+            opacity: 0.3;
+            mix-blend-mode: multiply;
+          }
+    
+    - id: "FR-002"
+      name: "Light Theme Glass Fix"
+      description: "Fix washed-out glass effect on light backgrounds"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED - light glass looks washed out"
+      acceptance: |
+        - .light-theme .glass has different values than dark theme
+        - Uses dark tint (rgba(0,0,0,x)) instead of white tint
+        - Less blur to maintain readability
+        - Visible border for definition
+        - All glass elements tested in light mode
+      uiDetails:
+        css: |
+          /* Light theme glass override */
+          .light-theme .glass {
+            background: rgba(255, 255, 255, 0.7);  /* Solid white, not transparent */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.1);  /* Visible dark border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          }
+          
+          /* Alternative: semi-transparent with dark tint */
+          .light-theme .glass-subtle {
+            background: rgba(0, 0, 0, 0.02);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+          }
+    
+    # --- Utility Classes ---
+    - id: "FR-003"
+      name: "Entrance Animation Utility"
+      description: "Reusable .animate-in class for fade-in-up effect"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
         - @keyframes fadeInUp defined in animations.css
-        - Cards use animation-delay for stagger (50-100ms increments)
+        - .animate-in utility class applies the animation
         - Animation: 0.6s ease-out
         - Start: opacity 0, translateY(20px)
         - End: opacity 1, translateY(0)
@@ -150,10 +293,10 @@ requirements:
             animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
           }
     
-    - id: "FR-002"
-      name: "Hover Lift Effect"
-      description: "Cards and interactive containers lift slightly on hover"
-      priority: "must-have"
+    - id: "FR-004"
+      name: "Hover Lift Utility"
+      description: "Reusable .hover-lift class for interactive elements"
+      priority: "should-have"
       currentState: "NOT IMPLEMENTED"
       acceptance: |
         - .hover-lift class available
@@ -172,7 +315,7 @@ requirements:
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
           }
     
-    - id: "FR-003"
+    - id: "FR-005"
       name: "Button Press Feedback"
       description: "Buttons show satisfying press animation"
       priority: "should-have"
@@ -188,246 +331,76 @@ requirements:
             transition: transform 0.1s ease-out;
           }
     
-    # --- State Patterns ---
-    - id: "FR-004"
+  # ---------------------------------------------------------------------------
+  # DEFERRED TO FUTURE SPECS
+  # The following were considered but moved to separate specs to reduce scope:
+  # ---------------------------------------------------------------------------
+  deferred:
+    - id: "DEFER-001"
       name: "Loading State Pattern"
-      description: "Reusable loading spinner with optional message"
-      priority: "must-have"
-      currentState: "NOT IMPLEMENTED"
-      acceptance: |
-        - .loading-state container class
-        - Animated spinner (CSS only, no library)
-        - Optional text message below spinner
-        - Centered in container
-      uiDetails:
-        html: |
-          <div class="loading-state">
-            <div class="spinner"></div>
-            <p>Loading...</p>
-          </div>
-        css: |
-          .loading-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-md);
-            padding: var(--space-xl);
-            color: var(--text-secondary);
-          }
-          
-          .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid var(--glass-border);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-          }
-          
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-    
-    - id: "FR-005"
-      name: "Empty State Pattern"
-      description: "Reusable empty state with icon and message"
-      priority: "must-have"
-      currentState: "NOT IMPLEMENTED"
-      acceptance: |
-        - .empty-state container class
-        - Large icon/emoji slot
-        - Primary message (heading)
-        - Secondary message (optional hint)
-        - Centered, subtle styling
-      uiDetails:
-        html: |
-          <div class="empty-state">
-            <span class="empty-icon">🌊</span>
-            <p class="empty-title">No items yet</p>
-            <p class="empty-hint">Create your first item to get started</p>
-          </div>
-        css: |
-          .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-sm);
-            padding: var(--space-2xl);
-            text-align: center;
-          }
-          
-          .empty-icon {
-            font-size: 48px;
-            opacity: 0.5;
-          }
-          
-          .empty-title {
-            font-size: var(--text-lg);
-            color: var(--text-primary);
-            margin: 0;
-          }
-          
-          .empty-hint {
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            margin: 0;
-          }
-    
-    - id: "FR-006"
+      reason: "Nice-to-have, can add in card spec or later"
+      
+    - id: "DEFER-002"
+      name: "Empty State Pattern"  
+      reason: "Nice-to-have, can add in card spec or later"
+      
+    - id: "DEFER-003"
       name: "Error State Pattern"
-      description: "Reusable error display with icon and action"
-      priority: "should-have"
-      currentState: "NOT IMPLEMENTED"
-      acceptance: |
-        - .error-state container class
-        - Red-tinted glass background
-        - Error icon
-        - Message + optional retry button
-      uiDetails:
-        html: |
-          <div class="error-state">
-            <span class="error-icon">⚠️</span>
-            <p class="error-message">Something went wrong</p>
-            <button class="btn btn-secondary btn-sm">Retry</button>
-          </div>
-        css: |
-          .error-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-lg);
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error);
-            border-radius: var(--radius-md);
-          }
-          
-          .error-icon {
-            font-size: 24px;
-          }
-          
-          .error-message {
-            color: var(--error);
-            margin: 0;
-          }
-    
-    # --- Visual Hierarchy ---
-    - id: "FR-007"
+      reason: "Nice-to-have, can add in card spec or later"
+      
+    - id: "DEFER-004"
       name: "Priority Color System"
-      description: "CSS variables and utility classes for priority levels"
-      priority: "should-have"
-      currentState: "NOT IMPLEMENTED"
-      acceptance: |
-        - --priority-low (blue), --priority-medium (yellow), --priority-high (red)
-        - Utility classes: .priority-low, .priority-medium, .priority-high
-        - Applies to text, border, or background based on modifier
-      uiDetails:
-        cssVariables: |
-          :root {
-            --priority-low: #38bdf8;      /* Sky blue */
-            --priority-medium: #fbbf24;   /* Amber */
-            --priority-high: #fb7185;     /* Rose/pink */
-            --priority-urgent: #ef4444;   /* Red */
-          }
-        cssClasses: |
-          .priority-low { color: var(--priority-low); }
-          .priority-medium { color: var(--priority-medium); }
-          .priority-high { color: var(--priority-high); }
-          .priority-urgent { color: var(--priority-urgent); }
-          
-          .priority-dot-low { background: var(--priority-low); }
-          .priority-dot-medium { background: var(--priority-medium); }
-          .priority-dot-high { background: var(--priority-high); }
-    
-    # --- Glassmorphism Enhancement ---
-    - id: "FR-008"
+      reason: "Belongs in card types spec where it will be used"
+      
+    - id: "DEFER-005"
       name: "Glass Variations"
-      description: "Multiple glass effect intensities"
-      priority: "should-have"
-      currentState: "PARTIAL - only one .glass class"
-      acceptance: |
-        - .glass-subtle (less blur, more transparent)
-        - .glass (standard - current)
-        - .glass-heavy (more blur, more opaque)
-      uiDetails:
-        css: |
-          .glass-subtle {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-          }
-          
-          .glass-heavy {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-          }
-    
-    # --- Optional Delight ---
-    - id: "FR-009"
-      name: "Confetti Celebration Effect"
-      description: "Trigger confetti on task completion or XP gain"
-      priority: "nice-to-have"
-      currentState: "NOT IMPLEMENTED"
-      acceptance: |
-        - confetti.js utility module (can use canvas-confetti CDN)
-        - triggerConfetti() function exported
-        - Fires from multiple points
-        - XP-scaled intensity (more XP = more particles)
-      implementation: |
-        Option A: Use canvas-confetti library (CDN)
-        Option B: Simple custom canvas implementation
-        Either way, export as features/effects/confetti.js
+      reason: "FR-002 handles light theme fix; variations can come later"
+      
+    - id: "DEFER-006"
+      name: "Confetti Celebration"
+      reason: "Nice-to-have polish, defer to gamification spec"
 
 # =============================================================================
-# TECHNICAL APPROACH
+# TECHNICAL APPROACH - REDUCED SCOPE
 # =============================================================================
 
 technicalApproach:
   
   affectedFiles:
     new:
+      - file: "ui/styles/plasma.css"
+        purpose: "Animated background plasma bubbles"
       - file: "ui/styles/animations.css"
-        purpose: "All animation keyframes and utility classes"
-      - file: "ui/styles/states.css"
-        purpose: "Loading, empty, error state patterns"
-      - file: "features/effects/confetti.js"
-        purpose: "Optional confetti celebration effect"
+        purpose: "Animation keyframes and utility classes"
     
     modify:
-      - file: "ui/styles/variables.css"
+      - file: "ui/styles/base.css"
         changes:
-          - "Add priority color variables"
-          - "Add animation timing variables"
+          - "Add light theme glass fix (.light-theme .glass)"
+          - "Import plasma.css and animations.css"
       
       - file: "ui/styles/buttons.css"
         changes:
           - "Add :active press feedback"
       
-      - file: "ui/styles/base.css"
+      - file: "index.html"
         changes:
-          - "Import animations.css and states.css"
-          - "Add glass-subtle and glass-heavy variants"
+          - "Add plasma-background div"
       
-      - file: "index.html (or main entry)"
+      - file: "login.html"
         changes:
-          - "Link new CSS files"
+          - "Add plasma-background div (optional - may already have stars)"
     
     delete: []
   
   dependencies:
-    - "No new JS dependencies for core features"
-    - "Optional: canvas-confetti (CDN) for FR-009"
+    - "No new dependencies - pure CSS"
   
   patterns:
     - "AI-First headers on new files"
     - "CSS custom properties for all values"
-    - "Utility class approach (composable)"
-    - "No inline styles"
+    - "Theme testing: verify dark AND light mode"
+    - "No hardcoded colors - use CSS variables"
 
 # =============================================================================
 # VERIFICATION PLAN
@@ -461,20 +434,29 @@ verification:
       expectedResult: "Button scales down slightly while pressed"
     
     - id: "MT-004"
-      name: "Loading State"
-      description: "Verify loading state renders properly"
+      name: "Plasma Bubbles Animation"
+      description: "Verify animated background exists and animates"
       steps:
-        - "Add .loading-state HTML to a container"
-        - "Observe spinner animation"
-      expectedResult: "Spinner rotates smoothly, text displays below"
+        - "Open index.html in browser"
+        - "Observe background"
+      expectedResult: "Colored blobs float and morph slowly"
     
     - id: "MT-005"
-      name: "Empty State"
-      description: "Verify empty state styling"
+      name: "Light Theme Glass"
+      description: "Verify glass doesn't look washed out in light mode"
       steps:
-        - "Add .empty-state HTML to a container"
-        - "Observe layout"
-      expectedResult: "Centered icon, title, and hint text"
+        - "Toggle to light theme"
+        - "Observe any glass elements"
+      expectedResult: "Glass has visible definition, not washed out"
+    
+    - id: "MT-006"
+      name: "Both Themes Working"
+      description: "Toggle themes and verify nothing breaks"
+      steps:
+        - "Start in dark mode, observe plasma and glass"
+        - "Toggle to light mode"
+        - "Toggle back to dark mode"
+      expectedResult: "Both modes work, no visual glitches"
 
 # =============================================================================
 # APPROVAL

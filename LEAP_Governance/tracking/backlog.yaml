@@ -725,24 +725,23 @@ priorities:
         - "FR-006: ARIA labels on all form inputs + role='alert' on error container"
 
     - id: "LEAP-036"
-      name: "Design System Enhancement"
+      name: "Design System Enhancement (Phase 1)"
       category: "scaffold-conventions"
       priority: "short-term"
       status: "proposed"
-      description: "Visual polish: animations, hover effects, loading/empty/error states, priority colors"
-      rationale: "GoldSource scaffold is functional but visually basic - demos need 'wow' factor"
-      estimatedEffort: "medium"
+      description: "Core visual polish: plasma bubbles background, light theme glass fix, animation utilities"
+      rationale: "GoldSource scaffold looks static - demos need animated background and working light theme"
+      estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "Sprint Functional Spec SPEC-002 v1.0"
+      source: "Sprint Functional Spec SPEC-002 v2.0"
       functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
       acceptanceCriteria:
-        - "FR-001: Cards animate in with fadeInUp on load"
-        - "FR-002: Hover lift effect on interactive elements"
-        - "FR-003: Button press feedback (scale down on active)"
-        - "FR-004: Loading state pattern with spinner"
-        - "FR-005: Empty state pattern with icon + message"
-        - "FR-007: Priority color system (low/medium/high/urgent)"
+        - "FR-001: Animated plasma bubbles in background (both themes)"
+        - "FR-002: Light theme glass fix (not washed out)"
+        - "FR-003: .animate-in utility class"
+        - "FR-004: .hover-lift utility class"
+        - "FR-005: Button :active press feedback"
   
   mediumTerm: []
   future: []
