@@ -62,6 +62,42 @@ steps:
       - "Code patterns (state, functions, imports)"
       - "Documentation (README, functionality.yaml)"
 
+  # -------------------------------------------------------------------------
+  # LEAP-024: Gold Source Compliance Check
+  # -------------------------------------------------------------------------
+  3b_goldSourceCompliance:
+    action: "Compare demo output against Gold Source scaffold"
+    purpose: "Detect regression/drift from Gold Source conventions"
+    
+    comparison:
+      lockedFiles:
+        action: "Verify locked files were NOT modified"
+        files:
+          - "core/state.js"
+          - "core/firebase.js"
+          - "core/constants.js"
+          - "core/logger.js"
+          - "ui/styles/variables.css"
+          - "ui/styles/base.css"
+        check: "Compare hash or content - should match Gold Source"
+      
+      namingConventions:
+        action: "Verify naming matches Gold Source patterns"
+        patterns:
+          - "features/{singular}/ not {plural}/"
+          - "components/{name}-ui.js + {name}.css"
+          - "services: {feature}-service.js"
+        reference: "GoldSource/meta/architectural-standards.yaml pathNaming"
+      
+      structuralPatterns:
+        action: "Verify folder structure matches Gold Source"
+        check: "Same top-level folders (core/, features/, ui/)"
+        reference: "GoldSource layout"
+    
+    output:
+      file: "FactoryTestRuns/goldsource-compliance-{version}.yaml"
+      includeIn: "demo-output-comparison report"
+
   4_categorizeDeviations:
     action: "Categorize deviations by root cause"
     reference: "LEAP_Governance/tracking/backlog-categories.yaml"
@@ -74,11 +110,34 @@ steps:
   5_addToBacklog:
     action: "Add LEAP improvement items to backlog"
     location: "LEAP_Governance/tracking/backlog.yaml"
-    requirements:
+    
+    # -------------------------------------------------------------------------
+    # LEAP-025: Deduplication Checklist
+    # -------------------------------------------------------------------------
+    deduplicationStep:
+      action: "Check each finding against existing backlog before adding"
+      required: true
+      
+      checklist:
+        - step: "Search backlog for similar item"
+          how: "grep backlog.yaml for keywords from finding"
+        
+        - step: "Determine outcome"
+          outcomes:
+            duplicate: "Finding matches existing item - do NOT add, note in comparison doc"
+            overlapping: "Finding partially matches - consider merging or extending existing item"
+            new: "No match found - add new item with unique LEAP-XXX ID"
+        
+        - step: "Document decision"
+          required: true
+          format: "In comparison doc, note: 'Finding X → [duplicate of LEAP-YYY | merged into LEAP-YYY | new item LEAP-ZZZ]'"
+    
+    newItemRequirements:
       - "Unique LEAP-XXX ID"
       - "Category from backlog-categories.yaml"
       - "Source reference to comparison document"
       - "Clear rationale citing specific deviations"
+      - "Deduplication decision documented"
 
   6_reviewWithUser:
     action: "Present findings for prioritization"

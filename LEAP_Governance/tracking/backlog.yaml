@@ -15,12 +15,12 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 32
-    proposed: 3
+    complete: 34
+    proposed: 1
     inProgress: 0
     superseded: 6
   
-  note: "Counts verified 2026-01-20T18:10:35Z - Superseded 5 items after relevance analysis (GOV-008, GOV-011, USER-003, LEAP-013, LEAP-018)"
+  note: "Counts verified 2026-01-20T18:16:36Z - LEAP-024, LEAP-025 completed (factory-review-workflow updates)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -558,7 +558,9 @@ priorities:
       name: "Gold Source Compliance Check in Factory Review"
       category: "factory-test-runs"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Quick implementation (LEAP-024 + LEAP-025)"
       description: "Add step to factory-review-workflow comparing demo output against Gold Source scaffold to detect regression/drift"
       rationale: "Current workflow compares Run N vs Run N-1, but doesn't verify Factory follows Gold Source conventions (locked files, naming, structure)"
       estimatedEffort: "small"
@@ -608,7 +610,9 @@ priorities:
       name: "Formalize Backlog Deduplication Step"
       category: "factory-test-runs"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-20"
+      completedIn: "Quick implementation (LEAP-024 + LEAP-025)"
       description: "Add explicit deduplication step to factory-review-workflow before adding new backlog items"
       rationale: "Currently done ad-hoc; need formal step to check each finding against existing backlog (duplicate/overlap/new)"
       estimatedEffort: "small"
