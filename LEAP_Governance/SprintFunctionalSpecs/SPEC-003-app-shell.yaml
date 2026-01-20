@@ -370,6 +370,31 @@ technicalApproach:
     - "State management via state.js"
 
 # =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: true
+  
+  governanceUpdatesRequired:
+    - file: "GoldSource/meta/architectural-standards.yaml"
+      change: "Add 'Page Registration Pattern' section explaining registerPage() API"
+    - file: "GoldSource/meta/ARCHITECTURE.yaml"
+      change: "Update extensionPoints.addingNewPage with steps for page registration"
+    - file: "GoldSource/governance/demo-rules.yaml"
+      change: "Add guidance on when to create new pages vs. modify canvas content"
+  
+  rationale: |
+    The page registration pattern (registerPage()) is NEW functionality that Factory AI
+    needs to understand when creating multi-page demos. Currently there's no way to add
+    pages - this creates the mechanism. Factory runs will need to know:
+    - How to register a new page
+    - How to link sidebar nav to pages
+    - How config-driven navigation works
+
+# =============================================================================
 # VERIFICATION PLAN
 # =============================================================================
 

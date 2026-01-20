@@ -353,6 +353,22 @@ technicalApproach:
       mitigation: "Clear error message, configurable in constants.js"
 
 # =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: false
+  
+  governanceUpdatesRequired: []
+  
+  rationale: |
+    Auth changes are additive features (user profiles, password reset, domain validation).
+    No new architectural patterns - follows existing auth-service.js patterns.
+    Factory AI doesn't need to know about auth internals.
+
+# =============================================================================
 # VERIFICATION PLAN
 # =============================================================================
 

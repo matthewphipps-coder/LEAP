@@ -86,6 +86,23 @@ technicalApproach:
       mitigation: "[How to prevent/handle]"
 
 # =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: false  # true | false
+  
+  # If true, list what needs updating
+  governanceUpdatesRequired:
+    - file: "[governance file path]"
+      change: "[what needs to be added/modified]"
+  
+  # Brief justification
+  rationale: "[Why governance does/doesn't need updating]"
+
+# =============================================================================
 # VERIFICATION PLAN
 # =============================================================================
 

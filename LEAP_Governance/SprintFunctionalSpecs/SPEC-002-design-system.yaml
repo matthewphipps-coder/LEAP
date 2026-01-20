@@ -451,6 +451,23 @@ technicalApproach:
     - "No hardcoded colors - use CSS variables"
 
 # =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: false
+  
+  governanceUpdatesRequired: []
+  
+  rationale: |
+    Design system changes are purely visual CSS additions.
+    New utility classes (.animate-in, .hover-lift) are additive.
+    No architectural patterns change.
+    Factory AI just copies scaffold and uses existing classes.
+
+# =============================================================================
 # VERIFICATION PLAN
 # =============================================================================
 

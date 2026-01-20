@@ -327,6 +327,32 @@ technicalApproach:
     - "Service pattern for all data access"
 
 # =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: true
+  
+  governanceUpdatesRequired:
+    - file: "GoldSource/meta/architectural-standards.yaml"
+      change: "Add 'Data Service Pattern' section with ring-fencing and CRUD template"
+    - file: "GoldSource/meta/ARCHITECTURE.yaml"
+      change: "Add dataFlow.firestoreConventions showing /users/{uid} pattern"
+    - file: "GoldSource/governance/demo-rules.yaml"
+      change: "Add guidance on creating feature data services using the template"
+  
+  rationale: |
+    Data conventions spec establishes NEW patterns for data access:
+    - Ring-fenced data under /users/{uid}/
+    - Data service template pattern
+    - Preference sync pattern
+    Factory AI needs to know these patterns to create data-driven demos
+    that follow consistent data access patterns.
+    The DATA_CONVENTIONS.md doc (created as part of spec) becomes reference material.
+
+# =============================================================================
 # VERIFICATION PLAN
 # =============================================================================
 
