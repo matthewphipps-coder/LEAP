@@ -734,11 +734,12 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "Sprint Functional Spec SPEC-002 v2.0"
+      source: "Sprint Functional Spec SPEC-002 v2.1"
       functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
       acceptanceCriteria:
         - "FR-001: Animated plasma bubbles in background (both themes)"
         - "FR-002: Light theme glass fix (not washed out)"
+        - "FR-006: Brand color system (2 vars control entire app)"
         - "FR-003: .animate-in utility class"
         - "FR-004: .hover-lift utility class"
         - "FR-005: Button :active press feedback"

@@ -8,7 +8,7 @@
 metadata:
   specId: "SPEC-002"
   name: "Design System Enhancement"
-  version: "2.0.0"
+  version: "2.1.0"
   created: "2026-01-20"
   lastUpdated: "2026-01-20"
   status: "draft"
@@ -125,13 +125,15 @@ currentState:
 scope:
   problem: |
     GoldSource scaffold is functional but visually basic.
-    Two main issues:
+    Three main issues:
     1. No animated background - looks static compared to old NEXUS
     2. Light theme glass is washed out and unusable
+    3. No easy way to rebrand for customer demos (colors scattered)
     
   goal: |
     PHASE 1: Core visual polish that makes biggest impact with least risk.
-    Focus on: Animated background + light theme fix + basic utility classes.
+    Focus on: Animated background + light theme fix + brand color system.
+    Enable: "Change 2 CSS variables = customer-branded demo"
     Defer to future: State patterns, confetti, complex animations.
   
   notInScope:
@@ -144,6 +146,8 @@ scope:
   successCriteria:
     - Index page has animated plasma bubbles in background
     - Light theme glass looks solid, not washed out
+    - Two brand color variables control entire app look
+    - Background has subtle brand color tint (not pure black)
     - .animate-in and .hover-lift utility classes available
     - Button has :active press feedback
     - Both themes tested and working with all changes
@@ -263,6 +267,50 @@ requirements:
             backdrop-filter: blur(6px);
             border: 1px solid rgba(0, 0, 0, 0.05);
           }
+    
+    # --- Brand Customization ---
+    - id: "FR-006"
+      name: "Brand Color Influence System"
+      description: "Two primary brand colors that subtly influence the entire design"
+      priority: "must-have"
+      currentState: "PARTIAL - has --accent-primary but doesn't influence backgrounds"
+      acceptance: |
+        - Define --brand-primary and --brand-secondary in :root
+        - --bg-primary is NOT pure black, but black with hint of brand color
+        - Plasma bubbles use brand colors
+        - Accents, glows, and highlights derive from brand colors
+        - Changing 2 variables transforms entire app to customer brand
+        - Document the pattern in constants.js or variables.css
+      example: |
+        For ServiceNow: --brand-primary: #62d84e (green), --brand-secondary: #8b5cf6 (purple)
+        For IBM: --brand-primary: #0f62fe (blue), --brand-secondary: #be95ff (violet)
+      uiDetails:
+        cssVariables: |
+          :root {
+            /* BRAND COLORS - Change these 2 to rebrand the app */
+            --brand-primary: #62d84e;    /* ServiceNow green */
+            --brand-secondary: #8b5cf6;  /* Purple accent */
+            
+            /* DERIVED COLORS - These use the brand colors */
+            --bg-primary: #0a0a0c;  /* Pure dark... */
+            --bg-tinted: color-mix(in srgb, var(--bg-primary) 97%, var(--brand-primary) 3%);
+            /* OR fallback for older browsers: */
+            --bg-tinted: #0a0c0a;  /* Black with subtle green tint */
+            
+            /* Accent inherits from brand */
+            --accent-primary: var(--brand-primary);
+            --accent-glow: color-mix(in srgb, var(--brand-primary) 20%, transparent);
+            
+            /* Plasma uses brand colors */
+            --plasma-1: var(--brand-primary);
+            --plasma-2: var(--brand-secondary);
+            --plasma-3: color-mix(in srgb, var(--brand-primary) 50%, var(--brand-secondary));
+          }
+        notes: |
+          - color-mix() is modern CSS, may need fallback values
+          - The tint should be VERY subtle (2-5%) - muted, not obvious
+          - Plasma bubbles should use brand colors at low opacity
+          - This enables "Change 2 vars = customer-branded demo"
     
     # --- Utility Classes ---
     - id: "FR-003"
