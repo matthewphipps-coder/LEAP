@@ -199,7 +199,16 @@ factoryRunsCompleted:
     addedDate: "2026-01-20"
     note: "First run using FACTORY_TASK_TEMPLATE.md - compliance validated"
   
-  nextRun: "v2.0.3 - validate Phase 21 documentation improvements"
+  - demo: "NEXUS v2.0.3-major-incident"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.3-major-incident/"
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-v2.0.3-major-incident/"
+    testsRun: 14
+    testsPassed: 12
+    addedDate: "2026-01-20"
+    note: "Repeat run for comparison - all compliance checks passed, no regressions"
+    comparisonReport: "FactoryTestRuns/factory-comparison-v2.0.2-vs-v2.0.3.yaml"
+  
+  nextRun: "TBD - Factory stable, consider new scenario or archetype"
 
 backlogState:
   totalItems: 41

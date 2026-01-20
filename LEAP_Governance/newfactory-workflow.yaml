@@ -59,15 +59,7 @@ steps:
       - "mkdir -p ~/Documents/DemoInstances/Factory-[version]"
       - "cp -r GoldSource/* ~/Documents/DemoInstances/Factory-[version]/"
   
-  3_copyScaffold:
-    action: "Copy scaffold to demo output location"
-    source: "GoldSource/scaffold/"
-    destination: "[user-specified location]/NEXUS-[version]/"
-    commands:
-      - "mkdir -p [demo-output-location]"
-      - "cp -r GoldSource/scaffold/* [demo-output-location]/"
-  
-  4_generateOnboardingPrompt:
+  3_generateOnboardingPrompt:
     action: "Generate and display factory onboarding prompt"
     display: true
     template: |
@@ -87,18 +79,12 @@ steps:
          - Output location: [DEMO_OUTPUT]
          - Factory workspace: [FACTORY_WORKSPACE]
       
-      3. The scaffold has already been copied to [DEMO_OUTPUT].
-         Begin with Stage 1: Discovery.
-      
-      4. Follow the 8-stage lifecycle with !Proceed gates.
-      
-      5. Save stage artifacts to the FACTORY WORKSPACE ([FACTORY_WORKSPACE]),
-         NOT the demo output folder.
+      3. Follow the 8-stage lifecycle with !Proceed gates.
       
       Start by reading governance/FACTORY_README.yaml, then begin Discovery.
       ═══════════════════════════════════════════════════════════════════════════
   
-  5_confirmReady:
+  4_confirmReady:
     action: "Confirm factory is ready"
     message: |
       ✅ Factory instance created!
@@ -112,3 +98,4 @@ steps:
       3. Paste the prompt to initialize the Factory AI
       
       The Factory AI is completely separate from this LEAP session.
+

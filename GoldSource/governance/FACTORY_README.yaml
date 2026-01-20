@@ -86,7 +86,7 @@ demoOutput:
   location:
     rule: "Create OUTSIDE this Gold Source folder"
     askUser: true
-    defaultPath: "~/Documents/DemoInstances/"
+    defaultPath: "~/Documents/DemoOutput/"
   
   trackingTemplate: "governance/templates/CURRENT_STATE.yaml"
 

@@ -148,6 +148,9 @@ priorities:
         Phase 19 implemented a lighter solution: FACTORY_TASK_TEMPLATE.md uses reading guide approach.
         Template points AI to relevant docs at each stage rather than creating 8 separate governance files.
         Achieves same goal (governance at point of need) with ~150 lines instead of 2100+.
+      cleanupNote: |
+        2026-01-20: Removed GoldSource/governance/stage-governance/ folder (contained only stage-5-implementation-governance.yaml).
+        This was an unused prototype from the original design - never referenced in Factory governance docs.
   
   shortTerm:
     # -------------------------------------------------------------------------
