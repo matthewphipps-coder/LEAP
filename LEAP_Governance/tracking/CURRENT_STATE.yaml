@@ -21,7 +21,7 @@ currentPhase:
   number: "22"
   name: "DesignSystemEnhancement"
   status: "in-progress"
-  stage: "discovery"
+  stage: "research"
   startedDate: "2026-01-20T21:57:00Z"
   completedDate: null
   
@@ -30,7 +30,23 @@ currentPhase:
   functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
   backlogId: "LEAP-036"
   
-  stageArtifact: null  # Will be stage-1-discovery.yaml when created
+  stageArtifact: "docs/phases/phase-22/stage-1-discovery.yaml"
+  
+  discoveryFindings:
+    plasmaBubbles:
+      - "Slow drift: 45-60s linear animation cycles"
+      - "Wide range: 80% screen freedom using viewport units"
+      - "Sizes: 675-1200px, overlapping allowed"
+      - "3 brand colors: primary, secondary, accent"
+    glassEffect:
+      - "Max 85-88% opacity - background shows through"
+      - "Dark: rgba(20,20,25,0.85) with blur"
+      - "Light: rgba(255,255,255,0.88) with blur"
+    designPrinciples:
+      - "Bold brand colors for accents only, never large filled areas"
+      - "Theme-aware from day 1"
+      - "CSS variables for all design tokens"
+      - "Isolated effect files (plasma.css, animations.css)"
   
   previousPhase:
     number: "21"

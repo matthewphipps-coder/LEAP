@@ -1,0 +1,135 @@
+# =============================================================================
+# PHASE 22: DESIGN SYSTEM ENHANCEMENT
+# STAGE 1: DISCOVERY
+# =============================================================================
+
+metadata:
+  phase: 22
+  phaseName: "DesignSystemEnhancement"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-20T21:57:00Z"
+  status: "complete"
+  functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-002-design-system.yaml"
+
+# =============================================================================
+# PHASE OBJECTIVE
+# =============================================================================
+
+objective:
+  goal: "Implement SPEC-002: Animated background, light theme glass fix, brand color system, animation utilities"
+  
+  context: |
+    The Gold Source scaffold (v2.1) has solid foundations but lacks visual polish:
+    - Static dark background (no animation)
+    - Light theme glass effect looks washed out
+    - No reusable animation utilities
+    - Brand colors hardcoded, not easily changeable
+    
+    This phase implements SPEC-002 which addresses these gaps with:
+    - Plasma bubble background effect
+    - Theme-aware glass styling
+    - Animation utility classes
+    - 3-color brand system
+  
+  approach: "Visual prototype first, then implement to scaffold"
+  functionalSpec: "SPEC-002-design-system.yaml"
+  
+  successCriteria:
+    - "FR-001: Plasma bubbles animate in background (both themes)"
+    - "FR-002: Light theme glass not washed out"
+    - "FR-003: .animate-in utility class works"
+    - "FR-004: .hover-lift utility class works"
+    - "FR-005: Button :active press feedback"
+    - "FR-006: 3 brand color variables control entire app appearance"
+
+# =============================================================================
+# DISCOVERY PROCESS
+# =============================================================================
+
+discoveryProcess:
+  method: "Interactive visual prototype"
+  artifact: "GoldSource/scaffold/design-preview.html"
+  
+  iterations:
+    - version: 1
+      changes: "Initial plasma bubbles, glass effect, animations"
+      feedback: "Bubbles too small, too fast, need more movement"
+    
+    - version: 2
+      changes: "2x bubble size, faster animation"
+      feedback: "Still too fast, need 80% screen freedom, slower drift"
+    
+    - version: 3
+      changes: "45-60s linear cycles, viewport units for range"
+      feedback: "Perfect. Now fix glass opacity."
+    
+    - version: 4
+      changes: "Glass max 85-88% opacity, background shows through"
+      feedback: "Good. Add light theme override for instruction box."
+    
+    - version: 5
+      changes: "Light theme glass override added"
+      feedback: "Approved. Ready to proceed."
+
+# =============================================================================
+# VALIDATED DESIGN PRINCIPLES
+# =============================================================================
+
+validatedPrinciples:
+  
+  plasmaBubbles:
+    sizes: "675px, 825px, 1050px, 1200px"
+    animation: "45-60s linear infinite cycles"
+    movement: "80% screen freedom using viewport units (vw/vh)"
+    overlap: "Allowed - bubbles can drift through each other"
+    colors: "Uses --plasma-1, --plasma-2, --plasma-3 from brand colors"
+    darkTheme: "mix-blend-mode: screen, opacity 0.6"
+    lightTheme: "mix-blend-mode: multiply, opacity 0.45, more blur"
+  
+  glassEffect:
+    maxOpacity: "85-88% - background must show through"
+    darkTheme: "rgba(20, 20, 25, 0.85) with 20px blur"
+    lightTheme: "rgba(255, 255, 255, 0.88) with 16px blur"
+    border: "rgba border for subtle definition"
+    shadow: "var(--glass-shadow) for depth"
+  
+  brandColors:
+    count: 3
+    variables:
+      - "--brand-primary (e.g., #62d84e)"
+      - "--brand-secondary (e.g., #8b5cf6)"
+      - "--brand-accent (e.g., #38bdf8)"
+    usage: "Accents, borders, small elements ONLY"
+    prohibition: "Never use bold brand colors for large filled areas"
+    plasmaIntegration: "Plasma bubbles derive from these 3 colors"
+  
+  themeAwareness:
+    principle: "Every style must consider both dark and light themes"
+    method: ".light-theme class on body overrides defaults"
+    requirement: "New CSS must include light theme variants"
+
+# =============================================================================
+# RESEARCH QUESTIONS FOR NEXT STAGE
+# =============================================================================
+
+researchQuestions:
+  scaffoldCSS:
+    - "What variables exist in variables.css? What's missing?"
+    - "What .glass class exists in base.css? How to upgrade?"
+    - "Where should plasma.css and animations.css be added?"
+    - "What CSS link order in index.html?"
+  
+  integration:
+    - "Any conflicts with existing styles?"
+    - "What files need modification vs new files?"
+    - "Where do plasma bubble divs go in HTML?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"
+  focus: "Examine current GoldSource CSS structure, identify integration points"
