@@ -16,8 +16,8 @@ summary:
   
   statusBreakdown:
     complete: 34
-    proposed: 5
-    inProgress: 0
+    proposed: 4
+    inProgress: 1
     superseded: 6
   
   note: "Added LEAP-038 (Data Conventions) 2026-01-20 - linked to SPEC-004"
@@ -728,7 +728,8 @@ priorities:
       name: "Design System Enhancement (Phase 1)"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "in-progress"
+      phaseStarted: "Phase 22"
       description: "Core visual polish: plasma bubbles background, light theme glass fix, animation utilities"
       rationale: "GoldSource scaffold looks static - demos need animated background and working light theme"
       estimatedEffort: "small"
