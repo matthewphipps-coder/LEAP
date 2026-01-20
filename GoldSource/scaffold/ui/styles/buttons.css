@@ -34,6 +34,12 @@
     cursor: not-allowed;
 }
 
+/* FR-005: Press feedback */
+.btn:active:not(:disabled) {
+    transform: scale(0.97);
+    transition: transform 0.1s ease-out;
+}
+
 /* =============================================================================
    BUTTON VARIANTS
    ============================================================================= */

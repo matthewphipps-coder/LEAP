@@ -118,6 +118,7 @@ li {
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
 }
 
 .text-primary {

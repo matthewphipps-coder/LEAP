@@ -1,0 +1,250 @@
+# =============================================================================
+# PHASE 22: DESIGN SYSTEM ENHANCEMENT
+# STAGE 4: DESIGN
+# =============================================================================
+
+metadata:
+  phase: 22
+  phaseName: "DesignSystemEnhancement"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-20T22:58:00Z"
+  status: "pending-approval"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  summary: "Add plasma bubbles, update glass styling, add animation utilities"
+  effort: "Small (estimated 30-45 minutes)"
+  
+  fileChanges:
+    create:
+      - path: "ui/styles/plasma.css"
+        purpose: "Plasma bubble background effect"
+        
+      - path: "ui/styles/animations.css"
+        purpose: "Entrance and hover animation utilities"
+    
+    modify:
+      - path: "ui/styles/variables.css"
+        changes:
+          - "Add --brand-primary, --brand-secondary, --brand-accent"
+          - "Add --plasma-1, --plasma-2, --plasma-3"
+          - "Add --glass-shadow"
+          - "Update .light-theme glass values"
+        
+      - path: "ui/styles/base.css"
+        changes:
+          - "Add box-shadow to .glass"
+          - "Add .light-theme .glass override"
+      
+      - path: "ui/styles/buttons.css"
+        changes:
+          - "Add .btn:active:not(:disabled) press feedback"
+      
+      - path: "index.html"
+        changes:
+          - "Add plasma.css and animations.css links"
+          - "Add .plasma-background div at start of body"
+      
+      - path: "login.html"
+        changes:
+          - "Add plasma.css link"
+          - "Add .plasma-background div"
+
+# =============================================================================
+# DETAILED FILE SPECIFICATIONS
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# NEW FILE: plasma.css
+# -----------------------------------------------------------------------------
+plasmaCss:
+  path: "ui/styles/plasma.css"
+  locked: false
+  
+  contents:
+    plasmaBackground:
+      selector: ".plasma-background"
+      properties: "position fixed, full viewport, z-index -1"
+    
+    plasmaBubble:
+      selector: ".plasma-bubble"
+      properties: "absolute, radial-gradient, blur(80px), mix-blend-mode"
+    
+    bubbleSizes:
+      b1: "1200px, --plasma-1"
+      b2: "1050px, --plasma-2"
+      b3: "825px, --plasma-3"
+      b4: "675px, --plasma-2"
+    
+    keyframes:
+      - "bubbleFloat1: 55s linear, moves 40-60vw, 20-70vh"
+      - "bubbleFloat2: 60s linear"
+      - "bubbleFloat3: 50s linear"
+      - "bubbleFloat4: 45s linear"
+    
+    lightTheme:
+      - "opacity: 0.45"
+      - "mix-blend-mode: multiply"
+      - "filter: blur(100px)"
+
+# -----------------------------------------------------------------------------
+# NEW FILE: animations.css
+# -----------------------------------------------------------------------------
+animationsCss:
+  path: "ui/styles/animations.css"
+  locked: false
+  
+  contents:
+    animateIn:
+      selector: ".animate-in"
+      animation: "fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards"
+      stagger: "nth-child delay 0.1s increments"
+    
+    hoverLift:
+      selector: ".hover-lift"
+      hover: "translateY(-6px) scale(1.02), shadow increase"
+    
+    keyframes:
+      fadeInUp: "from opacity 0, translateY 20px"
+
+# -----------------------------------------------------------------------------
+# MODIFY: variables.css
+# -----------------------------------------------------------------------------
+variablesCssChanges:
+  insertAfterLine21:
+    - "/* Brand Colors - Configurable for theming */"
+    - "--brand-primary: #62d84e;"
+    - "--brand-secondary: #8b5cf6;"
+    - "--brand-accent: #38bdf8;"
+    - "/* Plasma Colors - Derived from brand */"
+    - "--plasma-1: var(--brand-primary);"
+    - "--plasma-2: var(--brand-secondary);"
+    - "--plasma-3: var(--brand-accent);"
+  
+  addToGlassSection:
+    - "--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);"
+  
+  updateLightTheme:
+    - "--glass-bg: rgba(255, 255, 255, 0.88);"
+
+# -----------------------------------------------------------------------------
+# MODIFY: base.css
+# -----------------------------------------------------------------------------
+baseCssChanges:
+  updateGlassClass:
+    add: "box-shadow: var(--glass-shadow);"
+  
+  addLightThemeOverride:
+    selector: ".light-theme .glass"
+    properties:
+      - "background: rgba(255, 255, 255, 0.88)"
+      - "box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06)"
+
+# -----------------------------------------------------------------------------
+# MODIFY: buttons.css
+# -----------------------------------------------------------------------------
+buttonsCssChanges:
+  addAfterLine35:
+    - ".btn:active:not(:disabled) {"
+    - "    transform: scale(0.97);"
+    - "    transition: transform 0.1s ease-out;"
+    - "}"
+
+# -----------------------------------------------------------------------------
+# MODIFY: index.html
+# -----------------------------------------------------------------------------
+indexHtmlChanges:
+  addCssLinks:
+    location: "After inputs.css link (line 31)"
+    add:
+      - '<link rel="stylesheet" href="ui/styles/plasma.css">'
+      - '<link rel="stylesheet" href="ui/styles/animations.css">'
+  
+  addPlasmaDiv:
+    location: "Start of body, before dashboard-shell"
+    add: |
+      <!-- Plasma Background -->
+      <div class="plasma-background">
+        <div class="plasma-bubble b1"></div>
+        <div class="plasma-bubble b2"></div>
+        <div class="plasma-bubble b3"></div>
+        <div class="plasma-bubble b4"></div>
+      </div>
+
+# =============================================================================
+# DEPENDENCY GRAPH
+# =============================================================================
+
+dependencyGraph:
+  order:
+    1: "Create plasma.css (standalone)"
+    2: "Create animations.css (standalone)"
+    3: "Update variables.css (adds tokens plasma.css needs)"
+    4: "Update base.css (uses new glass-shadow token)"
+    5: "Update buttons.css (standalone)"
+    6: "Update index.html (links new CSS, adds plasma div)"
+    7: "Update login.html (optional, same plasma treatment)"
+
+# =============================================================================
+# COMPLEXITY ESTIMATES
+# =============================================================================
+
+complexityEstimates:
+  - file: "plasma.css"
+    effort: "medium"
+    lines: "~80"
+    risk: "low"
+  
+  - file: "animations.css"
+    effort: "small"
+    lines: "~40"
+    risk: "low"
+  
+  - file: "variables.css"
+    effort: "small"
+    lines: "+15"
+    risk: "low"
+  
+  - file: "base.css"
+    effort: "small"
+    lines: "+10"
+    risk: "low"
+  
+  - file: "buttons.css"
+    effort: "small"
+    lines: "+4"
+    risk: "low"
+  
+  - file: "index.html"
+    effort: "small"
+    lines: "+8"
+    risk: "low"
+
+# =============================================================================
+# APPROVAL STATUS
+# =============================================================================
+
+approvalStatus:
+  status: "PENDING"
+  authorizedBy: null
+  timestamp: null
+  
+  note: |
+    This is the CRITICAL GATE (design → implementation).
+    Per Constitution Rule 3, file operations require !Proceed.
+    
+    Files to be modified: 4 (variables.css, base.css, buttons.css, index.html)
+    Files to be created: 2 (plasma.css, animations.css)
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"
+  focus: "Execute the file changes above"
