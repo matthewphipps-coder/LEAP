@@ -40,39 +40,155 @@ criticalContext: |
   5. Never modify this Gold Source
 
 # =============================================================================
-# CONTENTS OF THIS GOLD SOURCE
+# CONTENTS OF THIS GOLD SOURCE - COMPLETE FILE REGISTRY
+# =============================================================================
+# Every file listed. No orphans. Updated by Factory or LEAP as noted.
 # =============================================================================
 
 contents:
+
   scaffold:
     path: "scaffold/"
     description: "Core code components - copy to demo, don't modify here"
     locked: true
-  
+    updatedBy: "LEAP only"
+    updateWhen: "When scaffold features are added/changed"
+
+  # ---------------------------------------------------------------------------
+  # ARCHETYPES (Pattern Playbook)
+  # ---------------------------------------------------------------------------
   archetypes:
     path: "archetypes/"
-    description: "UI patterns available for demos"
-    current: ["agentic-dashboard"]
-  
+    description: "Pattern guidance for Factory AI"
+    files:
+      - file: "agentic-dashboard/archetype.yaml"
+        purpose: "Pattern decision tree - when to use PAGE_TABS, PAGE_SIDEBAR_ACTIONS, etc."
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold patterns change or new patterns added"
+
+  # ---------------------------------------------------------------------------
+  # META (Architecture & Standards)
+  # ---------------------------------------------------------------------------
   meta:
     path: "meta/"
-    description: "Architecture and standards"
+    description: "Architecture documentation and coding standards"
     files:
-      - "ARCHITECTURE.yaml - Playing field description"
-      - "architectural-standards.yaml - Code standards and rules"
-      - "design-system.yaml - Design tokens and visual patterns"
-      - "functionality.yaml - What already exists"
-      - "theme-extension-guide.yaml - How to customize themes"
-  
+      - file: "ARCHITECTURE.yaml"
+        purpose: "Folder structure, module dependencies, data flow"
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold structure changes"
+      
+      - file: "architectural-standards.yaml"
+        purpose: "Code patterns, naming rules, triad pattern, extension points"
+        updatedBy: "LEAP"
+        updateWhen: "When coding standards change"
+      
+      - file: "design-system.yaml"
+        purpose: "Design tokens, colors, typography, spacing"
+        updatedBy: "LEAP"
+        updateWhen: "When visual design system changes"
+      
+      - file: "functionality.yaml"
+        purpose: "What scaffold features exist and how to extend them"
+        updatedBy: "Both"
+        updateWhen: "LEAP: when scaffold adds features. Factory: update DEMO COPY with new demo features"
+      
+      - file: "theme-extension-guide.yaml"
+        purpose: "How to customize themes, brand colors, glass effects"
+        updatedBy: "LEAP"
+        updateWhen: "When theming capabilities change"
+
+  # ---------------------------------------------------------------------------
+  # GOVERNANCE (Factory Operations)
+  # ---------------------------------------------------------------------------
   governance:
     path: "governance/"
-    description: "How you operate"
+    description: "Factory operational protocols and rules"
     files:
-      - "FACTORY_README.yaml - This file (entry point)"
-      - "factory-protocol.yaml - How to run the factory"
-      - "lifecycle-stages.yaml - 8 stages with gates"
-      - "demo-rules.yaml - Consistency rules"
-      - "templates/ - Stage artifact templates"
+      - file: "FACTORY_README.yaml"
+        purpose: "Entry point for Factory AI - this file"
+        updatedBy: "LEAP"
+        updateWhen: "When factory process changes"
+      
+      - file: "factory-protocol.yaml"
+        purpose: "Gate protocol (!Proceed), recovery (!bump), execution model"
+        updatedBy: "LEAP"
+        updateWhen: "When factory gates or recovery process changes"
+      
+      - file: "lifecycle-stages.yaml"
+        purpose: "8-stage lifecycle with inputs, activities, outputs"
+        updatedBy: "LEAP"
+        updateWhen: "When stage definitions change"
+      
+      - file: "demo-rules.yaml"
+        purpose: "Locked files, naming conventions, consistency rules"
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold locked files or naming rules change"
+      
+      - file: "artifact-manifest.yaml"
+        purpose: "Where artifacts go (factory workspace vs demo output)"
+        updatedBy: "LEAP"
+        updateWhen: "When artifact locations change"
+      
+      - file: "FACTORY_TASK_TEMPLATE.md"
+        purpose: "Task checklist for Factory AI - copy to factory workspace as task.md"
+        updatedBy: "LEAP"
+        updateWhen: "When stage checklists or reading lists change"
+
+  # ---------------------------------------------------------------------------
+  # GOVERNANCE TEMPLATES (Stage Artifacts)
+  # ---------------------------------------------------------------------------
+  templates:
+    path: "governance/templates/"
+    description: "Stage artifact templates - Factory fills these out"
+    files:
+      - file: "README.md"
+        purpose: "Instructions for using templates"
+        updatedBy: "LEAP"
+      
+      - file: "CURRENT_STATE.yaml"
+        purpose: "Demo tracking - copy to factory workspace, update throughout"
+        updatedBy: "Factory"
+        updateWhen: "Every stage transition"
+      
+      - file: "stage-1-discovery.yaml"
+        purpose: "Template for Stage 1 Discovery artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-2-research.yaml"
+        purpose: "Template for Stage 2 Research artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-3-analysis.yaml"
+        purpose: "Template for Stage 3 Analysis artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-4-design.yaml"
+        purpose: "Template for Stage 4 Design artifact (includes scaffoldPatternDecisions)"
+        updatedBy: "LEAP"
+      
+      - file: "stage-5-implementation.yaml"
+        purpose: "Template for Stage 5 Implementation artifact (includes patternVerification)"
+        updatedBy: "LEAP"
+      
+      - file: "stage-6-validation.yaml"
+        purpose: "Template for Stage 6 Validation artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-7-testing.yaml"
+        purpose: "Template for Stage 7 Testing artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-8-closure.yaml"
+        purpose: "Template for Stage 8 Closure artifact"
+        updatedBy: "LEAP"
+
+fileCount:
+  total: 22
+  archetypes: 1
+  meta: 5
+  governance: 6
+  templates: 10
 
 # =============================================================================
 # DEMO OUTPUT
