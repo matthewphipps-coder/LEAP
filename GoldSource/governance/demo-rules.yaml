@@ -40,6 +40,18 @@ codeStandards:
   noInlineStyles:
     rule: true
     reason: "Use CSS variables and classes"
+  
+  stylingReference:
+    rule: "Use CSS variables from design-system.yaml"
+    reference: "meta/design-system.yaml"
+    guide: "meta/theme-extension-guide.yaml"
+    keyVariables:
+      - "--brand-primary, --brand-secondary, --brand-accent (theming)"
+      - "--glass-bg, --glass-border (glassmorphism)"
+    keyClasses:
+      - ".glass (glassmorphism effect)"
+      - ".animate-in (entrance animation)"
+      - ".hover-lift (hover effect)"
 
 # =============================================================================
 # SCAFFOLD RULES

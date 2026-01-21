@@ -87,6 +87,8 @@ Relative paths in this document are from Gold Source root.
 - `governance/lifecycle-stages.yaml` (Stage 5 section)
 - `governance/demo-rules.yaml` (code standards, locked files)
 - `meta/architectural-standards.yaml` (lines 130-170: naming, locked files, extension points)
+- `meta/design-system.yaml` (design tokens, visual patterns)
+- `meta/theme-extension-guide.yaml` (how to customize themes)
 - `governance/artifact-manifest.yaml` (lines 72-75: functionality.yaml location)
 
 ⚠️ **Critical conventions** (from architectural-standards.yaml):

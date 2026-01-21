@@ -60,7 +60,9 @@ contents:
     files:
       - "ARCHITECTURE.yaml - Playing field description"
       - "architectural-standards.yaml - Code standards and rules"
+      - "design-system.yaml - Design tokens and visual patterns"
       - "functionality.yaml - What already exists"
+      - "theme-extension-guide.yaml - How to customize themes"
   
   governance:
     path: "governance/"

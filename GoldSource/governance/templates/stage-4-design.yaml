@@ -49,6 +49,21 @@ wireframes:
       description: "[What it shows]"
 
 # =============================================================================
+# VISUAL DESIGN (Optional - for UI changes)
+# =============================================================================
+visualDesign:
+  required: false
+  when: "UI changes that involve custom styling"
+  reference: "meta/theme-extension-guide.yaml"
+  
+  styling:
+    colorsUsed: "[List CSS variables, e.g. --brand-primary, --accent-primary]"
+    glassEffects: "[Where .glass class is applied]"
+    animations: "[Which utilities used: .animate-in, .hover-lift]"
+  
+  lightThemeConsidered: "[true|false - verified demo works in light theme?]"
+
+# =============================================================================
 # DEPENDENCY GRAPH (LEAP-007)
 # =============================================================================
 dependencyGraph:
