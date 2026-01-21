@@ -8,19 +8,19 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 52
+  totalItems: 55
   immediate: 8
-  shortTerm: 44
+  shortTerm: 47
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 40
-    proposed: 6
+    proposed: 9
     inProgress: 0
     superseded: 6
   
-  note: "Phase 25 completed LEAP-040 (2026-01-21)"
+  note: "Added LEAP-046/047/048 from Factory v2.0.4 recommendations (2026-01-21)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -941,6 +941,64 @@ priorities:
       dependencies: ["LEAP-037"]  # App Shell (created the patterns)
       addedDate: "2026-01-21"
       source: "Factory Governance Impact Report - GAP-005, GAP-006, GAP-007"
+
+    - id: "LEAP-046"
+      name: "Fix Canvas-UI innerHTML Overwrite"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Fix canvas-ui.js so it doesn't overwrite canvas innerHTML, preserving page sections for page-router"
+      rationale: |
+        Factory v2.0.4 found canvas-ui.js overwrites the canvas innerHTML, destroying page sections
+        defined in index.html. This breaks multi-page navigation until manually fixed.
+        Factory had to modify canvas-ui.js each run to work around this.
+      acceptanceCriteria:
+        - "GoldSource/scaffold/ui/components/canvas/canvas-ui.js does NOT overwrite innerHTML"
+        - "Page sections in index.html preserved after canvas init"
+        - "page-router.js works correctly without workaround"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-037"]  # App Shell (created multi-page system)
+      addedDate: "2026-01-21"
+      source: "Factory v2.0.4 closure - REC-001"
+
+    - id: "LEAP-047"
+      name: "Add Placeholder Logo Assets"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add placeholder logo-dark.svg and logo-light.svg files to prevent 404 errors"
+      rationale: |
+        Factory runs consistently see 404 errors for /assets/logo-dark.svg and /assets/logo-light.svg.
+        The scaffold references these paths but files don't exist. Should add simple placeholder
+        SVGs that Factory can replace, or make paths configurable.
+      acceptanceCriteria:
+        - "GoldSource/scaffold/assets/logo-dark.svg exists with placeholder content"
+        - "GoldSource/scaffold/assets/logo-light.svg exists with placeholder content"
+        - "No 404 errors for logo files in browser console"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Factory v2.0.4 closure - REC-002 (also seen in v2.0.3)"
+
+    - id: "LEAP-048"
+      name: "Document Multi-Page Structure in Scaffold README"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add section to scaffold README explaining multi-page structure and how to add content to pages"
+      rationale: |
+        Factory AI needs to understand how page-dashboard, page-incidents, etc work together
+        with page-router.js. Current README doesn't explain this architecture, leading to
+        confusion about where to add feature content.
+      acceptanceCriteria:
+        - "GoldSource/scaffold/README.md includes 'Multi-Page Architecture' section"
+        - "Page section IDs documented (page-dashboard, page-incidents, etc)"
+        - "How to add new page documented"
+        - "How to add content to existing page documented"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-037"]  # App Shell (created multi-page system)
+      addedDate: "2026-01-21"
+      source: "Factory v2.0.4 closure - REC-003"
   
   mediumTerm: []
   future: []
