@@ -7,8 +7,7 @@ metadata:
   lastUpdated: "2026-01-21"
   status: "active"
 
-summary:
-  totalItems: 59
+summary:\n  totalItems: 60
   immediate: 8
   shortTerm: 47
   mediumTerm: 0
@@ -16,11 +15,11 @@ summary:
   
   statusBreakdown:
     complete: 42
-    proposed: 9
+    proposed: 7
     inProgress: 0
-    superseded: 8
+    superseded: 11
   
-  note: "Superseded LEAP-049/050 after root cause analysis (2026-01-21) - !bump protocol added"
+  note: \"Superseded LEAP-048/051/052 → new LEAP-053 for consolidated pattern enforcement (2026-01-21)\"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -994,7 +993,13 @@ priorities:
       name: "Document Multi-Page Structure in Scaffold README"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededBy: "LEAP-053"
+      supersededDate: "2026-01-21"
+      supersededReason: |
+        Investigation found multi-page patterns ARE already documented in functionality.yaml
+        and architectural-standards.yaml. The real issue is Factory AI not applying documented
+        patterns during implementation. LEAP-053 addresses root cause with template reminders.
       description: "Add section to scaffold README explaining multi-page structure and how to add content to pages"
       rationale: |
         Factory AI needs to understand how page-dashboard, page-incidents, etc work together
@@ -1006,7 +1011,7 @@ priorities:
         - "How to add new page documented"
         - "How to add content to existing page documented"
       estimatedEffort: "small"
-      dependencies: ["LEAP-037"]  # App Shell (created multi-page system)
+      dependencies: ["LEAP-037"]
       addedDate: "2026-01-21"
       source: "Factory v2.0.4 closure - REC-003"
 
@@ -1063,7 +1068,12 @@ priorities:
       name: "Feature-Page Placement Governance"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededBy: "LEAP-053"
+      supersededDate: "2026-01-21"
+      supersededReason: |
+        Root cause analysis found the patterns ARE documented but Factory AI doesn't apply them.
+        LEAP-053 adds explicit checklists in stage templates to force pattern verification.
       description: "Add governance rule: 'Primary features must render on their dedicated pages'"
       rationale: |
         NEXUS v2.1.0 defined a 'Calendar' page but rendered the calendar component inside the 'Change' page,
@@ -1080,7 +1090,12 @@ priorities:
       name: "UX Consistency - No Duplicate Nav"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "superseded"
+      supersededBy: "LEAP-053"
+      supersededDate: "2026-01-21"
+      supersededReason: |
+        Root cause analysis found PAGE_SIDEBAR_ACTIONS pattern IS documented. Factory AI
+        doesn't apply it. LEAP-053 adds explicit checklist to prevent creating custom nav bars.
       description: "Add governance rule forbidding local nav bars when Sidebar is available"
       rationale: |
         NEXUS v2.1.0 created a local 'filter bar' in the header while also defining sidebar filter actions.
@@ -1092,6 +1107,49 @@ priorities:
       dependencies: []
       addedDate: "2026-01-21"
       source: "Critical Analysis of NEXUS v2.1.0 - Architectural & Governance Failures"
+
+    # -------------------------------------------------------------------------
+    # Consolidated Pattern Enforcement (2026-01-21)
+    # -------------------------------------------------------------------------
+
+    - id: "LEAP-053"
+      name: "Enforce Scaffold Pattern Usage in Factory Templates"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add explicit scaffold pattern checklists to Factory stage templates"
+      rationale: |
+        Root cause analysis of v2.1.0 failures found that scaffold patterns (PAGE_TABS,
+        PAGE_SIDEBAR_ACTIONS, SETTINGS_SECTIONS, registerStateSlice) ARE documented in
+        functionality.yaml and architectural-standards.yaml. However, Factory AI reads
+        these at Stage 2 but doesn't consistently apply them at Stage 5.
+        
+        The fix is to add explicit checklists at the point of decision (Stage 4) and
+        verification (Stage 5) so Factory cannot claim ignorance.
+      acceptanceCriteria:
+        - "FACTORY_TASK_TEMPLATE.md Stage 4 includes scaffold pattern checklist with checkboxes"
+        - "FACTORY_TASK_TEMPLATE.md Stage 5 includes pattern verification checkboxes"
+        - "stage-4-design.yaml includes scaffoldPatternsDecisions section"
+        - "stage-5-implementation.yaml includes scaffoldPatternVerification section"
+      proposedChanges:
+        file1:
+          path: "governance/FACTORY_TASK_TEMPLATE.md"
+          changes:
+            - "Stage 4: Add scaffold pattern checklist (PAGE_TABS, PAGE_SIDEBAR_ACTIONS, etc)"
+            - "Stage 5: Add pattern verification checkboxes (no custom nav bars, etc)"
+        file2:
+          path: "governance/templates/stage-4-design.yaml"
+          changes:
+            - "Add scaffoldPatternsDecisions section with explicit yes/no fields"
+        file3:
+          path: "governance/templates/stage-5-implementation.yaml"
+          changes:
+            - "Add scaffoldPatternVerification section with violation flags"
+      estimatedEffort: "small"
+      dependencies: []
+      supersedes: ["LEAP-048", "LEAP-051", "LEAP-052"]
+      addedDate: "2026-01-21"
+      source: "Root cause analysis of v2.1.0 governance failures"
 
   mediumTerm: []
   future: []
