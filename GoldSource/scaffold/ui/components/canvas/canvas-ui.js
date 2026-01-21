@@ -1,14 +1,12 @@
 /**
  * @file canvas-ui.js
- * @purpose Canvas component - main content area (empty for future cards)
+ * @purpose Canvas component - main content area
  * @layer ui
- * @dependencies [state.js]
+ * @dependencies []
  * @dependents [app.js]
  * @locked false
  * @modifyImpact [main content area]
  */
-
-import { subscribe } from '../../../core/state.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -16,7 +14,7 @@ import { subscribe } from '../../../core/state.js';
 
 export const MODULE_CONTRACT = {
   provides: ['initCanvas'],
-  requires: ['state.js']
+  requires: []
 };
 
 // =============================================================================
@@ -25,24 +23,12 @@ export const MODULE_CONTRACT = {
 
 /**
  * @function initCanvas
- * @purpose Initialize canvas component with welcome message
+ * @purpose Initialize canvas component
+ * @note Legacy function - page sections now defined in index.html (SPEC-003).
+ *       Multi-page system uses #page-dashboard, #page-incidents, etc.
+ *       This function is kept as no-op for backwards compatibility.
  */
 export function initCanvas() {
-  const canvasEl = document.getElementById('canvas');
-  if (!canvasEl) return;
-
-  canvasEl.innerHTML = `
-    <div class="canvas-content">
-      <div class="canvas-welcome">
-        <h1 class="welcome-title">Welcome to NEXUS</h1>
-        <p class="welcome-subtitle">Your AI-First Enterprise Dashboard</p>
-        <p class="welcome-hint">This canvas is ready for future features via the Factory.</p>
-      </div>
-    </div>
-  `;
-
-  // Subscribe to state changes for future features
-  subscribe((state, source) => {
-    // Future: update canvas based on state changes
-  });
+  // No-op: Page sections are statically defined in index.html
+  // Do NOT overwrite canvas innerHTML - it destroys page-router targets
 }

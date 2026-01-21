@@ -102,7 +102,7 @@ dependencyMap:
     
     "state.js":
       imports: ["logger.js"]
-      exportedTo: ["app.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js", "canvas-ui.js"]
+      exportedTo: ["app.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js"]
     
     "firebase.js":
       imports: ["config.js (external)"]
@@ -131,7 +131,7 @@ dependencyMap:
     "sidebar-ui.js":
       imports: ["state.js"]
     "canvas-ui.js":
-      imports: ["state.js"]
+      imports: []
 
 # =============================================================================
 # DATA FLOW
