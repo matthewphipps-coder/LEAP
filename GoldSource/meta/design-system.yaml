@@ -130,3 +130,94 @@ glassmorphism:
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
     }
+
+# =============================================================================
+# PHASE 22: BRAND COLOR SYSTEM (FR-006)
+# =============================================================================
+
+brandColorSystem:
+  description: "3-variable brand color system for easy theming"
+  file: "ui/styles/variables.css"
+  
+  variables:
+    - name: "--brand-primary"
+      default: "#62d84e"
+      purpose: "Primary brand color (green)"
+    - name: "--brand-secondary"
+      default: "#8b5cf6"
+      purpose: "Secondary brand color (purple)"
+    - name: "--brand-accent"
+      default: "#38bdf8"
+      purpose: "Accent brand color (sky blue)"
+  
+  customization: |
+    Override in :root or via settings dialog:
+    :root {
+      --brand-primary: #ff6b6b;
+      --brand-secondary: #4ecdc4;
+      --brand-accent: #ffe66d;
+    }
+  
+  impact:
+    - "Plasma bubble colors (--plasma-1/2/3 derived from brand)"
+    - "Accent highlights throughout app"
+
+# =============================================================================
+# PHASE 22: PLASMA BACKGROUND (FR-001)
+# =============================================================================
+
+plasmaBackground:
+  description: "Animated gradient bubble background effect"
+  file: "ui/styles/plasma.css"
+  
+  usage:
+    html: |
+      <div class="plasma-background">
+        <div class="plasma-bubble b1"></div>
+        <div class="plasma-bubble b2"></div>
+        <div class="plasma-bubble b3"></div>
+        <div class="plasma-bubble b4"></div>
+      </div>
+    placement: "First child inside <body>, before main content"
+  
+  variables:
+    - "--plasma-1: var(--brand-primary)"
+    - "--plasma-2: var(--brand-secondary)"
+    - "--plasma-3: var(--brand-accent)"
+  
+  lightTheme:
+    behavior: "Reduced opacity (0.15) for subtler effect"
+    override: ".light-theme .plasma-bubble { opacity: 0.15; }"
+  
+  animation:
+    type: "float (infinite)"
+    duration: "20s to 35s per bubble"
+    effect: "Gentle floating motion with blur"
+
+# =============================================================================
+# PHASE 22: ANIMATION UTILITIES (FR-003, FR-004, FR-005)
+# =============================================================================
+
+animationUtilities:
+  description: "Reusable animation classes for micro-interactions"
+  file: "ui/styles/animations.css"
+  
+  classes:
+    - name: ".animate-in"
+      purpose: "Fade-up entrance animation"
+      behavior: "Opacity 0→1, translateY 30px→0"
+      stagger: "nth-child delays (100ms increments)"
+      usage: |
+        <h1 class="animate-in">Title</h1>
+        <div class="card animate-in">Card 1</div>
+        <div class="card animate-in">Card 2</div>
+    
+    - name: ".hover-lift"
+      purpose: "Subtle lift on hover"
+      behavior: "translateY(-4px) with enhanced shadow"
+      usage: |
+        <div class="card hover-lift">Hoverable card</div>
+  
+  buttonFeedback:
+    selector: ".btn-primary:active, .btn-secondary:active"
+    behavior: "scale(0.97) for press feedback"

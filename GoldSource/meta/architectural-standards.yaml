@@ -168,6 +168,177 @@ phase18Conventions:
       - "Dynamic imports: use import() if needed"
     learnedFrom: "Phase 18 bug - require() in app.js broke theme toggle"
 
+# =============================================================================
+# PHASE 23: PAGE REGISTRATION PATTERN (LEAP-043)
+# =============================================================================
+
+pageRegistrationPattern:
+  name: "Config-Driven Page and Sidebar Extension"
+  purpose: "Factory can add pages and sidebar actions via config-only changes"
+  addedDate: "2026-01-21"
+  source: "Phase 23 - ExtensibleAppShell (SPEC-003)"
+  spec: "SPEC-003"
+  
+  pageTabs:
+    location: "core/constants.js"
+    constant: "PAGE_TABS"
+    type: "Array of page config objects"
+    
+    schema:
+      required:
+        - name: "id"
+          type: "string"
+          purpose: "Unique page identifier (used in data-page attribute)"
+        - name: "icon"
+          type: "string"
+          purpose: "Lucide icon name (e.g., 'layout-dashboard', 'alert-triangle')"
+        - name: "label"
+          type: "string"
+          purpose: "User-visible tab label (shown in tooltip)"
+      optional:
+        - name: "badge"
+          type: "number"
+          purpose: "Count badge displayed on tab"
+    
+    example: |
+      export const PAGE_TABS = [
+        { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+        { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
+        { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
+      ];
+    
+    factoryUsage: |
+      To add a new page:
+      1. Append to PAGE_TABS array in constants.js
+      2. Create HTML for page container (see multiPageSystem)
+  
+  sidebarActions:
+    location: "core/constants.js"
+    constant: "PAGE_SIDEBAR_ACTIONS"
+    type: "Object mapping pageId to action arrays"
+    
+    schema:
+      key: "Page ID (must match a PAGE_TABS entry)"
+      value: "Array of action objects"
+      actionFields:
+        required:
+          - name: "id"
+            type: "string"
+            purpose: "Unique action identifier"
+          - name: "icon"
+            type: "string"
+            purpose: "Lucide icon name"
+          - name: "label"
+            type: "string"
+            purpose: "Tooltip label"
+        optional:
+          - name: "badge"
+            type: "number"
+            purpose: "Count badge on action button"
+    
+    example: |
+      export const PAGE_SIDEBAR_ACTIONS = {
+        dashboard: [
+          { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
+        ],
+        incidents: [
+          { id: 'new-incident', icon: 'plus', label: 'New Incident' },
+          { id: 'filter', icon: 'filter', label: 'Filter' },
+        ],
+        reports: [],  // No sidebar actions for this page
+      };
+    
+    behavior: |
+      - Sidebar hides if page has empty actions array
+      - First action is automatically set as 'active'
+      - Custom events dispatched on action click (sidebar-action)
+  
+  settingsConfigs:
+    location: "core/constants.js"
+    constants: ["SETTINGS_MENU", "SETTINGS_SECTIONS"]
+    purpose: "Config-driven settings dialog sections"
+    
+    SETTINGS_MENU:
+      description: "Left sidebar menu structure"
+      example: |
+        export const SETTINGS_MENU = [
+          { group: 'DISPLAY', items: [
+            { id: 'appearance', icon: 'palette', label: 'Appearance' },
+            { id: 'branding', icon: 'image', label: 'Branding' },
+          ]}
+        ];
+    
+    SETTINGS_SECTIONS:
+      description: "Section-specific configuration"
+      example: |
+        export const SETTINGS_SECTIONS = {
+          appearance: {
+            colorModes: ['dark', 'light', 'system'],
+            accentColors: [...]
+          },
+          branding: {
+            logoMaxHeight: 32,
+            supportedFormats: ['svg', 'png', 'jpg', 'webp']
+          }
+        };
+
+# =============================================================================
+# PHASE 23: MULTI-PAGE CANVAS SYSTEM (LEAP-045)
+# =============================================================================
+
+multiPageSystem:
+  name: "Multi-Page Canvas System"
+  purpose: "Support multiple content pages with tab-based navigation"
+  addedDate: "2026-01-21"
+  source: "Phase 23 - ExtensibleAppShell (SPEC-003)"
+  spec: "SPEC-003"
+  
+  htmlStructure:
+    container: "#canvas"
+    pageElement: ".page"
+    activeClass: ".active"
+    
+    template: |
+      <main id="canvas" class="canvas glass">
+        <div class="page active" id="page-dashboard" data-page="dashboard">
+          <h1 class="page-title animate-in">Dashboard</h1>
+          <!-- Dashboard content -->
+        </div>
+        <div class="page" id="page-incidents" data-page="incidents">
+          <h1 class="page-title animate-in">Incidents</h1>
+          <!-- Incidents content -->
+        </div>
+      </main>
+    
+    requirements:
+      - "Each page needs id='page-{id}' and data-page='{id}'"
+      - "Only one page has 'active' class at a time"
+      - "Page id must match PAGE_TABS entry id"
+  
+  pageRouter:
+    file: "core/page-router.js"
+    function: "selectTab(pageId)"
+    behavior:
+      - "Updates PAGE_TABS active state"
+      - "Shows/hides page containers"
+      - "Calls updateSidebarForPage(pageId)"
+      - "Dispatches 'page-change' custom event"
+    
+    example: |
+      import { selectTab } from '../core/page-router.js';
+      
+      // Switch to incidents page
+      selectTab('incidents');
+  
+  factoryUsage: |
+    To add a new page:
+    1. Add entry to PAGE_TABS in constants.js
+    2. Add page actions to PAGE_SIDEBAR_ACTIONS (or empty array)
+    3. Create page container in index.html:
+       <div class="page" id="page-mypage" data-page="mypage">
+         <h1 class="page-title animate-in">My Page</h1>
+       </div>
+    4. (Optional) Create page-specific components in ui/components/
 agentEngagementRules:
   name: "The Pair Protocol"
   purpose: "Ensure high-fidelity collaboration between User and AI"

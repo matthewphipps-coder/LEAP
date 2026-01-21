@@ -1,8 +1,8 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-21T06:31:00Z"
-  version: "4.7.0"
+  lastUpdated: "2026-01-21T06:38:00Z"
+  version: "4.8.0"
 
 aiMustRead:
   - "READ THIS FILE FIRST - at start of every session"
@@ -14,109 +14,51 @@ projectContext:
   name: "LEAP"
   tagline: "AI-First DemoFactory Build & Control Project"
   version: "v1.1.0"
-  currentFocus: "Between phases - Phase 23 complete, ready for next phase"
+  currentFocus: "Phase 24 in progress - Factory Governance documentation"
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "23"
-  name: "ExtensibleAppShell"
-  status: "complete"
-  stage: "closure"
-  startedDate: "2026-01-21T05:13:00Z"
-  completedDate: "2026-01-21T06:04:00Z"
+  number: "24"
+  name: "FactoryGovernance"
+  status: "in-progress"
+  stage: "design"
+  startedDate: "2026-01-21T06:35:00Z"
   
-  goal: "Implement SPEC-003: Transform index.html into extensible scaffold with floating header, page tabs, floating pill sidebar, settings dialog, and multi-page system"
+  goal: "Update GoldSource governance docs to reflect Phase 22/23 patterns (LEAP-043, LEAP-044, LEAP-045)"
   
-  functionalSpec: "LEAP_Governance/SprintFunctionalSpecs/SPEC-003-app-shell.yaml"
-  prototype: "LEAP_Governance/SprintFunctionalSpecs/SPEC-003-prototype.html"
-  backlogId: "LEAP-037"
+  backlogItems:
+    - "LEAP-043: Document Page Registration Pattern"
+    - "LEAP-044: Document Phase 22 Design Patterns"
+    - "LEAP-045: Document Phase 23 Shell Patterns"
   
-  stageArtifact: "docs/phases/phase-23/stage-8-closure.yaml"
+  stageArtifact: "docs/phases/phase-24/stage-4-design.yaml"
   
   previousPhase:
-    number: "22"
-    name: "DesignSystemEnhancement"
+    number: "23"
+    name: "ExtensibleAppShell"
     status: "complete"
     executiveSignOff: "Granted by Matthew Phipps"
   
-  # Phase 23 Scope (from SPEC-003)
+  # Phase 24 Scope
   sprintScope:
-    name: "Extensible App Shell"
-    effort: "medium"
-    approach: "Spec-driven implementation with prototype as visual contract"
-    functionalSpec: "SPEC-003-app-shell.yaml"
-    
-    requirements:
-      mustHave:
-        - id: "FR-001"
-          name: "Customer Logo Slot"
-        - id: "FR-002"
-          name: "Page Switcher Tabs"
-        - id: "FR-004B"
-          name: "Unified Count Badge System"
-        - id: "FR-004C"
-          name: "Floating Header"
-        - id: "FR-004D"
-          name: "Settings Dialog"
-        - id: "FR-004E"
-          name: "Workspace Branding Settings"
-        - id: "FR-005"
-          name: "Contextual Sidebar Actions"
-        - id: "FR-006"
-          name: "Floating Pill-Shaped Sidebar"
-        - id: "FR-007"
-          name: "Multi-Page Canvas System"
-      shouldHave:
-        - id: "FR-003"
-          name: "AI Search Box (slot only)"
-        - id: "FR-004"
-          name: "Header Action Buttons"
-        - id: "FR-008"
-          name: "Page Registration Pattern"
+    name: "Factory Governance Documentation"
+    effort: "small"
+    approach: "Documentation-only - no code changes"
     
     affectedFiles:
-      new:
-        - "core/page-router.js"
-        - "ui/components/settings/settings-ui.js"
-        - "ui/components/settings/settings.css"
       modify:
-        - "core/constants.js"
-        - "index.html"
-        - "ui/components/header/header-ui.js"
-        - "ui/components/header/header.css"
-        - "ui/components/sidebar/sidebar-ui.js"
-        - "ui/components/sidebar/sidebar.css"
-        - "core/app.js"
-    
-    factoryGovernanceImpact: true
-    governanceReason: "Page registration pattern is new - Factory needs to know how to add pages"
-  
-  breakingChanges:
-    - component: "Sidebar"
-      change: "Complete replacement: push/pull expand-collapse → floating pill"
-    - component: "Header"
-      change: "Major enhancement with tabs, search slot, settings"
-    - dependency: "Lucide Icons"
-      change: "New CDN dependency added to GoldSource"
+        - "GoldSource/meta/design-system.yaml"
+        - "GoldSource/meta/functionality.yaml"
+        - "GoldSource/meta/architectural-standards.yaml"
 
 currentActivity:
-  status: "discovery"
-  summary: "Starting Phase 23: Extensible App Shell"
+  status: "design"
+  summary: "Phase 24: Factory Governance - awaiting design approval"
   
   recentWork:
     date: "2026-01-21"
-    session: "Phase 23 Initialization"
-    description: "Critical review complete, prep work done (CSS variables), starting Discovery stage"
-
-    
-    sessionChanges:
-      backupCreated: "GoldSource_backup_v2.1_pre-phase22"
-      gitCommits:
-        - "5c17b1b - Add Factory Governance Impact section to specs"
-        - "ad332f4 - Backup GoldSource v2.1"
-      keyDecisions:
-        - "Starting with SPEC-002 (lowest risk, no governance impact)"
-        - "Spec-driven implementation approach"
+    session: "Phase 24 Discovery through Design"
+    description: "Researched Phase 22/23 patterns, created implementation plan"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
