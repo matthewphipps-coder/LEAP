@@ -7,19 +7,19 @@ metadata:
   lastUpdated: "2026-01-21"
   status: "active"
 
-summary:\n  totalItems: 60
+summary:\n  totalItems: 61
   immediate: 8
-  shortTerm: 47
+  shortTerm: 48
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 43
-    proposed: 6
+    proposed: 7
     inProgress: 0
     superseded: 11
   
-  note: "LEAP-053 completed in Phase 26 - Factory AI Compliance Enhancement (2026-01-21)"
+  note: "Added LEAP-056: /newfactory workflow with prompt saving (2026-01-21)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -1152,6 +1152,41 @@ priorities:
       supersedes: ["LEAP-048", "LEAP-051", "LEAP-052"]
       addedDate: "2026-01-21"
       source: "Root cause analysis of v2.1.0 governance failures"
+
+    # -------------------------------------------------------------------------
+    # /newfactory Workflow (2026-01-21)
+    # -------------------------------------------------------------------------
+
+    - id: "LEAP-056"
+      name: "Create /newfactory Workflow with Prompt Saving"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+        Create .agent/workflows/newfactory.md workflow that:
+        1. Prompts for demo name, scenario, output location
+        2. Creates Factory workspace and Demo output directories
+        3. Copies scaffold to demo output
+        4. Copies task.md to factory workspace
+        5. Saves the onboarding prompt to factory workspace for audit trail
+        6. Generates simple prompt for new AI session
+      rationale: "Current process is manual and prompts are not saved for comparison"
+      acceptanceCriteria:
+        - "/newfactory command exists and is documented"
+        - "Prompt is saved to factory workspace as prompt.md"
+        - "Simple prompt format for new AI session"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Phase 26 comparison run setup"
+      standardPrompt: |
+        Create a demo for "NEXUS v[VERSION]-[FEATURE]" with the scenario "[SCENARIO DESCRIPTION]".
+
+        Gold Source: ~/Documents/LEAP/GoldSource/
+        Demo Output: ~/Documents/DemoOutput/NEXUS-v[VERSION]-[FEATURE]/
+        Factory Workspace: ~/Documents/DemoInstances/Factory-v[VERSION]-[FEATURE]/
+
+        Read the governance files in GoldSource/governance/ and follow the 8-stage lifecycle with !Proceed gates.
 
   mediumTerm: []
   future: []
