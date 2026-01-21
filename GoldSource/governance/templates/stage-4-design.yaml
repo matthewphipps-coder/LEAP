@@ -64,6 +64,48 @@ visualDesign:
   lightThemeConsidered: "[true|false - verified demo works in light theme?]"
 
 # =============================================================================
+# SCAFFOLD PATTERN DECISIONS (Required)
+# =============================================================================
+# Reference: archetypes/agentic-dashboard/archetype.yaml for pattern guidance
+# =============================================================================
+scaffoldPatternDecisions:
+  description: "Factory must explicitly decide on each pattern before proceeding"
+  
+  patterns:
+    pageTabs:
+      question: "Will this feature need a dedicated page?"
+      decision: "[yes/no]"
+      ifYes: "Add entry to PAGE_TABS in constants.js"
+    
+    sidebarActions:
+      question: "Will this page need contextual actions?"
+      decision: "[yes/no]"
+      ifYes: "Add to PAGE_SIDEBAR_ACTIONS[pageId] in constants.js"
+    
+    featureState:
+      question: "Will this feature need its own state?"
+      decision: "[yes/no]"
+      ifYes: "Use registerStateSlice() from state.js"
+    
+    settingsSections:
+      question: "Will this feature need settings?"
+      decision: "[yes/no]"
+      ifYes: "Add to SETTINGS_MENU and SETTINGS_SECTIONS in constants.js"
+    
+    modalDialog:
+      question: "Will this feature need a detail dialog?"
+      decision: "[yes/no]"
+      ifYes: "Use lazy modal creation pattern (create DOM on first open)"
+  
+  antiPatternConfirmations:
+    - confirmation: "I will NOT create custom navigation bars"
+      verified: "[true/false]"
+    - confirmation: "Feature content will render on its correct page"
+      verified: "[true/false]"
+    - confirmation: "I will NOT leave placeholder text"
+      verified: "[true/false]"
+
+# =============================================================================
 # DEPENDENCY GRAPH (LEAP-007)
 # =============================================================================
 dependencyGraph:

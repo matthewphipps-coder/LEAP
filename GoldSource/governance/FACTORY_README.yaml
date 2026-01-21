@@ -101,14 +101,15 @@ firstSteps:
   2: "Read governance/factory-protocol.yaml"
   3: "Read governance/lifecycle-stages.yaml"
   4: "Read governance/demo-rules.yaml"
-  5: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
-  6: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
-  7: "Ask user for: scenario description (what the demo should show)"
-  8: "Copy scaffold to demo location"
-  9: "Copy FACTORY_TASK_TEMPLATE.md to factory workspace as task.md"
-  10: "Adapt task.md: Fill in demo name, paths, and demo-specific items"
-  11: "Initialize CURRENT_STATE.yaml in factory workspace"
-  12: "Begin Stage 1: Discovery with !Proceed gate"
+  5: "Read archetypes/agentic-dashboard/archetype.yaml (pattern decisions)"
+  6: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
+  7: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
+  8: "Ask user for: scenario description (what the demo should show)"
+  9: "Copy scaffold to demo location"
+  10: "Copy FACTORY_TASK_TEMPLATE.md to factory workspace as task.md"
+  11: "Adapt task.md: Fill in demo name, paths, and demo-specific items"
+  12: "Initialize CURRENT_STATE.yaml in factory workspace"
+  13: "Begin Stage 1: Discovery with !Proceed gate"
 
 # =============================================================================
 # GOLDEN RULES

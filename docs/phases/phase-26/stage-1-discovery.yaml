@@ -1,0 +1,138 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Phase 26
+# =============================================================================
+
+metadata:
+  phase: 26
+  phaseName: "FactoryAICompliance"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-21T19:21:00Z"
+  status: "in-progress"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: |
+    Factory AI is not reliably using scaffold patterns (PAGE_TABS, PAGE_SIDEBAR_ACTIONS,
+    registerStateSlice, etc.) during demo creation. Root cause analysis shows:
+    1. Pattern documentation exists but is scattered across multiple files
+    2. Factory AI onboarding doesn't include pattern references
+    3. Pattern decisions happen at Stage 4 but relevant docs aren't in reading list until Stage 5
+    4. No enforcement mechanism ensures AI considers patterns before designing
+  
+  evidence:
+    - "NEXUS v2.1.0 created custom navigation bar instead of using PAGE_SIDEBAR_ACTIONS"
+    - "NEXUS v2.1.0 placed calendar content on wrong page despite PAGE_TABS defining pages"
+    - "archetype.yaml is never referenced in Factory AI reading path"
+    - "Stage 4 template has no scaffold pattern decision section"
+  
+  rootCause: |
+    The Template IS the compliance mechanism, not the reading list.
+    Current templates don't FORCE AI to make pattern decisions or verify compliance.
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  inScope:
+    - "Refactor archetype.yaml as 50-100 line pattern quick reference"
+    - "Add archetype.yaml to FACTORY_README firstSteps reading list"
+    - "Add pattern reading to FACTORY_TASK_TEMPLATE Stage 4"
+    - "Add scaffoldPatternDecisions section to stage-4-design.yaml template"
+    - "Add patternVerification section to stage-5-implementation.yaml template"
+    - "Verify documentation matches actual scaffold code"
+  
+  outOfScope:
+    - "Modifying scaffold code"
+    - "Changing locked files"
+    - "Restructuring governance folder hierarchy"
+    - "Splitting architectural-standards.yaml into smaller files"
+  
+  backlogItems:
+    primary: "New item: Factory AI Compliance Enhancement"
+    related:
+      - "LEAP-053 (supersede after this phase)"
+
+# =============================================================================
+# RESEARCH QUESTIONS FOR STAGE 2
+# =============================================================================
+
+researchQuestions:
+  codeVsDocumentation:
+    - question: "Does archetype.yaml match actual scaffold component structure?"
+      check: "Compare archetype.yaml components list vs scaffold/ui/components/"
+    
+    - question: "Does functionality.yaml accurately describe extension patterns?"
+      check: "Verify SHELL-001 extensionNotes match actual PAGE_TABS implementation"
+    
+    - question: "Are there scaffold features not documented in functionality.yaml?"
+      check: "Audit scaffold/core/ and scaffold/ui/components/ for undocumented code"
+    
+    - question: "Do locked file lists in demo-rules.yaml match actual locked files?"
+      check: "Compare demo-rules.yaml locked list vs files marked @locked in headers"
+  
+  currentReadingPath:
+    - question: "What does Factory AI actually read before Stage 4?"
+      check: "Trace FACTORY_README + FACTORY_TASK_TEMPLATE reading instructions"
+    
+    - question: "When does PAGE_TABS pattern first appear in reading path?"
+      check: "Search all governance docs for PAGE_TABS references"
+  
+  templateStructure:
+    - question: "What mandatory sections do stage templates currently have?"
+      check: "Review stage-4-design.yaml and stage-5-implementation.yaml templates"
+    
+    - question: "How do other templates enforce compliance?"
+      check: "Review stage-6-validation.yaml for pattern verification approach"
+
+# =============================================================================
+# KEY FEATURES
+# =============================================================================
+
+keyFeatures:
+  - name: "Pattern Quick Reference (archetype.yaml refactor)"
+    description: "50-100 line decision tree for Factory AI"
+    priority: "must-have"
+  
+  - name: "Onboarding Update"
+    description: "Add archetype to FACTORY_README firstSteps"
+    priority: "must-have"
+  
+  - name: "Stage 4 Reading Update"
+    description: "Add pattern docs to FACTORY_TASK_TEMPLATE Stage 4"
+    priority: "must-have"
+  
+  - name: "Stage 4 Template Pattern Decisions"
+    description: "Add scaffoldPatternDecisions section to stage-4-design.yaml"
+    priority: "must-have"
+  
+  - name: "Stage 5 Template Verification"
+    description: "Add patternVerification section to stage-5-implementation.yaml"
+    priority: "must-have"
+
+# =============================================================================
+# SUCCESS CRITERIA
+# =============================================================================
+
+successCriteria:
+  primary: "Next Factory run (v2.2.0 or later) demonstrates better pattern compliance"
+  
+  measuredBy:
+    - "Factory AI explicitly references PAGE_TABS/PAGE_SIDEBAR_ACTIONS in Stage 4 design"
+    - "No custom navigation bars created"
+    - "Feature content rendered on correct pages"
+    - "Stage 4 artifact includes scaffoldPatternDecisions section"
+
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  focus: "Answer research questions, audit scaffold code vs documentation"
+  requires: "!Proceed"

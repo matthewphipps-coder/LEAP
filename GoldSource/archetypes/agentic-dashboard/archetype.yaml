@@ -1,80 +1,113 @@
 # =============================================================================
-# ARCHETYPE: AGENTIC DASHBOARD
+# ARCHETYPE: AGENTIC DASHBOARD v2.0.0
 # =============================================================================
-# This archetype provides an AI-powered dashboard interface.
-# It includes chat, data cards, and quick actions.
+# Pattern Playbook for Factory AI
 # =============================================================================
 
 name: "Agentic Dashboard"
-version: "1.0.0"
-description: "AI-powered dashboard with chat, data cards, and actions"
+version: "2.0.0"
+description: "AI-powered dashboard with multi-page canvas, contextual sidebar, and settings"
 
 # =============================================================================
-# WHAT THIS ARCHETYPE PROVIDES
+# PATTERN DECISION TREE - Use these before creating new components
 # =============================================================================
 
-provides:
+patternDecisionTree:
   
-  aiInteraction:
-    component: "chat-panel"
-    path: "scaffold/ui/components/chat-panel/"
-    purpose: "AI assistant interaction with message history"
+  pageTabs:
+    when: "Feature needs its own view/tab in header"
+    use: "Add entry to PAGE_TABS in constants.js"
+    reference: "architectural-standards.yaml lines 182-213"
+    doNot: "Create custom navigation header or tab bar"
   
-  dataDisplay:
-    component: "data-cards"
-    path: "scaffold/ui/components/data-cards/"
-    purpose: "Metrics and task information display"
+  sidebarActions:
+    when: "Page needs contextual action buttons"
+    use: "Add to PAGE_SIDEBAR_ACTIONS[pageId] in constants.js"
+    reference: "architectural-standards.yaml lines 215-254"
+    doNot: "Create inline toolbar or floating action buttons"
   
-  quickActions:
-    component: "action-buttons"
-    path: "scaffold/ui/components/action-buttons/"
-    purpose: "Quick action buttons for common tasks"
+  featureState:
+    when: "Feature needs its own state beyond core (user/theme/sidebar)"
+    use: "registerStateSlice('name', initialState, setters) from state.js"
+    reference: "architectural-standards.yaml lines 600-610"
+    doNot: "Modify state.js (locked) or create parallel state system"
+  
+  settingsSections:
+    when: "Feature has user-configurable options"
+    use: "Add to SETTINGS_MENU and SETTINGS_SECTIONS in constants.js"
+    reference: "architectural-standards.yaml lines 256-283"
+    doNot: "Create separate settings page or modal"
+  
+  modalDialog:
+    when: "Feature needs popup/detail view"
+    use: "Create dialog DOM on first open with showModal()"
+    reference: "architectural-standards.yaml lines 778-793"
+    doNot: "Add dialog HTML directly to index.html"
 
 # =============================================================================
-# SCAFFOLD STRUCTURE
+# ANTI-PATTERNS - What NOT to do
 # =============================================================================
 
-scaffoldStructure:
-  core:
-    - "scaffold/core/app.js - Application orchestrator"
-    - "scaffold/core/state.js - State management"
-    - "scaffold/core/logger.js - Logging"
-    - "scaffold/core/error-handler.js - Error handling"
-    - "scaffold/core/mock-data.js - Mock data"
+antiPatterns:
   
+  - pattern: "Custom navigation bar"
+    why: "Conflicts with PAGE_SIDEBAR_ACTIONS, confuses users"
+    instead: "Use PAGE_SIDEBAR_ACTIONS for page-specific actions"
+  
+  - pattern: "Content on wrong page"
+    why: "If PAGE_TABS defines page X, feature X content must go in page-X container"
+    instead: "Match feature content to its PAGE_TABS entry"
+  
+  - pattern: "Placeholder text as content"
+    why: "Demos should show real demo content, not 'Navigate to X to see Y'"
+    instead: "Render actual feature content on default page"
+
+# =============================================================================
+# ACTIVE COMPONENTS (Phase 23)
+# =============================================================================
+
+activeComponents:
   shell:
-    - "scaffold/ui/components/header/ - Header (locked)"
-    - "scaffold/ui/components/nav/ - Navigation (locked)"
-    - "scaffold/ui/components/footer/ - Footer (locked)"
+    - component: "sidebar-ui.js"
+      path: "scaffold/ui/components/sidebar/"
+      purpose: "Floating pill sidebar with contextual per-page actions"
+      uses: "PAGE_SIDEBAR_ACTIONS from constants.js"
+    
+    - component: "header-ui.js"
+      path: "scaffold/ui/components/header/"
+      purpose: "Header with page tabs and controls"
+      uses: "PAGE_TABS from constants.js"
+    
+    - component: "settings-ui.js"
+      path: "scaffold/ui/components/settings/"
+      purpose: "Settings dialog with Appearance and Branding"
+      uses: "SETTINGS_MENU, SETTINGS_SECTIONS from constants.js"
   
-  archetypeComponents:
-    - "scaffold/ui/components/chat-panel/ - Chat (flexible)"
-    - "scaffold/ui/components/data-cards/ - Data cards (flexible)"
-    - "scaffold/ui/components/action-buttons/ - Actions (flexible)"
-  
-  styles:
-    - "scaffold/ui/styles/variables.css - CSS variables"
-    - "scaffold/ui/styles/base.css - Base styles"
-    - "scaffold/ui/styles/shell.css - Shell layout"
+  flexible:
+    - "chat-panel/ - AI chat interface"
+    - "data-cards/ - Data visualization cards"
+    - "action-buttons/ - Quick action buttons"
 
 # =============================================================================
-# USAGE
+# DEPRECATED COMPONENTS - Do not use
+# =============================================================================
+
+deprecatedComponents:
+  - component: "nav-ui.js"
+    path: "scaffold/ui/components/nav/"
+    status: "DEPRECATED - replaced by sidebar-ui.js in Phase 23"
+    reason: "Uses hardcoded NAV_ITEMS, not config-driven PAGE_SIDEBAR_ACTIONS"
+
+# =============================================================================
+# USAGE GUIDANCE
 # =============================================================================
 
 usage:
   bestFor:
     - "Task management dashboards"
     - "AI-assisted workflows"
-    - "Data visualization with AI insights"
-    - "ServiceNow future-vision demos"
-  
+    - "Multi-page enterprise apps"
   notFor:
     - "Simple static pages"
     - "Form-heavy interfaces"
     - "Mobile-first apps"
-
-# =============================================================================
-# PREVIEW
-# =============================================================================
-
-preview: "preview.png"

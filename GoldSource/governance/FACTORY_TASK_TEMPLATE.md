@@ -84,6 +84,8 @@ See `governance/factory-protocol.yaml` → `recoveryProtocol` for full details.
 📖 **Read before starting**:
 - `governance/lifecycle-stages.yaml` (Stage 4 section)
 - `governance/artifact-manifest.yaml` (wireframe location: lines 64-66)
+- `archetypes/agentic-dashboard/archetype.yaml` (pattern decisions)
+- `meta/functionality.yaml` (what scaffold provides)
 
 ⚠️ **Critical**: Wireframes go in FACTORY_WORKSPACE (see artifact-manifest.yaml)
 
@@ -103,7 +105,8 @@ See `governance/factory-protocol.yaml` → `recoveryProtocol` for full details.
 📖 **Read before starting**:
 - `governance/lifecycle-stages.yaml` (Stage 5 section)
 - `governance/demo-rules.yaml` (code standards, locked files)
-- `meta/architectural-standards.yaml` (lines 130-170: naming, locked files, extension points)
+- `meta/architectural-standards.yaml` (lines 130-170: naming, locked files)
+- `meta/architectural-standards.yaml` (lines 175-341: PAGE_TABS, PAGE_SIDEBAR_ACTIONS, multi-page)
 - `meta/design-system.yaml` (design tokens, visual patterns)
 - `meta/theme-extension-guide.yaml` (how to customize themes)
 - `governance/artifact-manifest.yaml` (lines 72-75: functionality.yaml location)

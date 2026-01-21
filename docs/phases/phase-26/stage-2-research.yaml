@@ -1,0 +1,272 @@
+# =============================================================================
+# STAGE 2: RESEARCH - Phase 26
+# =============================================================================
+
+metadata:
+  phase: 26
+  phaseName: "FactoryAICompliance"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-21T19:26:00Z"
+  status: "in-progress"
+  gateApproval: "Stage 1 approved with !Proceed at 2026-01-21T19:25:57Z"
+  previousStage: "stage-1-discovery.yaml"
+
+# =============================================================================
+# SCAFFOLD CODE AUDIT
+# =============================================================================
+
+scaffoldCodeAudit:
+  
+  actualScaffoldStructure:
+    core:
+      - "app.js (3866 bytes)"
+      - "auth-service.js (5450 bytes)"
+      - "config.js (549 bytes)"
+      - "constants.js (4126 bytes) - Contains PAGE_TABS, PAGE_SIDEBAR_ACTIONS, SETTINGS_*"
+      - "error-handler.js (3863 bytes)"
+      - "firebase.js (2396 bytes)"
+      - "logger.js (3645 bytes)"
+      - "mock-data.js (5202 bytes)"
+      - "page-router.js (3567 bytes) - Uses PAGE_TABS"
+      - "state.js (7422 bytes) - Has registerStateSlice()"
+      - "theme-manager.js (2949 bytes)"
+    
+    uiComponents:
+      - "action-buttons/ (2 files)"
+      - "canvas/ (2 files)"
+      - "chat-panel/ (2 files)"
+      - "data-cards/ (2 files)"
+      - "footer/ (2 files)"
+      - "header/ (2 files) - Uses PAGE_TABS for tab rendering"
+      - "nav/ (2 files) - OLD component, marked @locked but stale"
+      - "settings/ (2 files) - Uses SETTINGS_MENU, SETTINGS_SECTIONS"
+      - "sidebar/ (2 files) - NEW component, uses PAGE_SIDEBAR_ACTIONS"
+    
+    features:
+      - "ai/ (1 file) - ai-service.js"
+      - "dashboard/ (1 file)"
+
+# =============================================================================
+# ARCHETYPE.YAML vs REALITY
+# =============================================================================
+
+archetypeVsReality:
+  summary: "archetype.yaml is STALE and does not reflect Phase 23 changes"
+  
+  discrepancies:
+    - field: "scaffoldStructure.shell"
+      archetypeSays: "nav/ - Navigation (locked)"
+      reality: "nav/ exists but is stale; sidebar/ is the active component"
+      impact: "Factory AI may try to modify wrong component"
+    
+    - field: "scaffoldStructure.shell"
+      archetypeSays: "footer/ - Footer (locked)"
+      reality: "footer/ exists but is not prominent in Phase 23 shell"
+      impact: "Minor - footer still exists"
+    
+    - field: "provides"
+      archetypeSays: "chat-panel, data-cards, action-buttons"
+      reality: "These exist, but Phase 23 added PAGE_TABS, PAGE_SIDEBAR_ACTIONS, settings patterns"
+      impact: "Factory AI doesn't know about config-driven extension patterns"
+    
+    - field: "version"
+      archetypeSays: "1.0.0"
+      reality: "Should be 2.0.0 to match scaffold version"
+      impact: "Version drift"
+  
+  missing:
+    - "PAGE_TABS pattern - how to add pages"
+    - "PAGE_SIDEBAR_ACTIONS pattern - how to add contextual actions"
+    - "SETTINGS_MENU/SETTINGS_SECTIONS - how to extend settings"
+    - "registerStateSlice() - how to add feature state"
+    - "Multi-page canvas system"
+    - "Pattern decision tree (when to use what)"
+    - "Anti-patterns (what NOT to do)"
+
+# =============================================================================
+# FUNCTIONALITY.YAML ACCURACY
+# =============================================================================
+
+functionalityYamlAudit:
+  summary: "functionality.yaml is ACCURATE for Phase 23 features"
+  
+  verified:
+    - feature: "SHELL-001 (Extensible App Shell)"
+      documented: "PAGE_TABS, PAGE_SIDEBAR_ACTIONS, multi-page canvas"
+      actualCode: "constants.js, page-router.js, sidebar-ui.js, header-ui.js"
+      matches: true
+    
+    - feature: "SHELL-002 (Settings Dialog)"
+      documented: "SETTINGS_MENU, SETTINGS_SECTIONS"
+      actualCode: "constants.js, settings-ui.js"
+      matches: true
+    
+    - feature: "STATE-001 (State Manager)"
+      documented: "registerStateSlice() extension"
+      actualCode: "state.js has registerStateSlice() function"
+      matches: true
+  
+  gap: "functionality.yaml is accurate but Factory AI may not read it at the right time"
+
+# =============================================================================
+# READING PATH ANALYSIS
+# =============================================================================
+
+readingPathAnalysis:
+  
+  currentPath:
+    onboarding:
+      1: "FACTORY_README.yaml (entry point)"
+      2: "factory-protocol.yaml (gates)"
+      3: "lifecycle-stages.yaml (8 stages)"
+      4: "demo-rules.yaml (locked files)"
+    stage2:
+      5: "ARCHITECTURE.yaml (folder structure)"
+      6: "functionality.yaml (what scaffold provides) ← PAGE_TABS FIRST MENTION"
+    stage4:
+      7: "lifecycle-stages.yaml (Stage 4 section)"
+      8: "artifact-manifest.yaml (wireframe location)"
+    stage5:
+      9: "demo-rules.yaml (code standards)"
+      10: "architectural-standards.yaml lines 130-170 ← MISSES lines 175-341!"
+      11: "design-system.yaml"
+      12: "theme-extension-guide.yaml"
+  
+  whenPatternInfoAppears:
+    PAGE_TABS:
+      firstMention: "functionality.yaml (Stage 2)"
+      detailedDocs: "architectural-standards.yaml lines 182-213 (Stage 5, but not in reading range)"
+    PAGE_SIDEBAR_ACTIONS:
+      firstMention: "functionality.yaml (Stage 2)"
+      detailedDocs: "architectural-standards.yaml lines 215-254 (Stage 5, but not in reading range)"
+    registerStateSlice:
+      firstMention: "architectural-standards.yaml lines 600-610 (Stage 5, but not in reading range)"
+      detailedDocs: "Same location"
+    archetype:
+      mentions: "NEVER in reading path"
+  
+  criticalGap: |
+    Stage 4 is where DESIGN DECISIONS are made, but pattern documentation is:
+    - Either read too early (Stage 2) and forgotten by Stage 4
+    - Or read too late (Stage 5) after design is approved
+    - archetype.yaml is NEVER referenced
+
+# =============================================================================
+# NAV-UI.JS vs SIDEBAR-UI.JS
+# =============================================================================
+
+navVsSidebar:
+  finding: "Two navigation components exist, causing confusion"
+  
+  navUi:
+    file: "scaffold/ui/components/nav/nav-ui.js"
+    lines: 142
+    locked: true
+    purpose: "OLD sidebar navigation with NAV_ITEMS array"
+    uses: "Hardcoded NAV_ITEMS, not PAGE_TABS"
+    status: "STALE - should be deprecated or removed"
+  
+  sidebarUi:
+    file: "scaffold/ui/components/sidebar/sidebar-ui.js"
+    lines: 167
+    locked: false
+    purpose: "NEW floating pill sidebar with contextual actions"
+    uses: "PAGE_SIDEBAR_ACTIONS from constants.js"
+    status: "ACTIVE - Phase 23 component"
+  
+  impact: |
+    archetype.yaml references nav/ as locked shell component.
+    Factory AI might think nav/ is the active navigation.
+    In reality, sidebar/ is the Phase 23 replacement.
+
+# =============================================================================
+# TEMPLATE STRUCTURE ANALYSIS
+# =============================================================================
+
+templateAnalysis:
+  
+  stage4DesignTemplate:
+    file: "governance/templates/stage-4-design.yaml"
+    currentSections:
+      - "metadata"
+      - "mandatory (fields AI must complete)"
+      - "wireframes"
+      - "visualDesign"
+      - "dependencyGraph"
+      - "complexityEstimates"
+      - "filesToModify"
+      - "scopeChanges"
+      - "traceabilityReview"
+      - "nextStage"
+    missing:
+      - "scaffoldPatternDecisions - explicit yes/no per pattern"
+      - "Reference to archetype or functionality.yaml"
+  
+  stage5ImplementationTemplate:
+    file: "governance/templates/stage-5-implementation.yaml"
+    currentSections:
+      - "metadata"
+      - "mandatory (fields AI must complete)"
+      - "filesCreated"
+      - "filesModified"
+      - "functionalityUpdate"
+      - "commits"
+      - "nextStage"
+    missing:
+      - "patternVerification - confirm patterns used correctly"
+      - "Anti-pattern check - confirm no custom nav, etc."
+  
+  stage6ValidationTemplate:
+    file: "governance/templates/stage-6-validation.yaml"
+    has: "validationMatrix with field-by-field checks"
+    observation: "Could add scaffold pattern compliance as validation dimension"
+
+# =============================================================================
+# FINDINGS SUMMARY
+# =============================================================================
+
+findings:
+  
+  - finding: "archetype.yaml is stale and never referenced"
+    significance: "Factory AI has no pattern playbook"
+    implication: "Must refactor archetype as pattern quick reference AND add to reading path"
+  
+  - finding: "nav-ui.js is stale but still in scaffold"
+    significance: "Confusing - archetype references it, but sidebar-ui.js is active"
+    implication: "Either remove nav-ui.js or clearly mark deprecated in archetype"
+  
+  - finding: "functionality.yaml is accurate but read too early"
+    significance: "AI reads at Stage 2, forgets by Stage 4"
+    implication: "Add reminder to Stage 4 reading list"
+  
+  - finding: "architectural-standards line range in Stage 5 is wrong"
+    significance: "Lines 130-170 miss PAGE_TABS (175-213), PAGE_SIDEBAR_ACTIONS (215-254)"
+    implication: "Update FACTORY_TASK_TEMPLATE to correct line range"
+  
+  - finding: "Stage 4 template has no pattern decision section"
+    significance: "AI can skip thinking about patterns"
+    implication: "Add scaffoldPatternDecisions section to template"
+  
+  - finding: "Stage 5 template has no pattern verification"
+    significance: "No enforcement that AI followed patterns"
+    implication: "Add patternVerification section to template"
+
+# =============================================================================
+# QUESTIONS FOR ANALYSIS
+# =============================================================================
+
+questionsForAnalysis:
+  - "Should we remove nav-ui.js entirely or mark deprecated in archetype?"
+  - "How detailed should scaffoldPatternDecisions section be?"
+  - "Should patternVerification be in Stage 5 or Stage 6?"
+  - "What's the right line range for architectural-standards in Stage 5?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  focus: "Evaluate approach options and risks"
+  requires: "!Proceed"

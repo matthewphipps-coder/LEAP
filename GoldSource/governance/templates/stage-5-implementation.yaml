@@ -26,6 +26,7 @@ mandatory:
   content:
     - "filesCreated: List of new files"
     - "filesModified: List of modified files"
+    - "patternVerification: Verify patterns match Stage 4 decisions"
     - "functionalityUpdate: Demo functionality.yaml updated"
 
 implementationObjective: "Build the demo based on design"
@@ -38,6 +39,44 @@ filesCreated:
 
 filesModified:
   - "[path/to/file]"
+
+# =============================================================================
+# PATTERN VERIFICATION (Required before !Proceed)
+# =============================================================================
+patternVerification:
+  description: "Verify patterns used match Stage 4 decisions"
+  referenceArtifact: "stage-4-design.yaml scaffoldPatternDecisions"
+  
+  patternsUsed:
+    pageTabs:
+      stage4Decision: "[copy from stage-4]"
+      implemented: "[yes/no/n/a]"
+      files: "[list files where PAGE_TABS was modified]"
+    
+    sidebarActions:
+      stage4Decision: "[copy from stage-4]"
+      implemented: "[yes/no/n/a]"
+      files: "[list files where PAGE_SIDEBAR_ACTIONS was modified]"
+    
+    featureState:
+      stage4Decision: "[copy from stage-4]"
+      implemented: "[yes/no/n/a]"
+      files: "[list files where registerStateSlice was used]"
+    
+    settingsSections:
+      stage4Decision: "[copy from stage-4]"
+      implemented: "[yes/no/n/a]"
+      files: "[list files where SETTINGS_* was modified]"
+    
+    modalDialog:
+      stage4Decision: "[copy from stage-4]"
+      implemented: "[yes/no/n/a]"
+      files: "[list files where modal was created]"
+  
+  antiPatternCheck:
+    noCustomNavBars: "[confirmed]"
+    contentOnCorrectPage: "[confirmed]"
+    noPlaceholderText: "[confirmed]"
 
 # =============================================================================
 # FUNCTIONALITY.YAML UPDATE (Required)
@@ -65,3 +104,4 @@ commits:
 nextStage:
   name: "validation"
   requires: "!Proceed"
+

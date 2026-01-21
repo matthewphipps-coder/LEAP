@@ -1,0 +1,218 @@
+# =============================================================================
+# STAGE 3: ANALYSIS - Phase 26
+# =============================================================================
+
+metadata:
+  phase: 26
+  phaseName: "FactoryAICompliance"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-21T19:31:00Z"
+  status: "in-progress"
+  gateApproval: "Stage 2 approved with !Proceed at 2026-01-21T19:31:30Z"
+  previousStage: "stage-2-research.yaml"
+
+# =============================================================================
+# RISKS
+# =============================================================================
+
+risks:
+  
+  - id: "RISK-001"
+    name: "Breaking existing Factory runs"
+    probability: "low"
+    impact: "medium"
+    description: "Changes to templates might break in-progress Factory runs"
+    mitigation: "Templates are copied to factory workspace, so changes only affect NEW runs"
+  
+  - id: "RISK-002"
+    name: "Overly verbose templates"
+    probability: "medium"
+    impact: "medium"
+    description: "Adding scaffold pattern sections might make templates too long/complex"
+    mitigation: "Keep pattern decision section concise (5-10 questions max)"
+  
+  - id: "RISK-003"
+    name: "Archetype refactor scope creep"
+    probability: "medium"
+    impact: "low"
+    description: "Temptation to over-engineer archetype.yaml"
+    mitigation: "Keep archetype under 100 lines, focused on pattern decisions only"
+  
+  - id: "RISK-004"
+    name: "nav-ui.js removal breaking something"
+    probability: "low"
+    impact: "high"
+    description: "Unknown code might depend on nav-ui.js"
+    mitigation: "Option B: Mark deprecated in archetype, don't delete"
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+
+approachOptions:
+  
+  # -------------------------------------------------------------------------
+  # OPTION A: Minimal Changes
+  # -------------------------------------------------------------------------
+  - option: "A"
+    name: "Minimal Changes"
+    description: |
+      Update only the reading path:
+      - Add archetype.yaml to FACTORY_README firstSteps
+      - Add functionality.yaml to Stage 4 reading list
+      - Fix architectural-standards line range in Stage 5
+    pros:
+      - "Smallest change set"
+      - "Lower risk"
+      - "Quick to implement"
+    cons:
+      - "Doesn't force pattern decisions (AI can still skip)"
+      - "Archetype still stale"
+      - "No verification mechanism"
+    recommended: false
+  
+  # -------------------------------------------------------------------------
+  # OPTION B: Template Enforcement (Recommended)
+  # -------------------------------------------------------------------------
+  - option: "B"
+    name: "Template Enforcement"
+    description: |
+      Add pattern decisions to templates + update reading path:
+      1. Refactor archetype.yaml as pattern quick reference (50-100 lines)
+      2. Add archetype to FACTORY_README firstSteps
+      3. Add scaffoldPatternDecisions section to stage-4-design.yaml template
+      4. Add patternVerification section to stage-5-implementation.yaml template
+      5. Fix Stage 5 line range for architectural-standards
+      6. Mark nav-ui.js as deprecated in archetype.yaml (don't delete)
+    pros:
+      - "Forces AI to explicitly decide on patterns"
+      - "Creates audit trail in stage artifacts"
+      - "Verification step catches mistakes before !Proceed"
+      - "Archetype becomes useful pattern playbook"
+    cons:
+      - "More changes required"
+      - "Templates get slightly longer"
+    recommended: true
+  
+  # -------------------------------------------------------------------------
+  # OPTION C: Full Restructure
+  # -------------------------------------------------------------------------
+  - option: "C"
+    name: "Full Restructure"
+    description: |
+      Major documentation overhaul:
+      - Split architectural-standards.yaml into smaller files
+      - Create separate pattern-playbook.yaml
+      - Remove nav-ui.js from scaffold
+      - Update all governance docs for consistency
+    pros:
+      - "Clean separation of concerns"
+      - "Shorter, focused docs"
+      - "Removes stale code"
+    cons:
+      - "Large scope"
+      - "Risk of introducing errors"
+      - "More maintenance overhead"
+      - "Overkill for the problem"
+    recommended: false
+
+# =============================================================================
+# RECOMMENDED APPROACH
+# =============================================================================
+
+recommendedApproach:
+  option: "B"
+  rationale: |
+    Option B addresses the root cause: "The template IS the compliance mechanism."
+    
+    By adding scaffoldPatternDecisions to Stage 4 and patternVerification to Stage 5,
+    we FORCE Factory AI to explicitly engage with patterns at decision time.
+    
+    The archetype refactor provides a concise reference for pattern decisions,
+    keeping it under 100 lines with a focus on "when to use what" guidance.
+    
+    Marking nav-ui.js as deprecated (rather than deleting) is safer - unknown
+    code in demos might reference it, and we don't want to break anything.
+
+# =============================================================================
+# DETAILED DECISIONS
+# =============================================================================
+
+detailedDecisions:
+  
+  navUiJs:
+    question: "Should we remove nav-ui.js or mark deprecated?"
+    decision: "Mark deprecated in archetype.yaml"
+    rationale: "Safer - nav/ folder stays, archetype clearly states sidebar/ is active"
+  
+  scaffoldPatternDecisions:
+    question: "How detailed should this section be?"
+    decision: "5-7 patterns, each with question/decision/ifYes fields"
+    patterns:
+      - "PAGE_TABS - Need a new page?"
+      - "PAGE_SIDEBAR_ACTIONS - Need contextual actions for a page?"
+      - "registerStateSlice() - Need feature state?"
+      - "SETTINGS_SECTIONS - Need to extend settings?"
+      - "Lazy modal - Need a detail dialog?"
+    antiPatterns:
+      - "No custom navigation bars"
+      - "Content on correct page"
+      - "No placeholder text"
+  
+  patternVerification:
+    question: "Stage 5 or Stage 6?"
+    decision: "Stage 5 (simpler to add, before validation)"
+    rationale: "Stage 5 is implementation output - natural place for confirmation"
+  
+  architecturalStandardsLineRange:
+    question: "What's the right line range?"
+    current: "130-170"
+    proposed: "175-341 (covers PAGE_TABS, PAGE_SIDEBAR_ACTIONS, multiPageSystem)"
+    decision: "Add lines 175-341 as second reference, keep 130-170 for naming"
+
+# =============================================================================
+# RRMD+ DECISION
+# =============================================================================
+
+rrmdDecision:
+  required: false
+  triggers:
+    moreThan3Files: false  # 5-6 files, but all small changes
+    coreFiles: false  # No scaffold code changes
+    dataSchema: false
+    buildDeploy: false
+    previousFailures: false
+  rationale: |
+    Changes are to governance YAML files and templates only.
+    No scaffold code modifications.
+    No functional changes to running demos.
+
+# =============================================================================
+# FILES TO MODIFY
+# =============================================================================
+
+filesToModify:
+  - file: "archetypes/agentic-dashboard/archetype.yaml"
+    change: "Full refactor as pattern quick reference"
+  
+  - file: "governance/FACTORY_README.yaml"
+    change: "Add archetype.yaml to firstSteps reading list"
+  
+  - file: "governance/FACTORY_TASK_TEMPLATE.md"
+    change: "Add archetype and functionality.yaml to Stage 4, fix Stage 5 line range"
+  
+  - file: "governance/templates/stage-4-design.yaml"
+    change: "Add scaffoldPatternDecisions section"
+  
+  - file: "governance/templates/stage-5-implementation.yaml"
+    change: "Add patternVerification section"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  focus: "Create detailed implementation plan"
+  requires: "!Proceed"
