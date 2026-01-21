@@ -4,23 +4,23 @@ metadata:
   purpose: "Feature roadmap and priorities"
   version: "3.0.0"
   created: "2026-01-16"
-  lastUpdated: "2026-01-20"
+  lastUpdated: "2026-01-21"
   status: "active"
 
 summary:
-  totalItems: 49
+  totalItems: 52
   immediate: 8
-  shortTerm: 41
+  shortTerm: 44
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 36
-    proposed: 7
+    proposed: 10
     inProgress: 0
     superseded: 6
   
-  note: "LEAP-037 completed in Phase 23 (2026-01-21)"
+  note: "Added LEAP-044, LEAP-045 from Factory Governance Impact Report (2026-01-21)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -873,6 +873,66 @@ priorities:
       dependencies: ["LEAP-037"]  # App Shell (provides the slot)
       addedDate: "2026-01-21"
       source: "SPEC-003 forensic review - Q-002 decision"
+
+    - id: "LEAP-043"
+      name: "Document Page Registration Pattern"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add 'Page Registration Pattern' section to GoldSource/meta/architectural-standards.yaml"
+      rationale: |
+        Phase 23 implemented a config-driven extensibility pattern using PAGE_TABS and PAGE_SIDEBAR_ACTIONS 
+        arrays. This pattern enables Factory to add pages/actions via config-only changes, but the pattern 
+        is not documented in architectural-standards.yaml where Factory AI looks for guidance.
+      acceptanceCriteria:
+        - "GoldSource/meta/architectural-standards.yaml includes 'Page Registration Pattern' section"
+        - "PAGE_TABS array pattern documented with required fields (id, label, icon)"
+        - "PAGE_SIDEBAR_ACTIONS config pattern documented"
+        - "Example showing how Factory adds new pages"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-037"]  # App Shell (created the pattern)
+      addedDate: "2026-01-21"
+      source: "Phase 23 closure - pending governance update"
+
+    - id: "LEAP-044"
+      name: "Document Phase 22 Design Patterns"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Update GoldSource/meta/design-system.yaml with Phase 22 patterns (plasma, brand colors, animations)"
+      rationale: |
+        Phase 22 added plasma background, 3-color brand system, and animation utilities.
+        These are not documented in design-system.yaml where Factory AI looks for styling guidance.
+        Without docs, Factory may create static backgrounds or hardcode colors.
+      acceptanceCriteria:
+        - "design-system.yaml includes plasmaBackground section with usage instructions"
+        - "design-system.yaml includes brandCustomization section with 3-color system"
+        - "design-system.yaml includes animationUtilities section (.animate-in, .hover-lift)"
+        - "Light theme glass differences documented"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-036"]  # Design System Phase 1 (created the patterns)
+      addedDate: "2026-01-21"
+      source: "Factory Governance Impact Report - GAP-002, GAP-003, GAP-004"
+
+    - id: "LEAP-045"
+      name: "Document Phase 23 Shell Patterns"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Update GoldSource/meta/functionality.yaml and architectural-standards.yaml with Phase 23 patterns"
+      rationale: |
+        Phase 23 added settings dialog, multi-page canvas, and redesigned floating sidebar.
+        Functionality.yaml still describes old sidebar (push/pull). Architectural-standards.yaml
+        lacks multi-page system docs. Factory AI will be confused about current scaffold capabilities.
+      acceptanceCriteria:
+        - "functionality.yaml SHELL-001 updated to describe floating pill sidebar"
+        - "functionality.yaml includes SHELL-002 for Settings Dialog"
+        - "architectural-standards.yaml includes multiPageSystem section"
+        - "Breaking changes from Phase 23 reflected in docs"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-037"]  # App Shell (created the patterns)
+      addedDate: "2026-01-21"
+      source: "Factory Governance Impact Report - GAP-005, GAP-006, GAP-007"
   
   mediumTerm: []
   future: []
