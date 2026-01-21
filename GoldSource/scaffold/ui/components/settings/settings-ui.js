@@ -10,15 +10,15 @@
  */
 
 import { SETTINGS_MENU, SETTINGS_SECTIONS } from '../../../core/constants.js';
-import { getState, setState } from '../../../core/state.js';
+import { getState, setTheme } from '../../../core/state.js';
 
 // =============================================================================
 // MODULE CONTRACT
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['initSettings', 'openSettings', 'closeSettings'],
-    requires: ['constants.js', 'state.js']
+  provides: ['initSettings', 'openSettings', 'closeSettings'],
+  requires: ['constants.js', 'state.js']
 };
 
 // =============================================================================
@@ -38,22 +38,22 @@ let overlayEl = null;
  * @purpose Initialize settings dialog (create DOM if needed)
  */
 export function initSettings() {
-    // Check if overlay already exists
-    overlayEl = document.getElementById('settings-overlay');
+  // Check if overlay already exists
+  overlayEl = document.getElementById('settings-overlay');
 
-    if (!overlayEl) {
-        // Create settings overlay in body
-        overlayEl = document.createElement('div');
-        overlayEl.id = 'settings-overlay';
-        overlayEl.className = 'settings-overlay';
-        overlayEl.innerHTML = createSettingsDialogHTML();
-        document.body.appendChild(overlayEl);
-    }
+  if (!overlayEl) {
+    // Create settings overlay in body
+    overlayEl = document.createElement('div');
+    overlayEl.id = 'settings-overlay';
+    overlayEl.className = 'settings-overlay';
+    overlayEl.innerHTML = createSettingsDialogHTML();
+    document.body.appendChild(overlayEl);
+  }
 
-    // Bind events
-    bindSettingsEvents();
+  // Bind events
+  bindSettingsEvents();
 
-    console.log('[Settings] Initialized with', SETTINGS_MENU.length, 'menu groups');
+  console.log('[Settings] Initialized with', SETTINGS_MENU.length, 'menu groups');
 }
 
 // =============================================================================
@@ -65,7 +65,7 @@ export function initSettings() {
  * @purpose Generate settings dialog HTML structure
  */
 function createSettingsDialogHTML() {
-    return `
+  return `
     <div class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <!-- Left Menu -->
       <aside class="settings-menu">
@@ -104,7 +104,7 @@ function createSettingsDialogHTML() {
  * @purpose Generate settings menu HTML from SETTINGS_MENU config
  */
 function renderSettingsMenu() {
-    return SETTINGS_MENU.map(group => `
+  return SETTINGS_MENU.map(group => `
     <div class="settings-menu-section">
       <div class="settings-menu-section-label">${group.group}</div>
       ${group.items.map(item => `
@@ -129,31 +129,31 @@ function renderSettingsMenu() {
  * @purpose Open the settings dialog
  */
 export function openSettings() {
-    if (!overlayEl) {
-        initSettings();
-    }
+  if (!overlayEl) {
+    initSettings();
+  }
 
-    isOpen = true;
-    currentSection = 'appearance'; // Reset to default section
+  isOpen = true;
+  currentSection = 'appearance'; // Reset to default section
 
-    overlayEl.classList.add('visible');
+  overlayEl.classList.add('visible');
 
-    // Render current section
-    renderSection(currentSection);
-    updateMenuActiveState();
+  // Render current section
+  renderSection(currentSection);
+  updateMenuActiveState();
 
-    // Initialize icons
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+  // Initialize icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
 
-    // Trap focus
-    document.addEventListener('keydown', handleKeydown);
+  // Trap focus
+  document.addEventListener('keydown', handleKeydown);
 
-    // Prevent body scroll
-    document.body.style.overflow = 'hidden';
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
 
-    console.log('[Settings] Opened');
+  console.log('[Settings] Opened');
 }
 
 /**
@@ -161,18 +161,18 @@ export function openSettings() {
  * @purpose Close the settings dialog
  */
 export function closeSettings() {
-    if (!overlayEl || !isOpen) return;
+  if (!overlayEl || !isOpen) return;
 
-    isOpen = false;
-    overlayEl.classList.remove('visible');
+  isOpen = false;
+  overlayEl.classList.remove('visible');
 
-    // Remove listeners
-    document.removeEventListener('keydown', handleKeydown);
+  // Remove listeners
+  document.removeEventListener('keydown', handleKeydown);
 
-    // Restore body scroll
-    document.body.style.overflow = '';
+  // Restore body scroll
+  document.body.style.overflow = '';
 
-    console.log('[Settings] Closed');
+  console.log('[Settings] Closed');
 }
 
 // =============================================================================
@@ -185,36 +185,36 @@ export function closeSettings() {
  * @param {string} sectionId - Section to render
  */
 function renderSection(sectionId) {
-    const contentBody = document.getElementById('settings-content-body');
-    const titleEl = document.getElementById('settings-section-title');
+  const contentBody = document.getElementById('settings-content-body');
+  const titleEl = document.getElementById('settings-section-title');
 
-    if (!contentBody) return;
+  if (!contentBody) return;
 
-    // Update title
-    const menuItem = SETTINGS_MENU.flatMap(g => g.items).find(i => i.id === sectionId);
-    if (titleEl && menuItem) {
-        titleEl.textContent = menuItem.label;
-    }
+  // Update title
+  const menuItem = SETTINGS_MENU.flatMap(g => g.items).find(i => i.id === sectionId);
+  if (titleEl && menuItem) {
+    titleEl.textContent = menuItem.label;
+  }
 
-    // Render section-specific content
-    switch (sectionId) {
-        case 'appearance':
-            contentBody.innerHTML = renderAppearanceSection();
-            break;
-        case 'branding':
-            contentBody.innerHTML = renderBrandingSection();
-            break;
-        default:
-            contentBody.innerHTML = `<p>Section "${sectionId}" not implemented.</p>`;
-    }
+  // Render section-specific content
+  switch (sectionId) {
+    case 'appearance':
+      contentBody.innerHTML = renderAppearanceSection();
+      break;
+    case 'branding':
+      contentBody.innerHTML = renderBrandingSection();
+      break;
+    default:
+      contentBody.innerHTML = `<p>Section "${sectionId}" not implemented.</p>`;
+  }
 
-    // Reinitialize icons
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+  // Reinitialize icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
 
-    // Bind section-specific events
-    bindSectionEvents(sectionId);
+  // Bind section-specific events
+  bindSectionEvents(sectionId);
 }
 
 /**
@@ -222,10 +222,10 @@ function renderSection(sectionId) {
  * @purpose Render Appearance settings section
  */
 function renderAppearanceSection() {
-    const currentTheme = getState('theme') || 'dark';
-    const config = SETTINGS_SECTIONS.appearance;
+  const currentTheme = getState('theme') || 'dark';
+  const config = SETTINGS_SECTIONS.appearance;
 
-    return `
+  return `
     <div class="settings-section">
       <h4>Theme</h4>
       
@@ -257,7 +257,7 @@ function renderAppearanceSection() {
  * @purpose Render Branding settings section
  */
 function renderBrandingSection() {
-    return `
+  return `
     <div class="settings-section">
       <h4>Workspace Logos</h4>
       
@@ -295,34 +295,34 @@ function renderBrandingSection() {
  * @purpose Bind event listeners for settings dialog
  */
 function bindSettingsEvents() {
-    // Close button
-    document.getElementById('settings-close-btn')?.addEventListener('click', closeSettings);
+  // Close button
+  document.getElementById('settings-close-btn')?.addEventListener('click', closeSettings);
 
-    // Cancel button
-    document.getElementById('settings-cancel-btn')?.addEventListener('click', closeSettings);
+  // Cancel button
+  document.getElementById('settings-cancel-btn')?.addEventListener('click', closeSettings);
 
-    // Save button
-    document.getElementById('settings-save-btn')?.addEventListener('click', saveSettings);
+  // Save button
+  document.getElementById('settings-save-btn')?.addEventListener('click', saveSettings);
 
-    // Click outside to close
-    overlayEl?.addEventListener('click', (e) => {
-        if (e.target === overlayEl) {
-            closeSettings();
-        }
-    });
+  // Click outside to close
+  overlayEl?.addEventListener('click', (e) => {
+    if (e.target === overlayEl) {
+      closeSettings();
+    }
+  });
 
-    // Menu item clicks
-    overlayEl?.addEventListener('click', (e) => {
-        const menuItem = e.target.closest('.settings-menu-item');
-        if (menuItem) {
-            const sectionId = menuItem.dataset.section;
-            if (sectionId && sectionId !== currentSection) {
-                currentSection = sectionId;
-                renderSection(sectionId);
-                updateMenuActiveState();
-            }
-        }
-    });
+  // Menu item clicks
+  overlayEl?.addEventListener('click', (e) => {
+    const menuItem = e.target.closest('.settings-menu-item');
+    if (menuItem) {
+      const sectionId = menuItem.dataset.section;
+      if (sectionId && sectionId !== currentSection) {
+        currentSection = sectionId;
+        renderSection(sectionId);
+        updateMenuActiveState();
+      }
+    }
+  });
 }
 
 /**
@@ -330,18 +330,18 @@ function bindSettingsEvents() {
  * @purpose Bind section-specific event listeners
  */
 function bindSectionEvents(sectionId) {
-    if (sectionId === 'appearance') {
-        // Theme select change (live preview)
-        document.getElementById('color-mode-select')?.addEventListener('change', (e) => {
-            const newTheme = e.target.value;
-            if (newTheme === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                applyTheme(prefersDark ? 'dark' : 'light');
-            } else {
-                applyTheme(newTheme);
-            }
-        });
-    }
+  if (sectionId === 'appearance') {
+    // Theme select change (live preview)
+    document.getElementById('color-mode-select')?.addEventListener('change', (e) => {
+      const newTheme = e.target.value;
+      if (newTheme === 'system') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefersDark ? 'dark' : 'light');
+      } else {
+        applyTheme(newTheme);
+      }
+    });
+  }
 }
 
 /**
@@ -349,9 +349,9 @@ function bindSectionEvents(sectionId) {
  * @purpose Handle keyboard events when settings is open
  */
 function handleKeydown(e) {
-    if (e.key === 'Escape') {
-        closeSettings();
-    }
+  if (e.key === 'Escape') {
+    closeSettings();
+  }
 }
 
 /**
@@ -359,9 +359,9 @@ function handleKeydown(e) {
  * @purpose Update active state of menu items
  */
 function updateMenuActiveState() {
-    document.querySelectorAll('.settings-menu-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.section === currentSection);
-    });
+  document.querySelectorAll('.settings-menu-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.section === currentSection);
+  });
 }
 
 /**
@@ -369,18 +369,19 @@ function updateMenuActiveState() {
  * @purpose Save settings and close dialog
  */
 function saveSettings() {
-    // Get current values
-    const themeSelect = document.getElementById('color-mode-select');
-    if (themeSelect) {
-        const theme = themeSelect.value;
-        setState('theme', theme === 'system' ?
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') :
-            theme
-        );
-    }
+  // Get current values
+  const themeSelect = document.getElementById('color-mode-select');
+  if (themeSelect) {
+    const themeValue = themeSelect.value;
+    const resolvedTheme = themeValue === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : themeValue;
+    setTheme(resolvedTheme);
+    applyTheme(resolvedTheme);
+  }
 
-    console.log('[Settings] Saved');
-    closeSettings();
+  console.log('[Settings] Saved');
+  closeSettings();
 }
 
 /**
@@ -388,7 +389,7 @@ function saveSettings() {
  * @purpose Apply theme immediately (for live preview)
  */
 function applyTheme(theme) {
-    document.body.classList.toggle('light-theme', theme === 'light');
+  document.body.classList.toggle('light-theme', theme === 'light');
 }
 
 // =============================================================================
@@ -400,5 +401,5 @@ function applyTheme(theme) {
  * @purpose Check if settings dialog is open
  */
 export function isSettingsOpen() {
-    return isOpen;
+  return isOpen;
 }
