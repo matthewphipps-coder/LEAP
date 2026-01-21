@@ -1,0 +1,126 @@
+/**
+ * @file inputs.css
+ * @purpose Reusable input component patterns
+ * @layer core
+ * @dependencies [variables.css]
+ * @dependents [login page, forms, all UI components]
+ * @locked true
+ * @modifyImpact [all form inputs across application]
+ */
+
+/* =============================================================================
+   BASE INPUT
+   ============================================================================= */
+
+.input {
+    display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =============================================================================
+   INPUT STATES
+   ============================================================================= */
+
+/* Error state */
+.input-error {
+    border-color: var(--error);
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Success state */
+.input-success {
+    border-color: var(--success);
+}
+
+/* =============================================================================
+   TEXTAREA
+   ============================================================================= */
+
+textarea.input {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* =============================================================================
+   SELECT / DROPDOWN
+   ============================================================================= */
+
+.select {
+    display: block;
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    padding-right: var(--space-xl);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-md) center;
+    transition: all var(--transition-fast);
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =============================================================================
+   FORM GROUP (Label + Input)
+   ============================================================================= */
+
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--text-secondary);
+}
+
+.form-error {
+    margin-top: var(--space-xs);
+    font-size: var(--text-xs);
+    color: var(--error);
+}

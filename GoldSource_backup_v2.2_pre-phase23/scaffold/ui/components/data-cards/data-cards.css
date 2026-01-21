@@ -1,0 +1,173 @@
+/**
+ * @file data-cards.css
+ * @purpose Data cards component styles
+ * @layer ui
+ * @dependencies [variables.css, base.css]
+ * @dependents []
+ * @locked false
+ * @modifyImpact [data cards visual appearance]
+ */
+
+/* ==========================================================================
+   DATA CARDS CONTAINER
+   ========================================================================== */
+
+.data-cards {
+    margin-bottom: var(--spacing-xl);
+}
+
+.data-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* ==========================================================================
+   INDIVIDUAL DATA CARD
+   ========================================================================== */
+
+.data-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.data-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.data-card__icon {
+    font-size: var(--text-3xl);
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-lg);
+    background-color: var(--color-bg-tertiary);
+}
+
+.data-card__content {
+    flex: 1;
+}
+
+.data-card__value {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+}
+
+.data-card__label {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   DATA CARD VARIANTS
+   ========================================================================== */
+
+.data-card--success .data-card__icon {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.data-card--success .data-card__value {
+    color: var(--color-success);
+}
+
+.data-card--info .data-card__icon {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.data-card--info .data-card__value {
+    color: var(--color-info);
+}
+
+.data-card--warning .data-card__icon {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.data-card--warning .data-card__value {
+    color: var(--color-warning);
+}
+
+.data-card--accent .data-card__icon {
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+.data-card--accent .data-card__value {
+    color: var(--color-accent);
+}
+
+/* ==========================================================================
+   SECTIONS
+   ========================================================================== */
+
+.data-cards__section {
+    margin-top: var(--spacing-xl);
+}
+
+.data-cards__section-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   SUGGESTION CARDS
+   ========================================================================== */
+
+.data-cards__suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.suggestion-card {
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--border-radius-md);
+}
+
+.suggestion-card__task {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.suggestion-card__suggestion {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .data-cards__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .data-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-cards__grid {
+        grid-template-columns: 1fr;
+    }
+}

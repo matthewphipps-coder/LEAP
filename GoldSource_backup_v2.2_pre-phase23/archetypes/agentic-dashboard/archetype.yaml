@@ -1,0 +1,80 @@
+# =============================================================================
+# ARCHETYPE: AGENTIC DASHBOARD
+# =============================================================================
+# This archetype provides an AI-powered dashboard interface.
+# It includes chat, data cards, and quick actions.
+# =============================================================================
+
+name: "Agentic Dashboard"
+version: "1.0.0"
+description: "AI-powered dashboard with chat, data cards, and actions"
+
+# =============================================================================
+# WHAT THIS ARCHETYPE PROVIDES
+# =============================================================================
+
+provides:
+  
+  aiInteraction:
+    component: "chat-panel"
+    path: "scaffold/ui/components/chat-panel/"
+    purpose: "AI assistant interaction with message history"
+  
+  dataDisplay:
+    component: "data-cards"
+    path: "scaffold/ui/components/data-cards/"
+    purpose: "Metrics and task information display"
+  
+  quickActions:
+    component: "action-buttons"
+    path: "scaffold/ui/components/action-buttons/"
+    purpose: "Quick action buttons for common tasks"
+
+# =============================================================================
+# SCAFFOLD STRUCTURE
+# =============================================================================
+
+scaffoldStructure:
+  core:
+    - "scaffold/core/app.js - Application orchestrator"
+    - "scaffold/core/state.js - State management"
+    - "scaffold/core/logger.js - Logging"
+    - "scaffold/core/error-handler.js - Error handling"
+    - "scaffold/core/mock-data.js - Mock data"
+  
+  shell:
+    - "scaffold/ui/components/header/ - Header (locked)"
+    - "scaffold/ui/components/nav/ - Navigation (locked)"
+    - "scaffold/ui/components/footer/ - Footer (locked)"
+  
+  archetypeComponents:
+    - "scaffold/ui/components/chat-panel/ - Chat (flexible)"
+    - "scaffold/ui/components/data-cards/ - Data cards (flexible)"
+    - "scaffold/ui/components/action-buttons/ - Actions (flexible)"
+  
+  styles:
+    - "scaffold/ui/styles/variables.css - CSS variables"
+    - "scaffold/ui/styles/base.css - Base styles"
+    - "scaffold/ui/styles/shell.css - Shell layout"
+
+# =============================================================================
+# USAGE
+# =============================================================================
+
+usage:
+  bestFor:
+    - "Task management dashboards"
+    - "AI-assisted workflows"
+    - "Data visualization with AI insights"
+    - "ServiceNow future-vision demos"
+  
+  notFor:
+    - "Simple static pages"
+    - "Form-heavy interfaces"
+    - "Mobile-first apps"
+
+# =============================================================================
+# PREVIEW
+# =============================================================================
+
+preview: "preview.png"
