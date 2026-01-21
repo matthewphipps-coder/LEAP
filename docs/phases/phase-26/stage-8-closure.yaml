@@ -75,4 +75,5 @@ backlogImpact:
 signOff:
   requestedFrom: "Matthew Phipps"
   requestedAt: "2026-01-21T19:54:00Z"
-  status: "pending"
+  status: "granted"
+  grantedAt: "2026-01-21T19:57:53Z"
