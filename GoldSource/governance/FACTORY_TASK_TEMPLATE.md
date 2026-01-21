@@ -13,6 +13,23 @@ Relative paths in this document are from Gold Source root.
 
 ---
 
+## ⚠️ Recovery Instructions (!bump)
+
+**If session restarts or you receive "continue":**
+
+1. **DO NOT assume previous work is complete**
+2. Read `CURRENT_STATE.yaml` for current stage
+3. Read this `task.md` - checkboxes show completed work  
+4. Read latest `stage-X-*.yaml` artifact for context
+5. Report status to human before proceeding
+6. **DO NOT advance stage without verifying outputs exist**
+
+**Trigger word: `!bump`** - Human can type this to invoke full recovery protocol.
+
+See `governance/factory-protocol.yaml` → `recoveryProtocol` for full details.
+
+---
+
 ## Stage 1: Discovery
 **Objective**: Define demo requirements from user scenario
 

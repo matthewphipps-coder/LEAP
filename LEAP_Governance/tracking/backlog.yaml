@@ -8,7 +8,7 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 55
+  totalItems: 59
   immediate: 8
   shortTerm: 47
   mediumTerm: 0
@@ -16,11 +16,11 @@ summary:
   
   statusBreakdown:
     complete: 40
-    proposed: 9
+    proposed: 11
     inProgress: 0
-    superseded: 6
+    superseded: 8
   
-  note: "Added LEAP-046/047/048 from Factory v2.0.4 recommendations (2026-01-21)"
+  note: "Superseded LEAP-049/050 after root cause analysis (2026-01-21) - !bump protocol added"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -999,7 +999,90 @@ priorities:
       dependencies: ["LEAP-037"]  # App Shell (created multi-page system)
       addedDate: "2026-01-21"
       source: "Factory v2.0.4 closure - REC-003"
-  
+
+    # -------------------------------------------------------------------------
+    # Factory Run v2.1.0 Critical Failures (2026-01-21)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-049"
+      name: "[CRITICAL] Restore FACTORY_TASK_TEMPLATE.md"
+      category: "factory-governance"
+      priority: "immediate"
+      status: "superseded"
+      supersededDate: "2026-01-21"
+      supersededBy: "Template exists - premise of item was incorrect"
+      description: "Restore the missing FACTORY_TASK_TEMPLATE.md file to GoldSource/governance/templates/"
+      rationale: |
+        Forensic analysis of NEXUS v2.1.0 failure revealed that the factory failed to track tasks 
+        because the governance template for task tracking was completely missing from the scaffold.
+        This is a critical configuration gap preventing governance compliance.
+      supersessionNote: |
+        Investigation on 2026-01-21 found FACTORY_TASK_TEMPLATE.md exists at 
+        GoldSource/governance/FACTORY_TASK_TEMPLATE.md (5,236 bytes). The original analysis
+        incorrectly claimed the file was missing. The v2.1.0 factory comparison report
+        (FactoryTestRuns/factory-comparison-v2.0.4-vs-v2.1.0.yaml) confirmed all 9/9 tests passed.
+        Missing stages 6-8 were due to early user approval, not missing template.
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Critical Analysis of NEXUS v2.1.0 - Architectural & Governance Failures"
+
+    - id: "LEAP-050"
+      name: "Enforce Stage 6-8 Artifact Verification"
+      category: "factory-devops"
+      priority: "immediate"
+      status: "superseded"
+      supersededDate: "2026-01-21"
+      supersededBy: "Addressed by !bump recovery protocol in factory-protocol.yaml"
+      description: "Update Factory workflow prompt to strictly enforce creation of Validation, Testing, and Closure artifacts"
+      rationale: |
+        NEXUS v2.1.0 run abandoned the lifecycle after Stage 5 (Implementation). It essentially "quit" 
+        without validating or closing the phase. Governance must hard-gate this behavior.
+      supersessionNote: |
+        Root cause identified: Antigravity 'continue' button sends 'continue' which AI misinterpreted
+        as stage approval. Fixed by adding:
+        1. invalidTriggers list to gateProtocol (factory-protocol.yaml) - 'continue' explicitly invalid
+        2. recoveryProtocol with !bump trigger for crash/restart recovery
+        3. stageCompletionVerification requiring output verification before advancing
+        The underlying issue was UI behavior + missing negative guidance, not missing enforcement.
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Critical Analysis of NEXUS v2.1.0 - Architectural & Governance Failures"
+
+    - id: "LEAP-051"
+      name: "Feature-Page Placement Governance"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add governance rule: 'Primary features must render on their dedicated pages'"
+      rationale: |
+        NEXUS v2.1.0 defined a 'Calendar' page but rendered the calendar component inside the 'Change' page,
+        destroying the multi-page UX. Governance must explicitly forbid this 'logic displacement'.
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes 'Feature Placement' rule"
+        - "Rule: 'If PAGE_TABS defines Page X, Feature X components must render in Page X container'"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Critical Analysis of NEXUS v2.1.0 - Architectural & Governance Failures"
+
+    - id: "LEAP-052"
+      name: "UX Consistency - No Duplicate Nav"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Add governance rule forbidding local nav bars when Sidebar is available"
+      rationale: |
+        NEXUS v2.1.0 created a local 'filter bar' in the header while also defining sidebar filter actions.
+        This duplicated navigation is confusing. Governance must enforce using the Sidebar for page actions.
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes 'Navigation Consistency' rule"
+        - "Rule: 'Do not create local header toolbars; use PAGE_SIDEBAR_ACTIONS'"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-21"
+      source: "Critical Analysis of NEXUS v2.1.0 - Architectural & Governance Failures"
+
   mediumTerm: []
   future: []
 

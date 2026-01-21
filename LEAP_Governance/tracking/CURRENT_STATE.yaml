@@ -1,7 +1,7 @@
 metadata:
   type: "state"
   purpose: "Single source of truth for current LEAP work"
-  lastUpdated: "2026-01-21T07:06:00Z"
+  lastUpdated: "2026-01-21T17:28:00Z"
   version: "5.0.0"
 
 aiMustRead:
@@ -39,22 +39,26 @@ currentPhase:
     executiveSignOff: "Granted by Matthew Phipps"
 
 currentActivity:
-  status: "closure"
-  summary: "Phase 25 complete - Factory now has design guidance"
+  status: "between-phases"
+  summary: "Phase 25 complete - Ad-hoc governance improvements made"
   
   recentWork:
     date: "2026-01-21"
-    session: "Factory v2.0.4 Review"
-    description: "Reviewed Factory v2.0.4, added 3 backlog items (LEAP-046/047/048), all compliance passed"
+    session: "Factory Recovery Protocol"
+    description: |
+      Investigated NEXUS v2.1.0 'failures' - found root cause was Antigravity 'continue' button
+      being misinterpreted as stage approval. Added !bump recovery protocol to Factory governance,
+      invalidTriggers list to gateProtocol. Superseded LEAP-049/050 (incorrect analysis).
+      Fixed backlog counts.
 
 backlogState:
-  totalItems: 55
+  totalItems: 59
   complete: 40
   inProgress: 0
-  proposed: 9
-  superseded: 6
+  proposed: 11
+  superseded: 8
   
-  note: "Added LEAP-046/047/048 from Factory v2.0.4 recommendations (2026-01-21)"
+  note: "Added !bump protocol, superseded LEAP-049/050, fixed counts (2026-01-21)"
 
 factoryRunsCompleted:
   - demo: "NEXUS v0.0.1-firstTest"
