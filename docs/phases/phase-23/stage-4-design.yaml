@@ -1,0 +1,160 @@
+metadata:
+  type: "stage-artifact"
+  phase: 23
+  phaseName: "ExtensibleAppShell"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-21T05:32:00Z"
+  status: "pending-authorization"
+  gateApproval:
+    from: "analysis"
+    approvedBy: "Matthew Phipps"
+    approvedAt: "2026-01-21T05:32:46Z"
+    command: "!Proceed"
+
+# =============================================================================
+# IMPLEMENTATION AUTHORIZATION REQUEST
+# =============================================================================
+
+authorizationRequest:
+  
+  phase: "Phase 23: Extensible App Shell"
+  scope: "Implement SPEC-003"
+  effort: "Medium (~1,250 lines, 4-6 hours)"
+  
+  breakingChanges:
+    - "Sidebar: Complete replacement (push/pull → floating pill)"
+    - "Header: Major rewrite with new elements"
+    - "New Dependency: Lucide Icons 0.562.0 CDN"
+  
+  riskLevel: "MEDIUM"
+  mitigations:
+    - "GoldSource backup v2.2 created"
+    - "Incremental commits for safe rollback"
+    - "Prototype provides exact visual target"
+  
+  implementationPlan: ".gemini/antigravity/brain/.../implementation_plan.md"
+  
+  requestedBy: "AI Assistant"
+  awaitingAuthorization: "Matthew Phipps (LEAP Executive)"
+
+# =============================================================================
+# DESIGN SUMMARY
+# =============================================================================
+
+designSummary:
+
+  newFiles:
+    - file: "core/page-router.js"
+      purpose: "Client-side page switching"
+      lines: 80
+    
+    - file: "ui/components/settings/settings-ui.js"
+      purpose: "Settings dialog component"
+      lines: 200
+    
+    - file: "ui/components/settings/settings.css"
+      purpose: "Settings dialog styles"
+      lines: 150
+  
+  modifiedFiles:
+    - file: "core/constants.js"
+      changes: "Add PAGE_TABS, PAGE_SIDEBAR_ACTIONS, SETTINGS_MENU, SETTINGS_SECTIONS"
+      lines: "+75"
+    
+    - file: "index.html"
+      changes: "Add Lucide CDN, page containers, settings overlay"
+      lines: "+30"
+    
+    - file: "ui/components/header/header-ui.js"
+      changes: "Complete rewrite - tabs, search, actions"
+      lines: "→250"
+    
+    - file: "ui/components/header/header.css"
+      changes: "Major additions for all header elements"
+      lines: "+200"
+    
+    - file: "ui/components/sidebar/sidebar-ui.js"
+      changes: "Complete rewrite - floating pill, contextual actions"
+      lines: "→150"
+    
+    - file: "ui/components/sidebar/sidebar.css"
+      changes: "Complete rewrite - pill styling, tooltips"
+      lines: "→100"
+    
+    - file: "core/app.js"
+      changes: "Import/init new modules"
+      lines: "+15"
+
+# =============================================================================
+# IMPLEMENTATION PHASES
+# =============================================================================
+
+implementationPhases:
+  
+  - phase: "Infrastructure"
+    steps:
+      - "Add Lucide Icons 0.562.0 CDN to index.html"
+      - "Add config arrays to constants.js"
+      - "Create page-router.js"
+    commit: "SPEC-003: Add infrastructure (Lucide, configs, router)"
+  
+  - phase: "Header Rebuild"
+    steps:
+      - "Rewrite header-ui.js with logo slot, tabs, search, actions"
+      - "Update header.css with all new styles"
+    commit: "SPEC-003: Rebuild header with extensible layout"
+  
+  - phase: "Sidebar Rebuild"
+    steps:
+      - "Rewrite sidebar-ui.js as floating pill"
+      - "Update sidebar.css for new design"
+    commit: "SPEC-003: Rebuild sidebar as floating pill"
+  
+  - phase: "Settings Dialog"
+    steps:
+      - "Create settings-ui.js with Appearance + Branding"
+      - "Create settings.css for dialog styling"
+    commit: "SPEC-003: Add settings dialog"
+  
+  - phase: "Integration"
+    steps:
+      - "Update index.html structure"
+      - "Wire up app.js imports and event handlers"
+      - "Browser validation"
+    commit: "SPEC-003: Complete integration"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  
+  automated:
+    - "Page tabs switch content correctly"
+    - "Tab overflow shows 'More' menu on narrow viewport"
+    - "Theme toggle switches dark/light"
+    - "Settings dialog opens on gear click"
+    - "Settings dialog closes on ESC"
+    - "Sidebar hides on pages with no actions"
+    - "No JavaScript console errors"
+  
+  visual:
+    - "Header layout matches prototype exactly"
+    - "Sidebar floating pill position correct"
+    - "Settings dialog styling matches prototype"
+    - "Both themes render correctly"
+    - "Glass effects work on all components"
+
+# =============================================================================
+# COMPLETION CRITERIA
+# =============================================================================
+
+completionCriteria:
+  - "Implementation plan created ✅"
+  - "File specifications documented ✅"
+  - "Verification plan defined ✅"
+  - "Awaiting executive authorization"
+
+status: "pending-authorization"
+nextStep: "Executive authorization → Implementation"

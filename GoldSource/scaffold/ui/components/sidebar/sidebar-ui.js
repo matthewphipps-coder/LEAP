@@ -1,26 +1,34 @@
 /**
  * @file sidebar-ui.js
- * @purpose Sidebar component - navigation panel with collapse/expand
+ * @purpose Sidebar component - floating pill with contextual per-page actions
  * @layer ui
- * @dependencies [state.js]
- * @dependents [app.js]
+ * @dependencies [constants.js]
+ * @dependents [app.js, page-router.js]
  * @locked false
  * @modifyImpact [sidebar navigation]
+ * @spec SPEC-003
  */
 
-import { getState, setSidebarCollapsed, subscribe } from '../../../core/state.js';
+import { PAGE_SIDEBAR_ACTIONS } from '../../../core/constants.js';
 
 // =============================================================================
 // MODULE CONTRACT
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-  provides: ['initSidebar', 'toggleSidebar'],
-  requires: ['state.js']
+  provides: ['initSidebar', 'updateSidebarForPage', 'handleSidebarAction'],
+  requires: ['constants.js']
 };
 
 // =============================================================================
-// SIDEBAR INITIALIZATION
+// STATE
+// =============================================================================
+
+let currentPage = null;
+let currentActiveAction = null;
+
+// =============================================================================
+// INITIALIZATION
 // =============================================================================
 
 /**
@@ -31,72 +39,128 @@ export function initSidebar() {
   const sidebarEl = document.getElementById('sidebar');
   if (!sidebarEl) return;
 
-  sidebarEl.innerHTML = `
-    <div class="sidebar-content">
-      <!-- Toggle Button -->
-      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">
-        <span class="toggle-icon">◀</span>
-      </button>
-      
-      <!-- Navigation -->
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Dashboard</div>
-          <ul class="nav-list">
-            <li class="nav-item">
-              <a href="#" class="nav-link nav-link--active">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Overview</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      
-      <!-- Footer -->
-      <div class="sidebar-footer">
-        <span class="sidebar-version">v2.0.0</span>
-      </div>
-    </div>
-  `;
+  // Add glass class for consistent styling
+  sidebarEl.classList.add('glass');
 
-  // Bind toggle event
-  document.getElementById('sidebar-toggle')?.addEventListener('click', toggleSidebar);
-
-  // Subscribe to state changes
-  subscribe((state, source) => {
-    if (source === 'setSidebarCollapsed') {
-      updateSidebarState();
+  // Bind action clicks
+  sidebarEl.addEventListener('click', (e) => {
+    const actionBtn = e.target.closest('.nav-item');
+    if (actionBtn) {
+      const actionId = actionBtn.dataset.action;
+      if (actionId) {
+        handleSidebarAction(actionId);
+      }
     }
   });
 
-  // Set initial state
-  updateSidebarState();
+  console.log('[Sidebar] Initialized');
 }
 
-/**
- * @function toggleSidebar
- * @purpose Toggle sidebar collapsed state
- */
-export function toggleSidebar() {
-  const current = getState('sidebarCollapsed');
-  setSidebarCollapsed(!current);
-}
+// =============================================================================
+// PAGE-SPECIFIC RENDERING
+// =============================================================================
 
 /**
- * @function updateSidebarState
- * @purpose Update sidebar DOM based on collapsed state
+ * @function updateSidebarForPage
+ * @purpose Update sidebar content based on current page
+ * @param {string} pageId - The ID of the current page
  */
-function updateSidebarState() {
+export function updateSidebarForPage(pageId) {
   const sidebarEl = document.getElementById('sidebar');
-  const toggleIcon = document.querySelector('.toggle-icon');
-  const collapsed = getState('sidebarCollapsed');
+  if (!sidebarEl) return;
 
-  if (sidebarEl) {
-    sidebarEl.classList.toggle('sidebar--collapsed', collapsed);
+  currentPage = pageId;
+  const actions = PAGE_SIDEBAR_ACTIONS[pageId] || [];
+
+  // Hide sidebar if no actions for this page
+  if (actions.length === 0) {
+    sidebarEl.classList.add('hidden');
+    console.log('[Sidebar] Hidden - no actions for', pageId);
+    return;
   }
 
-  if (toggleIcon) {
-    toggleIcon.textContent = collapsed ? '▶' : '◀';
+  // Show sidebar and render actions
+  sidebarEl.classList.remove('hidden');
+
+  sidebarEl.innerHTML = `
+    <nav class="sidebar-nav" role="toolbar" aria-label="Page actions">
+      ${actions.map((action, index) => `
+        <button 
+          class="nav-item ${index === 0 ? 'active' : ''} ${action.badge ? 'has-badge' : ''}"
+          data-action="${action.id}"
+          aria-label="${action.label}"
+          title="${action.label}"
+        >
+          <i data-lucide="${action.icon}"></i>
+          ${action.badge ? `<span class="count-badge">${action.badge}</span>` : ''}
+          <span class="nav-tooltip">${action.label}</span>
+        </button>
+      `).join('')}
+    </nav>
+  `;
+
+  // Initialize Lucide icons for new content
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
   }
+
+  // Set first action as active
+  currentActiveAction = actions[0]?.id || null;
+
+  console.log('[Sidebar] Rendered', actions.length, 'actions for', pageId);
+}
+
+// =============================================================================
+// ACTION HANDLING
+// =============================================================================
+
+/**
+ * @function handleSidebarAction
+ * @purpose Handle sidebar action button click
+ * @param {string} actionId - The ID of the clicked action
+ */
+export function handleSidebarAction(actionId) {
+  // Update active state
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    const isActive = btn.dataset.action === actionId;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-pressed', isActive);
+  });
+
+  currentActiveAction = actionId;
+
+  // Dispatch custom event for features to handle
+  const event = new CustomEvent('sidebar-action', {
+    detail: {
+      actionId,
+      pageId: currentPage
+    },
+    bubbles: true
+  });
+  document.dispatchEvent(event);
+
+  console.log('[Sidebar] Action triggered:', actionId, 'on page:', currentPage);
+}
+
+// =============================================================================
+// GETTERS
+// =============================================================================
+
+/**
+ * @function getCurrentAction
+ * @purpose Get the currently active sidebar action
+ * @returns {string|null} Current action ID
+ */
+export function getCurrentAction() {
+  return currentActiveAction;
+}
+
+/**
+ * @function getActionsForPage
+ * @purpose Get sidebar actions for a specific page
+ * @param {string} pageId - Page ID
+ * @returns {Array} Array of action objects
+ */
+export function getActionsForPage(pageId) {
+  return PAGE_SIDEBAR_ACTIONS[pageId] || [];
 }

@@ -6,6 +6,7 @@
  * @dependents [index.html]
  * @locked false
  * @modifyImpact [application initialization flow]
+ * @spec SPEC-003
  */
 
 import { info, error as logError } from './logger.js';
@@ -13,8 +14,10 @@ import { getState } from './state.js';
 import { setupAuthListener, logout } from './auth-service.js';
 import { initTheme, setTheme, getTheme } from './theme-manager.js';
 import { initHeader } from '../ui/components/header/header-ui.js';
-import { initSidebar } from '../ui/components/sidebar/sidebar-ui.js';
+import { initSidebar, updateSidebarForPage } from '../ui/components/sidebar/sidebar-ui.js';
 import { initCanvas } from '../ui/components/canvas/canvas-ui.js';
+import { initPageRouter } from './page-router.js';
+import { initSettings, openSettings } from '../ui/components/settings/settings-ui.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -22,7 +25,11 @@ import { initCanvas } from '../ui/components/canvas/canvas-ui.js';
 
 export const MODULE_CONTRACT = {
     provides: ['initApp'],
-    requires: ['logger.js', 'state.js', 'auth-service.js', 'theme-manager.js', 'header-ui.js', 'sidebar-ui.js', 'canvas-ui.js']
+    requires: [
+        'logger.js', 'state.js', 'auth-service.js', 'theme-manager.js',
+        'header-ui.js', 'sidebar-ui.js', 'canvas-ui.js',
+        'page-router.js', 'settings-ui.js'  // SPEC-003
+    ]
 };
 
 // =============================================================================
@@ -67,12 +74,14 @@ async function initApp() {
 function initializeUI(user) {
     info('App: Initializing UI components');
 
-    // Initialize shell components
-    initHeader(user, handleLogout, handleThemeToggle);
+    // Initialize SPEC-003 components
+    initHeader(user, handleLogout, handleThemeToggle, handleSettingsOpen);
     initSidebar();
+    initSettings();
+    initPageRouter(updateSidebarForPage);  // Connect page changes to sidebar
     initCanvas();
 
-    info('App: Initialization complete');
+    info('App: Initialization complete (SPEC-003)');
 }
 
 // =============================================================================
@@ -94,6 +103,14 @@ function handleLogout() {
 function handleThemeToggle() {
     const currentTheme = getTheme();
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
+/**
+ * @function handleSettingsOpen
+ * @purpose Handle settings button click (SPEC-003)
+ */
+function handleSettingsOpen() {
+    openSettings();
 }
 
 // =============================================================================

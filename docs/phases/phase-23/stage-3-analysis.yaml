@@ -1,0 +1,421 @@
+metadata:
+  type: "stage-artifact"
+  phase: 23
+  phaseName: "ExtensibleAppShell"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-21T05:30:00Z"
+  status: "complete"
+  gateApproval:
+    from: "research"
+    approvedBy: "Matthew Phipps"
+    approvedAt: "2026-01-21T05:30:07Z"
+    command: "!Proceed"
+
+# =============================================================================
+# RRMD+ ASSESSMENT (Risk/Reward/Mitigation/Decision)
+# =============================================================================
+
+rrmdAssessment:
+  
+  trigger: "Medium-effort phase with breaking changes to sidebar and header"
+  
+  overallRisk: "MEDIUM"
+  overallRationale: |
+    This phase involves rewriting two core components (sidebar, header) and adding 
+    new infrastructure (page router, settings). The prototype is complete and tested,
+    reducing design risk. Main risks are implementation complexity and integration.
+  
+  recommendation: "PROCEED with incremental implementation"
+
+  risks:
+    - id: "R-001"
+      category: "Implementation"
+      risk: "Header complexity may cause timeline slip"
+      probability: "medium"
+      impact: "low"
+      mitigation: "Build header incrementally - static first, interactive second"
+      owner: "AI"
+    
+    - id: "R-002"
+      category: "Integration"
+      risk: "Sidebar/page router coordination may have edge cases"
+      probability: "low"
+      impact: "medium"
+      mitigation: "Page router calls updateSidebarForPage() on every switch"
+      owner: "AI"
+    
+    - id: "R-003"
+      category: "Breaking Change"
+      risk: "Existing sidebar behavior completely replaced"
+      probability: "certain"
+      impact: "low"
+      mitigation: "GoldSource backup v2.2 created. Full revert possible."
+      owner: "AI"
+    
+    - id: "R-004"
+      category: "Dependency"
+      risk: "Lucide Icons CDN dependency could fail"
+      probability: "very low"
+      impact: "medium"
+      mitigation: "Pinned version 0.562.0. Could self-host if needed."
+      owner: "AI"
+    
+    - id: "R-005"
+      category: "Scope"
+      risk: "Settings dialog may grow beyond MVP scope"
+      probability: "medium"
+      impact: "low"
+      mitigation: "Strict scope: Appearance + Branding only. Future items in backlog."
+      owner: "AI"
+
+  rewards:
+    - "Factory can add new pages with config-only changes"
+    - "Customer branding via settings (no code changes)"
+    - "Modern floating sidebar design"
+    - "Extensible settings system for future features"
+    - "Visual parity with prototype (proven design)"
+
+  decision: "PROCEED"
+  decisionRationale: |
+    Risks are manageable with incremental approach. Rewards are significant for 
+    Factory extensibility and demo quality. Prototype provides clear visual target.
+    Backup ensures safe rollback if needed.
+
+# =============================================================================
+# APPROACH OPTIONS ANALYSIS
+# =============================================================================
+
+approachOptions:
+
+  # --- Header Implementation Approach ---
+  headerApproach:
+    selected: "APPROACH-A"
+    
+    options:
+      - id: "APPROACH-A"
+        name: "Incremental Build"
+        description: "Build header in stages: structure → tabs → search → actions"
+        pros:
+          - "Testable at each stage"
+          - "Can validate structure before adding complexity"
+          - "Easier to debug"
+        cons:
+          - "Multiple commits/iterations"
+        
+      - id: "APPROACH-B"
+        name: "Big Bang"
+        description: "Build entire header in one pass from prototype"
+        pros:
+          - "Faster if no issues"
+        cons:
+          - "Hard to debug if something breaks"
+          - "All-or-nothing validation"
+    
+    decision: "APPROACH-A"
+    rationale: |
+      Header is the most complex component. Incremental approach reduces risk
+      and allows validation at each stage. Order:
+      1. Structure (logo, brand, spacer, actions container)
+      2. Page tabs with overflow logic
+      3. Search box slot
+      4. Action buttons (notifications, settings, theme, avatar)
+
+  # --- Sidebar Implementation Approach ---
+  sidebarApproach:
+    selected: "APPROACH-A"
+    
+    options:
+      - id: "APPROACH-A"
+        name: "Complete Rewrite"
+        description: "Delete existing sidebar code, write fresh from spec"
+        pros:
+          - "Clean slate, no legacy baggage"
+          - "Design matches prototype exactly"
+        cons:
+          - "Lose existing collapse/expand behavior"
+        
+      - id: "APPROACH-B"
+        name: "Gradual Transform"
+        description: "Modify existing sidebar to become pill shape"
+        pros:
+          - "Preserve existing code structure"
+        cons:
+          - "Code will be messy hybrid"
+          - "Design drift likely"
+    
+    decision: "APPROACH-A"
+    rationale: |
+      Existing sidebar is fundamentally different (push/pull expand-collapse).
+      Trying to transform it would create technical debt. Clean rewrite is cleaner
+      and ensures exact prototype match.
+
+  # --- Settings Dialog Approach ---
+  settingsApproach:
+    selected: "APPROACH-A"
+    
+    options:
+      - id: "APPROACH-A"
+        name: "Single File"
+        description: "All settings logic in settings-ui.js (~200 lines)"
+        pros:
+          - "Simple to understand"
+          - "Single import"
+        cons:
+          - "Could grow large with future sections"
+        
+      - id: "APPROACH-B"
+        name: "Split Files"
+        description: "settings-ui.js (dialog chrome) + settings-sections.js (content)"
+        pros:
+          - "Better separation of concerns"
+          - "Easier to extend"
+        cons:
+          - "More files to manage"
+    
+    decision: "APPROACH-A"
+    rationale: |
+      MVP has only 2 sections (Appearance + Branding). Single file is sufficient.
+      If future phases add many sections, can refactor to APPROACH-B then.
+
+  # --- Page Router Approach ---
+  pageRouterApproach:
+    selected: "APPROACH-A"
+    
+    options:
+      - id: "APPROACH-A"
+        name: "Simple State-Based"
+        description: "Track current page in state.js, show/hide page containers"
+        pros:
+          - "Works with existing state system"
+          - "Simple implementation"
+        cons:
+          - "All pages loaded upfront (not lazy)"
+        
+      - id: "APPROACH-B"
+        name: "Dynamic Loading"
+        description: "Load page content on demand via dynamic imports"
+        pros:
+          - "Better performance for many pages"
+        cons:
+          - "More complex implementation"
+          - "Overkill for demo scaffold"
+    
+    decision: "APPROACH-A"
+    rationale: |
+      Demo scaffold will have few pages (3-6 typically). Lazy loading is overkill.
+      Simple show/hide with CSS .page--active class is sufficient and proven in prototype.
+
+# =============================================================================
+# IMPLEMENTATION ORDER (Final)
+# =============================================================================
+
+implementationOrder:
+  
+  description: |
+    Implementation follows dependency order. Each step is validated before moving
+    to the next. Commit after each major step for safe rollback points.
+  
+  phases:
+    - phase: "Infrastructure"
+      steps:
+        - step: 1
+          name: "Add Lucide Icons CDN"
+          file: "index.html"
+          lines: "~5"
+          validates: "Icons render correctly"
+          commit: false
+        
+        - step: 2
+          name: "Add Config Arrays"
+          file: "core/constants.js"
+          lines: "~75"
+          validates: "Exports work, arrays defined"
+          commit: true
+          commitMessage: "SPEC-003: Add page/sidebar/settings config arrays"
+        
+        - step: 3
+          name: "Create Page Router"
+          file: "core/page-router.js"
+          lines: "~80"
+          validates: "switchPage() function works"
+          commit: true
+          commitMessage: "SPEC-003: Add page router with config-driven switching"
+    
+    - phase: "Header Rebuild"
+      steps:
+        - step: 4
+          name: "Rewrite Header Component"
+          files: ["ui/components/header/header-ui.js", "ui/components/header/header.css"]
+          lines: "~450"
+          subSteps:
+            - "4a: Structure (logo, brand, containers)"
+            - "4b: Page tabs with tooltips"
+            - "4c: Tab overflow logic"
+            - "4d: Search box slot"
+            - "4e: Action buttons"
+          validates: "Header matches prototype visually"
+          commit: true
+          commitMessage: "SPEC-003: Rebuild header with tabs, search, actions"
+    
+    - phase: "Sidebar Rebuild"
+      steps:
+        - step: 5
+          name: "Rewrite Sidebar Component"
+          files: ["ui/components/sidebar/sidebar-ui.js", "ui/components/sidebar/sidebar.css"]
+          lines: "~250"
+          subSteps:
+            - "5a: Floating pill structure"
+            - "5b: Contextual actions from config"
+            - "5c: Circular button highlights"
+            - "5d: Tooltips on hover"
+            - "5e: Show/hide based on page"
+          validates: "Sidebar matches prototype, hides on pages with no actions"
+          commit: true
+          commitMessage: "SPEC-003: Rebuild sidebar as floating pill with contextual actions"
+    
+    - phase: "Settings Dialog"
+      steps:
+        - step: 6
+          name: "Create Settings Component"
+          files: ["ui/components/settings/settings-ui.js", "ui/components/settings/settings.css"]
+          lines: "~350"
+          subSteps:
+            - "6a: Dialog structure and overlay"
+            - "6b: Left menu navigation"
+            - "6c: Appearance section (theme, accent)"
+            - "6d: Branding section (logo upload)"
+            - "6e: ESC/overlay close handlers"
+          validates: "Settings opens, sections switch, ESC closes"
+          commit: true
+          commitMessage: "SPEC-003: Add settings dialog with Appearance and Branding"
+    
+    - phase: "Integration"
+      steps:
+        - step: 7
+          name: "Update index.html"
+          file: "index.html"
+          lines: "~30"
+          subSteps:
+            - "7a: Add page containers"
+            - "7b: Add settings overlay container"
+            - "7c: Update body structure"
+          validates: "HTML structure supports all components"
+          commit: false
+        
+        - step: 8
+          name: "Update App Integration"
+          file: "core/app.js"
+          lines: "~15"
+          subSteps:
+            - "8a: Import new modules"
+            - "8b: Initialize page router"
+            - "8c: Wire up settings button"
+          validates: "Full application works end-to-end"
+          commit: true
+          commitMessage: "SPEC-003: Wire up app shell integration"
+    
+    - phase: "Final"
+      steps:
+        - step: 9
+          name: "Browser Validation"
+          validates: |
+            - All tabs switch pages
+            - Sidebar shows/hides per page
+            - Theme toggle works
+            - Settings dialog opens/closes
+            - No console errors
+          commit: false
+        
+        - step: 10
+          name: "Final Commit"
+          commit: true
+          commitMessage: "SPEC-003: Extensible App Shell complete"
+
+# =============================================================================
+# COMPLEXITY ESTIMATES
+# =============================================================================
+
+complexityEstimates:
+  
+  byFile:
+    - file: "core/constants.js"
+      newLines: 75
+      complexity: "low"
+      risk: "low"
+      notes: "Simple config arrays"
+    
+    - file: "core/page-router.js"
+      newLines: 80
+      complexity: "low"
+      risk: "low"
+      notes: "Simple show/hide logic"
+    
+    - file: "ui/components/header/header-ui.js"
+      newLines: 250
+      complexity: "high"
+      risk: "medium"
+      notes: "Many elements, tab overflow logic"
+    
+    - file: "ui/components/header/header.css"
+      newLines: 200
+      complexity: "medium"
+      risk: "low"
+      notes: "Extract from prototype"
+    
+    - file: "ui/components/sidebar/sidebar-ui.js"
+      newLines: 150
+      complexity: "high"
+      risk: "medium"
+      notes: "Contextual behavior, page coordination"
+    
+    - file: "ui/components/sidebar/sidebar.css"
+      newLines: 100
+      complexity: "medium"
+      risk: "low"
+      notes: "Pill styling from prototype"
+    
+    - file: "ui/components/settings/settings-ui.js"
+      newLines: 200
+      complexity: "medium"
+      risk: "low"
+      notes: "Dialog + 2 sections"
+    
+    - file: "ui/components/settings/settings.css"
+      newLines: 150
+      complexity: "medium"
+      risk: "low"
+      notes: "Extract from prototype"
+    
+    - file: "index.html"
+      newLines: 30
+      complexity: "medium"
+      risk: "low"
+      notes: "Structure changes"
+    
+    - file: "core/app.js"
+      newLines: 15
+      complexity: "low"
+      risk: "low"
+      notes: "Import and init calls"
+  
+  totals:
+    newLines: 1250
+    highComplexity: 2
+    mediumComplexity: 5
+    lowComplexity: 3
+    estimatedHours: "4-6 hours implementation"
+
+# =============================================================================
+# COMPLETION CRITERIA
+# =============================================================================
+
+completionCriteria:
+  - "RRMD+ assessment complete ✅"
+  - "Approach options analyzed ✅"
+  - "Implementation order finalized ✅"
+  - "Complexity estimates documented ✅"
+  - "Risk mitigations identified ✅"
+
+status: "complete"
+readyFor: "design"

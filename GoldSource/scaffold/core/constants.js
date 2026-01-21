@@ -13,7 +13,11 @@
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-  provides: ['APP_NAME', 'APP_VERSION', 'ENV', 'isDev', 'isProd'],
+  provides: [
+    'APP_NAME', 'APP_VERSION', 'ENV', 'isDev', 'isProd', 'CHECKPOINT_PREFIX',
+    // SPEC-003 configs
+    'PAGE_TABS', 'PAGE_SIDEBAR_ACTIONS', 'SETTINGS_MENU', 'SETTINGS_SECTIONS'
+  ],
   requires: []
 };
 
@@ -47,3 +51,79 @@ export const isProd = ENV === 'production';
 // =============================================================================
 
 export const CHECKPOINT_PREFIX = '[NEXUS]';
+
+// =============================================================================
+// PAGE TABS CONFIGURATION (SPEC-003)
+// =============================================================================
+
+/**
+ * @constant PAGE_TABS
+ * @purpose Define available pages in header tab bar
+ * @extensible Factory can add pages by appending to this array
+ */
+export const PAGE_TABS = [
+  { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+  { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
+  { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
+  { id: 'calendar', icon: 'calendar', label: 'Calendar' },
+];
+
+// =============================================================================
+// SIDEBAR ACTIONS PER PAGE (SPEC-003)
+// =============================================================================
+
+/**
+ * @constant PAGE_SIDEBAR_ACTIONS
+ * @purpose Define contextual sidebar buttons per page
+ * @extensible Factory can add actions by extending page arrays
+ */
+export const PAGE_SIDEBAR_ACTIONS = {
+  dashboard: [
+    { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
+  ],
+  incidents: [
+    { id: 'new-incident', icon: 'plus', label: 'New Incident' },
+    { id: 'filter', icon: 'filter', label: 'Filter' },
+  ],
+  reports: [],  // No sidebar actions for reports
+  calendar: [], // No sidebar actions for calendar
+};
+
+// =============================================================================
+// SETTINGS CONFIGURATION (SPEC-003)
+// =============================================================================
+
+/**
+ * @constant SETTINGS_MENU
+ * @purpose Define settings dialog menu structure
+ */
+export const SETTINGS_MENU = [
+  {
+    group: 'DISPLAY',
+    items: [
+      { id: 'appearance', icon: 'palette', label: 'Appearance' },
+      { id: 'branding', icon: 'image', label: 'Branding' },
+    ]
+  }
+];
+
+/**
+ * @constant SETTINGS_SECTIONS
+ * @purpose Define settings section configurations
+ */
+export const SETTINGS_SECTIONS = {
+  appearance: {
+    colorModes: ['dark', 'light', 'system'],
+    accentColors: [
+      { id: 'green', value: '#62d84e', label: 'Green' },
+      { id: 'blue', value: '#38bdf8', label: 'Blue' },
+      { id: 'purple', value: '#8b5cf6', label: 'Purple' },
+    ]
+  },
+  branding: {
+    logoMaxHeight: 32,
+    logoMaxWidth: 160,
+    supportedFormats: ['svg', 'png', 'jpg', 'webp']
+  }
+};
+

@@ -21,7 +21,7 @@ currentPhase:
   number: "23"
   name: "ExtensibleAppShell"
   status: "in-progress"
-  stage: "discovery"
+  stage: "design"
   startedDate: "2026-01-21T05:13:00Z"
   completedDate: null
   
@@ -31,7 +31,7 @@ currentPhase:
   prototype: "LEAP_Governance/SprintFunctionalSpecs/SPEC-003-prototype.html"
   backlogId: "LEAP-037"
   
-  stageArtifact: "docs/phases/phase-23/stage-1-discovery.yaml"
+  stageArtifact: "docs/phases/phase-23/stage-4-design.yaml"
   
   previousPhase:
     number: "22"

@@ -1,31 +1,52 @@
 /**
  * @file canvas.css
- * @purpose Canvas component styles - main content area
+ * @purpose Canvas component styles - main content area with multi-page system
  * @layer ui
  * @dependencies [variables.css]
  * @dependents [index.html]
  * @locked false
  * @modifyImpact [main content area appearance]
+ * @spec SPEC-003
  */
 
 /* =============================================================================
-   CANVAS CONTAINER
+   CANVAS CONTAINER (SPEC-003)
    ============================================================================= */
 
 .canvas {
     position: fixed;
     top: var(--header-height);
-    left: var(--sidebar-width);
+    /* Leave room for floating sidebar pill */
+    left: calc(var(--sidebar-pill-width) + var(--sidebar-gap) * 2);
     right: 0;
     bottom: 0;
     overflow-y: auto;
-    transition: left var(--transition-normal);
+    padding: var(--space-xl);
 }
 
-/* Adjust when sidebar is collapsed */
-.sidebar--collapsed~.canvas,
-.dashboard-body:has(.sidebar--collapsed) .canvas {
-    left: var(--sidebar-collapsed);
+/* =============================================================================
+   PAGE SYSTEM (SPEC-003)
+   ============================================================================= */
+
+.page {
+    display: none;
+    min-height: 100%;
+}
+
+.page--active {
+    display: block;
+}
+
+.page-content {
+    max-width: 1200px;
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
 }
 
 .canvas-content {

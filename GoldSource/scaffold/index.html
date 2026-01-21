@@ -36,6 +36,10 @@
   <link rel="stylesheet" href="ui/components/header/header.css">
   <link rel="stylesheet" href="ui/components/sidebar/sidebar.css">
   <link rel="stylesheet" href="ui/components/canvas/canvas.css">
+  <link rel="stylesheet" href="ui/components/settings/settings.css">
+
+  <!-- Lucide Icons (SPEC-003) -->
+  <script src="https://unpkg.com/lucide@0.562.0"></script>
 </head>
 
 <body>
@@ -50,25 +54,52 @@
   <!-- Dashboard Shell -->
   <div class="dashboard-shell" id="dashboard-shell">
 
-    <!-- Header -->
+    <!-- Header (SPEC-003) -->
     <header class="header" id="header">
       <!-- Rendered by header-ui.js -->
     </header>
 
-    <!-- Main Body: Sidebar + Canvas -->
-    <div class="dashboard-body">
+    <!-- Floating Sidebar (SPEC-003) -->
+    <aside class="sidebar glass" id="sidebar">
+      <!-- Rendered by sidebar-ui.js -->
+    </aside>
 
-      <!-- Sidebar -->
-      <aside class="sidebar" id="sidebar">
-        <!-- Rendered by sidebar-ui.js -->
-      </aside>
+    <!-- Canvas with Multi-Page System (SPEC-003) -->
+    <main class="canvas" id="canvas">
 
-      <!-- Canvas (Main Content Area) -->
-      <main class="canvas" id="canvas">
-        <!-- Rendered by canvas-ui.js -->
-      </main>
+      <!-- Dashboard Page -->
+      <section class="page page--active" data-page="dashboard" id="page-dashboard" aria-hidden="false">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Dashboard</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
 
-    </div>
+      <!-- Incidents Page -->
+      <section class="page" data-page="incidents" id="page-incidents" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Incidents</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+      <!-- Reports Page -->
+      <section class="page" data-page="reports" id="page-reports" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Reports</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+      <!-- Calendar Page -->
+      <section class="page" data-page="calendar" id="page-calendar" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Calendar</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+    </main>
 
   </div>
 
