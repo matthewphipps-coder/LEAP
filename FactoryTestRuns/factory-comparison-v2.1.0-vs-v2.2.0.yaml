@@ -1,0 +1,111 @@
+# =============================================================================
+# FACTORY RUN COMPARISON: v2.1.0 vs v2.2.0
+# =============================================================================
+# Purpose: Validate Phase 26 improvements
+# Created: 2026-01-21T21:10:00Z
+# =============================================================================
+
+comparisonSummary:
+  before: "NEXUS v2.1.0-change-approval (pre-Phase 26)"
+  after: "NEXUS v2.2.0-change-approval (post-Phase 26)"
+  scenario: "Change request management with multi-level approval workflow and CAB scheduling"
+  
+  verdict: "PHASE 26 IMPROVEMENTS CONFIRMED ✅"
+
+# =============================================================================
+# KEY DIFFERENCES
+# =============================================================================
+
+keyDifferences:
+
+  scaffoldPatternDecisions:
+    v2.1.0: "NOT PRESENT"
+    v2.2.0: "PRESENT - 4 patterns explicitly documented"
+    improvement: "✅ Factory AI explicitly decided on patterns at design time"
+
+  archetypeReference:
+    v2.1.0: "No reference to archetype.yaml"
+    v2.2.0: "References 'archetype.yaml patternDecisionTree' for each pattern"
+    improvement: "✅ Factory AI read and applied pattern playbook"
+
+  patternDocumentation:
+    v2.1.0: "PAGE_TABS mentioned inline in changes, no section"
+    v2.2.0: "Dedicated section with pattern, decision, reference, implementation"
+    improvement: "✅ Structured, auditable pattern decisions"
+
+  patternVerification:
+    v2.1.0: "Stage 5 does not have patternVerification section"
+    v2.2.0: "Stage 5 has scaffoldPatternsUsed (not full patternVerification)"
+    improvement: "⚠️ Partial - patterns listed but not linked to Stage 4 decisions"
+
+# =============================================================================
+# V2.2.0 PATTERNS DOCUMENTED (Stage 4)
+# =============================================================================
+
+v2.2.0PatternsDecided:
+  - pattern: "PAGE_TABS"
+    decision: "Add 'changes' page"
+    reference: "archetype.yaml patternDecisionTree.pageTabs"
+    
+  - pattern: "PAGE_SIDEBAR_ACTIONS"
+    decision: "Add actions for changes and update calendar"
+    reference: "archetype.yaml patternDecisionTree.sidebarActions"
+    
+  - pattern: "State Slice"
+    decision: "Register 'change' state slice"
+    reference: "archetype.yaml patternDecisionTree.featureState"
+    
+  - pattern: "Modal Dialog"
+    decision: "Lazy-init change detail dialog"
+    reference: "archetype.yaml patternDecisionTree.modalDialog"
+
+# =============================================================================
+# PHASE 26 SUCCESS CRITERIA
+# =============================================================================
+
+successCriteria:
+  
+  - criteria: "Factory AI explicitly references PAGE_TABS/PAGE_SIDEBAR_ACTIONS in Stage 4"
+    result: "✅ PASS"
+    evidence: "scaffoldPatternDecisions section lines 20-64"
+  
+  - criteria: "Stage 4 artifact includes scaffoldPatternDecisions section"
+    result: "✅ PASS"
+    evidence: "Section present with 4 patterns"
+  
+  - criteria: "No custom navigation bars created"
+    result: "✅ PASS"
+    evidence: "Uses PAGE_SIDEBAR_ACTIONS, no nav-ui usage"
+  
+  - criteria: "Feature content on correct pages"
+    result: "✅ PASS"
+    evidence: "Changes page in page-changes section, Calendar has CAB additions"
+
+# =============================================================================
+# AREAS FOR IMPROVEMENT
+# =============================================================================
+
+areasForImprovement:
+  
+  - issue: "patternVerification section not fully structured"
+    detail: "Stage 5 has 'scaffoldPatternsUsed' but not the full patternVerification format"
+    action: "Next template version should enforce exact format from template"
+  
+  - issue: "No link back to Stage 4 decisions"
+    detail: "Stage 5 lists patterns used but doesn't cross-reference Stage 4 decisions"
+    action: "Template should require stage4Decision field"
+
+# =============================================================================
+# CONCLUSION
+# =============================================================================
+
+conclusion: |
+  Phase 26 changes successfully improved Factory AI pattern compliance.
+  
+  The scaffoldPatternDecisions section in Stage 4 forced the AI to explicitly
+  consider and document each pattern decision BEFORE implementation.
+  
+  The archetype.yaml references prove the AI read the pattern playbook.
+  
+  Minor gap: Stage 5 patternVerification format not fully followed, but
+  patterns ARE documented in scaffoldPatternsUsed section.
