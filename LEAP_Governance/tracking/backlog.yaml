@@ -15,12 +15,12 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 39
-    proposed: 7
+    complete: 40
+    proposed: 6
     inProgress: 0
     superseded: 6
   
-  note: "Phase 24 completed LEAP-043, LEAP-044, LEAP-045 (2026-01-21)"
+  note: "Phase 25 completed LEAP-040 (2026-01-21)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -811,7 +811,9 @@ priorities:
       name: "Theme/Design System Factory Documentation"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-21"
+      completedIn: "Phase 25"
       description: "Create Factory-visible documentation for theme extension, brand customization, and design utilities"
       rationale: |
         Audit revealed comprehensive documentation exists (SPEC-002, design-system.yaml) but is scattered
