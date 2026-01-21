@@ -15,12 +15,12 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 36
-    proposed: 10
+    complete: 39
+    proposed: 7
     inProgress: 0
     superseded: 6
   
-  note: "Added LEAP-044, LEAP-045 from Factory Governance Impact Report (2026-01-21)"
+  note: "Phase 24 completed LEAP-043, LEAP-044, LEAP-045 (2026-01-21)"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -878,7 +878,9 @@ priorities:
       name: "Document Page Registration Pattern"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-21"
+      completedIn: "Phase 24"
       description: "Add 'Page Registration Pattern' section to GoldSource/meta/architectural-standards.yaml"
       rationale: |
         Phase 23 implemented a config-driven extensibility pattern using PAGE_TABS and PAGE_SIDEBAR_ACTIONS 
@@ -898,7 +900,9 @@ priorities:
       name: "Document Phase 22 Design Patterns"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-21"
+      completedIn: "Phase 24"
       description: "Update GoldSource/meta/design-system.yaml with Phase 22 patterns (plasma, brand colors, animations)"
       rationale: |
         Phase 22 added plasma background, 3-color brand system, and animation utilities.
@@ -918,7 +922,9 @@ priorities:
       name: "Document Phase 23 Shell Patterns"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-21"
+      completedIn: "Phase 24"
       description: "Update GoldSource/meta/functionality.yaml and architectural-standards.yaml with Phase 23 patterns"
       rationale: |
         Phase 23 added settings dialog, multi-page canvas, and redesigned floating sidebar.
