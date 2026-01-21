@@ -15,8 +15,8 @@ summary:
   future: 0
   
   statusBreakdown:
-    complete: 40
-    proposed: 11
+    complete: 41
+    proposed: 10
     inProgress: 0
     superseded: 8
   
@@ -965,15 +965,17 @@ priorities:
       name: "Add Placeholder Logo Assets"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-21"
+      completedIn: "Ad-hoc (manual file drop)"
       description: "Add placeholder logo-dark.svg and logo-light.svg files to prevent 404 errors"
       rationale: |
         Factory runs consistently see 404 errors for /assets/logo-dark.svg and /assets/logo-light.svg.
         The scaffold references these paths but files don't exist. Should add simple placeholder
         SVGs that Factory can replace, or make paths configurable.
       acceptanceCriteria:
-        - "GoldSource/scaffold/assets/logo-dark.svg exists with placeholder content"
-        - "GoldSource/scaffold/assets/logo-light.svg exists with placeholder content"
+        - "GoldSource/scaffold/assets/logo-dark.svg exists with placeholder content ✅"
+        - "GoldSource/scaffold/assets/logo-light.svg exists with placeholder content ✅"
         - "No 404 errors for logo files in browser console"
       estimatedEffort: "small"
       dependencies: []
