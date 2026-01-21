@@ -8,19 +8,19 @@ metadata:
   status: "active"
 
 summary:
-  totalItems: 48
+  totalItems: 49
   immediate: 8
-  shortTerm: 40
+  shortTerm: 41
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
     complete: 35
-    proposed: 7
+    proposed: 8
     inProgress: 0
     superseded: 6
   
-  note: "Added LEAP-041 (Login Page Cleanup) 2026-01-20"
+  note: "Added LEAP-042 (AI Search Interactions) 2026-01-21"
   
   categoriesRef: "LEAP_Governance/tracking/backlog-categories.yaml"
 
@@ -850,6 +850,27 @@ priorities:
       dependencies: ["LEAP-036"]  # Design System Phase 1 complete
       addedDate: "2026-01-20"
       source: "Forensic audit of Phase 22 - 2026-01-20"
+
+    - id: "LEAP-042"
+      name: "AI Search Interactions"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: "Implement AI Search UX: expanded modal, keyboard shortcut (⌘K), blur overlay, escape to close"
+      rationale: |
+        SPEC-003 Q-002 decision: AI Search in App Shell is slot-only (input box).
+        Full interactions deferred to future phase. Prototype has working implementation
+        that can be extracted when this backlog item is prioritized.
+      acceptanceCriteria:
+        - "⌘K / Ctrl+K keyboard shortcut opens expanded search modal"
+        - "ESC closes expanded search"
+        - "Click outside modal closes it"
+        - "Focus automatically moves to search input when modal opens"
+        - "Blur overlay behind modal"
+      estimatedEffort: "small"
+      dependencies: ["LEAP-037"]  # App Shell (provides the slot)
+      addedDate: "2026-01-21"
+      source: "SPEC-003 forensic review - Q-002 decision"
   
   mediumTerm: []
   future: []
