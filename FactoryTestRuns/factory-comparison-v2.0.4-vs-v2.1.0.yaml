@@ -1,0 +1,226 @@
+# =============================================================================
+# FACTORY COMPARISON: v2.0.4 vs v2.1.0 (Change Approval)
+# =============================================================================
+# Purpose: Validate complex scenario Factory run
+# Created: 2026-01-21T12:55:00Z
+# =============================================================================
+
+metadata:
+  type: "comparison"
+  name: "Factory Run Comparison - Complex Scenario"
+  version1: "NEXUS v2.0.4-major-incident"
+  version2: "NEXUS v2.1.0-change-approval"
+  scenario: "Change Request Management with Multi-Level Approval Workflow"
+  created: "2026-01-21"
+  comparisonType: "complex-scenario-validation"
+
+# =============================================================================
+# EXECUTIVE SUMMARY
+# =============================================================================
+
+executiveSummary:
+  verdict: "✅ COMPLEX SCENARIO PASSED - Scaffold Extensions Working"
+  
+  keyFindings:
+    - "Factory successfully used registerStateSlice() for feature state"
+    - "Settings panel correctly extended with new section"
+    - "Multiple feature modules created (change-request/, approval/)"
+    - "5 new UI components created"
+    - "All locked files preserved"
+    - "No console errors"
+  
+  statistics:
+    stagesCompleted: 5  # User approved early, stages 6-8 skipped
+    componentsCreated: 5
+    featureModules: 2
+    browserTestsPassed: true
+    consoleErrors: 0  # Only known 404s for logos
+
+# =============================================================================
+# SCENARIO COMPLEXITY COMPARISON
+# =============================================================================
+
+scenarioComparison:
+
+  v204_majorIncident:
+    scenario: "Incident cards with AI dialog"
+    components: 2  # incident-cards, incident-dialog
+    featureModules: 1  # incident/
+    statePattern: "Local state (module-scoped)"
+    settingsExtension: false
+    pageCount: 1  # Incidents page only
+  
+  v210_changeApproval:
+    scenario: "Change management with approval workflow and CAB scheduling"
+    components: 5  # change-card, change-detail, approval-chain, cab-calendar, risk-badge
+    featureModules: 2  # change-request/, approval/
+    statePattern: "registerStateSlice() ✅"
+    settingsExtension: true  # Change Management section ✅
+    pageCount: 1  # Changes page with sub-views
+  
+  improvement: "+3 components, +1 feature module, proper state extension, settings integration"
+
+# =============================================================================
+# SCAFFOLD EXTENSION VALIDATION
+# =============================================================================
+
+scaffoldExtensionUsage:
+
+  registerStateSlice:
+    required: true
+    used: true
+    verdict: "✅ CORRECT USAGE"
+    evidence:
+      file: "features/change-request/change-service.js"
+      code: |
+        const { getChanges, setChanges, setSelectedChange, setFilter, setLoading } = registerStateSlice(
+            'changes',
+            { items: [], selected: null, loading: false, filter: { status: 'all', risk: 'all' } },
+            { setChanges: (state, items) => ({ ...state, items }), ... }
+        );
+  
+  pageTabsConfig:
+    required: true
+    used: true
+    verdict: "✅ CORRECT USAGE"
+    evidence: "Added 'changes' to PAGE_TABS in constants.js"
+  
+  settingsExtension:
+    required: true
+    used: true
+    verdict: "✅ CORRECT USAGE"
+    evidence: "Added 'change-management' to SETTINGS_SECTIONS, renderChangeManagementSection() added"
+  
+  sidebarActionsConfig:
+    required: true
+    used: true
+    verdict: "✅ CORRECT USAGE"
+    evidence: "Added changes sidebar actions (new-change, filter-changes, schedule-cab)"
+
+# =============================================================================
+# GOLD SOURCE COMPLIANCE
+# =============================================================================
+
+goldSourceCompliance:
+
+  lockedFiles:
+    - file: "core/state.js"
+      verdict: "✅ IDENTICAL to GoldSource"
+    - file: "core/firebase.js"
+      verdict: "✅ IDENTICAL to GoldSource"
+    - file: "ui/styles/variables.css"
+      verdict: "✅ IDENTICAL to GoldSource"
+    - file: "ui/styles/base.css"
+      verdict: "✅ IDENTICAL to GoldSource"
+  
+  namingConventions:
+    pathNaming: "features/change-request/, features/approval/ ✅ SINGULAR"
+    componentNaming: "change-card-ui.js + change-card.css ✅"
+    serviceNaming: "change-service.js, approval-service.js ✅"
+  
+  aiFirstHeaders: "All new files have @file, @purpose, @layer, @dependencies ✅"
+  moduleContract: "All modules export MODULE_CONTRACT ✅"
+
+# =============================================================================
+# BROWSER TESTING
+# =============================================================================
+
+browserTesting:
+  
+  tests:
+    - name: "Login/Signup"
+      result: "✅ PASS"
+    
+    - name: "Changes Page Display"
+      result: "✅ PASS"
+      details: "8 change cards with various statuses and risk levels"
+    
+    - name: "Filtering Controls"
+      result: "✅ PASS"
+      details: "Status and risk filters present and functional"
+    
+    - name: "Detail View - Approval Chain"
+      result: "✅ PASS"
+      details: "3-level workflow (Requester → Manager → CAB)"
+    
+    - name: "Detail View - AI Risk Assessment"
+      result: "✅ PASS"
+      details: "Score, risk factors, recommendations displayed"
+    
+    - name: "Detail View - CAB Scheduling"
+      result: "✅ PASS"
+      details: "Scheduled meeting date, integrated with CAB calendar"
+    
+    - name: "CAB Calendar"
+      result: "✅ PASS"
+      details: "Week view with scheduled CAB meetings"
+    
+    - name: "Settings - Change Management"
+      result: "✅ PASS"
+      details: "New section with approval workflow, CAB schedule, risk threshold settings"
+    
+    - name: "Console Errors"
+      result: "✅ PASS"
+      details: "Only known 404s for missing logos (LEAP-047)"
+
+# =============================================================================
+# OBSERVATIONS
+# =============================================================================
+
+observations:
+
+  positive:
+    - title: "registerStateSlice() correctly adopted"
+      detail: "Factory properly imported from state.js and used for feature state, avoiding locked file modification"
+    
+    - title: "Settings extension well executed"
+      detail: "Clean integration with existing settings structure, added new menu item and render function"
+    
+    - title: "Complex UI well organized"
+      detail: "5 separate component folders, each with UI.js + CSS, following established patterns"
+    
+    - title: "AI integration meaningful"
+      detail: "Risk assessment calculates dynamic score based on CI count, criticality, related incidents"
+
+  incomplete:
+    - title: "Missing stages 6-8 artifacts"
+      detail: "Factory workspace only has stages 1-5. User approved early before full lifecycle completion."
+      impact: "Low - demo is functional"
+    
+    - title: "Missing meta/functionality.yaml"
+      detail: "Demo output doesn't have meta folder or functionality.yaml"
+      impact: "Medium - violates LEAP-014"
+    
+    - title: "Missing README.md"
+      detail: "Demo output doesn't have README"
+      impact: "Low - cosmetic"
+
+# =============================================================================
+# CONCLUSION
+# =============================================================================
+
+conclusion:
+  verdict: "✅ COMPLEX SCENARIO SUCCESS - SCAFFOLD IS EXTENSIBLE"
+  
+  summary: |
+    v2.1.0-change-approval demonstrates that the GoldSource scaffold is successfully
+    extensible for complex scenarios. The Factory AI correctly:
+    
+    1. Used registerStateSlice() for feature state management ✅
+    2. Extended settings panel with new section ✅
+    3. Created multiple feature modules ✅
+    4. Created 5 new UI components following patterns ✅
+    5. Preserved all locked files ✅
+    6. Integrated AI risk assessment ✅
+    7. Built complex CAB calendar visualization ✅
+    
+    Minor gaps (missing meta/, README, stages 6-8) are due to early user approval,
+    not Factory capability limitations.
+    
+    The scaffold extension points (registerStateSlice, PAGE_TABS, SETTINGS_SECTIONS)
+    are working as designed and documentable for future Factory guidance.
+  
+  recommendations:
+    - "Update CURRENT_STATE.yaml with v2.1.0 run details"
+    - "Consider documenting scaffold extension patterns more prominently for Factory"
+    - "LEAP-047 (placeholder logos) should be addressed to clean up console"

@@ -123,7 +123,16 @@ factoryRunsCompleted:
     note: "Repeat run post-Phase 25 - all compliance checks passed, locked files verified"
     comparisonReport: "FactoryTestRuns/factory-comparison-v2.0.3-vs-v2.0.4.yaml"
   
-  nextRun: "TBD - 9 Factory runs complete, consider new scenario or archetype"
+  - demo: "NEXUS v2.1.0-change-approval"
+    location: "~/Documents/DemoOutput/NEXUS-v2.1.0-change-approval/"
+    factoryWorkspace: "~/Documents/DemoInstances/Factory-v2.1.0-change-approval/"
+    testsRun: 9
+    testsPassed: 9
+    addedDate: "2026-01-21"
+    note: "COMPLEX SCENARIO - Change management with approval workflow, CAB scheduling, AI risk. First use of registerStateSlice(), settings extension."
+    comparisonReport: "FactoryTestRuns/factory-comparison-v2.0.4-vs-v2.1.0.yaml"
+  
+  nextRun: "TBD - 10 Factory runs complete (v2.1.0 validated complex scenario)"
 
 backlogState:
   totalItems: 52
