@@ -89,10 +89,17 @@
   --header-height: 64px;
   --sidebar-width: 280px;
   --sidebar-collapsed: 64px;
+  
+  /* Layout - SPEC-003 Floating Pill Sidebar */
+  --sidebar-pill-width: 68px;
+  --sidebar-button-size: 44px;
+  --sidebar-gap: 20px;
 
   /* Z-Index */
   --z-sidebar: 100;
   --z-header: 200;
+  --z-tooltip: 250;
+  --z-settings: 350;
   --z-modal-backdrop: 300;
   --z-modal: 400;
   --z-notification: 500;
