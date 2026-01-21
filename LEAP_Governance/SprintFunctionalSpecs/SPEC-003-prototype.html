@@ -1183,44 +1183,7 @@
             color: var(--text-primary);
         }
 
-        /* AI Search Expanded */
-        .ai-search-expanded {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 500px;
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            display: none;
-            flex-direction: column;
-            gap: var(--space-md);
-            z-index: var(--z-modal);
-        }
 
-        .ai-search-expanded.visible {
-            display: flex;
-        }
-
-        .ai-search-input {
-            width: 100%;
-            padding: var(--space-md);
-            border: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-primary);
-            font-size: var(--text-base);
-            border-radius: var(--radius-sm);
-            outline: none;
-        }
-
-        .ai-search-input:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .light-theme .ai-search-input {
-            background: rgba(255, 255, 255, 0.8);
-        }
 
         /* Demo Indicator */
         .demo-indicator {
@@ -1863,13 +1826,7 @@
         </div>
     </div>
 
-    <!-- AI Search Expanded -->
-    <div class="ai-search-expanded glass" id="search-expanded">
-        <input type="text" class="ai-search-input" placeholder="Ask anything... (ESC to close)" autofocus>
-        <p style="color: var(--text-secondary); font-size: var(--text-sm); text-align: center;">
-            Try: "Show critical incidents" or "Schedule meeting"
-        </p>
-    </div>
+
 
     <!-- Demo Indicator -->
     <div class="demo-indicator glass">
@@ -2333,11 +2290,7 @@
             }
         });
 
-        searchExpanded.addEventListener('click', (e) => {
-            if (e.target === searchExpanded) {
-                searchExpanded.classList.remove('visible');
-            }
-        });
+
 
         // Initialize Lucide icons
         lucide.createIcons();

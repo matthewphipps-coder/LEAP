@@ -59,7 +59,7 @@ referenceImplementation:
     - name: "Lucide Icons"
       cdn: "https://unpkg.com/lucide@latest"
       purpose: "Modern icon set for nav, header tabs, and action buttons"
-      note: "TODO: Pin to stable version once identified. v0.263.1 from earlier spec was broken."
+      note: "Prototype uses @latest for convenience. Implementation MUST pin to stable version in Gold Source."
     
   # Implementation guidance for dev agents
   devAgentGuidance:
@@ -464,72 +464,68 @@ requirements:
           - "ESC key"
           - "Click outside dialog (on overlay)"
       
-      # === MENU STRUCTURE ===
+      # === MENU STRUCTURE (MVP) ===
       menuStructure:
-        description: "Organized into 3 section groups with 7 menu items"
+        description: "MVP: 1 group with 2 menu items (per Q-003 decision)"
+        defaultSection: "appearance"
         groups:
-          - name: "GENERAL"
+          - name: "DISPLAY"
             items:
-              - { id: "general", icon: "settings-2", label: "Preferences" }
               - { id: "appearance", icon: "palette", label: "Appearance" }
               - { id: "branding", icon: "image", label: "Branding" }
-              - { id: "notifications", icon: "bell", label: "Notifications" }
-          - name: "INTEGRATIONS"
-            items:
-              - { id: "integrations", icon: "plug-zap", label: "Connected Apps" }
-              - { id: "ai", icon: "brain", label: "AI Settings" }
-          - name: "ACCOUNT"
-            items:
-              - { id: "security", icon: "shield", label: "Security" }
-              - { id: "about", icon: "info", label: "About" }
       
       # === EXTENSIBILITY PATTERN ===
       extensibility:
         description: |
-          Settings sections are CONFIG-DRIVEN. To add a new section:
+          Settings sections are CONFIG-DRIVEN. Factory can extend by adding groups/items.
+          To add a new section:
           1. Add menu item to SETTINGS_MENU array
           2. Add section content to SETTINGS_SECTIONS array
           3. No code changes needed - renders automatically
         
         menuConfig: |
-          // Settings menu definition - add new items here
+          // Gold Source MVP - minimal settings menu
           const SETTINGS_MENU = [
-            { group: 'GENERAL', items: [
-              { id: 'general', icon: 'settings-2', label: 'Preferences' },
+            { group: 'DISPLAY', items: [
               { id: 'appearance', icon: 'palette', label: 'Appearance' },
-              { id: 'notifications', icon: 'bell', label: 'Notifications' },
+              { id: 'branding', icon: 'image', label: 'Branding' },
             ]},
-            { group: 'INTEGRATIONS', items: [
-              { id: 'integrations', icon: 'plug-zap', label: 'Connected Apps' },
-              { id: 'ai', icon: 'brain', label: 'AI Settings' },
-              // ADD NEW INTEGRATION SECTIONS HERE
-            ]},
-            { group: 'ACCOUNT', items: [
-              { id: 'security', icon: 'shield', label: 'Security' },
-              { id: 'about', icon: 'info', label: 'About' },
-            ]},
+            // Factory can add more groups here, e.g.:
+            // { group: 'INTEGRATIONS', items: [
+            //   { id: 'ai', icon: 'brain', label: 'AI Settings' },
+            // ]},
           ];
         
         sectionContentPattern: |
           // Each section has its own content definition
           const SETTINGS_SECTIONS = {
-            'general': {
-              title: 'Preferences',
+            'appearance': {
+              title: 'Appearance',
               sections: [
                 {
-                  name: 'Workspace',
+                  name: 'Theme',
                   settings: [
-                    { type: 'select', id: 'default-page', label: 'Default Page', 
-                      description: 'Choose which page to show on startup',
-                      options: [{ value: 'dashboard', label: 'Dashboard' }, ...] },
-                    { type: 'toggle', id: 'auto-refresh', label: 'Auto-refresh',
-                      description: 'Automatically refresh data', default: true },
+                    { type: 'select', id: 'color-mode', label: 'Color Mode', 
+                      options: ['Dark', 'Light', 'System'] },
+                    { type: 'select', id: 'accent-color', label: 'Accent Color',
+                      options: ['Green', 'Blue', 'Purple', 'Orange'] },
                   ]
                 },
-                // More sub-sections...
               ]
             },
-            // ADD NEW SECTIONS HERE
+            'branding': {
+              title: 'Branding',
+              sections: [
+                {
+                  name: 'Workspace Logos',
+                  settings: [
+                    { type: 'file', id: 'logo-dark', label: 'Dark Mode Logo' },
+                    { type: 'file', id: 'logo-light', label: 'Light Mode Logo' },
+                  ]
+                },
+              ]
+            },
+            // Factory adds new sections here
           };
         
         addingSectionGuide: |
@@ -1020,6 +1016,22 @@ requirements:
             render: (container) => { /* render content */ }
           });
 
+  # Non-functional requirements
+  nonFunctional:
+    - id: "NFR-001"
+      category: "accessibility"
+      description: "All interactive elements must be keyboard accessible per LEAP-030"
+      acceptance: |
+        - Settings dialog: focus trap, ESC to close
+        - Page tabs: arrow keys to navigate, Enter to select
+        - Sidebar buttons: focusable with visible focus indicators
+        - Icon buttons: aria-label required
+    
+    - id: "NFR-002"
+      category: "performance"
+      description: "Page switching must feel instant"
+      acceptance: "Page content shows within 100ms of tab click"
+
 # =============================================================================
 # TECHNICAL APPROACH
 # =============================================================================
@@ -1084,6 +1096,13 @@ technicalApproach:
     - "Lazy page initialization"
     - "Event delegation for tab clicks"
     - "State management via state.js"
+  
+  risks:
+    - risk: "Settings dialog complexity may exceed 500-line limit"
+      mitigation: "Split into settings-ui.js (dialog chrome) and settings-sections.js (content rendering)"
+    
+    - risk: "Tab overflow logic may cause layout issues on edge cases"
+      mitigation: "Test with 10+ tabs across multiple viewport widths; prototype already stress-tested"
 
 # =============================================================================
 # FACTORY GOVERNANCE IMPACT
@@ -1164,8 +1183,8 @@ verification:
 # =============================================================================
 
 approval:
-  specApprovedBy: null
-  specApprovedDate: null
+  specApprovedBy: "Matthew Phipps"
+  specApprovedDate: "2026-01-21"
   implementationApprovedBy: null
   implementationApprovedDate: null
 
