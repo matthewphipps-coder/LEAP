@@ -85,9 +85,9 @@
 
 ---
 
-## Stage 8: Closure
-- [/] Final git commit
-- [ ] Update CURRENT_STATE.yaml (complete)
-- [ ] Update backlog.yaml (LEAP-060 → complete)
-- [ ] Create stage-8-closure.yaml
-- [ ] Request human sign-off
+## Stage 8: Closure ✅
+- [x] Final git commit
+- [x] Update CURRENT_STATE.yaml (complete)
+- [x] Update backlog.yaml (LEAP-060 → complete)
+- [x] Create stage-8-closure.yaml
+- [x] Request human sign-off

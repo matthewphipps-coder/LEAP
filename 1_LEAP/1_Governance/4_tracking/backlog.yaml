@@ -7,19 +7,20 @@ metadata:
   lastUpdated: "2026-01-21"
   status: "active"
 
-summary:\n  totalItems: 65
+summary:
+  totalItems: 65
   immediate: 8
   shortTerm: 49
   mediumTerm: 0
   future: 0
   
   statusBreakdown:
-    complete: 44
-    proposed: 7
+    complete: 45
+    proposed: 6
     inProgress: 0
     superseded: 12
   
-  note: "Split LEAP-039 into LEAP-060, 061, 062 (2026-01-22)"
+  note: "LEAP-060 completed Phase 31 (2026-01-22)"
   
   categoriesRef: "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
 
@@ -808,7 +809,9 @@ priorities:
       name: "UI State Patterns"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-22"
+      completedIn: "Phase 31"
       description: "Loading, empty, error state patterns plus glass variations for consistent UI feedback"
       rationale: "Demos need consistent patterns for showing loading skeletons, empty states, and errors"
       estimatedEffort: "small"
@@ -817,10 +820,10 @@ priorities:
       source: "Split from LEAP-039"
       functionalSpec: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-002-design-system.yaml"
       acceptanceCriteria:
-        - "DEFER-001: Loading State Pattern (.loading skeleton)"
-        - "DEFER-002: Empty State Pattern (.empty-state)"
-        - "DEFER-003: Error State Pattern (.error-state)"
-        - "DEFER-005: Glass Variations (.glass-subtle, .glass-heavy)"
+        - "DEFER-001: Loading State Pattern (.loading-skeleton) ✅"
+        - "DEFER-002: Empty State Pattern (.empty-state) ✅"
+        - "DEFER-003: Error State Pattern (.error-state) ✅"
+        - "DEFER-005: Glass Variations (.glass-subtle, .glass-heavy) ✅"
 
     - id: "LEAP-061"
       name: "Card System"
