@@ -1,0 +1,246 @@
+# =============================================================================
+# STAGE 3: ANALYSIS - SPEC-001 Authentication System
+# =============================================================================
+# Phase 29: Implement SPEC-001 Authentication Features
+# RRMD+ Risk Assessment (MANDATORY for GoldSource work)
+# =============================================================================
+
+metadata:
+  phase: 29
+  name: "Authentication System Implementation"
+  stage: 3
+  stageName: "Analysis"
+  created: "2026-01-22T02:42:00Z"
+  previousStage: "4_Phases/phase-29/stage-2-research.yaml"
+
+# =============================================================================
+# RRMD+ RISK ASSESSMENT
+# =============================================================================
+
+riskAssessment:
+  methodology: "RRMD+ (Risks, Recommendations, Mitigations, Dependencies)"
+  overallRisk: "LOW"
+  breakingChanges: false
+
+# =============================================================================
+# CHANGE CLASSIFICATION
+# =============================================================================
+
+changeClassification:
+
+  nonBreaking:
+    - change: "Add plasma background to login.html"
+      reason: "Additive - new visual element"
+    - change: "Extract CSS to login.css"
+      reason: "Refactor - no functionality change"
+    - change: "Add ARIA labels"
+      reason: "Additive - accessibility enhancement"
+    - change: "Add forgot password flow"
+      reason: "Additive - new feature"
+    - change: "Add domain validation"
+      reason: "Additive - configurable (empty array = disabled)"
+    - change: "Add role/xp to user profile"
+      reason: "Additive - new fields, no existing data affected"
+
+  potentiallyBreaking:
+    - change: "Remove inline onclick from toggle link"
+      risk: "MINIMAL"
+      reason: "Only affects login page, replacing with addEventListener"
+      mitigation: "Same function, different binding method"
+    
+    - change: "Add ALLOWED_EMAIL_DOMAINS to constants.js"
+      risk: "MINIMAL"
+      reason: "constants.js is @locked for Factory, not LEAP"
+      mitigation: "Default to empty array (validation disabled)"
+
+# =============================================================================
+# RISKS
+# =============================================================================
+
+risks:
+
+  - id: "R-001"
+    category: "CSS Extraction"
+    description: "Extracting inline styles may miss specificity or cascade issues"
+    probability: "LOW"
+    impact: "MEDIUM"
+    mitigation: "Visual comparison before/after, browser testing"
+    rollback: "Restore from backup"
+
+  - id: "R-002"
+    category: "Firebase Import"
+    description: "sendPasswordResetEmail import may fail if not available on CDN"
+    probability: "VERY LOW"
+    impact: "LOW"
+    mitigation: "Same CDN already used, function is standard Firebase Auth"
+    rollback: "Remove forgot password feature"
+
+  - id: "R-003"
+    category: "Domain Validation"
+    description: "Too restrictive validation could lock out legitimate users"
+    probability: "LOW"
+    impact: "MEDIUM"
+    mitigation: "Default ALLOWED_EMAIL_DOMAINS = [] disables validation"
+    rollback: "Set array to empty"
+
+  - id: "R-004"
+    category: "Theme Initialization"
+    description: "initTheme() may conflict with existing theme handling"
+    probability: "LOW"
+    impact: "LOW"
+    mitigation: "Use same pattern as index.html"
+    rollback: "Remove initTheme call"
+
+# =============================================================================
+# DEMO COMPATIBILITY ASSESSMENT
+# =============================================================================
+
+demoCompatibility:
+  
+  assessment: "NO IMPACT"
+  
+  reason: |
+    Login page is completely separate from demo features:
+    - Login redirects to index.html after auth
+    - No demos use login components
+    - All changes are to login.html/login.js (not index.html or app.js)
+    - User profile field additions are forward-compatible
+  
+  affectedDemos: []
+  
+  factoryImpact: |
+    Factory never extends login.html or login.js.
+    Constants.js change adds new constant; existing constants unchanged.
+    Auth-service.js change adds fields to new signups only.
+
+# =============================================================================
+# ROLLBACK STRATEGY
+# =============================================================================
+
+rollbackStrategy:
+  
+  trigger: "Any of: visual regression, auth failure, Firebase errors"
+  
+  steps:
+    - step: 1
+      action: "Stop implementation immediately"
+    - step: 2
+      action: "Run: rm -rf 2_GoldSource"
+    - step: 3
+      action: "Run: cp -r X_GoldSource_Backup/phase-29-{timestamp} 2_GoldSource"
+    - step: 4
+      action: "Report failure to human"
+    - step: 5
+      action: "Analyze what went wrong"
+    - step: 6
+      action: "Decide: retry with fixes or abort phase"
+  
+  backupLocation: "X_GoldSource_Backup/phase-29-$(date +%Y%m%d-%H%M)"
+
+# =============================================================================
+# IMPLEMENTATION APPROACH
+# =============================================================================
+
+implementationApproach:
+  
+  selected: "Incremental with validation"
+  
+  order:
+    - step: 1
+      file: "constants.js"
+      changes: "Add ALLOWED_EMAIL_DOMAINS"
+      validate: "Module imports successfully"
+    
+    - step: 2
+      file: "login.css (NEW)"
+      changes: "Extract styles from login.html"
+      validate: "File created with all styles"
+    
+    - step: 3
+      file: "login.html"
+      changes: "All HTML changes (plasma, CSS link, ARIA, elements)"
+      validate: "Page loads without errors"
+    
+    - step: 4
+      file: "login.js"
+      changes: "All JS changes (imports, handlers, validation)"
+      validate: "Toggle works, form submits"
+    
+    - step: 5
+      file: "auth-service.js"
+      changes: "Add role/xp to user doc"
+      validate: "Signup creates complete user doc"
+  
+  rationale: |
+    Dependencies flow forward: constants → CSS → HTML → JS → service.
+    Each step can be validated before proceeding.
+    Backup restoration works at any point.
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+
+dependencies:
+
+  internal:
+    - file: "ui/styles/base.css"
+      provides: "plasma-background, plasma-bubble classes"
+      action: "Read existing classes, replicate in login.html"
+    
+    - file: "core/firebase.js"
+      provides: "Firebase auth and db instances"
+      action: "No changes needed"
+    
+    - file: "ui/styles/variables.css"
+      provides: "CSS custom properties (--success may need adding)"
+      action: "Check if --success exists; use #22c55e if not"
+
+  external:
+    - dependency: "Firebase Auth CDN"
+      version: "10.7.1"
+      provides: "sendPasswordResetEmail function"
+      action: "Import alongside existing auth functions"
+
+# =============================================================================
+# VERIFICATION PLAN PREVIEW
+# =============================================================================
+
+verificationPreview:
+  
+  stage6_validation:
+    - "Compare login.html to prototype visually"
+    - "Verify all ARIA attributes present"
+    - "Check plasma background animation"
+  
+  stage7_testing:
+    - "Test login flow (existing behavior unchanged)"
+    - "Test signup flow (new user has role/xp)"
+    - "Test forgot password flow (new feature)"
+    - "Test domain validation (if enabled)"
+    - "Test error messages display correctly"
+    - "Test success message displays correctly"
+
+# =============================================================================
+# RECOMMENDATION
+# =============================================================================
+
+recommendation:
+  decision: "PROCEED"
+  confidence: "HIGH"
+  
+  rationale: |
+    - All changes are additive or non-breaking refactors
+    - Login page is isolated from demo functionality
+    - Rollback strategy is straightforward
+    - Prototype already validated in browser
+    - Low overall risk with clear mitigations
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  stage: 4
+  name: "Design"
+  focus: "Create implementation plan (prototype already exists)"
+  key: "Document exact code changes per file"

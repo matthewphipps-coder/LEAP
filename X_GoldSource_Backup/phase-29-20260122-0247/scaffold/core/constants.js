@@ -14,7 +14,7 @@
 
 export const MODULE_CONTRACT = {
   provides: [
-    'APP_NAME', 'APP_VERSION', 'ALLOWED_EMAIL_DOMAINS', 'ENV', 'isDev', 'isProd', 'CHECKPOINT_PREFIX',
+    'APP_NAME', 'APP_VERSION', 'ENV', 'isDev', 'isProd', 'CHECKPOINT_PREFIX',
     // SPEC-003 configs
     'PAGE_TABS', 'PAGE_SIDEBAR_ACTIONS', 'SETTINGS_MENU', 'SETTINGS_SECTIONS'
   ],
@@ -27,13 +27,6 @@ export const MODULE_CONTRACT = {
 
 export const APP_NAME = 'NEXUS';
 export const APP_VERSION = '2.0.0';
-
-/**
- * @constant ALLOWED_EMAIL_DOMAINS
- * @purpose Restrict signup to specific email domains (FR-005)
- * @extensible Set to empty array to allow any domain
- */
-export const ALLOWED_EMAIL_DOMAINS = [];  // e.g., ['@servicenow.com']
 
 // =============================================================================
 // ENVIRONMENT DETECTION

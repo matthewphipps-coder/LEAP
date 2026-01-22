@@ -1,0 +1,101 @@
+/**
+ * @file canvas.css
+ * @purpose Canvas component styles - main content area with multi-page system
+ * @layer ui
+ * @dependencies [variables.css]
+ * @dependents [index.html]
+ * @locked false
+ * @modifyImpact [main content area appearance]
+ * @spec SPEC-003
+ */
+
+/* =============================================================================
+   CANVAS CONTAINER (SPEC-003)
+   ============================================================================= */
+
+.canvas {
+    position: fixed;
+    top: var(--header-height);
+    /* Leave room for floating sidebar pill */
+    left: calc(var(--sidebar-pill-width) + var(--sidebar-gap) * 2);
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: var(--space-xl);
+}
+
+/* =============================================================================
+   PAGE SYSTEM (SPEC-003)
+   ============================================================================= */
+
+.page {
+    display: none;
+    min-height: 100%;
+}
+
+.page--active {
+    display: block;
+}
+
+.page-content {
+    max-width: 1200px;
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+}
+
+.canvas-content {
+    min-height: 100%;
+    padding: var(--space-xl);
+}
+
+/* =============================================================================
+   WELCOME MESSAGE
+   ============================================================================= */
+
+.canvas-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.welcome-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    font-weight: var(--font-semibold);
+    background: linear-gradient(135deg, var(--accent-primary), #a3e635);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--space-md);
+}
+
+.welcome-subtitle {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.welcome-hint {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* =============================================================================
+   GRID READY (for future cards)
+   ============================================================================= */
+
+.canvas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}

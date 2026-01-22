@@ -1,0 +1,259 @@
+# =============================================================================
+# STAGE 2: RESEARCH - SPEC-001 Authentication System
+# =============================================================================
+# Phase 29: Implement SPEC-001 Authentication Features
+# =============================================================================
+
+metadata:
+  phase: 29
+  name: "Authentication System Implementation"
+  stage: 2
+  stageName: "Research"
+  created: "2026-01-22T02:38:00Z"
+  previousStage: "4_Phases/phase-29/stage-1-discovery.yaml"
+
+# =============================================================================
+# SETUP VERIFICATION
+# =============================================================================
+
+setupComplete:
+  phaseFolder: true
+  currentStateUpdated: true
+  taskTemplatecopied: true
+
+# =============================================================================
+# FILE ANALYSIS
+# =============================================================================
+
+fileAnalysis:
+
+  # ---------------------------------------------------------------------------
+  # login.html (166 lines, 4383 bytes)
+  # ---------------------------------------------------------------------------
+  loginHtml:
+    path: "scaffold/login.html"
+    currentState:
+      totalLines: 166
+      inlineStyles: "Lines 20-109 (~90 lines in <style> block)"
+      plasmaBackground: "MISSING - not present"
+      inlineOnclick: "Line 157: onclick=\"toggleMode()\""
+      ariaLabels: "MISSING on all inputs"
+      forgotPassword: "MISSING - no link present"
+      domainNotice: "MISSING - no signup domain notice"
+      htmlHeader: "MISSING - no AI-First header comment"
+    
+    changesNeeded:
+      - item: "PRE-001"
+        change: "Add plasma-background div with 4 bubble elements"
+        location: "Insert after <body> tag"
+      - item: "PRE-002"
+        change: "Remove <style> block (lines 20-109), link to login.css"
+        location: "Head section"
+      - item: "PRE-003"
+        change: "Remove onclick=\"toggleMode()\" from toggle link"
+        location: "Line 157"
+      - item: "PRE-004"
+        change: "Add AI-First HTML header comment"
+        location: "After <!DOCTYPE html>"
+      - item: "FR-002"
+        change: "Add forgot password link element"
+        location: "After password input, before submit button"
+      - item: "FR-005"
+        change: "Add domain-notice element (hidden by default)"
+        location: "After form, before toggle"
+      - item: "FR-006"
+        change: "Add aria-label, aria-required to inputs; role='alert' aria-live='polite' to error div"
+        location: "Input elements and error div"
+
+  # ---------------------------------------------------------------------------
+  # login.js (165 lines, 5203 bytes)
+  # ---------------------------------------------------------------------------
+  loginJs:
+    path: "scaffold/login.js"
+    currentState:
+      totalLines: 165
+      hasAiHeader: true
+      toggleMode: "window.toggleMode exposed globally (line 104)"
+      imports: "login, signup, setupAuthListener from auth-service"
+      errorCodes: "7 codes handled in getErrorMessage (lines 153-161)"
+      themeInit: "MISSING - no theme initialization"
+      forgotHandler: "MISSING"
+      domainValidation: "MISSING"
+      successMessage: "MISSING"
+    
+    changesNeeded:
+      - item: "PRE-003"
+        change: "Use addEventListener on toggle link instead of window.toggleMode"
+        location: "Initialization section"
+      - item: "PRE-005"
+        change: "Add initTheme() call reading localStorage/system preference"
+        location: "Initialization section"
+      - item: "FR-002"
+        change: "Add forgotBtn click handler calling sendPasswordResetEmail"
+        location: "New handler section"
+      - item: "FR-003"
+        change: "Add showSuccess() function for green success messages"
+        location: "Error handling section"
+      - item: "FR-004"
+        change: "Add reset-specific error codes to getErrorMessage"
+        location: "Lines 153-161"
+      - item: "FR-005"
+        change: "Add validateEmailDomain() using ALLOWED_EMAIL_DOMAINS"
+        location: "New validation section"
+      - item: "IMPORT"
+        change: "Add sendPasswordResetEmail import from Firebase"
+        location: "Line 11"
+
+  # ---------------------------------------------------------------------------
+  # auth-service.js (163 lines, 5450 bytes)
+  # ---------------------------------------------------------------------------
+  authService:
+    path: "scaffold/core/auth-service.js"
+    currentState:
+      totalLines: 163
+      hasAiHeader: true
+      signupFunction: "Lines 92-110"
+      userDocFields: "email, displayName, createdAt"
+      missingFields: "role, xp"
+      timestampType: "Date.toISOString() - could use serverTimestamp()"
+    
+    changesNeeded:
+      - item: "FR-001"
+        change: "Add role: 'member' and xp: 0 to user document"
+        location: "Lines 98-102"
+      - item: "OPTIONAL"
+        change: "Consider serverTimestamp() instead of Date.toISOString()"
+        location: "Line 101"
+
+  # ---------------------------------------------------------------------------
+  # constants.js (130 lines, 4126 bytes)
+  # ---------------------------------------------------------------------------
+  constants:
+    path: "scaffold/core/constants.js"
+    currentState:
+      totalLines: 130
+      hasAiHeader: true
+      locked: true
+      allowedDomains: "MISSING"
+    
+    changesNeeded:
+      - item: "FR-005"
+        change: "Add ALLOWED_EMAIL_DOMAINS constant"
+        location: "After APP_VERSION, before ENV"
+      - item: "UPDATE"
+        change: "Add to MODULE_CONTRACT.provides"
+        location: "Lines 16-19"
+    
+    lockedFileNote: |
+      constants.js is marked @locked true for Factory.
+      LEAP CAN modify this file per coding-standards.yaml.
+
+  # ---------------------------------------------------------------------------
+  # NEW FILE: login.css
+  # ---------------------------------------------------------------------------
+  loginCss:
+    path: "scaffold/ui/components/login/login.css"
+    status: "NEW FILE"
+    purpose: "Extract inline styles from login.html"
+    source: "Lines 20-109 from login.html"
+    changesNeeded:
+      - item: "PRE-002"
+        change: "Create file with extracted styles"
+      - item: "PRE-004"
+        change: "Add AI-First CSS header comment"
+      - item: "FR-003"
+        change: "Add .login-success class variant (green styling)"
+
+# =============================================================================
+# INTEGRATION POINTS
+# =============================================================================
+
+integrationPoints:
+  
+  firebaseImports:
+    current: "signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut"
+    adding: "sendPasswordResetEmail"
+    source: "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+  
+  themeSystem:
+    existingPattern: "Variables in variables.css, theme toggling via JS"
+    loginPage: "Currently no theme initialization"
+    fix: "Call initTheme() at page load"
+  
+  designTokens:
+    success: "Need to add --success color variable or use inline #22c55e"
+    existing: "--error: #ef4444 used for error messages"
+
+# =============================================================================
+# PATTERN REFERENCES
+# =============================================================================
+
+patternReferences:
+  
+  plasmaBackground:
+    source: "index.html lines 73-78"
+    pattern: |
+      <div class="plasma-background">
+        <div class="plasma-bubble"></div>
+        <div class="plasma-bubble"></div>
+        <div class="plasma-bubble"></div>
+        <div class="plasma-bubble"></div>
+      </div>
+    cssLocation: "ui/styles/base.css (plasma-background and plasma-bubble classes)"
+  
+  eventListeners:
+    pattern: "addEventListener in initialization section"
+    example: "form.addEventListener('submit', handleSubmit)"
+    applyTo: "toggleLink.addEventListener('click', toggleMode)"
+  
+  aiFirstHeaders:
+    htmlExample: |
+      <!--
+        @file login.html
+        @purpose Login and signup page for NEXUS
+        @layer page
+      -->
+    cssExample: |
+      /**
+       * @file login.css
+       * @purpose Login page component styles
+       * @layer ui
+       */
+
+# =============================================================================
+# DEPENDENCY GRAPH
+# =============================================================================
+
+dependencyGraph:
+  description: "Files and their modification dependencies"
+  
+  order:
+    1: "constants.js - Add ALLOWED_EMAIL_DOMAINS (no deps)"
+    2: "login.css - Create file with extracted styles (no deps)"
+    3: "login.html - Extract styles, add elements (deps: login.css exists)"
+    4: "login.js - Add handlers and validation (deps: constants.js updated)"
+    5: "auth-service.js - Add user fields (no deps on above)"
+
+# =============================================================================
+# VERIFICATION CHECKLIST
+# =============================================================================
+
+researchVerification:
+  - "[x] Read stage-1-discovery.yaml"
+  - "[x] Read login.html (166 lines)"
+  - "[x] Read login.js (165 lines)"
+  - "[x] Read auth-service.js (163 lines)"
+  - "[x] Read constants.js (130 lines)"
+  - "[x] Identified plasma background pattern in index.html"
+  - "[x] Confirmed all files can be modified (LEAP authority)"
+  - "[x] Documented change locations with line numbers"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  stage: 3
+  name: "Analysis"
+  focus: "RRMD+ risk assessment for all changes"
+  key: "Assess demo compatibility and rollback strategy"

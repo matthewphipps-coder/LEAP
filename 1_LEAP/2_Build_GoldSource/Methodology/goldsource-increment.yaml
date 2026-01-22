@@ -1,0 +1,472 @@
+# =============================================================================
+# GOLDSOURCE INCREMENT METHODOLOGY
+# =============================================================================
+# How LEAP improves the GoldSource scaffold (distinct from Factory extending it)
+# =============================================================================
+
+metadata:
+  type: "methodology"
+  name: "GoldSource Increment Protocol"
+  purpose: "8-stage process for LEAP to improve the GoldSource scaffold"
+  version: "1.0.0"
+  created: "2026-01-22"
+  status: "active"
+  owner: "Matthew Phipps"
+
+# =============================================================================
+# SCOPE: WHEN TO USE THIS VS PULSE-PROTOCOL
+# =============================================================================
+
+scope:
+  thisMethodology:
+    - "Adding new scaffold features (new components, new patterns)"
+    - "Modifying locked scaffold files"
+    - "Refining factory methodology (governance/templates in GoldSource)"
+    - "GoldSource bug fixes and backlog items"
+    - "Implementing functional specs (SPEC-XXX)"
+    - "Major architectural changes to GoldSource"
+  
+  usePulseInstead:
+    - "LEAP-only governance file updates (1_Governance/)"
+    - "Documentation-only changes"
+  
+  keyDifference: |
+    Pulse = LEAP governance only (rules, protocols, tracking - no code)
+    This = GoldSource builds (specs, prototypes, scaffold code, factory governance)
+
+# =============================================================================
+# THE SPEC → PROTOTYPE → GOLDSOURCE WORKFLOW
+# =============================================================================
+
+coreWorkflow:
+  description: "Three-artifact progression - use as needed based on complexity"
+  
+  flexibility:
+    rule: "Spec and Prototype are optional - AI recommends based on scope"
+    
+    recommendSpec:
+      - "Multiple related requirements"
+      - "Scope grows during discovery"
+      - "Breaking changes to existing behavior"
+      - "New architectural patterns"
+    
+    recommendPrototype:
+      - "UI changes (visual validation before scaffold work)"
+      - "Complex interactions needing browser testing"
+      - "Uncertain design that benefits from rapid iteration"
+    
+    skipBoth:
+      - "Simple bug fixes with clear solution"
+      - "Minor code improvements"
+      - "Documentation updates in meta/"
+  
+  artifacts:
+    spec:
+      location: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-XXX-name.yaml"
+      purpose: "Define WHAT we're building (requirements, user stories)"
+      template: "1_LEAP/2_Build_GoldSource/Functional_Specs/TEMPLATE.yaml"
+      optional: true
+    
+    prototype:
+      location: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-XXX-prototype.html"
+      purpose: "Single-file implementation to validate design"
+      validation: "Must match spec requirements before GoldSource work"
+      optional: true
+    
+    goldSource:
+      location: "2_GoldSource/scaffold/"
+      purpose: "Production implementation integrated into scaffold"
+      constraint: "Must match prototype behavior (if prototype exists)"
+  
+  progression:
+    full: 
+      description: "Major features with UI"
+      steps:
+        - "Create SPEC-XXX.yaml with requirements"
+        - "Build prototype.html that implements spec"
+        - "Human validates prototype in browser"
+        - "Implement in GoldSource based on proven prototype"
+        - "Validate GoldSource matches prototype behavior"
+    
+    specOnly:
+      description: "Backend/logic changes without UI"
+      steps:
+        - "Create SPEC-XXX.yaml with requirements"
+        - "Implement in GoldSource per spec"
+        - "Validate against spec requirements"
+    
+    direct:
+      description: "Bug fixes, minor improvements"
+      steps:
+        - "Document change in stage artifacts"
+        - "Implement in GoldSource"
+        - "Validate fix works"
+
+# =============================================================================
+# 8-STAGE LIFECYCLE (Adapted from Factory)
+# =============================================================================
+
+conversationBoundary:
+  rule: "Stage 2 MUST start in a new conversation"
+  reason: |
+    Discovery often involves extensive discussion, exploration, and decision-making.
+    By the time Discovery completes, both human and AI may be fatigued.
+    Starting Stage 2 in a fresh conversation ensures:
+    - Clean context without accumulated confusion
+    - Fresh AI instance without prior assumptions
+    - Natural pause for human to step away if needed
+  
+  enforcement:
+    afterStage1:
+      action: "End conversation after Stage 1 approval"
+      artifact: "stage-1-discovery.yaml must be complete"
+      instruction: "AI tells human: 'Discovery complete. Start a new conversation for Stage 2.'"
+    
+    stage2Start:
+      action: "New conversation reads discovery artifact"
+      firstStep: "Read stage-1-discovery.yaml before any work"
+
+stages:
+
+  - stage: 1
+    name: "Discovery"
+    purpose: "Define what GoldSource improvement is needed"
+    
+    inputs:
+      - "Backlog item or feature request"
+      - "Existing SPEC-XXX (if updating)"
+    
+    activities:
+      - "Identify the gap or improvement needed"
+      - "Review existing scaffold capabilities"
+      - "Define success criteria"
+      - "Create or update SPEC-XXX.yaml (if recommended)"
+      - "Determine workflow: full / specOnly / direct"
+    
+    outputs:
+      - "SPEC-XXX.yaml (if applicable)"
+      - "stage-1-discovery.yaml (required - enables handoff)"
+    
+    gate: "!Proceed"
+    
+    conversationEnd:
+      rule: "MANDATORY - End conversation after this stage"
+      reason: "Prevents discovery fatigue from affecting execution"
+      nextStep: "Human starts new conversation for Stage 2"
+  
+  - stage: 2
+    name: "Research"
+    purpose: "Understand current scaffold and impact"
+    
+    inputs:
+      - "stage-1-discovery.yaml (from previous conversation)"
+      - "SPEC-XXX.yaml (if exists)"
+      - "2_GoldSource/ (current scaffold)"
+    
+    firstSteps:
+      rule: "MANDATORY setup before research"
+      items:
+        - step: "Create phase folder"
+          command: "mkdir -p 4_Phases/phase-{X}"
+        - step: "Update CURRENT_STATE.yaml"
+          update: "currentPhase: {number, name, status: 'in-progress', stage: 2}"
+        - step: "Copy task template"
+          command: "cp 1_LEAP/2_Build_GoldSource/Methodology/TASK_TEMPLATE.md 4_Phases/phase-{X}/task.md"
+    
+    activities:
+      - "Create phase folder and update CURRENT_STATE (FIRST)"
+      - "Copy and adapt TASK_TEMPLATE.md"
+      - "Read discovery artifact from Stage 1"
+      - "Read affected scaffold files"
+      - "Research patterns in archetypes/ (technical context)"
+      - "Identify integration points"
+    
+    outputs:
+      - "4_Phases/phase-{X}/ folder created"
+      - "task.md copied and adapted"
+      - "CURRENT_STATE.yaml updated"
+      - "stage-2-research.yaml with file impact assessment"
+    
+    gate: "!Proceed"
+  
+  - stage: 3
+    name: "Analysis"
+    purpose: "Risk assessment and approach selection"
+    
+    inputs:
+      - "Research artifact"
+      - "SPEC-XXX.yaml (if exists)"
+    
+    activities:
+      - "Assess breaking change risk"
+      - "Identify demo compatibility concerns"
+      - "Compare implementation approaches"
+      - "Create RRMD+ (ALWAYS required for GoldSource work)"
+    
+    outputs:
+      - "stage-3-analysis.yaml with RRMD+ risk assessment"
+      - "Recommended approach"
+    
+    gate: "!Proceed"
+  
+  - stage: 4
+    name: "Design"
+    purpose: "Validate approach before implementation"
+    
+    inputs:
+      - "SPEC-XXX.yaml (if exists)"
+      - "Analysis artifact"
+    
+    activities:
+      fullWorkflow:
+        - "Create SPEC-XXX-prototype.html"
+        - "Implement all spec requirements in prototype"
+        - "Human reviews prototype in browser"
+        - "Document pattern decisions"
+      directWorkflow:
+        - "Create implementation plan (files to change, approach)"
+        - "Document pattern decisions"
+        - "Get human approval on plan"
+    
+    outputs:
+      fullWorkflow:
+        - "SPEC-XXX-prototype.html (working prototype)"
+        - "stage-4-design.yaml with pattern decisions"
+      directWorkflow:
+        - "stage-4-design.yaml with implementation plan"
+    
+    gate: "!Proceed (after human validates prototype OR approves plan)"
+  
+  - stage: 5
+    name: "Implementation"
+    purpose: "Implement in GoldSource based on prototype"
+    
+    inputs:
+      - "Validated prototype"
+      - "Design artifact"
+    
+    preImplementation:
+      backup:
+        rule: "MANDATORY - Create timestamped backup before ANY modifications"
+        location: "X_GoldSource_Backup/"
+        command: "cp -r 2_GoldSource X_GoldSource_Backup/phase-{X}-$(date +%Y%m%d-%H%M)"
+        naming: "Timestamp prevents collision between multiple runs"
+        reason: "Safety net - enables rollback if implementation fails"
+      
+      rollbackProcedure:
+        description: "If implementation fails, restore from backup"
+        steps:
+          - "Stop work immediately"
+          - "Run: rm -rf 2_GoldSource"
+          - "Run: cp -r X_GoldSource_Backup/phase-{X}-{timestamp} 2_GoldSource"
+          - "Report to human what went wrong"
+          - "Decide: retry or abort phase"
+    
+    activities:
+      - "Create timestamped backup of GoldSource (FIRST)"
+      - "Modify scaffold files per design"
+      - "Commit incrementally: git add . && git commit -m 'WIP: [description]'"
+      - "Maintain prototype behavior"
+      - "Update meta/ documentation (see checklist below)"
+    
+    gitStrategy:
+      rule: "Incremental commits during implementation"
+      wipCommits:
+        when: "After completing each logical unit of work"
+        format: "git commit -m 'WIP Phase {X}: [what was done]'"
+        reason: "Enables partial recovery if session crashes"
+      finalCommit:
+        when: "Stage 8 Closure"
+        format: "git commit -m 'Phase {X}: [phase name] complete'"
+    
+    documentationUpdates:
+      rule: "MANDATORY - Check each meta/ file for relevance"
+      location: "2_GoldSource/meta/"
+      checklist:
+        - file: "functionality.yaml"
+          updateWhen: "New features added or existing features changed"
+        - file: "ARCHITECTURE.yaml"
+          updateWhen: "Folder structure, module dependencies, or data flow changes"
+        - file: "architectural-standards.yaml"
+          updateWhen: "New code patterns or conventions established"
+        - file: "design-system.yaml"
+          updateWhen: "New design tokens, colors, or visual patterns"
+        - file: "theme-extension-guide.yaml"
+          updateWhen: "Theme capabilities or customization options change"
+    
+    outputs:
+      - "Timestamped GoldSource backup"
+      - "Modified GoldSource files"
+      - "WIP git commits"
+      - "Updated meta/ documentation"
+      - "stage-5-implementation.yaml"
+    
+    gate: "!Proceed"
+  
+  - stage: 6
+    name: "Validation"
+    purpose: "Verify GoldSource matches design intent"
+    
+    inputs:
+      - "Modified GoldSource"
+      - "Prototype (if exists)"
+      - "SPEC-XXX.yaml (if exists)"
+      - "stage-4-design.yaml (implementation plan)"
+    
+    activities:
+      - "Compare GoldSource behavior to prototype/spec/plan"
+      - "Verify all requirements implemented"
+      - "Check for regressions in existing features"
+      - "Validate documentation updated"
+    
+    outputs:
+      - "stage-6-validation.yaml with comparison results"
+      - "Any discrepancy notes"
+    
+    gate: "!Proceed"
+  
+  - stage: 7
+    name: "Testing"
+    purpose: "Full scaffold testing"
+    
+    inputs:
+      - "Validated GoldSource"
+    
+    activities:
+      - "Run scaffold locally (python3 -m http.server)"
+      - "Test new feature end-to-end"
+      - "Test existing features for regressions"
+      - "Capture screenshots/recordings"
+    
+    outputs:
+      - "stage-7-testing.yaml with test results"
+      - "Screenshots/recordings as evidence"
+    
+    gate: "!Proceed"
+  
+  - stage: 8
+    name: "Closure"
+    purpose: "Finalize and document"
+    
+    inputs:
+      - "Testing artifact"
+    
+    activities:
+      - "Final git commit: 'Phase {X}: [phase name] complete'"
+      - "Update CURRENT_STATE.yaml (status: complete)"
+      - "Document lessons learned"
+      - "Update backlog.yaml (close items)"
+      - "Check: Do Factory governance files need updates? (see below)"
+    
+    factoryGovernanceCheck:
+      rule: "If GoldSource patterns changed, update Factory governance"
+      location: "2_GoldSource/governance/"
+      checkEach:
+        - file: "demo-rules.yaml"
+          updateWhen: "If locked files list or naming conventions changed"
+        - file: "lifecycle-stages.yaml"
+          updateWhen: "If stage expectations changed"
+        - file: "templates/*.yaml"
+          updateWhen: "If new stage template fields needed"
+        - file: "FACTORY_README.yaml"
+          updateWhen: "If file registry changed"
+    
+    outputs:
+      - "stage-8-closure.yaml with lessons learned"
+      - "Final git commit"
+      - "Updated CURRENT_STATE.yaml"
+      - "Updated Factory governance (if patterns changed)"
+    
+    gate: "Human sign-off"
+
+# =============================================================================
+# TASK TRACKING (Different from Pulse)
+# =============================================================================
+
+taskTracking:
+  rule: "task.md IS allowed for GoldSource increment phases"
+  reason: "Code-heavy work benefits from detailed checklists"
+  
+  template:
+    source: "1_LEAP/2_Build_GoldSource/Methodology/TASK_TEMPLATE.md"
+    requirement: "AI MUST copy template to phase folder at Stage 2 start"
+    adaptation: "Fill in phase name, SPEC reference, and customize checklist items"
+  
+  location: "4_Phases/phase-{X}/task.md"
+  
+  format:
+    - "[ ] Uncompleted"
+    - "[/] In progress"
+    - "[x] Completed"
+  
+  keyBenefit: |
+    Template ensures consistent structure across phases.
+    AI doesn't invent its own tracking - uses proven format.
+
+# =============================================================================
+# ARTIFACT LOCATIONS
+# =============================================================================
+
+artifactLocations:
+  phaseArtifacts: "4_Phases/phase-{X}/"
+  specs: "1_LEAP/2_Build_GoldSource/Functional_Specs/"
+  prototypes: "1_LEAP/2_Build_GoldSource/Functional_Specs/"
+  methodology:
+    folder: "1_LEAP/2_Build_GoldSource/Methodology/"
+    files:
+      - "goldsource-increment.yaml - This methodology"
+      - "coding-standards.yaml - Code patterns and LEAP authority"
+      - "TASK_TEMPLATE.md - Checklist template"
+  goldSource: "2_GoldSource/"
+  
+  noFactoryReferences: |
+    LEAP methodology does NOT reference GoldSource governance/ files.
+    GoldSource meta/ files (ARCHITECTURE.yaml, functionality.yaml) 
+    are read for TECHNICAL context only, not for rules.
+
+# =============================================================================
+# RECOVERY PROTOCOL
+# =============================================================================
+
+recovery:
+  trigger: "!bump"
+  
+  onBump:
+    - "Read CURRENT_STATE.yaml for current phase/stage"
+    - "Read task.md for checked/unchecked items"
+    - "Read latest stage artifact"
+    - "Report status and ask how to proceed"
+  
+  stageVerification:
+    stage4: "Prototype exists and has been reviewed"
+    stage5: "GoldSource files modified, functionality.yaml updated"
+    stage6: "Validation artifact exists"
+    stage7: "Testing artifact exists with screenshots"
+    stage8: "Git commit exists, closure artifact exists"
+
+# =============================================================================
+# BREAKING CHANGE PROTOCOL
+# =============================================================================
+
+riskAssessment:
+  rule: "RRMD+ is ALWAYS required for GoldSource work"
+  reason: "GoldSource is the foundation - all changes carry risk"
+  
+  inStage3:
+    - "Document what is being changed"
+    - "Assess demo compatibility impact"
+    - "Identify rollback strategy"
+    - "Get human approval before proceeding"
+  
+  breakingChanges:
+    definition: "Changes that would break existing demos"
+    examples:
+      - "Changing locked file structure"
+      - "Renaming exported functions"
+      - "Changing state shape"
+      - "Removing features"
+    additionalRequirements:
+      - "Migration guide in closure"
+      - "Factory governance update if patterns change"
+
+

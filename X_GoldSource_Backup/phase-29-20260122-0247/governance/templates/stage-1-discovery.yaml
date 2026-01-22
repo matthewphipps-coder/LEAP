@@ -1,0 +1,48 @@
+# =============================================================================
+# STAGE 1: DISCOVERY TEMPLATE
+# =============================================================================
+# Copy this to your demo folder and fill in the blanks.
+# =============================================================================
+
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 1
+  stageName: "discovery"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+
+discoveryObjective: "Define demo requirements from user scenario"
+
+# =============================================================================
+# USER INPUT
+# =============================================================================
+
+userInput:
+  demoName: "[NEXUS vx.x.x-feature]"
+  scenarioDescription: |
+    [User's description of what they want the demo to show]
+  
+  targetArchetype: "[agentic-dashboard | other]"
+
+# =============================================================================
+# REQUIREMENTS
+# =============================================================================
+
+requirements:
+  keyFeatures:
+    - "[Feature 1]"
+    - "[Feature 2]"
+  
+  userFlows:
+    - "[Flow 1: User does X, sees Y]"
+  
+  dataNeeds:
+    - "[What data should be displayed]"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"

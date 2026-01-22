@@ -1161,7 +1161,9 @@ priorities:
       name: "Create /newfactory Workflow with Prompt Saving"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-22"
+      completedIn: "Ad-hoc (workflow file creation)"
       description: |
         Create .agent/workflows/newfactory.md workflow that:
         1. Prompts for demo name, scenario, output location
@@ -1196,7 +1198,9 @@ priorities:
       name: "Enforce patternVerification Format in Stage 5"
       category: "factory-governance"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-22"
+      completedIn: "Ad-hoc (template update)"
       description: |
         Stage 5 template has patternVerification section but v2.2.0 Factory run
         used 'scaffoldPatternsUsed' instead. Need to:

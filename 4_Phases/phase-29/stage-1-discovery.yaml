@@ -1,0 +1,238 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - SPEC-001 Authentication System
+# =============================================================================
+# Phase 29: Implement SPEC-001 Authentication Features
+# =============================================================================
+
+metadata:
+  phase: 29
+  name: "Authentication System Implementation"
+  stage: 1
+  stageName: "Discovery"
+  created: "2026-01-22T02:31:00Z"
+  spec: "SPEC-001-authentication.yaml"
+  specVersion: "3.3.0"
+  specStatus: "approved"
+
+# =============================================================================
+# SCOPE DECISION
+# =============================================================================
+
+workflow:
+  selected: "full"
+  reason: "UI changes with prototype - need visual validation"
+  
+  prototypeExists: true
+  prototypeLocation: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-001-prototype.html"
+  prototypeStatus: "Complete and validated"
+
+# =============================================================================
+# GAP ANALYSIS: SPEC vs CURRENT SCAFFOLD
+# =============================================================================
+
+gapAnalysis:
+  
+  summary: |
+    Most auth features exist but incomplete. Need: plasma background, CSS extraction,
+    forgot password flow, domain validation, ARIA labels, and 2 missing user profile fields.
+  
+  # ---------------------------------------------------------------------------
+  # PREREQUISITES (LEAP-041) - Login Cleanup
+  # ---------------------------------------------------------------------------
+  prerequisites:
+    
+    - id: "PRE-001"
+      name: "Plasma Background"
+      status: "MISSING"
+      currentState: "login.html has no plasma background"
+      prototypeShows: "Animated plasma bubbles matching index.html"
+      work: "Add plasma-background div with 4 bubble elements"
+    
+    - id: "PRE-002"
+      name: "CSS Extraction"
+      status: "MISSING"
+      currentState: "~90 lines inline styles in login.html <style> block"
+      prototypeShows: "Styles should be in login.css"
+      work: "Create ui/components/login/login.css, move styles"
+    
+    - id: "PRE-003"
+      name: "Remove Inline onclick"
+      status: "PARTIAL"
+      currentState: |
+        login.html line 157: onclick="toggleMode()" on toggle link
+        login.js line 104: window.toggleMode = function...
+      prototypeShows: "Uses addEventListener, no inline handlers"
+      work: "Use addEventListener on toggle link"
+    
+    - id: "PRE-004"
+      name: "AI-First Headers"
+      status: "PARTIAL"
+      currentState: |
+        login.js: ✅ Has full AI-First headers
+        login.html: ❌ No HTML header comment
+        login.css: TBD (new file)
+      work: "Add headers to login.html, add to new login.css"
+    
+    - id: "PRE-005"
+      name: "Theme Initialization"
+      status: "NEEDS VERIFICATION"
+      currentState: "login.js doesn't appear to initialize theme"
+      prototypeShows: "initTheme() reads localStorage or system preference"
+      work: "Add theme initialization at page load"
+  
+  # ---------------------------------------------------------------------------
+  # FUNCTIONAL REQUIREMENTS
+  # ---------------------------------------------------------------------------
+  functional:
+    
+    - id: "FR-001"
+      name: "Complete User Profile"
+      status: "PARTIAL"
+      currentState: |
+        auth-service.js signup() lines 98-103 creates:
+        - email ✅
+        - displayName ✅
+        - createdAt ✅
+        Missing: role, xp
+      work: "Add role: 'member', xp: 0 to user document"
+    
+    - id: "FR-002"
+      name: "Forgot Password Link"
+      status: "MISSING"
+      currentState: "No forgot password link in login.html"
+      prototypeShows: "Button below password field, right-aligned"
+      work: "Add forgot-btn element to HTML"
+    
+    - id: "FR-003"
+      name: "Password Reset Success"
+      status: "MISSING"
+      currentState: "No success message handling"
+      prototypeShows: "Green success message: '✅ Password reset email sent'"
+      work: "Add .success class variant to message styling"
+    
+    - id: "FR-004"
+      name: "Password Reset Errors"
+      status: "MISSING"
+      currentState: "getErrorMessage() doesn't have reset-specific errors"
+      work: "Add auth/too-many-requests and reset-specific error codes"
+    
+    - id: "FR-005"
+      name: "Domain Validation"
+      status: "MISSING"
+      currentState: "Any email can sign up"
+      prototypeShows: "Domain notice visible in signup mode"
+      work: "Add ALLOWED_EMAIL_DOMAINS to constants.js, validation in login.js"
+    
+    - id: "FR-006"
+      name: "ARIA Labels"
+      status: "MISSING"
+      currentState: "No aria-label, aria-required on inputs; no role='alert' on error div"
+      prototypeShows: "Full ARIA attributes on all form elements"
+      work: "Add aria-* attributes to login.html inputs and error div"
+    
+    - id: "FR-007"
+      name: "Login/Signup Toggle"
+      status: "IMPLEMENTED"
+      currentState: "✅ toggleMode() works correctly"
+      work: "None"
+    
+    - id: "FR-008"
+      name: "Loading States"
+      status: "IMPLEMENTED"
+      currentState: "✅ Button shows 'Signing in...' / 'Creating account...'"
+      work: "None"
+    
+    - id: "FR-009"
+      name: "Error Code Mapping"
+      status: "IMPLEMENTED"
+      currentState: "✅ getErrorMessage() handles 7 codes"
+      work: "None (FR-004 extends this)"
+    
+    - id: "FR-010"
+      name: "Auto-redirect"
+      status: "IMPLEMENTED"
+      currentState: "✅ setupAuthListener redirects if logged in"
+      work: "None"
+
+# =============================================================================
+# FILES TO MODIFY
+# =============================================================================
+
+fileImpact:
+  
+  modify:
+    - file: "scaffold/login.html"
+      changes:
+        - "PRE-001: Add plasma background div"
+        - "PRE-002: Remove inline styles, add link to login.css"
+        - "PRE-003: Remove inline onclick from toggle link"
+        - "PRE-004: Add HTML AI-First header comment"
+        - "FR-002: Add forgot-btn element"
+        - "FR-005: Add domain-notice element"
+        - "FR-006: Add ARIA attributes to inputs and error div"
+    
+    - file: "scaffold/login.js"
+      changes:
+        - "PRE-003: Use addEventListener for toggle link"
+        - "PRE-005: Add theme initialization"
+        - "FR-002: Add forgotBtn handler with sendPasswordResetEmail"
+        - "FR-003: Add showSuccess message function"
+        - "FR-004: Add reset-specific error codes"
+        - "FR-005: Add validateEmailDomain function"
+        - "Import sendPasswordResetEmail from Firebase"
+    
+    - file: "scaffold/core/auth-service.js"
+      changes:
+        - "FR-001: Add role and xp fields to user document"
+        - "Consider: Use serverTimestamp() instead of Date.toISOString()"
+    
+    - file: "scaffold/core/constants.js"
+      changes:
+        - "FR-005: Add ALLOWED_EMAIL_DOMAINS constant"
+  
+  new:
+    - file: "scaffold/ui/components/login/login.css"
+      purpose: "PRE-002: Extracted login page styles"
+  
+  delete: []
+
+# =============================================================================
+# SUCCESS CRITERIA
+# =============================================================================
+
+successCriteria:
+  - "Login page shows plasma background matching index.html"
+  - "No inline styles in login.html"
+  - "No inline onclick handlers"
+  - "Forgot Password link visible and functional"
+  - "Password reset shows inline success/error (no alert())"
+  - "Signup restricted to @servicenow.com by default"
+  - "Domain notice visible in signup mode"
+  - "All inputs have ARIA labels"
+  - "Error div has role='alert' aria-live='polite'"
+  - "User doc has email, displayName, role, xp, createdAt"
+
+# =============================================================================
+# RISK ASSESSMENT PREVIEW
+# =============================================================================
+
+riskPreview:
+  breakingChanges: false
+  demoCompatibility: "No impact - login is separate from demo features"
+  
+  risks:
+    - risk: "CSS extraction could miss styles"
+      mitigation: "Compare login.html before/after visually"
+    - risk: "Firebase sendPasswordResetEmail import issue"
+      mitigation: "Already importing from CDN, add to existing import"
+    - risk: "Domain validation too restrictive for testing"
+      mitigation: "Set ALLOWED_EMAIL_DOMAINS = [] to disable"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  stage2:
+    action: "Create phase folder, copy TASK_TEMPLATE.md, research scaffold files"
+    rule: "MUST start in new conversation (per goldsource-increment.yaml)"

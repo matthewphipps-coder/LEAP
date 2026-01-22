@@ -1,0 +1,607 @@
+# =============================================================================
+# STAGE 4: DESIGN - SPEC-001 Authentication System
+# =============================================================================
+# Phase 29: Implementation Plan for GoldSource
+# Prototype: SPEC-001-prototype.html (683 lines, validated)
+# =============================================================================
+
+metadata:
+  phase: 29
+  name: "Authentication System Implementation"
+  stage: 4
+  stageName: "Design"
+  created: "2026-01-22T02:44:00Z"
+  previousStage: "4_Phases/phase-29/stage-3-analysis.yaml"
+
+prototypeReference:
+  file: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-001-prototype.html"
+  lines: 683
+  status: "Validated"
+  tested: "Login/signup flow, forgot password, domain validation, theme toggle"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  summary: "5 files to modify/create in dependency order"
+  estimatedChanges: "~200 new lines, ~100 lines refactored"
+
+# =============================================================================
+# STEP 1: constants.js - Add ALLOWED_EMAIL_DOMAINS
+# =============================================================================
+
+step1:
+  file: "scaffold/core/constants.js"
+  action: "MODIFY"
+  prereq: []
+  
+  changes:
+    - location: "After line 29 (APP_VERSION)"
+      add: |
+        /**
+         * @constant ALLOWED_EMAIL_DOMAINS
+         * @purpose Restrict signup to specific email domains (FR-005)
+         * @extensible Set to empty array to allow any domain
+         */
+        export const ALLOWED_EMAIL_DOMAINS = [];  // e.g., ['@servicenow.com']
+    
+    - location: "Line 18 (MODULE_CONTRACT.provides)"
+      update: "Add 'ALLOWED_EMAIL_DOMAINS' to provides array"
+  
+  validation: "Module imports successfully in browser console"
+
+# =============================================================================
+# STEP 2: login.css (NEW) - Extract styles from login.html
+# =============================================================================
+
+step2:
+  file: "scaffold/ui/components/login/login.css"
+  action: "CREATE"
+  prereq: []
+  
+  content: |
+    /**
+     * @file login.css
+     * @purpose Login page component styles
+     * @layer ui
+     * @dependencies [variables.css, base.css]
+     * @dependents [login.html]
+     */
+    
+    /* Login Page Layout */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+    }
+    
+    /* Login Card */
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: var(--space-xl);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+    
+    /* Logo/Brand */
+    .login-brand {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    
+    .login-brand h1 {
+      font-family: var(--font-heading);
+      font-size: var(--text-3xl);
+      font-weight: var(--font-semibold);
+      background: linear-gradient(135deg, var(--accent-primary), #a3e635);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .login-brand p {
+      margin-top: var(--space-sm);
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+    }
+    
+    /* Form */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    
+    .login-form .btn {
+      margin-top: var(--space-sm);
+      width: 100%;
+      padding: var(--space-md);
+    }
+    
+    /* FR-002: Forgot Password Link */
+    .forgot-password-container {
+      text-align: right;
+      margin-top: calc(-1 * var(--space-sm));
+      margin-bottom: var(--space-xs);
+    }
+    
+    .forgot-link {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+    
+    .forgot-link:hover {
+      color: var(--accent-primary);
+    }
+    
+    .forgot-link:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* FR-003/004: Message Display (Error/Success) */
+    .login-message {
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      display: none;
+    }
+    
+    .login-message.visible {
+      display: block;
+    }
+    
+    .login-message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    
+    .login-message.success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    /* Mode Toggle */
+    .login-toggle {
+      text-align: center;
+      margin-top: var(--space-lg);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+    
+    .login-toggle a {
+      color: var(--accent-primary);
+      cursor: pointer;
+    }
+    
+    .login-toggle a:hover {
+      text-decoration: underline;
+    }
+    
+    /* FR-005: Domain Notice */
+    .domain-notice {
+      text-align: center;
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: rgba(99, 223, 78, 0.1);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      display: none;
+    }
+    
+    .domain-notice.visible {
+      display: block;
+    }
+  
+  validation: "File exists, CSS syntax valid"
+
+# =============================================================================
+# STEP 3: login.html - Add elements, remove inline styles
+# =============================================================================
+
+step3:
+  file: "scaffold/login.html"
+  action: "MODIFY"
+  prereq: ["step2"]
+  
+  changes:
+    - id: "PRE-004"
+      location: "Line 1, after <!DOCTYPE html>"
+      add: |
+        <!--
+          @file login.html
+          @purpose Login and signup page for NEXUS
+          @layer page
+          @dependencies [variables.css, base.css, buttons.css, inputs.css, login.css, login.js]
+        -->
+
+    - id: "PRE-002"
+      location: "Lines 19-109"
+      action: "Remove entire <style> block"
+      replace: |
+        <!-- Login Page Styles -->
+        <link rel="stylesheet" href="ui/components/login/login.css">
+
+    - id: "PRE-001"
+      location: "After <body> line 111"
+      add: |
+        <!-- Plasma Background -->
+        <div class="plasma-background">
+          <div class="plasma-bubble b1"></div>
+          <div class="plasma-bubble b2"></div>
+          <div class="plasma-bubble b3"></div>
+          <div class="plasma-bubble b4"></div>
+        </div>
+
+    - id: "FR-003/004"
+      location: "Replace line 121 (error div)"
+      old: |
+        <div id="login-error" class="login-error"></div>
+      new: |
+        <!-- Message Display (Error or Success) -->
+        <div id="login-message" class="login-message" role="alert" aria-live="polite"></div>
+
+    - id: "FR-006"
+      location: "Lines 127-134 (email input)"
+      old: |
+        <input 
+          type="email" 
+          id="email" 
+          class="input" 
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+      new: |
+        <input 
+          type="email" 
+          id="email" 
+          class="input" 
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+          aria-label="Email address"
+          aria-required="true"
+        >
+
+    - id: "FR-006"
+      location: "Lines 139-146 (password input)"
+      old: |
+        <input 
+          type="password" 
+          id="password" 
+          class="input" 
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+        >
+      new: |
+        <input 
+          type="password" 
+          id="password" 
+          class="input" 
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+          aria-label="Password"
+          aria-required="true"
+        >
+
+    - id: "FR-002"
+      location: "After password form-group, before submit button"
+      add: |
+        <!-- Forgot Password Link -->
+        <div class="forgot-password-container">
+          <button type="button" id="forgot-btn" class="forgot-link">
+            Forgot Password?
+          </button>
+        </div>
+
+    - id: "PRE-003"
+      location: "Line 157 (toggle link)"
+      old: |
+        <a id="toggle-link" onclick="toggleMode()">Sign up</a>
+      new: |
+        <a id="toggle-link">Sign up</a>
+
+    - id: "FR-005"
+      location: "After form, before toggle div"
+      add: |
+        <!-- Domain Notice (visible in signup mode) -->
+        <div id="domain-notice" class="domain-notice">
+          Registration restricted to @servicenow.com emails.
+        </div>
+  
+  validation: "Page loads without errors, visual comparison to prototype"
+
+# =============================================================================
+# STEP 4: login.js - Add handlers and validation
+# =============================================================================
+
+step4:
+  file: "scaffold/login.js"
+  action: "MODIFY"
+  prereq: ["step1"]
+  
+  changes:
+    - id: "IMPORT"
+      location: "Line 11"
+      old: |
+        import { login, signup, setupAuthListener } from './core/auth-service.js';
+      new: |
+        import { login, signup, setupAuthListener, sendPasswordReset } from './core/auth-service.js';
+        import { ALLOWED_EMAIL_DOMAINS } from './core/constants.js';
+
+    - id: "PRE-004"
+      location: "Lines 1-9"
+      update: "Already has header - no change needed"
+
+    - id: "DOM-ELEMENTS"
+      location: "After line 39 (toggleLink)"
+      add: |
+        const messageDiv = document.getElementById('login-message');
+        const forgotBtn = document.getElementById('forgot-btn');
+        const domainNotice = document.getElementById('domain-notice');
+
+    - id: "PRE-005"
+      location: "After DOM elements, before setupAuthListener"
+      add: |
+        // =============================================================================
+        // THEME INITIALIZATION
+        // =============================================================================
+        
+        function initTheme() {
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme) {
+            document.body.classList.toggle('light-theme', savedTheme === 'light');
+          } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.body.classList.toggle('light-theme', !prefersDark);
+          }
+        }
+        initTheme();
+
+    - id: "PRE-003"
+      location: "After form.addEventListener"
+      add: |
+        // Toggle mode via addEventListener
+        toggleLink.addEventListener('click', toggleMode);
+    
+    - id: "PRE-003"
+      location: "Lines 100-122"
+      action: "Replace entire toggleMode function"
+      old: |
+        window.toggleMode = function toggleMode() {
+          isSignupMode = !isSignupMode;
+          ...
+        };
+      new: |
+        function toggleMode() {
+          isSignupMode = !isSignupMode;
+          
+          if (isSignupMode) {
+            subtitle.textContent = 'Create your account';
+            submitBtn.textContent = 'Create Account';
+            toggleText.textContent = 'Already have an account?';
+            toggleLink.textContent = 'Sign in';
+            passwordInput.autocomplete = 'new-password';
+            domainNotice.classList.add('visible');
+          } else {
+            subtitle.textContent = 'Sign in to continue';
+            submitBtn.textContent = 'Sign In';
+            toggleText.textContent = "Don't have an account?";
+            toggleLink.textContent = 'Sign up';
+            passwordInput.autocomplete = 'current-password';
+            domainNotice.classList.remove('visible');
+          }
+          
+          hideMessage();
+        }
+
+    - id: "FR-002"
+      location: "After toggleMode function"
+      add: |
+        // =============================================================================
+        // FORGOT PASSWORD
+        // =============================================================================
+        
+        forgotBtn.addEventListener('click', handleForgotPassword);
+        
+        async function handleForgotPassword() {
+          const email = emailInput.value.trim();
+          
+          if (!email) {
+            showMessage('Please enter your email address first.', 'error');
+            return;
+          }
+          
+          forgotBtn.disabled = true;
+          forgotBtn.textContent = 'Sending...';
+          hideMessage();
+          
+          try {
+            await sendPasswordReset(email);
+            showMessage(`✅ Password reset email sent to ${email}!`, 'success');
+          } catch (err) {
+            showMessage(getErrorMessage(err.code), 'error');
+          }
+          
+          forgotBtn.disabled = false;
+          forgotBtn.textContent = 'Forgot Password?';
+        }
+
+    - id: "FR-005"
+      location: "After handleForgotPassword"
+      add: |
+        // =============================================================================
+        // DOMAIN VALIDATION
+        // =============================================================================
+        
+        function validateEmailDomain(email) {
+          if (ALLOWED_EMAIL_DOMAINS.length === 0) return true;
+          return ALLOWED_EMAIL_DOMAINS.some(domain => 
+            email.toLowerCase().endsWith(domain)
+          );
+        }
+
+    - id: "FR-005"
+      location: "Line 77 (after password length check in handleSubmit)"
+      add: |
+        // Domain validation for signup
+        if (isSignupMode && !validateEmailDomain(email)) {
+          showMessage('Please use an authorized email domain.', 'error');
+          return;
+        }
+
+    - id: "FR-003/004"
+      location: "Lines 128-136 (replace showError/hideError)"
+      old: |
+        function showError(message) {
+          errorDiv.textContent = message;
+          errorDiv.classList.add('visible');
+        }
+        
+        function hideError() {
+          errorDiv.classList.remove('visible');
+        }
+      new: |
+        function showMessage(text, type = 'error') {
+          messageDiv.textContent = text;
+          messageDiv.className = `login-message visible ${type}`;
+        }
+        
+        function hideMessage() {
+          messageDiv.className = 'login-message';
+        }
+
+    - id: "FR-004"
+      location: "Lines 153-161 (getErrorMessage)"
+      action: "Add reset-specific codes"
+      add: |
+        'auth/user-not-found': 'No account found with this email',
+        'auth/invalid-credential': 'Invalid email or password',
+  
+  validation: "Toggle works, forgot password works, domain validation works"
+
+# =============================================================================
+# STEP 5: auth-service.js - Add fields and sendPasswordReset
+# =============================================================================
+
+step5:
+  file: "scaffold/core/auth-service.js"
+  action: "MODIFY"
+  prereq: []
+  
+  changes:
+    - id: "IMPORT"
+      location: "Line 19"
+      old: |
+        import {
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+      new: |
+        import {
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut,
+            sendPasswordResetEmail
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    - id: "MODULE_CONTRACT"
+      location: "Line 27"
+      old: |
+        provides: ['setupAuthListener', 'login', 'signup', 'logout', 'fetchUserData', 'createUserAvatarHTML'],
+      new: |
+        provides: ['setupAuthListener', 'login', 'signup', 'logout', 'sendPasswordReset', 'fetchUserData', 'createUserAvatarHTML'],
+
+    - id: "FR-001"
+      location: "Lines 97-102 (inside signup function)"
+      old: |
+        const userDoc = {
+            email,
+            displayName: displayName || email.split('@')[0],
+            createdAt: new Date().toISOString()
+        };
+      new: |
+        const userDoc = {
+            email,
+            displayName: displayName || email.split('@')[0],
+            role: 'member',
+            xp: 0,
+            createdAt: new Date().toISOString()
+        };
+
+    - id: "FR-002"
+      location: "After logout function (line 127)"
+      add: |
+        /**
+         * @function sendPasswordReset
+         * @purpose Send password reset email to user
+         * @param {string} email - User email
+         * @returns {Promise<void>}
+         */
+        export async function sendPasswordReset(email) {
+            info('Auth: Password reset requested', { email });
+            try {
+                await sendPasswordResetEmail(auth, email);
+            } catch (err) {
+                logError('Auth: Password reset failed', { error: err.message });
+                throw err;
+            }
+        }
+  
+  validation: "Signup creates complete user doc, password reset works"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalSteps: 5
+  filesModified: 4
+  filesCreated: 1
+  
+  byItem:
+    PRE-001: "Plasma background in login.html"
+    PRE-002: "CSS extracted to login.css"
+    PRE-003: "Inline onclick removed, addEventListener used"
+    PRE-004: "AI-First headers in login.html, login.css"
+    PRE-005: "Theme initialization in login.js"
+    FR-001: "role/xp added to user doc in auth-service.js"
+    FR-002: "Forgot password link and handler"
+    FR-003: "Success message styling (.success class)"
+    FR-004: "Reset error codes added"
+    FR-005: "Domain validation in login.js"
+    FR-006: "ARIA labels on inputs and message div"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  stage: 5
+  name: "Implementation"
+  firstStep: "Create timestamped backup of GoldSource"
+  command: "cp -r 2_GoldSource X_GoldSource_Backup/phase-29-$(date +%Y%m%d-%H%M)"

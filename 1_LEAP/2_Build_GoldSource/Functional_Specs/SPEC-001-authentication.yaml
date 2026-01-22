@@ -8,24 +8,53 @@
 metadata:
   specId: "SPEC-001"
   name: "Authentication System"
-  version: "3.2.0"
+  version: "3.3.0"
   created: "2026-01-20"
-  lastUpdated: "2026-01-20"
-  status: "draft"
+  lastUpdated: "2026-01-22"
+  status: "approved"
   effort: "medium"  # Well-scoped, builds on existing foundation
   
   # Backlog linkage
   backlogId: "LEAP-035"
+  includesBacklogId: "LEAP-041"  # Login cleanup prerequisites
   targetPhase: null
+
+# =============================================================================
+# DESIGN REFERENCE - Prototype is the definitive visual/UX specification
+# =============================================================================
+
+designReference:
+  prototype: "SPEC-001-prototype.html"
+  location: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-001-prototype.html"
+  purpose: "Definitive design reference for implementation phases"
+  
+  usage:
+    stage4Design: "Reference prototype for all visual and UX decisions"
+    stage5Implementation: "Match prototype exactly for styling, colors, layout"
+    stage6Validation: "Compare implementation against prototype"
+  
+  features:
+    - "ServiceNow logo with theme switching (dark/light)"
+    - "Wasabi green (#63df4e) brand color scheme"
+    - "Plasma background animation"
+    - "Forgot Password flow with inline success/error messages"
+    - "Domain validation notice for signup mode"
+    - "ARIA labels for accessibility"
+    - "No inline onclick handlers (addEventListener pattern)"
 
 # =============================================================================
 # CURRENT STATE - What already exists in GoldSource scaffold
 # =============================================================================
 
 currentState:
-  summary: "Basic login/signup works but missing user profiles, password reset, domain validation, and accessibility"
+  summary: "Most auth features work. Need: plasma background, CSS extraction, password reset, domain validation, ARIA labels"
   
   alreadyImplemented:
+    - feature: "User Profile Creation on Signup"
+      location: "auth-service.js signup() lines 97-103"
+      status: "✅ PARTIAL"
+      note: "Creates /users/{uid} doc with email, displayName, createdAt. Missing: role and xp fields."
+    
     - feature: "Login/Signup Toggle"
       location: "login.js toggleMode()"
       status: "✅ Working"
@@ -55,10 +84,24 @@ currentState:
       location: "core/auth-service.js"
       status: "✅ Working"
       note: "login(), signup(), logout() functions exist"
+    
+    - feature: "addEventListener pattern"
+      location: "login.js line 54"
+      status: "✅ Working"
+      note: "Form uses addEventListener, not inline onclick"
+    
+    - feature: "AI-First Headers"
+      location: "login.js lines 1-9"
+      status: "✅ Working"
+      note: "Has full @file, @purpose, @layer, @dependencies headers"
   
   missingFeatures:
-    - feature: "User Profile Creation on Signup"
-      impact: "No user doc in Firestore - can't store user settings/XP"
+    - feature: "Plasma Background"
+      impact: "Login page looks different from main app"
+      priority: "must-have"
+    
+    - feature: "CSS Extraction"
+      impact: "~90 lines inline in login.html"
       priority: "must-have"
     
     - feature: "Password Reset Flow"
@@ -83,16 +126,18 @@ currentState:
 
 scope:
   problem: |
-    GoldSource scaffold login works but:
-    1. Signup doesn't create user profile in Firestore
+    GoldSource scaffold login mostly works but:
+    1. Signup creates user profile but missing role and xp fields
     2. No password reset flow
     3. No domain validation for corporate use
     4. Missing accessibility (ARIA labels)
     5. No "Forgot Password" link in UI
+    6. Login page missing plasma background
+    7. ~90 lines inline CSS should be extracted
     
   goal: |
-    Complete the auth system by adding the missing features.
-    Focus on: user profiles, password reset, domain validation, accessibility.
+    Complete the auth system and clean up login page.
+    Focus on: plasma background, CSS extraction, password reset, domain validation, accessibility.
   
   notInScope:
     - Social auth (Google, Microsoft, etc.)
@@ -110,27 +155,80 @@ scope:
     - Error message container has role="alert"
 
 # =============================================================================
+# PREREQUISITES (LEAP-041: Login Page Cleanup)
+# =============================================================================
+# These cleanup items should be done FIRST before adding auth features.
+# This ensures we're building on a clean, standards-compliant foundation.
+
+prerequisites:
+  backlogId: "LEAP-041"
+  purpose: "Clean up login.html before adding new auth features"
+  
+  items:
+    - id: "PRE-001"
+      name: "Add Plasma Background"
+      description: "Login page should have same plasma background as index.html"
+      currentState: "Login page has static background, index.html has animated plasma"
+      acceptance: "Login page shows animated plasma bubbles matching index.html"
+      files: ["login.html"]
+    
+    - id: "PRE-002"
+      name: "Extract Inline Styles to CSS File"
+      description: "Move ~90 lines of inline styles from login.html to separate CSS file"
+      currentState: "Inline <style> block in login.html"
+      acceptance: |
+        - New file: ui/components/login/login.css
+        - login.html imports login.css via <link>
+        - No inline styles remain in login.html
+      files: ["login.html", "ui/components/login/login.css [NEW]"]
+    
+    - id: "PRE-003"
+      name: "Replace Inline onclick Handler"
+      description: "Replace inline onclick with addEventListener for standards compliance"
+      currentState: "✅ ALREADY DONE - login.js line 54 uses addEventListener"
+      acceptance: |
+        - Button has id, no onclick attribute
+        - login.js uses addEventListener('click', handleSubmit)
+      status: "SKIP - already implemented"
+      files: ["login.html", "login.js"]
+    
+    - id: "PRE-004"
+      name: "Add AI-First Headers"
+      description: "Add standard AI-First headers to login.html and login.js"
+      currentState: "✅ ALREADY DONE - login.js has full headers"
+      acceptance: |
+        - login.html has AI-First HTML header comment
+        - login.js has @file, @purpose, @layer, @dependencies, @locked headers
+        - login.css has @file, @purpose headers
+      status: "PARTIAL - login.js done, login.html and new login.css need headers"
+      files: ["login.html", "login.css"]
+    
+    - id: "PRE-005"
+      name: "Verify Theme Initialization"
+      description: "Confirm theme initializes from system preference on first load"
+      currentState: "Needs verification"
+      acceptance: "Theme matches system preference (dark/light) on initial page load"
+      files: ["login.js"]
+
+# =============================================================================
 # FUNCTIONAL REQUIREMENTS
 # =============================================================================
 
 requirements:
   
   functional:
-    # --- NEW: User Profile Creation (most important gap) ---
+    # --- PARTIAL: User Profile Fields (mostly done, need 2 fields) ---
     - id: "FR-001"
-      name: "User Profile Creation on Signup"
-      description: "Create user document in Firestore when user signs up"
+      name: "Complete User Profile on Signup"
+      description: "Add missing fields to user document creation"
       priority: "must-have"
-      currentState: "NOT IMPLEMENTED"
+      currentState: "PARTIAL - auth-service.js creates doc with email, displayName, createdAt"
       acceptance: |
-        After signup(), create doc in /users/{uid} with:
-        - uid: Firebase user ID
-        - email: User email
-        - displayName: Extracted from email (before @)
+        Add to existing /users/{uid} doc:
         - role: "member"
-        - createdAt: serverTimestamp()
         - xp: 0
-      implementation: "Add to auth-service.js signup() function"
+        Consider: Use serverTimestamp() instead of new Date().toISOString()
+      implementation: "Update auth-service.js signup() lines 98-102"
     
     # --- NEW: Password Reset ---
     - id: "FR-002"
@@ -311,29 +409,38 @@ technicalApproach:
     modify:
       - file: "login.html"
         changes:
-          - "Add ARIA labels to email and password inputs"
-          - "Add role='alert' aria-live='polite' to error div"
-          - "Add Forgot Password link after password input"
-          - "Add CSS for forgot-link and success message styling"
+          - "[PRE-001] Add plasma background canvas"
+          - "[PRE-002] Remove inline styles, link to login.css"
+          - "[PRE-003] Remove inline onclick, add id to button"
+          - "[PRE-004] Add AI-First HTML header comment"
+          - "[FR-002] Add Forgot Password link after password input"
+          - "[FR-006] Add ARIA labels to email and password inputs"
+          - "[FR-006] Add role='alert' aria-live='polite' to error div"
       
       - file: "login.js"
         changes:
-          - "Add forgotBtn element reference"
-          - "Add password reset handler"
-          - "Add domain validation check before signup"
+          - "[PRE-003] Use addEventListener for submit button"
+          - "[PRE-004] Add AI-First JS headers"
+          - "[PRE-005] Verify theme initialization from system preference"
+          - "[FR-002] Add forgotBtn element reference"
+          - "[FR-003/004] Add password reset handler"
+          - "[FR-005] Add domain validation check before signup"
           - "Import sendPasswordResetEmail from Firebase"
       
       - file: "core/auth-service.js"
         changes:
-          - "Add user profile creation in signup() function"
+          - "[FR-001] Add user profile creation in signup() function"
           - "Import serverTimestamp from Firestore"
           - "Add createUserProfile() helper function"
       
       - file: "core/constants.js"
         changes:
-          - "Add ALLOWED_EMAIL_DOMAINS constant"
+          - "[FR-005] Add ALLOWED_EMAIL_DOMAINS constant"
     
-    new: []
+    new:
+      - file: "ui/components/login/login.css"
+        purpose: "[PRE-002] Extracted styles from login.html"
+    
     delete: []
   
   dependencies:

@@ -15,8 +15,7 @@ import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
-    signOut,
-    sendPasswordResetEmail
+    signOut
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
@@ -25,7 +24,7 @@ import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/f
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['setupAuthListener', 'login', 'signup', 'logout', 'sendPasswordReset', 'fetchUserData', 'createUserAvatarHTML'],
+    provides: ['setupAuthListener', 'login', 'signup', 'logout', 'fetchUserData', 'createUserAvatarHTML'],
     requires: ['firebase.js', 'state.js', 'logger.js']
 };
 
@@ -96,12 +95,9 @@ export async function signup(email, password, displayName = null) {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
 
         // Create user document in Firestore
-        // FR-001: Complete user profile with role and xp
         const userDoc = {
             email,
             displayName: displayName || email.split('@')[0],
-            role: 'member',
-            xp: 0,
             createdAt: new Date().toISOString()
         };
         await setDoc(doc(db, 'users', credential.user.uid), userDoc);
@@ -125,22 +121,6 @@ export async function logout() {
         window.location.href = 'login.html';
     } catch (err) {
         logError('Auth: Logout failed', { error: err.message });
-        throw err;
-    }
-}
-
-/**
- * @function sendPasswordReset
- * @purpose Send password reset email to user (FR-002)
- * @param {string} email - User email
- * @returns {Promise<void>}
- */
-export async function sendPasswordReset(email) {
-    info('Auth: Password reset requested', { email });
-    try {
-        await sendPasswordResetEmail(auth, email);
-    } catch (err) {
-        logError('Auth: Password reset failed', { error: err.message });
         throw err;
     }
 }

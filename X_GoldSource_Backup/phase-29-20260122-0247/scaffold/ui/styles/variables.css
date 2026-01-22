@@ -1,0 +1,122 @@
+/**
+ * @file variables.css
+ * @purpose CSS custom properties - design tokens from design-system.yaml
+ * @layer core
+ * @dependencies []
+ * @dependents [base.css, buttons.css, inputs.css, all component CSS]
+ * @locked true
+ * @modifyImpact [all visual styling across application]
+ */
+
+/* =============================================================================
+   DARK THEME (Default)
+   ============================================================================= */
+
+:root {
+  /* Brand Colors */
+  --bg-primary: #0a0a0c;
+  --accent-primary: #62d84e;
+  --accent-glow: rgba(98, 216, 78, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+
+  /* Brand Colors - Configurable for theming (FR-006) */
+  --brand-primary: #62d84e;
+  --brand-secondary: #8b5cf6;
+  --brand-accent: #38bdf8;
+
+  /* Plasma Colors - Derived from brand */
+  --plasma-1: var(--brand-primary);
+  --plasma-2: var(--brand-secondary);
+  --plasma-3: var(--brand-accent);
+
+  /* Semantic Colors */
+  --success: #22c55e;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 20px;
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* Typography */
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 10px var(--accent-glow);
+  --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 300ms ease-out;
+  --transition-slow: 500ms ease-out;
+
+  /* Layout */
+  --header-height: 64px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 64px;
+  
+  /* Layout - SPEC-003 Floating Pill Sidebar */
+  --sidebar-pill-width: 68px;
+  --sidebar-button-size: 44px;
+  --sidebar-gap: 20px;
+
+  /* Z-Index */
+  --z-sidebar: 100;
+  --z-header: 200;
+  --z-tooltip: 250;
+  --z-settings: 350;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-notification: 500;
+}
+
+/* =============================================================================
+   LIGHT THEME (Override with .light-theme on body)
+   ============================================================================= */
+
+.light-theme {
+  --bg-primary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}

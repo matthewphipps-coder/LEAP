@@ -1,0 +1,204 @@
+# =============================================================================
+# LEAP CODING STANDARDS FOR GOLDSOURCE
+# =============================================================================
+# Self-contained coding guidance for LEAP when modifying GoldSource.
+# Does NOT reference Factory governance files.
+# =============================================================================
+
+metadata:
+  type: "standards"
+  name: "LEAP Coding Standards"
+  purpose: "Code patterns for LEAP when building/modifying GoldSource"
+  version: "1.0.0"
+  created: "2026-01-22"
+  status: "active"
+
+# =============================================================================
+# LEAP AUTHORITY
+# =============================================================================
+
+leapAuthority:
+  rule: "LEAP can modify ANY file in GoldSource"
+  reason: "LEAP maintains GoldSource; Factory only extends it"
+  
+  includes:
+    - "All scaffold/ files"
+    - "All meta/ documentation"
+    - "All governance/ templates and protocols"
+    - "All archetypes/"
+  
+  noLockedFiles: |
+    Factory has 'locked files' it cannot modify.
+    LEAP has no such restriction - we own the scaffold.
+    However, we must be careful: changes affect all future demos.
+
+# =============================================================================
+# THE TRIAD PATTERN
+# =============================================================================
+
+triadPattern:
+  name: "Separation of Concerns"
+  description: "Every feature split into three layers"
+  
+  serviceLayer:
+    location: "src/features/[feature]/[feature]-service.js"
+    responsibility:
+      - "Business logic"
+      - "Data transformations"
+      - "State calculations"
+    rule: "NO DOM MANIPULATION"
+  
+  uiLayer:
+    location: "src/ui/components/[component]-ui.js"
+    responsibility:
+      - "Creating HTML structures"
+      - "Handling user events"
+      - "Calling service layer for data"
+    rule: "NO HEAVY LOGIC - dumb view"
+  
+  styleLayer:
+    location: "src/ui/components/[component].css"
+    responsibility: "Visual presentation only"
+    rule: "Component-specific styles in own .css file"
+
+# =============================================================================
+# CODE HYGIENE
+# =============================================================================
+
+codeHygiene:
+  
+  lineLimit:
+    rule: "No file over 500 lines"
+    action: "Refactor into sub-modules"
+  
+  esModules:
+    rule: "ES Modules only - NO CommonJS"
+    correct: "import/export"
+    incorrect: "require()"
+  
+  eventManagement:
+    rules:
+      - "No inline onclick in HTML"
+      - "Use addEventListener in ui.js"
+      - "Clean up listeners on component destroy"
+  
+  stateFlow:
+    rules:
+      - "Never call data sources directly from UI"
+      - "Use service functions"
+      - "State is source of truth, not DOM"
+
+# =============================================================================
+# NAMING CONVENTIONS
+# =============================================================================
+
+namingConventions:
+  
+  paths:
+    features: "Singular (features/incident/, not incidents/)"
+    components: "kebab-case (header-ui.js, not headerUI.js)"
+    services: "{feature}-service.js pattern"
+  
+  functions:
+    prefixes:
+      - "get... - retrieve data"
+      - "set... - update data"
+      - "handle... - event handlers"
+      - "render... - create DOM"
+      - "init... - initialize component"
+      - "load... - async data fetching"
+      - "open.../close... - show/hide UI"
+  
+  booleans:
+    prefixes: ["is...", "has...", "should..."]
+    example: "isAgentActive"
+  
+  css:
+    style: "BEM-lite naming"
+  
+  statusEnums:
+    pattern: "lowercase strings"
+    correct: ["active", "resolved", "pending"]
+    incorrect: ["Active", "RESOLVED"]
+
+# =============================================================================
+# AI-FIRST CODE STANDARDS
+# =============================================================================
+
+aiFirstStandards:
+  purpose: "Code optimized for AI comprehension"
+  
+  fileHeaders:
+    required: true
+    template: |
+      /**
+       * @file [filename]
+       * @purpose [single sentence]
+       * @layer [core|feature|ui]
+       * @dependencies [imports from]
+       * @dependents [imported by]
+       * @modifyImpact [what changes affect]
+       */
+  
+  functionAnnotations:
+    required: true
+    template: |
+      /**
+       * @function [functionName]
+       * @purpose [what and why]
+       * @param {type} paramName - description
+       * @returns {type} description
+       * @sideEffects [external state changes]
+       */
+
+# =============================================================================
+# FOLDER ORGANIZATION
+# =============================================================================
+
+folderOrganization:
+  
+  scaffoldStructure:
+    src:
+      core: "Application core (app.js, state, constants)"
+      features: "Feature modules"
+      ui: "UI components and styles"
+  
+  prohibitions:
+    - "Do NOT create new root folders without approval"
+    - "Do NOT create temp/scratch folders"
+    - "Do NOT keep obsolete files - git preserves history"
+
+# =============================================================================
+# KEY PATTERNS
+# =============================================================================
+
+keyPatterns:
+  
+  pageRegistration:
+    description: "Config-driven pages and sidebar"
+    location: "core/constants.js"
+    constants: ["PAGE_TABS", "PAGE_SIDEBAR_ACTIONS"]
+  
+  stateSlices:
+    description: "Feature state registration"
+    pattern: "registerStateSlice('feature', initialState, reducers)"
+  
+  componentInit:
+    explicit: "Shell components (header, sidebar) - init at startup"
+    lazy: "Modals/dialogs - create when opened"
+
+# =============================================================================
+# CHANGE SAFETY
+# =============================================================================
+
+changeSafety:
+  
+  beforeModifying:
+    - "Understand what depends on this file"
+    - "Check if Factory demos rely on this behavior"
+    - "Document breaking changes in RRMD+"
+  
+  afterModifying:
+    - "Update @dependents headers if exports changed"
+    - "Update meta/functionality.yaml if features changed"
+    - "Test scaffold locally before committing"

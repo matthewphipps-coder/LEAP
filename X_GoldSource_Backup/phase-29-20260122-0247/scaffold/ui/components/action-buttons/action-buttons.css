@@ -1,0 +1,120 @@
+/**
+ * @file action-buttons.css
+ * @purpose Action buttons component styles
+ * @layer ui
+ * @dependencies [variables.css, base.css]
+ * @dependents []
+ * @locked false
+ * @modifyImpact [action buttons visual appearance]
+ */
+
+/* ==========================================================================
+   ACTION BUTTONS CONTAINER
+   ========================================================================== */
+
+.action-buttons {
+    margin-bottom: var(--spacing-xl);
+}
+
+.action-buttons__header {
+    margin-bottom: var(--spacing-md);
+}
+
+.action-buttons__title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.action-buttons__grid {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   INDIVIDUAL ACTION BUTTON
+   ========================================================================== */
+
+.action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    min-width: 100px;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.action-button:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+.action-button__icon {
+    font-size: var(--text-2xl);
+}
+
+.action-button__label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+}
+
+/* ==========================================================================
+   BUTTON STATES
+   ========================================================================== */
+
+.action-button--loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.action-button--loading .action-button__icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.action-button--success {
+    border-color: var(--color-success);
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.action-button--error {
+    border-color: var(--color-error);
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .action-buttons__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .action-button {
+        min-width: unset;
+    }
+}
