@@ -97,6 +97,18 @@ contents:
         purpose: "How to customize themes, brand colors, glass effects"
         updatedBy: "LEAP"
         updateWhen: "When theming capabilities change"
+  
+  # ---------------------------------------------------------------------------
+  # DOCS (Developer Documentation)
+  # ---------------------------------------------------------------------------
+  docs:
+    path: "docs/"
+    description: "Developer documentation and pattern guides"
+    files:
+      - file: "DATA_CONVENTIONS.md"
+        purpose: "Ring-fenced Firestore patterns, user profile schema, data service template"
+        updatedBy: "LEAP"
+        updateWhen: "When data access patterns change"
 
   # ---------------------------------------------------------------------------
   # GOVERNANCE (Factory Operations)
@@ -184,9 +196,10 @@ contents:
         updatedBy: "LEAP"
 
 fileCount:
-  total: 22
+  total: 23
   archetypes: 1
   meta: 5
+  docs: 1
   governance: 6
   templates: 10
 
