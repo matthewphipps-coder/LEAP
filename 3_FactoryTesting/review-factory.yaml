@@ -1,0 +1,178 @@
+# =============================================================================
+# FACTORY REVIEW WORKFLOW
+# =============================================================================
+# Triggered after 2+ factory runs complete to compare outputs and identify
+# deviations that should be added to the LEAP backlog.
+# =============================================================================
+
+metadata:
+  name: "Factory Review Workflow"
+  trigger: "After 2+ factory runs with same scenario"
+  type: "workflow"
+  version: "1.0.0"
+  created: "2026-01-19"
+
+# =============================================================================
+# WHEN TO USE
+# =============================================================================
+
+whenToUse:
+  conditions:
+    - "Two or more factory runs have completed"
+    - "Runs built the same or similar feature"
+    - "You want to identify inconsistencies for LEAP improvement"
+  
+  notFor:
+    - "Comparing completely different features"
+    - "Single factory run (nothing to compare)"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  1_locateRuns:
+    action: "Identify completed factory runs to compare"
+    locations:
+      factoryWorkspaces: "~/Documents/DemoInstances/Factory-*/"
+      demoOutputs: "~/Documents/DemoOutput/NEXUS-*/"
+    gather:
+      - "Factory version (e.g., v1.0.1, v1.0.2)"
+      - "Feature name"
+      - "Completion date"
+
+  2_compareArtifacts:
+    action: "Compare factory stage artifacts (1-8)"
+    # Use inspection-guide.yaml and deviation-report.yaml for capturing findings
+    output: "3_FactoryTesting/results/comparison-{vA}-vs-{vB}.yaml"
+    focus:
+      - "Artifact structure consistency"
+      - "Metadata and gate tracking"
+      - "Section naming conventions"
+      - "Content completeness"
+
+  3_compareDemoCode:
+    action: "Compare actual demo code outputs"
+    # Use inspection-guide.yaml and deviation-report.yaml for capturing findings
+    output: "3_FactoryTesting/results/demo-comparison-{vA}-vs-{vB}.yaml"
+    focus:
+      - "Directory structure"
+      - "File naming conventions"
+      - "Code patterns (state, functions, imports)"
+      - "Documentation (README, functionality.yaml)"
+
+  # -------------------------------------------------------------------------
+  # LEAP-024: Gold Source Compliance Check
+  # -------------------------------------------------------------------------
+  3b_goldSourceCompliance:
+    action: "Compare demo output against Gold Source scaffold"
+    purpose: "Detect regression/drift from Gold Source conventions"
+    
+    comparison:
+      lockedFiles:
+        action: "Verify locked files were NOT modified"
+        files:
+          - "core/state.js"
+          - "core/firebase.js"
+          - "core/constants.js"
+          - "core/logger.js"
+          - "ui/styles/variables.css"
+          - "ui/styles/base.css"
+        check: "Compare hash or content - should match Gold Source"
+      
+      namingConventions:
+        action: "Verify naming matches Gold Source patterns"
+        patterns:
+          - "features/{singular}/ not {plural}/"
+          - "components/{name}-ui.js + {name}.css"
+          - "services: {feature}-service.js"
+        reference: "2_GoldSource/meta/architectural-standards.yaml pathNaming"
+      
+      structuralPatterns:
+        action: "Verify folder structure matches Gold Source"
+        check: "Same top-level folders (core/, features/, ui/)"
+        reference: "GoldSource layout"
+    
+    output:
+      file: "3_FactoryTesting/results/goldsource-compliance-{version}.yaml"
+      includeIn: "demo-output-comparison report"
+
+  4_categorizeDeviations:
+    action: "Categorize deviations by root cause"
+    reference: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+    categories:
+      - "factory-governance: Factory process needs improvement"
+      - "scaffold-conventions: Gold Source scaffold needs patterns"
+      - "demo-output: Demo output standards needed"
+      - "archetype-domain: Domain templates needed"
+
+  5_addToBacklog:
+    action: "Add LEAP improvement items to backlog"
+    location: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    
+    # -------------------------------------------------------------------------
+    # LEAP-025: Deduplication Checklist
+    # -------------------------------------------------------------------------
+    deduplicationStep:
+      action: "Check each finding against existing backlog before adding"
+      required: true
+      
+      checklist:
+        - step: "Search backlog for similar item"
+          how: "grep backlog.yaml for keywords from finding"
+        
+        - step: "Determine outcome"
+          outcomes:
+            duplicate: "Finding matches existing item - do NOT add, note in comparison doc"
+            overlapping: "Finding partially matches - consider merging or extending existing item"
+            new: "No match found - add new item with unique LEAP-XXX ID"
+        
+        - step: "Document decision"
+          required: true
+          format: "In comparison doc, note: 'Finding X → [duplicate of LEAP-YYY | merged into LEAP-YYY | new item LEAP-ZZZ]'"
+    
+    newItemRequirements:
+      - "Unique LEAP-XXX ID"
+      - "Category from backlog-categories.yaml"
+      - "Source reference to comparison document"
+      - "Clear rationale citing specific deviations"
+      - "Deduplication decision documented"
+
+  6_reviewWithUser:
+    action: "Present findings for prioritization"
+    present:
+      - "Summary of deviations found"
+      - "New backlog items added"
+      - "Recommended priority order (if any)"
+    waitFor: "User direction on next phase"
+
+# =============================================================================
+# OUTPUT ARTIFACTS
+# =============================================================================
+
+outputs:
+  comparison:
+    - "3_FactoryTesting/results/comparison-{vA}-vs-{vB}.yaml"
+    - "3_FactoryTesting/results/demo-comparison-{vA}-vs-{vB}.yaml"
+  
+  backlog:
+    - "Updated 1_LEAP/1_Governance/tracking/backlog.yaml"
+  
+  guide:
+    - "3_FactoryTesting/inspection-guide.yaml"
+    - "3_FactoryTesting/deviation-report.yaml"
+
+# =============================================================================
+# CONTINUOUS IMPROVEMENT
+# =============================================================================
+
+continuousImprovement:
+  purpose: "Each factory run comparison improves LEAP"
+  cycle:
+    - "Factory builds demo"
+    - "LEAP compares factory outputs"
+    - "Deviations become backlog items"
+    - "Backlog items improve LEAP"
+    - "Improved LEAP builds better factory"
+    - "Better factory produces more consistent demos"

@@ -1,0 +1,266 @@
+# =============================================================================
+# PHASE 21: STANDARDS & TEMPLATES
+# STAGE 1: DISCOVERY
+# =============================================================================
+
+metadata:
+  phase: 21
+  phaseName: "StandardsAndTemplates"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-20T17:24:00Z"
+  status: "in-progress"
+
+# =============================================================================
+# PHASE OBJECTIVE
+# =============================================================================
+
+objective:
+  goal: "Complete documentation standards for Factory templates, scaffold conventions, and demo output requirements"
+  
+  context: |
+    After Phase 20 (ScaffoldFoundation) strengthened the scaffold with extension mechanisms,
+    this phase focuses on documentation completeness:
+    - Factory stage templates need additional sections (dependency graphs, complexity estimates)
+    - Scaffold conventions need clarity (path naming, component creation policy)
+    - Demo output requirements need standardization (functionality.yaml, README template)
+    
+    All 10 items are documentation-only (no code changes).
+    Governance principle: "Docs == Code in LEAP" - full lifecycle stages apply.
+  
+  approach: "Documentation sprint - batch related template updates"
+  sprintName: "Standards & Templates"
+  
+  successCriteria:
+    - "All 5 factory stage templates enhanced with required sections"
+    - "All 3 scaffold convention gaps documented in architectural-standards.yaml"
+    - "Demo output requirements codified in lifecycle-stages.yaml and templates"
+    - "Factory run v2.0.3 validates documentation is actionable"
+
+# =============================================================================
+# SPRINT SCOPE - 10 Backlog Items
+# =============================================================================
+
+sprintScope:
+  totalItems: 10
+  effortBreakdown:
+    small: 10
+  
+  items:
+    # -------------------------------------------------------------------------
+    # Sub-Phase A: Factory Stage Templates (5 items)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-007"
+      name: "Add Dependency Graph to Design"
+      category: "factory-governance"
+      effort: "Small"
+      type: "documentation"
+      description: "Require dependency graph section in stage-4-design template"
+      source: "factory-comparison-v1.0.1-vs-v1.0.2"
+      target: "2_GoldSource/governance/templates/stage-4-design.yaml"
+      acceptanceCriteria:
+        - "stage-4-design.yaml template includes dependencyGraph section"
+        - "Example format documented"
+    
+    - id: "LEAP-008"
+      name: "Require Complexity Estimates"
+      category: "factory-governance"
+      effort: "Small"
+      type: "documentation"
+      description: "Add complexity estimate section to stage-4-design template"
+      source: "factory-comparison-v1.0.1-vs-v1.0.2"
+      target: "2_GoldSource/governance/templates/stage-4-design.yaml"
+      acceptanceCriteria:
+        - "stage-4-design.yaml template includes complexityEstimates section"
+        - "Effort values defined (small/medium/large)"
+    
+    - id: "LEAP-009"
+      name: "Mandate Test Evidence Files"
+      category: "factory-governance"
+      effort: "Small"
+      type: "documentation"
+      description: "Require screenshots and recordings in stage-7-testing template with defined storage location"
+      source: "factory-comparison-v1.0.1-vs-v1.0.2, factory-comparison-v1.0.2-vs-v1.0.3"
+      target: "2_GoldSource/governance/templates/stage-7-testing.yaml"
+      acceptanceCriteria:
+        - "stage-7-testing.yaml template includes testEvidence section"
+        - "Storage location defined (FACTORY_WORKSPACE/evidence/)"
+        - "Required evidence types listed (screenshots, recordings)"
+    
+    - id: "LEAP-021"
+      name: "Standardize Analysis Approach Format"
+      category: "factory-governance"
+      effort: "Small"
+      type: "documentation"
+      description: "Update stage-3-analysis template with consistent approach comparison structure"
+      source: "factory-comparison-v1.0.2-vs-v1.0.3"
+      target: "2_GoldSource/governance/templates/stage-3-analysis.yaml"
+      acceptanceCriteria:
+        - "stage-3-analysis.yaml template has standardized approachOptions section"
+        - "Format: APPROACH-A/B/C with pros, cons, recommendation"
+    
+    - id: "LEAP-022"
+      name: "Enhance Validation Matrix Template"
+      category: "factory-governance"
+      effort: "Small"
+      type: "documentation"
+      description: "Adopt detailed field-by-field validation approach in stage-6-validation template"
+      source: "factory-comparison-v1.0.2-vs-v1.0.3"
+      target: "2_GoldSource/governance/templates/stage-6-validation.yaml"
+      acceptanceCriteria:
+        - "stage-6-validation.yaml includes detailed validationMatrix section"
+        - "Template includes data model validation section"
+    
+    # -------------------------------------------------------------------------
+    # Sub-Phase B: Scaffold Conventions (3 items)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-003"
+      name: "Standardize Feature Path Naming"
+      category: "scaffold-conventions"
+      effort: "Small"
+      type: "documentation"
+      description: "Define whether features use singular or plural naming (e.g., incident/ vs incidents/)"
+      source: "demo-output-comparison-v1.0.1-vs-v1.0.2, factory-comparison-v1.0.2-vs-v1.0.3"
+      target: "2_GoldSource/meta/architectural-standards.yaml"
+      acceptanceCriteria:
+        - "architectural-standards.yaml pathNaming section includes explicit singular/plural rule"
+        - "Examples provided for common feature names"
+      alreadyDone:
+        claim: "Phase 19 note claims this is already in architectural-standards.yaml pathNaming.features"
+        verificationRequired: "Must verify exact wording and completeness"
+    
+    - id: "LEAP-019"
+      name: "Component Creation vs Modification Policy"
+      category: "scaffold-conventions"
+      effort: "Small"
+      type: "documentation"
+      description: "Define when factory agents should create new components vs modify existing flexible components"
+      source: "factory-comparison-v1.0.2-vs-v1.0.3"
+      target: "2_GoldSource/meta/architectural-standards.yaml"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes component creation decision tree"
+        - "Clear criteria for 'create new' vs 'modify existing'"
+      alreadyDone:
+        claim: "Phase 19 note claims demo-rules.yaml scaffoldRules.flexible section covers this"
+        verificationRequired: "Check if decision tree is explicitly documented"
+    
+    - id: "LEAP-030"
+      name: "Require Keyboard Accessibility"
+      category: "scaffold-conventions"
+      effort: "Small"
+      type: "documentation"
+      description: "All interactive components must support keyboard navigation (Enter/Space)"
+      source: "demo-output-comparison-v2.0.0-vs-v2.0.1"
+      target: "2_GoldSource/meta/architectural-standards.yaml"
+      acceptanceCriteria:
+        - "architectural-standards.yaml includes accessibility requirements section"
+        - "Keyboard handler example provided"
+    
+    # -------------------------------------------------------------------------
+    # Sub-Phase C: Demo Output Requirements (2 items)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-014"
+      name: "Require functionality.yaml in Demos"
+      category: "demo-output"
+      effort: "Small"
+      type: "documentation"
+      description: "Every demo output should include meta/functionality.yaml"
+      source: "demo-output-comparison-v1.0.1-vs-v1.0.2"
+      target: "2_GoldSource/governance/lifecycle-stages.yaml"
+      acceptanceCriteria:
+        - "lifecycle-stages.yaml Stage 5 outputs includes functionality.yaml requirement"
+        - "Or already present - verify during research"
+      alreadyDone:
+        claim: "May already be in artifact-manifest.yaml and lifecycle-stages.yaml"
+        verificationRequired: "Confirm exact wording and enforcement point"
+    
+    - id: "LEAP-015"
+      name: "Create README Template"
+      category: "demo-output"
+      effort: "Small"
+      type: "documentation"
+      description: "Standardize demo README structure"
+      source: "demo-output-comparison-v1.0.1-vs-v1.0.2"
+      target: "2_GoldSource/governance/templates/README.md"
+      acceptanceCriteria:
+        - "README.md template exists in 2_GoldSource/governance/templates/"
+        - "Standard sections defined (Overview, Features, Setup, Usage)"
+
+# =============================================================================
+# SUB-PHASE STRUCTURE
+# =============================================================================
+
+subPhases:
+  A:
+    name: "Factory Stage Templates"
+    items: ["LEAP-007", "LEAP-008", "LEAP-009", "LEAP-021", "LEAP-022"]
+    focus: "Enhance stage templates with missing sections"
+    targets:
+      - "stage-3-analysis.yaml"
+      - "stage-4-design.yaml"
+      - "stage-6-validation.yaml"
+      - "stage-7-testing.yaml"
+  
+  B:
+    name: "Scaffold Conventions"
+    items: ["LEAP-003", "LEAP-019", "LEAP-030"]
+    focus: "Clarify rules Factory AI should follow"
+    targets:
+      - "architectural-standards.yaml"
+  
+  C:
+    name: "Demo Output"
+    items: ["LEAP-014", "LEAP-015"]
+    focus: "Define what demos must include"
+    targets:
+      - "lifecycle-stages.yaml"
+      - "templates/README.md"
+
+# =============================================================================
+# 'ALREADY DONE' VERIFICATION
+# =============================================================================
+
+alreadyDoneVerification:
+  note: "Per pulse-protocol.yaml completionCriteria.discovery: 'already done' claims verified against source"
+  
+  itemsToVerify:
+    - id: "LEAP-003"
+      claim: "Phase 19 note - already in architectural-standards.yaml"
+      action: "Read architectural-standards.yaml pathNaming section in Research stage"
+    
+    - id: "LEAP-019"
+      claim: "Phase 19 note - in demo-rules.yaml scaffoldRules.flexible"
+      action: "Read demo-rules.yaml and architectural-standards.yaml in Research stage"
+    
+    - id: "LEAP-014"
+      claim: "May already be in artifact-manifest.yaml and lifecycle-stages.yaml"
+      action: "Read both files in Research stage to verify"
+
+# =============================================================================
+# RESEARCH QUESTIONS FOR NEXT STAGE
+# =============================================================================
+
+researchQuestions:
+  factoryTemplates:
+    - "What sections already exist in stage-3, 4, 6, 7 templates?"
+    - "What format should dependency graph use?"
+    - "Where should test evidence be stored (relative path)?"
+  
+  scaffoldConventions:
+    - "Is singular path naming already documented? (LEAP-003 verification)"
+    - "Is component creation policy already documented? (LEAP-019 verification)"
+    - "What accessibility patterns exist in current scaffold?"
+  
+  demoOutput:
+    - "Is functionality.yaml already required? (LEAP-014 verification)"
+    - "Does a README template already exist?"
+    - "What sections should README template include?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"
+  focus: "Read target files, verify 'already done' claims, identify exact changes needed"

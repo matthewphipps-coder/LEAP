@@ -1,0 +1,240 @@
+metadata:
+  type: "stage-artifact"
+  phase: 23
+  phaseName: "ExtensibleAppShell"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-21T05:13:00Z"
+  status: "in-progress"
+  
+  functionalSpec: "1_LEAP/1_Governance/SprintFunctionalSpecs/SPEC-003-app-shell.yaml"
+  backlogId: "LEAP-037"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: |
+    GoldSource index.html is a basic shell requiring significant edits for each 
+    demo scenario. The current sidebar and header lack extensibility, and there's 
+    no multi-page system or settings capability.
+  
+  currentLimitations:
+    - "Header: Static logo text (no customer branding), no page navigation tabs"
+    - "Header: No AI search slot, no settings button"
+    - "Sidebar: Push/pull expand-collapse pattern with only 1 hardcoded nav item"
+    - "Sidebar: Not contextual to current page"
+    - "Canvas: Single content area, no page switching system"
+    - "Settings: Non-existent - no way to configure appearance or branding"
+  
+  businessImpact: |
+    Every demo requires 5+ file modifications to customize basic elements.
+    Factory runs cannot easily extend navigation or add pages.
+    Customer branding requires code changes instead of config.
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  goal: |
+    Transform index.html into an extensible scaffold where:
+    - Customer logo swappable via settings (1 click)
+    - New pages added via PAGE_TABS config array
+    - Sidebar shows contextual actions per page
+    - AI search and settings are ready-to-use slots
+  
+  deliverables:
+    mustHave:
+      - id: "FR-001"
+        name: "Customer Logo Slot"
+        description: "Theme-swappable logo images in header"
+      - id: "FR-002"
+        name: "Page Switcher Tabs"
+        description: "Icon-only tabs with tooltips, responsive overflow to More menu"
+      - id: "FR-004B"
+        name: "Unified Count Badge System"
+        description: "Reusable .count-badge for all counters"
+      - id: "FR-004C"
+        name: "Floating Header"
+        description: "Header with no background, floats over plasma"
+      - id: "FR-004D"
+        name: "Settings Dialog"
+        description: "Full-screen modal with Appearance and Branding sections"
+      - id: "FR-004E"
+        name: "Workspace Branding Settings"
+        description: "Logo upload with dark/light mode support"
+      - id: "FR-005"
+        name: "Contextual Sidebar Actions"
+        description: "Per-page action buttons, sidebar shows/hides based on page"
+      - id: "FR-006"
+        name: "Floating Pill-Shaped Sidebar"
+        description: "Fixed-width pill (68px) with circular button highlights"
+      - id: "FR-007"
+        name: "Multi-Page Canvas System"
+        description: "Page containers with safe areas and scroll layout options"
+    
+    shouldHave:
+      - id: "FR-003"
+        name: "AI Search Box"
+        description: "Centered search input (UI slot only - no functionality)"
+      - id: "FR-004"
+        name: "Header Action Buttons"
+        description: "Notifications, settings, theme toggle, user avatar"
+      - id: "FR-008"
+        name: "Page Registration Pattern"
+        description: "registerPage() API for dynamic page addition (may defer)"
+  
+  notInScope:
+    - "Actual AI search functionality (just the UI slot)"
+    - "Settings sections beyond Appearance and Branding"
+    - "Specific page implementations (just the page system)"
+    - "Mobile responsive overhaul"
+
+# =============================================================================
+# QUESTIONS FOR RESEARCH
+# =============================================================================
+
+researchQuestions:
+  - id: "RQ-001"
+    question: "What is the current state of header-ui.js and sidebar-ui.js?"
+    purpose: "Understand what needs to be replaced vs enhanced"
+    status: "answered"
+    answer: |
+      header-ui.js (117 lines): Basic header with logo TEXT, theme toggle emoji, 
+      user avatar, logout button. Uses inline HTML template.
+      
+      sidebar-ui.js (103 lines): Traditional expand/collapse sidebar with 
+      toggle button, single nav item (Overview), version footer.
+      
+      Both will be COMPLETELY REWRITTEN for SPEC-003.
+  
+  - id: "RQ-002"
+    question: "What Lucide icon version should we pin?"
+    purpose: "Prototype uses @latest, need stable version for GoldSource"
+    status: "answered"
+    answer: |
+      Latest stable: 0.562.0 (published December 18, 2025)
+      CDN URL: https://unpkg.com/lucide@0.562.0
+  
+  - id: "RQ-003"
+    question: "What is the current structure of constants.js?"
+    purpose: "Adding PAGE_TABS, SIDEBAR_ACTIONS, SETTINGS configs"
+    status: "answered"
+    answer: |
+      constants.js (50 lines) currently contains:
+      - APP_NAME, APP_VERSION exports
+      - ENV detection (development/staging/production)
+      - isDev, isProd convenience exports
+      - CHECKPOINT_PREFIX for logging
+      
+      File is marked @locked true (for Factory only, not LEAP).
+      
+      Need to ADD:
+      - PAGE_TABS config array
+      - PAGE_SIDEBAR_ACTIONS config object
+      - SETTINGS_MENU config array
+      - SETTINGS_SECTIONS config object
+      
+      Update MODULE_CONTRACT.provides to include new exports.
+  
+  - id: "RQ-004"
+    question: "What new files will be created vs modified?"
+    purpose: "Implementation planning"
+    status: "answered"
+    answer: |
+      NEW FILES:
+      - core/page-router.js (page switching logic)
+      - ui/components/settings/settings-ui.js
+      - ui/components/settings/settings.css
+      
+      MODIFIED FILES:
+      - core/constants.js (add config arrays)
+      - index.html (update structure)
+      - ui/components/header/header-ui.js (complete rewrite)
+      - ui/components/header/header.css (major additions)
+      - ui/components/sidebar/sidebar-ui.js (complete rewrite)
+      - ui/components/sidebar/sidebar.css (major changes)
+      - core/app.js (import new components)
+
+# =============================================================================
+# CRITICAL DESIGN DECISIONS (Already Resolved in SPEC-003)
+# =============================================================================
+
+resolvedDecisions:
+  - id: "Q-001"
+    topic: "Locked files and LEAP"
+    decision: "LOCKED applies to Factory runs only. LEAP can modify."
+    
+  - id: "Q-002"
+    topic: "AI Search scope"
+    decision: "Slot-only. Just input box, no functionality."
+    
+  - id: "Q-003"
+    topic: "Settings scope"
+    decision: "2 sections only: Appearance + Branding"
+    
+  - id: "Q-004"
+    topic: "Page registration"
+    decision: "Config-only for MVP. registerPage() API is should-have."
+    
+  - id: "Q-005"
+    topic: "Sidebar behavior"
+    decision: "Floating pill, never expands. Contextual per page."
+
+# =============================================================================
+# BREAKING CHANGES
+# =============================================================================
+
+breakingChanges:
+  - component: "Sidebar"
+    change: "Complete replacement from expand/collapse to floating pill"
+    impact: |
+      - sidebar-ui.js: 100% rewrite
+      - sidebar.css: 100% rewrite
+      - Dashboard layout: No longer pushes content
+    mitigation: "Backup existing files. Clear documentation in closure."
+    
+  - component: "Header"
+    change: "Major enhancement with tabs, search, settings"
+    impact: |
+      - header-ui.js: ~80% rewrite
+      - header.css: Major additions
+      - New dependency: Lucide Icons
+    mitigation: "Incremental implementation per requirement"
+
+# =============================================================================
+# REFERENCE MATERIALS
+# =============================================================================
+
+references:
+  prototype: "1_LEAP/1_Governance/SprintFunctionalSpecs/SPEC-003-prototype.html"
+  prototypeVersion: "v9"
+  
+  prototypeRole: |
+    The prototype is a VISUAL CONTRACT - match the look and behavior exactly.
+    Do NOT copy code - implement with Gold Source patterns.
+  
+  relatedSpecs:
+    - "SPEC-002-design-system.yaml (Phase 22 - complete)"
+  
+  criticalReview: "~/.gemini/antigravity/brain/.../spec-003-critical-review.md"
+  
+  prepWorkComplete:
+    - "Added --sidebar-pill-width, --sidebar-button-size, --sidebar-gap to variables.css"
+    - "Added --z-tooltip, --z-settings to variables.css"
+    - "Committed as 'SPEC-003 prep'"
+
+# =============================================================================
+# DISCOVERY COMPLETION CRITERIA
+# =============================================================================
+
+completionCriteria:
+  - "Problem identified ✅"
+  - "Scope understood ✅"
+  - "Questions for research defined ✅"
+  - "Breaking changes documented ✅"
+  - "Open questions resolved (from SPEC-003) ✅"
+  
+status: "ready-for-research"

@@ -1,0 +1,407 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Phase 15
+# =============================================================================
+# Phase: Factory Lessons Incorporated
+# Started: 2026-01-19T13:24:00Z
+# =============================================================================
+
+metadata:
+  type: "stage-artifact"
+  phase: 15
+  phaseName: "Factory Lessons Incorporated"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-19T13:24:00Z"
+  status: "complete"
+  completedDate: "2026-01-19T13:39:00Z"
+  previousPhase: "Phase 14 - Factory Vision Alignment"
+
+discoveryObjective: "Identify and document improvements needed based on first factory run"
+
+# =============================================================================
+# CONTEXT: FIRST FACTORY RUN
+# =============================================================================
+
+factoryRunContext:
+  demo: "NEXUS v0.0.1-firstTest"
+  scenario: "Major Incident view with AI agent support"
+  duration: "27 minutes"
+  stagesCompleted: 8
+  outcome: "Working demo produced"
+  
+  locations:
+    factoryWorkspace: "/Users/matthew.phipps/Documents/DemoInstances/Factory-Test-001/"
+    demoOutput: "/Users/matthew.phipps/Documents/DemoOutput/Nexus 0.0.1-firstTest/"
+
+# =============================================================================
+# CRITICAL FINDINGS FROM FACTORY RUN
+# =============================================================================
+
+criticalFindings:
+
+  # ---------------------------------------------------------------------------
+  # PROCESS ISSUES
+  # ---------------------------------------------------------------------------
+  
+  processIssues:
+    
+    - id: "PROC-001"
+      name: "Superficial Testing"
+      severity: "high"
+      observation: |
+        Stage 7 testing claimed 100% pass rate with zero issues.
+        Tests were checkbox exercises, not real validation.
+      evidence:
+        - "No edge case testing"
+        - "No error handling verification"
+        - "No metric update testing after actions"
+        - "AI response variety not tested"
+      recommendation: "Create real test templates with edge cases"
+    
+    - id: "PROC-002"
+      name: "Hidden Scope Creep"
+      severity: "medium"
+      observation: |
+        Discovery identified FEAT-002 (Incident Detail View) and 
+        incident-detail-ui.js as required. Both were quietly dropped
+        with no acknowledgment.
+      evidence:
+        - "stage-1-discovery.yaml lists FEAT-002"
+        - "stage-1-discovery.yaml lists incident-detail-ui.js under newRequired"
+        - "Neither appears in implementation or closure"
+      recommendation: "Add dropped-features section to stage artifacts"
+    
+    - id: "PROC-003"
+      name: "Shallow Lessons Learned"
+      severity: "medium"
+      observation: |
+        Closure document lessons were generic/boilerplate.
+        No mention of what went wrong or where AI struggled.
+      evidence:
+        - "LL-001: '8-stage lifecycle provided good structure' - obvious"
+        - "LL-002: 'Triad pattern made UI modifications straightforward' - expected"
+        - "LL-003: 'Keyword-based responses work well' - is actually a limitation"
+      recommendation: "Require specific lessons template with struggle/friction points"
+
+  # ---------------------------------------------------------------------------
+  # ARCHITECTURAL ISSUES
+  # ---------------------------------------------------------------------------
+  
+  architecturalIssues:
+    
+    - id: "ARCH-001"
+      name: "@locked Violation"
+      severity: "critical"
+      observation: |
+        mock-data.js is marked @locked true but was modified.
+        Factory AI either didn't read headers or ignored the lock.
+      evidence:
+        - "mock-data.js line 7: @locked true"
+        - "stage-3-analysis.yaml incorrectly states only app.js is locked"
+      recommendation: |
+        Either:
+        A) Change mock-data.js to @locked false / @demoModifiable
+        B) Add enforcement mechanism for @locked
+    
+    - id: "ARCH-002"
+      name: "MODULE_CONTRACT Not Updated"
+      severity: "medium"
+      observation: |
+        When getMockIncidents and getMockIncidentMetrics were added,
+        the MODULE_CONTRACT.provides array was NOT updated.
+      evidence:
+        - "mock-data.js provides array still lists only 4 functions"
+        - "Should include getMockIncidents, getMockIncidentMetrics"
+      recommendation: "Add MODULE_CONTRACT validation to factory protocol"
+    
+    - id: "ARCH-003"
+      name: "ARCHITECTURE.yaml Has Stale Paths"
+      severity: "low"
+      observation: |
+        Copied ARCHITECTURE.yaml still references old DemoFactory paths.
+      evidence:
+        - "Line 48: 'location: DemoFactory/src/core/' - should be 2_GoldSource/scaffold/core/"
+      recommendation: "Fix paths in LEAP master ARCHITECTURE.yaml"
+
+  # ---------------------------------------------------------------------------
+  # GOVERNANCE GAPS
+  # ---------------------------------------------------------------------------
+  
+  governanceGaps:
+    
+    - id: "GOV-001"
+      name: "Factory Workspace Lifecycle Unclear"
+      severity: "high"
+      observation: |
+        Two directories created for one factory run:
+        - Factory workspace (Gold Source copy)
+        - Demo output (final product)
+        No guidance on what happens to factory workspace after.
+      evidence:
+        - "Factory-Test-001/ still exists with full Gold Source copy"
+        - "Demo output has its own complete copy of scaffold"
+        - "Relationship between them is unclear"
+      recommendation: "Clarify factory workspace lifecycle in governance"
+    
+    - id: "GOV-002"
+      name: "No Gate Records Created"
+      severity: "medium"
+      observation: |
+        pulse-protocol.yaml mandates gate records at stage transitions.
+        Demo has stage artifacts but NO gate records.
+      evidence:
+        - "pulse-protocol.yaml gateRecords section specifies location and format"
+        - "No gate-records/ directory in demo output"
+      recommendation: "Either enforce gate records or remove requirement"
+    
+    - id: "GOV-003"
+      name: "Continuous Improvement Loop is Manual"
+      severity: "medium"
+      observation: |
+        Factory AI is isolated (correct) but can't learn from LEAP.
+        If LEAP updates Gold Source, all existing factory workspaces are stale.
+      evidence:
+        - "Factory-Test-001/ is now a stale copy"
+        - "No mechanism to propagate improvements"
+      recommendation: "Document the manual feedback loop clearly"
+
+# =============================================================================
+# USER ADDITIONS
+# =============================================================================
+
+userAdditions:
+
+  # ---------------------------------------------------------------------------
+  # NEW CAPABILITY NEEDED
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-001"
+    name: "/newfactory Command for LEAP"
+    category: "feature"
+    severity: "high"
+    observation: |
+      LEAP needs a command to create a new factory instance.
+      Proposed: /newfactory
+    requirements:
+      leapKnows:
+        - "Gold Source location"
+        - "Factory metadata"
+        - "Version number base"
+      leapAsks:
+        - "Vx.x.x-[name] format version string from user"
+    recommendation: "Create 1_LEAP/1_Governance/newfactory-workflow.yaml"
+
+  # ---------------------------------------------------------------------------
+  # FACTORY ONBOARDING GAP
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-002"
+    name: "Factory Onboarding Prompt Undefined"
+    category: "governance"
+    severity: "high"
+    observation: |
+      What's the exact user prompt to give the Factory AI to onboard and initialize?
+      Currently undefined - user has to figure this out.
+    questions:
+      - "What should the user paste to start a factory session?"
+      - "Should there be a generated prompt or manual copy?"
+    recommendation: "Define standard factory initialization prompt in FACTORY_README.yaml"
+
+  # ---------------------------------------------------------------------------
+  # PRODUCT IDENTITY BLEEDING
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-003"
+    name: "NEXUS Product Bleeding Into Factory/LEAP"
+    category: "architecture"
+    severity: "medium"
+    observation: |
+      NEXUS is the DEMO PRODUCT (next-gen ServiceNow UI showcasing AI-first enterprise UX).
+      But "NEXUS" appears in:
+      - Gold Source scaffold (as branding)
+      - Factory output (as demo name)
+      - LEAP conversations (as context)
+      
+      This creates confusion about what is LEAP, what is Factory, what is NEXUS.
+    clarification:
+      LEAP: "The governance and Gold Source maintenance project (this repo)"
+      Factory: "The process/workflow that creates demos (separate AI session)"
+      NEXUS: "The demo product being created (output of factory)"
+    question: "Should Gold Source scaffold be NEXUS-branded or generic?"
+    recommendation: "Clarify three-layer identity in documentation"
+
+  # ---------------------------------------------------------------------------
+  # DEMO FOLDER LOCATION
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-004"
+    name: "Demo Output Location Too Separated?"
+    category: "architecture"
+    severity: "medium"
+    observation: |
+      Factory creates demos in a separate folder (e.g., /DemoOutput/).
+      Is this too much separation from the factory workspace?
+    currentState:
+      factoryWorkspace: "/DemoInstances/Factory-Test-001/"
+      demoOutput: "/DemoOutput/Nexus 0.0.1-firstTest/"
+    questions:
+      - "Should demo output be inside factory workspace?"
+      - "Or is separation correct for isolation?"
+    recommendation: "Research and decide on optimal folder structure"
+
+  # ---------------------------------------------------------------------------
+  # WIREFRAMES IN DESIGN
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-005"
+    name: "Design Phase Must Produce Wireframes"
+    category: "process"
+    severity: "high"
+    observation: |
+      Design phase should produce wireframe designs for new UI functions.
+      Factory currently skips visual design entirely.
+    gap: "No wireframe requirement in stage-4-design template"
+    recommendation: "Add wireframe requirement to design stage template"
+
+  # ---------------------------------------------------------------------------
+  # STAGE DOCS LOCATION WRONG
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-006"
+    name: "Stage Documents in Wrong Location"
+    category: "governance"
+    severity: "critical"
+    observation: |
+      Factory is putting stage-*.yaml artifacts in the DEMO OUTPUT folder.
+      But stage docs are FACTORY artifacts, not demo artifacts.
+      They should stay in the factory workspace.
+    evidence:
+      - "stage-1-discovery.yaml is in /DemoOutput/Nexus 0.0.1-firstTest/"
+      - "These are factory process docs, not demo deliverables"
+    demoShouldContain:
+      - "Actual code"
+      - "README.md"
+      - "Documentation for the demo user"
+    factoryShouldContain:
+      - "stage-*.yaml artifacts"
+      - "CURRENT_STATE.yaml (factory tracking)"
+      - "Process/audit trail"
+    recommendation: "Update factory governance to specify artifact locations"
+
+  # ---------------------------------------------------------------------------
+  # ARTIFACT GOVERNANCE GAP
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-007"
+    name: "Artifact Creation and Location Not Governed"
+    category: "governance"
+    severity: "high"
+    observation: |
+      Should the factory give AI a task.md or similar to work from?
+      Is there a gap in governance/stages/gates that needs this?
+      
+      Note: The design IS the implementation plan. But the AI created BOTH:
+      - task.md (in brain folder)
+      - implementation_plan.md (in brain folder)
+      
+      Factory stages should stipulate ALL necessary artifacts and WHERE to store them.
+    evidence:
+      artifactCreatedByAI: "/Users/matthew.phipps/.gemini/antigravity/brain/e240e70a-b493-4184-a33c-bca6636d9d93/implementation_plan.md.resolved"
+    questions:
+      - "Is design document = implementation plan? Or separate?"
+      - "Should factory have its own artifact governance?"
+      - "Where should each artifact type live?"
+    recommendation: "Define artifact manifest in factory governance"
+
+  # ---------------------------------------------------------------------------
+  # TESTING WITHOUT DEPLOYMENT
+  # ---------------------------------------------------------------------------
+  
+  - id: "USER-008"
+    name: "Testing Requested Before Deployment"
+    category: "process"
+    severity: "high"
+    observation: |
+      After implementation, factory asked user to test.
+      But factory hadn't deployed to a running local server first.
+      User had to manually run the server.
+    gap: "No deployment step before testing stage"
+    recommendation: "Add deployment verification to validation stage template"
+
+# =============================================================================
+# DISCOVERY SUMMARY
+# =============================================================================
+
+discoverySummary:
+  totalFindings: 17
+  critical: 2
+  high: 8
+  medium: 5
+  low: 1
+  
+  byCategory:
+    process: 5
+    architecture: 4
+    governance: 7
+    feature: 1
+  
+  criticalItems:
+    - "ARCH-001: @locked Violation - Factory modified locked file"
+    - "USER-006: Stage docs in wrong location - Factory vs demo separation"
+
+# =============================================================================
+# QUESTIONS FOR RESEARCH
+# =============================================================================
+
+questionsForResearch:
+  prioritization:
+    - "Which findings should be addressed in this phase vs deferred?"
+    - "What is the priority order for fixes?"
+    - "Are there findings that require RRMD+ (risk/reward assessment)?"
+  
+  architecture:
+    - "Should Gold Source scaffold be NEXUS-branded or generic?"
+    - "Should demo output be inside factory workspace or separate?"
+    - "Is design document = implementation plan? Or separate artifacts?"
+  
+  governance:
+    - "What should the user paste to start a factory session?"
+    - "Where should each artifact type live?"
+    - "What happens to factory workspace after demo is complete?"
+
+# =============================================================================
+# SCOPE CONSIDERATION
+# =============================================================================
+
+scopeConsideration:
+  note: |
+    17 findings is a lot for one phase.
+    Research stage should group and prioritize.
+    Some items may need to be deferred to future phases.
+  
+  suggestedGrouping:
+    immediate:
+      - "Critical items (ARCH-001, USER-006)"
+      - "High-severity governance gaps"
+      - "/newfactory workflow (enables future runs)"
+    shortTerm:
+      - "Template improvements (testing, design wireframes)"
+      - "Documentation clarity"
+    deferred:
+      - "Gate records enforcement decision"
+      - "NEXUS branding decision"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "research"
+  requires: "!Proceed"
+  focus: "Prioritize findings, group into workstreams, determine phase scope"
+  
+  researchObjectives:
+    - "Group 17 findings into logical workstreams"
+    - "Determine what fits in Phase 15 vs future phases"
+    - "Answer architecture questions (folder structure, artifact locations)"
+    - "Draft /newfactory workflow requirements"

@@ -1,0 +1,173 @@
+metadata:
+  type: "stage-artifact"
+  phase: 25
+  phaseName: "ThemeExtensionGuide"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-21T07:04:00Z"
+  status: "pending-approval"
+  gateApproval:
+    from: "research"
+    approvedBy: "Matthew Phipps"
+    approvedAt: "2026-01-21T07:03:17Z"
+    command: "!Proceed"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+goal: "Create theme guidance for Factory AI + update governance references"
+backlogItem: "LEAP-040"
+effort: "small"
+
+# =============================================================================
+# PROPOSED CHANGES
+# =============================================================================
+
+proposedChanges:
+
+  # ---------------------------------------------------------------------------
+  # 1. NEW FILE: Theme Extension Guide
+  # ---------------------------------------------------------------------------
+  - order: 1
+    file: "2_GoldSource/meta/theme-extension-guide.yaml"
+    action: "NEW"
+    purpose: "Step-by-step guide for Factory AI to customize themes"
+    sections:
+      - introduction: "What this guide is for"
+      - brandCustomization:
+          workflow: "Override --brand-primary/secondary/accent"
+          variables: ["--brand-primary", "--brand-secondary", "--brand-accent"]
+          impact: ["Plasma colors", "Accent highlights"]
+      - glassPatterns:
+          class: ".glass"
+          darkTheme: ["--glass-bg: rgba(255,255,255,0.05)", "--glass-border: 0.1"]
+          lightTheme: ["--glass-bg: rgba(255,255,255,0.88)", "--glass-border: 0.08"]
+          usage: "Add .glass class to any container for glassmorphism"
+      - animationPatterns:
+          animateIn: ".animate-in - Fade-up entrance with staggered delays"
+          hoverLift: ".hover-lift - Subtle lift on hover"
+          buttonFeedback: "scale(0.97) on :active"
+      - lightThemeQuirks:
+          differentValues: ["glass-bg", "glass-border", "glass-shadow", "shadow-card"]
+          plasmaOpacity: "Reduced to 0.15 via .light-theme .plasma-bubble"
+      - commonMistakes:
+          - "Hardcoding hex colors instead of using CSS variables"
+          - "Forgetting light theme overrides"
+          - "Using wrong variable names"
+    estimatedLines: "~120"
+
+  # ---------------------------------------------------------------------------
+  # 2. UPDATE: FACTORY_README.yaml
+  # ---------------------------------------------------------------------------
+  - order: 2
+    file: "2_GoldSource/governance/FACTORY_README.yaml"
+    action: "MODIFY"
+    change: "Add design-system.yaml and theme-extension-guide.yaml to meta.files list"
+    location: "lines 57-63 (meta section)"
+    before: |
+      files:
+        - "ARCHITECTURE.yaml - Playing field description"
+        - "architectural-standards.yaml - Code standards and rules"
+        - "functionality.yaml - What already exists"
+    after: |
+      files:
+        - "ARCHITECTURE.yaml - Playing field description"
+        - "architectural-standards.yaml - Code standards and rules"
+        - "design-system.yaml - Design tokens and visual patterns"
+        - "functionality.yaml - What already exists"
+        - "theme-extension-guide.yaml - How to customize themes"
+
+  # ---------------------------------------------------------------------------
+  # 3. UPDATE: FACTORY_TASK_TEMPLATE.md
+  # ---------------------------------------------------------------------------
+  - order: 3
+    file: "2_GoldSource/governance/FACTORY_TASK_TEMPLATE.md"
+    action: "MODIFY"
+    change: "Add design-system.yaml reference to Stage 5 reading list"
+    location: "lines 86-90 (Stage 5 section)"
+    before: |
+      📖 **Read before starting**:
+      - `governance/lifecycle-stages.yaml` (Stage 5 section)
+      - `governance/demo-rules.yaml` (code standards, locked files)
+      - `meta/architectural-standards.yaml` (lines 130-170: naming, locked files, extension points)
+      - `governance/artifact-manifest.yaml` (lines 72-75: functionality.yaml location)
+    after: |
+      📖 **Read before starting**:
+      - `governance/lifecycle-stages.yaml` (Stage 5 section)
+      - `governance/demo-rules.yaml` (code standards, locked files)
+      - `meta/architectural-standards.yaml` (lines 130-170: naming, locked files, extension points)
+      - `meta/design-system.yaml` (design tokens, visual patterns)
+      - `meta/theme-extension-guide.yaml` (how to customize themes)
+      - `governance/artifact-manifest.yaml` (lines 72-75: functionality.yaml location)
+
+  # ---------------------------------------------------------------------------
+  # 4. UPDATE: demo-rules.yaml
+  # ---------------------------------------------------------------------------
+  - order: 4
+    file: "2_GoldSource/governance/demo-rules.yaml"
+    action: "MODIFY"
+    change: "Add reference to design-system.yaml in codeStandards section"
+    location: "After noInlineStyles (around line 43)"
+    add: |
+      stylingReference:
+        rule: "Use CSS variables from design-system.yaml"
+        reference: "meta/design-system.yaml"
+        guide: "meta/theme-extension-guide.yaml"
+        keyVariables:
+          - "--brand-primary, --brand-secondary, --brand-accent (theming)"
+          - "--glass-bg, --glass-border (glassmorphism)"
+          - ".animate-in, .hover-lift (animations)"
+
+  # ---------------------------------------------------------------------------
+  # 5. UPDATE: templates/stage-4-design.yaml
+  # ---------------------------------------------------------------------------
+  - order: 5
+    file: "2_GoldSource/governance/templates/stage-4-design.yaml"
+    action: "MODIFY"
+    change: "Add optional visualDesign section for UI work"
+    location: "After wireframes section (around line 50)"
+    add: |
+      # =========================================================================
+      # VISUAL DESIGN (Optional - for UI changes)
+      # =========================================================================
+      visualDesign:
+        required: false
+        when: "UI changes that involve custom styling"
+        reference: "meta/theme-extension-guide.yaml"
+        
+        styling:
+          colorsUsed: "[List CSS variables used, e.g. --brand-primary]"
+          glassEffects: "[Where .glass class is applied]"
+          animations: "[Which animation utilities used]"
+        
+        lightThemeConsidered: "[true|false - have you verified light theme works?]"
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  method: "Manual verification"
+  steps:
+    - step: 1
+      action: "Verify theme-extension-guide.yaml created and valid YAML"
+      command: "cat 2_GoldSource/meta/theme-extension-guide.yaml | head -20"
+    
+    - step: 2
+      action: "Verify FACTORY_README.yaml lists both design files"
+      command: "grep -A 5 'files:' 2_GoldSource/governance/FACTORY_README.yaml | head -10"
+    
+    - step: 3
+      action: "Verify FACTORY_TASK_TEMPLATE.md has design refs in Stage 5"
+      command: "grep -A 8 'Stage 5' 2_GoldSource/governance/FACTORY_TASK_TEMPLATE.md | head -15"
+    
+    - step: 4
+      action: "Verify demo-rules.yaml has stylingReference"
+      command: "grep -A 5 'stylingReference' 2_GoldSource/governance/demo-rules.yaml"
+    
+    - step: 5
+      action: "Verify all 5 acceptance criteria from LEAP-040"
+      manual: true
+
+status: "pending-approval"

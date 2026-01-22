@@ -1,0 +1,418 @@
+# =============================================================================
+# SPRINT FUNCTIONAL SPEC: Data Conventions
+# =============================================================================
+# Source: User requirements for ring-fenced data and service patterns
+# Purpose: Establish Firestore data patterns for all future specs to follow
+# =============================================================================
+
+metadata:
+  specId: "SPEC-004"
+  name: "Data Conventions"
+  version: "1.0.0"
+  created: "2026-01-20"
+  lastUpdated: "2026-01-20"
+  status: "draft"
+  effort: "small"
+  
+  # Backlog linkage
+  backlogId: "LEAP-038"
+  targetPhase: null
+
+# =============================================================================
+# CURRENT STATE - What already exists in GoldSource scaffold
+# =============================================================================
+
+currentState:
+  summary: "Firebase is set up but no data conventions or user data storage"
+  
+  alreadyImplemented:
+    - feature: "Firebase initialization"
+      location: "core/firebase.js"
+      status: "✅ Working"
+      note: "Exports db, auth, app"
+    
+    - feature: "Auth service"
+      location: "core/auth-service.js"
+      status: "✅ Working"
+      note: "Login, logout, signup, password reset"
+    
+    - feature: "Client state"
+      location: "core/state.js"
+      status: "✅ Working"
+      note: "In-memory state with subscribe pattern"
+  
+  missingFeatures:
+    - feature: "User profile in Firestore"
+      impact: "No persistent user data"
+      priority: "must-have"
+    
+    - feature: "User preferences storage"
+      impact: "Theme/settings don't persist across devices"
+      priority: "must-have"
+    
+    - feature: "Ring-fenced data pattern"
+      impact: "No convention for user-scoped collections"
+      priority: "must-have"
+    
+    - feature: "Data service template"
+      impact: "Each demo invents its own patterns"
+      priority: "should-have"
+
+# =============================================================================
+# SCOPE DEFINITION
+# =============================================================================
+
+scope:
+  problem: |
+    GoldSource has Firebase but no data conventions.
+    Issues:
+    1. User profile not stored on signup
+    2. User preferences (theme, etc) don't persist across devices
+    3. No pattern for ring-fencing user data
+    4. Each demo creates its own data patterns (inconsistent)
+    
+  goal: |
+    Establish data conventions in the scaffold that:
+    - Create user profile document on signup
+    - Store/sync user preferences to Firestore
+    - Define ring-fenced data structure (/users/{uid}/...)
+    - Provide a service pattern template for future data
+    
+  notInScope:
+    - Specific card/content data (future spec)
+    - Complex queries or aggregations
+    - Real-time collaboration features
+    - Offline-first architecture
+    - Firestore security rules (just conventions)
+  
+  successCriteria:
+    - User profile created in Firestore on signup
+    - User preferences (theme) persist across devices/sessions
+    - Clear data structure documented
+    - Service template pattern available
+
+# =============================================================================
+# FUNCTIONAL REQUIREMENTS
+# =============================================================================
+
+requirements:
+  
+  functional:
+    # --- User Profile ---
+    - id: "FR-001"
+      name: "User Profile on Signup"
+      description: "Create user profile document when user signs up"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED"
+      relatedSpec: "SPEC-001 FR-001"
+      acceptance: |
+        - On successful signup, create /users/{uid} document
+        - Fields: email, displayName, createdAt, photoURL (if available)
+        - Use serverTimestamp() for createdAt
+        - Don't overwrite if exists (returning user)
+      dataStructure:
+        path: "/users/{uid}"
+        fields: |
+          {
+            email: string,
+            displayName: string | null,
+            photoURL: string | null,
+            createdAt: Timestamp,
+            lastLoginAt: Timestamp
+          }
+    
+    # --- User Preferences ---
+    - id: "FR-002"
+      name: "User Preferences Storage"
+      description: "Store user preferences in Firestore"
+      priority: "must-have"
+      currentState: "NOT IMPLEMENTED - theme in localStorage only"
+      acceptance: |
+        - Preferences stored at /users/{uid}/preferences or in user doc
+        - On theme change, sync to Firestore
+        - On login, load preferences from Firestore
+        - Fallback to localStorage if offline
+        - Merge with defaults for new users
+      dataStructure:
+        path: "/users/{uid}"
+        preferencesField: |
+          {
+            preferences: {
+              theme: "dark" | "light",
+              sidebarCollapsed: boolean,
+              // Future prefs go here
+            }
+          }
+      syncPattern: |
+        // On preference change
+        async function savePreference(key, value) {
+          const uid = auth.currentUser?.uid;
+          if (!uid) return;
+          
+          await updateDoc(doc(db, 'users', uid), {
+            [`preferences.${key}`]: value,
+            updatedAt: serverTimestamp()
+          });
+        }
+        
+        // On login - load preferences
+        async function loadUserPreferences(uid) {
+          const userDoc = await getDoc(doc(db, 'users', uid));
+          const prefs = userDoc.data()?.preferences || {};
+          // Apply to local state
+          if (prefs.theme) setTheme(prefs.theme);
+        }
+    
+    # --- Ring-Fenced Data ---
+    - id: "FR-003"
+      name: "Ring-Fenced Data Convention"
+      description: "All user data scoped under /users/{uid}/"
+      priority: "must-have"
+      currentState: "NOT DOCUMENTED"
+      acceptance: |
+        - User's data lives under /users/{uid}/
+        - Convention documented in code comments
+        - Future specs follow this pattern
+        - No cross-user data access
+      dataStructure:
+        convention: |
+          /users/{uid}                        ← User profile + preferences
+          /users/{uid}/cards/{cardId}         ← User's cards (future)
+          /users/{uid}/conversations/{id}     ← AI chat history (future)
+          /users/{uid}/settings/{key}         ← Extended settings (future)
+          
+          # Shared/global data (read-only for users)
+          /config/app                         ← App-wide config
+          /templates/{templateId}             ← Shared templates
+    
+    # --- Service Pattern ---
+    - id: "FR-004"
+      name: "Data Service Template"
+      description: "Template pattern for creating data services"
+      priority: "should-have"
+      currentState: "NOT IMPLEMENTED"
+      acceptance: |
+        - Template file or documented pattern
+        - Shows CRUD operations
+        - Shows real-time listener pattern
+        - Shows error handling
+        - Future specs copy this pattern
+      templatePattern: |
+        /**
+         * @file [feature]-service.js
+         * @purpose Data service for [feature]
+         * @layer core
+         */
+        
+        import { db, auth } from './firebase.js';
+        import { 
+          collection, doc, getDoc, getDocs, addDoc, 
+          updateDoc, deleteDoc, onSnapshot, query, where,
+          serverTimestamp 
+        } from 'firebase/firestore';
+        import { error as logError } from './logger.js';
+        
+        // =============================================================================
+        // COLLECTION REFERENCE
+        // =============================================================================
+        
+        function getUserCollection() {
+          const uid = auth.currentUser?.uid;
+          if (!uid) throw new Error('Not authenticated');
+          return collection(db, 'users', uid, '[feature]');
+        }
+        
+        // =============================================================================
+        // CRUD OPERATIONS
+        // =============================================================================
+        
+        export async function getAll() {
+          try {
+            const snapshot = await getDocs(getUserCollection());
+            return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          } catch (err) {
+            logError('[Feature]: Failed to fetch', { error: err.message });
+            throw err;
+          }
+        }
+        
+        export async function getById(id) {
+          const docRef = doc(getUserCollection(), id);
+          const snapshot = await getDoc(docRef);
+          if (!snapshot.exists()) return null;
+          return { id: snapshot.id, ...snapshot.data() };
+        }
+        
+        export async function create(data) {
+          const docRef = await addDoc(getUserCollection(), {
+            ...data,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+          return docRef.id;
+        }
+        
+        export async function update(id, data) {
+          const docRef = doc(getUserCollection(), id);
+          await updateDoc(docRef, {
+            ...data,
+            updatedAt: serverTimestamp()
+          });
+        }
+        
+        export async function remove(id) {
+          const docRef = doc(getUserCollection(), id);
+          await deleteDoc(docRef);
+        }
+        
+        // =============================================================================
+        // REAL-TIME LISTENER
+        // =============================================================================
+        
+        export function subscribeToAll(callback) {
+          return onSnapshot(getUserCollection(), (snapshot) => {
+            const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            callback(items);
+          });
+        }
+    
+    # --- Preference Sync ---
+    - id: "FR-005"
+      name: "Theme Preference Sync"
+      description: "Theme syncs to Firestore, persists across devices"
+      priority: "must-have"
+      currentState: "Theme in localStorage only"
+      acceptance: |
+        - On theme toggle, save to Firestore
+        - On login, load theme from Firestore
+        - Fallback to localStorage if no Firestore pref
+        - Update state.js and theme-manager.js integration
+
+# =============================================================================
+# TECHNICAL APPROACH
+# =============================================================================
+
+technicalApproach:
+  
+  affectedFiles:
+    new:
+      - file: "core/user-service.js"
+        purpose: "User profile and preferences CRUD"
+      - file: "docs/DATA_CONVENTIONS.md"
+        purpose: "Document data patterns for future specs"
+    
+    modify:
+      - file: "core/auth-service.js"
+        changes:
+          - "Call createUserProfile() on signup"
+          - "Call loadUserPreferences() on login"
+      
+      - file: "core/theme-manager.js"
+        changes:
+          - "Sync theme changes to Firestore via user-service"
+      
+      - file: "core/state.js"
+        changes:
+          - "Optional: integrate preference loading"
+    
+    delete: []
+  
+  dependencies:
+    - "Already using Firebase/Firestore"
+  
+  patterns:
+    - "Ring-fenced data under /users/{uid}/"
+    - "serverTimestamp() for all timestamps"
+    - "Graceful offline fallback"
+    - "Service pattern for all data access"
+
+# =============================================================================
+# FACTORY GOVERNANCE IMPACT
+# =============================================================================
+# Answer: "Does this change introduce new patterns the Factory AI needs to know?"
+
+factoryGovernanceImpact:
+  
+  introducesNewPatterns: true
+  
+  governanceUpdatesRequired:
+    - file: "2_GoldSource/meta/architectural-standards.yaml"
+      change: "Add 'Data Service Pattern' section with ring-fencing and CRUD template"
+    - file: "2_GoldSource/meta/ARCHITECTURE.yaml"
+      change: "Add dataFlow.firestoreConventions showing /users/{uid} pattern"
+    - file: "2_GoldSource/governance/demo-rules.yaml"
+      change: "Add guidance on creating feature data services using the template"
+  
+  rationale: |
+    Data conventions spec establishes NEW patterns for data access:
+    - Ring-fenced data under /users/{uid}/
+    - Data service template pattern
+    - Preference sync pattern
+    Factory AI needs to know these patterns to create data-driven demos
+    that follow consistent data access patterns.
+    The DATA_CONVENTIONS.md doc (created as part of spec) becomes reference material.
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verification:
+  
+  manualTests:
+    - id: "MT-001"
+      name: "User Profile Creation"
+      description: "Verify user profile created on signup"
+      steps:
+        - "Create new account"
+        - "Check Firestore for /users/{uid}"
+      expectedResult: "User document exists with email, createdAt"
+    
+    - id: "MT-002"
+      name: "Preference Persistence"
+      description: "Verify theme persists across devices"
+      steps:
+        - "Login, change theme to light"
+        - "Logout"
+        - "Login on different browser/device"
+      expectedResult: "Theme is light (loaded from Firestore)"
+    
+    - id: "MT-003"
+      name: "Preference Fallback"
+      description: "Verify localStorage fallback works"
+      steps:
+        - "Login, change theme"
+        - "Go offline"
+        - "Change theme again"
+        - "Refresh page"
+      expectedResult: "Theme persists via localStorage"
+
+# =============================================================================
+# APPROVAL
+# =============================================================================
+
+approval:
+  specApprovedBy: null
+  specApprovedDate: null
+  implementationApprovedBy: null
+  implementationApprovedDate: null
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  designPhilosophy: |
+    Establish patterns NOW so future specs just follow them.
+    "Convention over configuration" — demos should know exactly
+    where their data lives and how to access it.
+    
+  securityNote: |
+    Firestore security rules should enforce ring-fencing:
+    - Users can only read/write their own /users/{uid}/** data
+    - Rules are NOT part of this spec but should be set up
+    
+  futureData: |
+    When cards/AI are added, they follow the pattern:
+    /users/{uid}/cards/{cardId}
+    /users/{uid}/conversations/{conversationId}
+    /users/{uid}/ai-context/{contextId}

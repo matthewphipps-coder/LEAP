@@ -1,0 +1,179 @@
+metadata:
+  type: "stage-artifact"
+  phase: 13
+  phaseName: "DemoFactory Prototype"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-19T09:30:00Z"
+  completedDate: "2026-01-19T09:57:00Z"
+  status: "complete"
+  previousStage: "4_Phases/phase-13/stage-1-discovery.yaml"
+
+researchObjective: "Answer discovery questions to define concrete scope for DemoFactory Prototype"
+
+# =============================================================================
+# AI EXECUTION MODEL - Critical architectural decision
+# =============================================================================
+
+aiExecutionModel:
+  question: "Are stages 1-8 executed by AI Agents?"
+  answer: "Yes, with human approval at every gate"
+  
+  decision:
+    chosen: "Option C - Human-in-the-Loop"
+    rationale:
+      - "Human must be in the loop for stages 1-4 and 6 anyway (AI can't do those alone)"
+      - "Consistency: all gates require human approval via !Proceed"
+      - "Reduces risk through explicit authorization"
+      - "Proven model - LEAP uses it successfully"
+  
+  orchestrationOptions:
+    
+    optionA:
+      name: "Multi-Agent Orchestration"
+      status: "not-selected"
+      description: "LEAP orchestrates multiple AI executions, each handling one stage with fresh context"
+    
+    optionB:
+      name: "Single-Agent with Stage Gates"
+      status: "not-selected"
+      description: "One AI session, but explicit gates force pause/validation between stages"
+    
+    optionC:
+      name: "Human-in-the-Loop Hybrid"
+      status: "SELECTED"
+      description: "AI proposes, human approves at each gate via !Proceed"
+
+# =============================================================================
+# IMMUTABLE FOUNDATION - What the factory provides
+# =============================================================================
+
+immutableFoundation:
+  principle: "Factory provides scaffold → AI fills in the gaps → Less variance = More consistency"
+  
+  components:
+    
+    authentication:
+      status: "decided"
+      decision: "Simulated (mock) for prototype"
+      rationale: "Keeps demos simple, prevents auth complexity from blocking demo creation"
+      futureWork: "Harden with real auth in future phase"
+    
+    pageStructure:
+      status: "decided"
+      decision: "Locked shell, flexible content"
+      details:
+        locked:
+          - "Index page layout"
+          - "Navigation patterns"
+          - "Header/footer scaffolding"
+        flexible:
+          - "Main content area (AI customizes per demo scenario)"
+    
+    themeStyling:
+      status: "decided"
+      decision: "CSS variables + brand-safe palette"
+      details:
+        - "Factory provides design tokens (colors, spacing, typography)"
+        - "AI picks from approved palettes, can't go off-brand"
+    
+    databaseInteraction:
+      status: "decided"
+      decision: "Mock data for prototype"
+      rationale: "No real DB complexity, focus on UX patterns"
+    
+    coreInfrastructure:
+      status: "decided"
+      decision: "All locked"
+      lockedComponents:
+        - component: "State management"
+          description: "Factory provides StateManager pattern"
+        - component: "Error handling"
+          description: "Factory provides error framework"
+        - component: "Logging"
+          description: "Factory provides logging/audit trail"
+        - component: "Routing"
+          description: "Consistent URL patterns, history management"
+        - component: "API patterns"
+          description: "Standard fetch/response handling (even for mock data)"
+        - component: "Component lifecycle"
+          description: "Init/destroy patterns prevent memory leaks"
+        - component: "Event handling"
+          description: "addEventListener, not inline (per architectural-standards.yaml)"
+        - component: "Config management"
+          description: "Environment variables, feature flags"
+
+# =============================================================================
+# TECHNOLOGY STACK
+# =============================================================================
+
+technicalStack:
+  question: "What technology stack should DemoFactory use?"
+  
+  decision:
+    structure: "HTML5"
+    logic: "Vanilla JS"
+    styling: "CSS variables"
+    build: "None (or Vite if needed)"
+  
+  rationale:
+    - "Architectural-standards.yaml Triad Pattern examples are vanilla JS"
+    - "Simpler AI guidance - no framework-specific patterns to learn/break"
+    - "Future vision focus - demoing UX concepts, not framework capabilities"
+    - "Faster prototype - no build tooling, no dependency management"
+    - "Governance fit - LEAP already governs vanilla JS successfully"
+  
+  futureConsideration: "If demos grow complex, consider lightweight option (Alpine.js, Lit)"
+
+# =============================================================================
+# DEMO DEFINITION
+# =============================================================================
+
+demoDefinition:
+  question: "What does 'building a demo' mean concretely?"
+  
+  decision:
+    outputType: "Web app (standalone HTML/JS/CSS)"
+    purpose: "Future vision of ServiceNow UX in an agentic world"
+    
+  clarification:
+    notSimulating: "Current ServiceNow UI"
+    notConnecting: "Real ServiceNow instances"
+    focus: "What's possible with AI-first design"
+  
+  implications:
+    - "Freedom to innovate on UX patterns"
+    - "No constraints from current ServiceNow UI library"
+    - "Showcase agentic capabilities"
+
+# =============================================================================
+# FACTORY EVOLUTION STRATEGY
+# =============================================================================
+
+factoryEvolutionStrategy:
+  question: "After prototype, incrementally improve or rebuild?"
+  
+  decision: "Plan for clean room rebuild (v2)"
+  
+  rationale:
+    - "First prototype is a learning vehicle - purpose is to discover right patterns"
+    - "Incremental improvement accumulates technical debt"
+    - "LEAP already does this successfully (v1.0.0-fresh governance rebuild)"
+    - "Lessons are captured in phase closures - nothing lost in rebuild"
+    - "Aligns with 'Precision over velocity' philosophy"
+  
+  strategy:
+    flow: "Prototype v1 → Learn → Document lessons → Rebuild v2 (clean config)"
+    keyQuestions:
+      - "What did we get wrong?"
+      - "What patterns emerged?"
+      - "What should be hardened?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Assess risks, create implementation approach, define prototype scope"

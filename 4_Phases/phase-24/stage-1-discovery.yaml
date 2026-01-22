@@ -1,0 +1,89 @@
+metadata:
+  type: "stage-artifact"
+  phase: 24
+  phaseName: "FactoryGovernance"
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-21T06:36:00Z"
+  status: "complete"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: "GoldSource governance docs are outdated after Phases 22 and 23"
+  context: |
+    Phases 22 (DesignSystemEnhancement) and 23 (ExtensibleAppShell) added significant 
+    new patterns to the GoldSource scaffold. However, the governance documentation 
+    that Factory AI reads was not updated, creating a gap between what exists in code 
+    and what's documented.
+  
+  impact: |
+    Factory AI reads 2_GoldSource/meta/* for guidance. Without updated docs:
+    - Factory won't know about plasma background, brand color system, animation utilities
+    - Factory won't understand PAGE_TABS/PAGE_SIDEBAR_ACTIONS patterns
+    - Factory will be confused by floating pill sidebar (docs describe push/pull)
+    - Settings dialog and multi-page system are undocumented
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  backlogItems:
+    - id: "LEAP-043"
+      name: "Document Page Registration Pattern"
+      target: "2_GoldSource/meta/architectural-standards.yaml"
+      effort: "small"
+    
+    - id: "LEAP-044"
+      name: "Document Phase 22 Design Patterns"
+      target: "2_GoldSource/meta/design-system.yaml"
+      effort: "small"
+    
+    - id: "LEAP-045"
+      name: "Document Phase 23 Shell Patterns"
+      targets:
+        - "2_GoldSource/meta/functionality.yaml"
+        - "2_GoldSource/meta/architectural-standards.yaml"
+      effort: "small"
+  
+  totalEffort: "small (documentation only - no code changes)"
+  
+  filesAffected:
+    modify:
+      - "2_GoldSource/meta/architectural-standards.yaml"
+      - "2_GoldSource/meta/design-system.yaml"
+      - "2_GoldSource/meta/functionality.yaml"
+    new: []
+    delete: []
+
+# =============================================================================
+# QUESTIONS FOR RESEARCH
+# =============================================================================
+
+questionsForResearch:
+  - "What specific patterns from Phase 22 need documenting in design-system.yaml?"
+  - "What breaking changes from Phase 23 need reflecting in functionality.yaml?"
+  - "How should PAGE_TABS/PAGE_SIDEBAR_ACTIONS patterns be documented for Factory use?"
+
+# =============================================================================
+# ALREADY DONE CHECK
+# =============================================================================
+
+alreadyDoneCheck:
+  - item: "Page Registration Pattern documented"
+    verified: false
+    verificationMethod: "Check architectural-standards.yaml for PAGE_TABS section"
+  
+  - item: "Plasma background documented"
+    verified: false
+    verificationMethod: "Check design-system.yaml for plasmaBackground section"
+  
+  - item: "Floating sidebar documented"
+    verified: false
+    verificationMethod: "Check functionality.yaml SHELL-001 description"
+
+status: "complete"
+nextStage: "research"

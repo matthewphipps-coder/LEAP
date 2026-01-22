@@ -2,7 +2,7 @@
 # LEAP ARCHITECTURE
 # =============================================================================
 # This describes LEAP - the governance and Gold Source maintenance project.
-# For scaffold/demo architecture, see: GoldSource/meta/ARCHITECTURE.yaml
+# For scaffold/demo architecture, see: 2_GoldSource/meta/ARCHITECTURE.yaml
 # =============================================================================
 
 metadata:
@@ -29,7 +29,7 @@ overview:
     
     Factory:
       description: "AI-assisted demo creation workflow (runs in separate AI session)"
-      entryPoint: "GoldSource/governance/FACTORY_README.yaml"
+      entryPoint: "2_GoldSource/governance/FACTORY_README.yaml"
     
     Demo:
       description: "Final product created by Factory (e.g., NEXUS demos)"
@@ -42,7 +42,7 @@ overview:
 folderStructure:
   
   Governance:
-    path: "LEAP_Governance/"
+    path: "1_LEAP/1_Governance/"
     purpose: "LEAP governance rules, protocols, and templates"
     contents:
       - "constitution.yaml - Core rules"
@@ -52,19 +52,19 @@ folderStructure:
       - "tracking/ - Current state, backlog, bugs"
   
   GoldSource:
-    path: "GoldSource/"
+    path: "2_GoldSource/"
     purpose: "The master copy used by Factory to create demos"
     contents:
       - "scaffold/ - Demo code (HTML, JS, CSS)"
       - "meta/ - Architecture and standards for scaffold"
       - "governance/ - Factory-specific protocols"
       - "archetypes/ - UI pattern templates"
-    architectureRef: "GoldSource/meta/ARCHITECTURE.yaml"
+    architectureRef: "2_GoldSource/meta/ARCHITECTURE.yaml"
   
   docs:
-    path: "Phases/"
+    path: "4_Phases/"
     purpose: "Phase history and artifacts"
-    structure: "Phases/phase-N/*.yaml"
+    structure: "4_Phases/phase-N/*.yaml"
 
 # =============================================================================
 # LIFECYCLE
@@ -83,8 +83,8 @@ lifecycle:
     7: "Testing - Verify it works"
     8: "Closure - Lessons learned"
   
-  protocol: "LEAP_Governance/pulse-protocol.yaml"
-  currentState: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
+  protocol: "1_LEAP/1_Governance/pulse-protocol.yaml"
+  currentState: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
 
 # =============================================================================
 # KEY ENTRY POINTS (FOR AI)
@@ -94,21 +94,21 @@ entryPoints:
   
   startingNewSession:
     action: "Read CURRENT_STATE.yaml first"
-    location: "LEAP_Governance/tracking/CURRENT_STATE.yaml"
+    location: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
   
   understandingRules:
     action: "Read constitution and protocols"
     files:
-      - "LEAP_Governance/constitution.yaml"
-      - "LEAP_Governance/pulse-protocol.yaml"
+      - "1_LEAP/1_Governance/constitution.yaml"
+      - "1_LEAP/1_Governance/pulse-protocol.yaml"
   
   creatingDemo:
     action: "Use /newfactory command"
-    workflow: "FactoryTesting/initiate-factory.yaml"
+    workflow: "3_FactoryTesting/initiate-factory.yaml"
   
   understandingScaffold:
     action: "Read scaffold architecture"
-    location: "GoldSource/meta/ARCHITECTURE.yaml"
+    location: "2_GoldSource/meta/ARCHITECTURE.yaml"
 
 # =============================================================================
 # FEEDBACK LOOP
@@ -126,4 +126,4 @@ feedbackLoop:
   
   artifacts:
     factoryWorkspace: "~/Documents/DemoInstances/Factory-*/stage-8-closure.yaml"
-    backlog: "LEAP_Governance/tracking/backlog.yaml"
+    backlog: "1_LEAP/1_Governance/tracking/backlog.yaml"

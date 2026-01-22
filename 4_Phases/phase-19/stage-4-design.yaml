@@ -1,0 +1,302 @@
+# =============================================================================
+# PHASE 19: FACTORY TASK TEMPLATE
+# STAGE 4: DESIGN (REVISED)
+# =============================================================================
+
+metadata:
+  phase: 19
+  phaseName: "FactoryTaskTemplate"
+  stage: 4
+  stageName: "design"
+  created: "2026-01-20T13:17:00Z"
+  revised: "2026-01-20T13:23:00Z"
+  status: "complete"
+  author: "AI Architect"
+  previousStage: "stage-3-analysis.yaml"
+  gateApproval: "Stage 3 approved with !Proceed at 2026-01-20T13:17:06Z"
+  
+  revisionNote: |
+    User feedback: Hardcoding specific rules doesn't scale. Template should 
+    point AI to read relevant docs at each stage (reading guide approach).
+
+# =============================================================================
+# DESIGN OBJECTIVE
+# =============================================================================
+
+objective: "Create detailed implementation plan with reading guide approach"
+
+# =============================================================================
+# DELIVERABLE 1: FACTORY_TASK_TEMPLATE.md (REVISED)
+# =============================================================================
+
+deliverable1:
+  file: "2_GoldSource/governance/FACTORY_TASK_TEMPLATE.md"
+  type: "new"
+  purpose: "Task template as stage-scoped reading guide - points AI to relevant docs at each stage"
+  
+  designPrinciple: |
+    Template contains POINTERS to governance docs, not duplicated content.
+    When governance changes, template doesn't need updating.
+    AI reads relevant sections at point of need.
+  
+  content: |
+    # Factory Task: [DEMO_NAME]
+    
+    > Copy this template to your factory workspace as `task.md` and adapt for your demo.
+    > Read the linked docs at each stage - they contain the authoritative rules.
+    
+    ## Workspace Reference
+    
+    - **Factory Workspace**: [FACTORY_WORKSPACE_PATH]
+    - **Demo Output**: [DEMO_OUTPUT_PATH]
+    - **Gold Source**: (read-only reference)
+    
+    Relative paths in this document are from Gold Source root.
+    
+    ---
+    
+    ## Stage 1: Discovery
+    **Objective**: Define demo requirements from user scenario
+    
+    📖 **Read before starting**: `governance/lifecycle-stages.yaml` (Stage 1 section)
+    
+    - [ ] Document demo name, scenario, target archetype
+    - [ ] List key features and user flows
+    - [ ] Create `stage-1-discovery.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Discovery items for this demo]
+    
+    ---
+    
+    ## Stage 2: Research
+    **Objective**: Review scaffold capabilities, identify gaps
+    
+    📖 **Read before starting**:
+    - `governance/lifecycle-stages.yaml` (Stage 2 section)
+    - `meta/ARCHITECTURE.yaml` (scaffold structure overview)
+    - `meta/functionality.yaml` (what scaffold already provides)
+    
+    - [ ] Review scaffold structure (core/, ui/, features/)
+    - [ ] Identify gaps between requirements and scaffold
+    - [ ] Create `stage-2-research.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Research items for this demo]
+    
+    ---
+    
+    ## Stage 3: Analysis
+    **Objective**: Risk assessment, approach options
+    
+    📖 **Read before starting**: `governance/lifecycle-stages.yaml` (Stage 3 section)
+    
+    - [ ] Identify risks
+    - [ ] Compare approach options
+    - [ ] Create `stage-3-analysis.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Analysis items for this demo]
+    
+    ---
+    
+    ## Stage 4: Design
+    **Objective**: Implementation plan, wireframes
+    
+    📖 **Read before starting**:
+    - `governance/lifecycle-stages.yaml` (Stage 4 section)
+    - `governance/artifact-manifest.yaml` (wireframe location: lines 64-66)
+    
+    ⚠️ **Critical**: Wireframes go in FACTORY_WORKSPACE (see artifact-manifest.yaml)
+    
+    - [ ] Create detailed implementation plan
+    - [ ] Generate wireframes → save to **FACTORY_WORKSPACE** (not brain/, not artifacts/)
+    - [ ] Create `stage-4-design.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Design items for this demo]
+    
+    ---
+    
+    ## Stage 5: Implementation
+    **Objective**: Build demo based on design
+    
+    📖 **Read before starting**:
+    - `governance/lifecycle-stages.yaml` (Stage 5 section)
+    - `governance/demo-rules.yaml` (code standards, locked files)
+    - `meta/architectural-standards.yaml` (lines 130-170: naming, locked files, extension points)
+    - `governance/artifact-manifest.yaml` (lines 72-75: functionality.yaml location)
+    
+    ⚠️ **Critical conventions** (from architectural-standards.yaml):
+    - Path naming: SINGULAR (features/incident/, not incidents/)
+    - File naming: kebab-case
+    - Locked files: DO NOT MODIFY (see demo-rules.yaml scaffoldRules.locked)
+    
+    ⚠️ **Critical**: Update `meta/functionality.yaml` in **DEMO OUTPUT** with new features
+    
+    - [ ] Read the docs listed above
+    - [ ] Implement design changes following conventions
+    - [ ] Add AI-First headers to all new .js files
+    - [ ] Update functionality.yaml in demo output
+    - [ ] Create `stage-5-implementation.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Implementation items for this demo]
+    
+    ---
+    
+    ## Stage 6: Validation
+    **Objective**: Verify all Discovery features implemented
+    
+    📖 **Read before starting**: `governance/lifecycle-stages.yaml` (Stage 6 section)
+    
+    - [ ] Compare Discovery requirements to functionality.yaml
+    - [ ] Verify all features implemented or explained in scopeChanges
+    - [ ] Verify README.md exists in demo output
+    - [ ] Confirm deployment readiness
+    - [ ] Create `stage-6-validation.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Validation items for this demo]
+    
+    ---
+    
+    ## Stage 7: Testing
+    **Objective**: Test demo in browser
+    
+    📖 **Read before starting**:
+    - `governance/lifecycle-stages.yaml` (Stage 7 section)
+    - `governance/artifact-manifest.yaml` (test evidence location)
+    
+    ⚠️ **Critical**: Save screenshots/recordings to **FACTORY_WORKSPACE** (not brain/, not artifacts/)
+    
+    - [ ] Start server: `python3 -m http.server 8080` in demo output
+    - [ ] Test all features in browser
+    - [ ] Save screenshots → **FACTORY_WORKSPACE**
+    - [ ] Save recordings → **FACTORY_WORKSPACE**
+    - [ ] Create `stage-7-testing.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request !Proceed
+    
+    ### Demo-specific items:
+    - [ ] [Add Testing items for this demo]
+    
+    ---
+    
+    ## Stage 8: Closure
+    **Objective**: Lessons learned, sign-off
+    
+    📖 **Read before starting**: `governance/lifecycle-stages.yaml` (Stage 8 section)
+    
+    - [ ] Document lessons learned
+    - [ ] Identify improvements for Gold Source
+    - [ ] Create README.md → save to **DEMO OUTPUT**
+    - [ ] Create `stage-8-closure.yaml` → save to **FACTORY_WORKSPACE**
+    - [ ] Request human sign-off
+    
+    ### Demo-specific items:
+    - [ ] [Add Closure items for this demo]
+
+# =============================================================================
+# DELIVERABLE 2: FACTORY_README.yaml UPDATE
+# =============================================================================
+
+deliverable2:
+  file: "2_GoldSource/governance/FACTORY_README.yaml"
+  type: "modify"
+  section: "firstSteps"
+  
+  currentContent: |
+    firstSteps:
+      1: "Read this entire file"
+      2: "Read governance/factory-protocol.yaml"
+      3: "Read governance/lifecycle-stages.yaml"
+      4: "Read governance/demo-rules.yaml"
+      5: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
+      6: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
+      7: "Ask user for: scenario description (what the demo should show)"
+      8: "Copy scaffold to demo location"
+      9: "Initialize CURRENT_STATE.yaml in demo"
+      10: "Begin Stage 1: Discovery with !Proceed gate"
+  
+  newContent: |
+    firstSteps:
+      1: "Read this entire file"
+      2: "Read governance/factory-protocol.yaml"
+      3: "Read governance/lifecycle-stages.yaml"
+      4: "Read governance/demo-rules.yaml"
+      5: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
+      6: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
+      7: "Ask user for: scenario description (what the demo should show)"
+      8: "Copy scaffold to demo location"
+      9: "Copy FACTORY_TASK_TEMPLATE.md to factory workspace as task.md"
+      10: "Adapt task.md: Fill in demo name, paths, and demo-specific items"
+      11: "Initialize CURRENT_STATE.yaml in factory workspace"
+      12: "Begin Stage 1: Discovery with !Proceed gate"
+
+# =============================================================================
+# DELIVERABLE 3: BACKLOG UPDATE
+# =============================================================================
+
+deliverable3:
+  file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+  type: "modify"
+  
+  changes:
+    - id: "LEAP-033"
+      currentStatus: "proposed"
+      newStatus: "superseded"
+      note: "Superseded by Phase 19 Factory Task Template - reading guide approach"
+    
+    - id: "LEAP-003"
+      add: "Note: Addressed by Factory Task Template Stage 5 reading guide"
+    
+    - id: "LEAP-009"
+      add: "Note: Addressed by Factory Task Template Stage 7 reading guide"
+    
+    - id: "LEAP-019"
+      add: "Note: Partially addressed by Factory Task Template Stage 5 reading guide"
+
+# =============================================================================
+# IMPLEMENTATION STEPS
+# =============================================================================
+
+implementationSteps:
+  1: "Create FACTORY_TASK_TEMPLATE.md in 2_GoldSource/governance/"
+  2: "Update FACTORY_README.yaml firstSteps (lines 97-107)"
+  3: "Update backlog.yaml for LEAP-033, LEAP-003, LEAP-009, LEAP-019"
+
+# =============================================================================
+# SCALABILITY NOTES
+# =============================================================================
+
+scalabilityNotes:
+  principle: "Template contains pointers, not duplicated content"
+  
+  whenGovernanceChanges:
+    scenario: "A new naming convention is added to architectural-standards.yaml"
+    templateImpact: "None - template already points to that file"
+    aiImpact: "AI reads updated file at Stage 5, gets new rule automatically"
+  
+  whenNewRuleAdded:
+    scenario: "New Stage 5 requirement added to lifecycle-stages.yaml"
+    templateImpact: "None - template already points to that file"
+    aiImpact: "AI reads updated file at Stage 5, gets new requirement"
+  
+  maintenanceRequired:
+    - "Only if file locations change"
+    - "Only if new critical stages are added"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "implementation"
+  focus: "Create the files as designed"
+  requires: "!Proceed"

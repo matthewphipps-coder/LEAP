@@ -1,0 +1,45 @@
+# GOVERNANCE INDEX
+# Read this first at every session start
+
+metadata:
+  purpose: "Guide AI to the right governance file"
+  version: "1.2.0"
+
+readFirst:
+  aiOnboard: "ai-onboard-protocol.yaml"  # Session start for all AI agents
+  
+beforeActions:
+  fileOperations: "checklists/before-file-op.yaml"
+  phaseStart: "checklists/before-phase.yaml"
+
+whenConfused: "Run !pulse"
+
+# Core governance documents
+coreDocumentation:
+  rules: "constitution.yaml"
+  lifecycle: "pulse-protocol.yaml"
+  safety: "safety-protocol.yaml"
+
+# Protocols referenced by constitution rules
+protocols:
+  riskAssessment: "rrmd-protocol.yaml"      # Rule 9
+  agentRecovery: "bump-protocol.yaml"       # Rule 12
+  peerReview: "agent-persona.yaml"          # Elite A-Team personas
+  
+# Workflows
+workflows:
+  newFactory: "3_FactoryTesting/initiate-factory.yaml"
+  factoryReview: "3_FactoryTesting/review-factory.yaml"
+
+# Tracking references
+tracking:
+  currentState: "tracking/CURRENT_STATE.yaml"
+  backlog: "tracking/backlog.yaml"
+  backlogCategories: "tracking/backlog-categories.yaml"
+  bugs: "tracking/bugs.yaml"
+
+# Factory testing (at LEAP root, not in LEAP_Governance)
+factoryTesting:
+  location: "3_FactoryTesting/"
+  purpose: "Factory workflows, inspection guides, and results"
+  index: "3_FactoryTesting/INDEX.yaml"

@@ -1,0 +1,314 @@
+metadata:
+  type: "stage-artifact"
+  phase: 23
+  phaseName: "ExtensibleAppShell"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-21T05:26:00Z"
+  status: "complete"
+  gateApproval:
+    from: "discovery"
+    approvedBy: "Matthew Phipps"
+    approvedAt: "2026-01-21T05:18:46Z"
+    command: "!Proceed"
+
+# =============================================================================
+# PROTOTYPE VERIFICATION
+# =============================================================================
+
+prototypeVerification:
+  file: "1_LEAP/1_Governance/SprintFunctionalSpecs/SPEC-003-prototype.html"
+  version: "v9"
+  testedAt: "2026-01-21T05:26:00Z"
+  
+  visualElements:
+    header:
+      - "✅ NEXUS logo/brand text on left"
+      - "✅ 6 page tabs with icons (Dashboard active)"
+      - "✅ Badge '2' on Incidents tab"
+      - "✅ Centered 'Ask anything...' search box"
+      - "✅ Notification bell with badge '5'"
+      - "✅ Settings gear icon"
+      - "✅ Theme toggle switch"
+      - "✅ User avatar 'MP'"
+    
+    sidebar:
+      - "✅ Floating pill shape on left"
+      - "✅ Single circular button (refresh icon, green)"
+      - "✅ Glass effect with blur"
+    
+    canvas:
+      - "✅ Dashboard page with 3 cards"
+      - "✅ Cards: Active Incidents, Tasks Due Today, AI Insights"
+    
+    footer:
+      - "✅ Version badge 'SPEC-003 Prototype v9'"
+  
+  interactiveTests:
+    - test: "Page Tab Switching"
+      action: "Clicked Incidents tab (badge '2')"
+      result: "✅ Content changed to Incidents view with INC001, INC002"
+    
+    - test: "Theme Toggle"
+      action: "Clicked theme toggle"
+      result: "✅ Switched from dark (#0a0a0c) to light (#f8fafc)"
+    
+    - test: "Settings Dialog Open"
+      action: "Clicked gear icon"
+      result: "✅ Modal opened with Appearance (active) and Branding sections"
+    
+    - test: "Settings Dialog Close"
+      action: "Pressed ESC key"
+      result: "✅ Dialog closed correctly"
+  
+  recordings:
+    screenshot: "spec_003_prototype_view_1768973217959.png"
+    interactions: "prototype_interactions_1768973233044.webp"
+
+# =============================================================================
+# COMPONENT DEPENDENCY ANALYSIS
+# =============================================================================
+
+componentDependencies:
+  
+  description: |
+    Implementation order matters because components depend on each other.
+    This analysis determines the correct build sequence.
+  
+  dependencyGraph:
+    # Level 0: No dependencies (can build first)
+    level0:
+      - component: "CSS Variables"
+        file: "ui/styles/variables.css"
+        status: "✅ DONE (prep work)"
+        note: "Added sidebar-pill-width, sidebar-button-size, sidebar-gap, z-tooltip, z-settings"
+      
+      - component: "Lucide Icons CDN"
+        file: "index.html"
+        status: "pending"
+        note: "Add <script src='https://unpkg.com/lucide@0.562.0'>"
+    
+    # Level 1: Depends on Level 0
+    level1:
+      - component: "Config Arrays"
+        file: "core/constants.js"
+        status: "pending"
+        dependsOn: []
+        provides: ["PAGE_TABS", "PAGE_SIDEBAR_ACTIONS", "SETTINGS_MENU", "SETTINGS_SECTIONS"]
+    
+    # Level 2: Depends on Level 1 (configs)
+    level2:
+      - component: "Page Router"
+        file: "core/page-router.js"
+        status: "pending"
+        dependsOn: ["constants.js (PAGE_TABS)"]
+        provides: ["switchPage()", "initPageRouter()"]
+      
+      - component: "Header Component"
+        file: "ui/components/header/header-ui.js"
+        status: "pending"  
+        dependsOn: ["constants.js (PAGE_TABS)", "Lucide Icons"]
+        provides: ["initHeader()"]
+        note: "Complete rewrite"
+      
+      - component: "Sidebar Component"
+        file: "ui/components/sidebar/sidebar-ui.js"
+        status: "pending"
+        dependsOn: ["constants.js (PAGE_SIDEBAR_ACTIONS)"]
+        provides: ["initSidebar()", "updateSidebarForPage()"]
+        note: "Complete rewrite"
+    
+    # Level 3: Depends on Level 2
+    level3:
+      - component: "Settings Dialog"
+        file: "ui/components/settings/settings-ui.js"
+        status: "pending"
+        dependsOn: ["constants.js (SETTINGS_MENU, SETTINGS_SECTIONS)", "Header (triggers open)"]
+        provides: ["openSettings()", "closeSettings()"]
+        note: "NEW file"
+    
+    # Level 4: Integration
+    level4:
+      - component: "App Integration"
+        file: "core/app.js"
+        status: "pending"
+        dependsOn: ["All above components"]
+        provides: ["Initialize everything"]
+
+# =============================================================================
+# FILES AFFECTED - DETAILED
+# =============================================================================
+
+filesAffected:
+  
+  new:
+    - file: "core/page-router.js"
+      purpose: "Client-side page switching logic"
+      estimatedLines: "~80"
+      complexity: "low"
+    
+    - file: "ui/components/settings/settings-ui.js"
+      purpose: "Settings dialog component"
+      estimatedLines: "~200"
+      complexity: "medium"
+    
+    - file: "ui/components/settings/settings.css"
+      purpose: "Settings dialog styles"
+      estimatedLines: "~150"
+      complexity: "low"
+  
+  modify:
+    - file: "core/constants.js"
+      currentLines: 50
+      changes:
+        - "Add PAGE_TABS config array (~15 lines)"
+        - "Add PAGE_SIDEBAR_ACTIONS config object (~20 lines)"
+        - "Add SETTINGS_MENU config array (~10 lines)"
+        - "Add SETTINGS_SECTIONS config object (~30 lines)"
+        - "Update MODULE_CONTRACT.provides"
+      estimatedNewLines: "~125"
+      complexity: "low"
+    
+    - file: "index.html"
+      currentLines: 79
+      changes:
+        - "Add Lucide Icons CDN script"
+        - "Restructure body for new layout"
+        - "Add page containers"
+        - "Add settings overlay container"
+      estimatedNewLines: "~100"
+      complexity: "medium"
+    
+    - file: "ui/components/header/header-ui.js"
+      currentLines: 117
+      changes:
+        - "COMPLETE REWRITE"
+        - "Logo slot with theme-swappable images"
+        - "Page tabs from config"
+        - "Tab overflow logic"
+        - "AI search box"
+        - "Notification bell"
+        - "Settings button"
+        - "Theme toggle"
+        - "User avatar"
+      estimatedNewLines: "~250"
+      complexity: "high"
+    
+    - file: "ui/components/header/header.css"
+      currentLines: "unknown"
+      changes:
+        - "Major additions for all new header elements"
+        - "Tab styling with overflow"
+        - "Search box styling"
+        - "Action button styling"
+      estimatedNewLines: "~200"
+      complexity: "medium"
+    
+    - file: "ui/components/sidebar/sidebar-ui.js"
+      currentLines: 103
+      changes:
+        - "COMPLETE REWRITE"
+        - "Floating pill design"
+        - "Contextual actions per page"
+        - "Circular button highlights"
+        - "Tooltips on hover"
+        - "Show/hide based on page"
+      estimatedNewLines: "~150"
+      complexity: "high"
+    
+    - file: "ui/components/sidebar/sidebar.css"
+      currentLines: "unknown"
+      changes:
+        - "COMPLETE REWRITE for pill styling"
+        - "Hidden state transition"
+        - "Circular button styles"
+        - "Tooltip positioning"
+      estimatedNewLines: "~100"
+      complexity: "medium"
+    
+    - file: "core/app.js"
+      currentLines: "unknown"
+      changes:
+        - "Import page-router.js"
+        - "Import settings-ui.js"
+        - "Call initPageRouter()"
+        - "Update initSidebar() call"
+      estimatedNewLines: "~10"
+      complexity: "low"
+
+# =============================================================================
+# IMPLEMENTATION RISKS
+# =============================================================================
+
+risks:
+  - id: "RISK-001"
+    area: "Header Complexity"
+    description: "Header has many elements: logo, tabs, overflow, search, actions"
+    probability: "medium"
+    impact: "medium"
+    mitigation: "Build incrementally - start with static elements, add interactivity"
+  
+  - id: "RISK-002"
+    area: "Tab Overflow Logic"
+    description: "Responsive overflow to 'More' menu requires resize observer"
+    probability: "medium"
+    impact: "low"
+    mitigation: "Prototype already has working code - extract and adapt"
+  
+  - id: "RISK-003"
+    area: "Settings Dialog Size"
+    description: "settings-ui.js may exceed 200 lines"
+    probability: "low"
+    impact: "low"
+    mitigation: "Can split into settings-ui.js (dialog) + settings-sections.js (content)"
+  
+  - id: "RISK-004"
+    area: "Sidebar/Page Coordination"
+    description: "Sidebar visibility must sync with page changes"
+    probability: "low"
+    impact: "medium"
+    mitigation: "Page router calls updateSidebarForPage() on every switch"
+
+# =============================================================================
+# RESEARCH FINDINGS SUMMARY
+# =============================================================================
+
+findings:
+  prototypeStatus: "✅ Fully functional - all interactions work"
+  
+  lucideVersion: "0.562.0 (December 2025)"
+  
+  constantsJsStructure: |
+    50 lines, marked @locked (Factory only).
+    Currently exports: APP_NAME, APP_VERSION, ENV, isDev, isProd, CHECKPOINT_PREFIX.
+    Will add: PAGE_TABS, PAGE_SIDEBAR_ACTIONS, SETTINGS_MENU, SETTINGS_SECTIONS.
+  
+  implementationOrder:
+    1: "Lucide Icons CDN + CSS variables (done)"
+    2: "constants.js config arrays"
+    3: "page-router.js"
+    4: "header-ui.js + header.css"
+    5: "sidebar-ui.js + sidebar.css"
+    6: "settings-ui.js + settings.css"
+    7: "app.js integration + index.html updates"
+  
+  estimatedComplexity:
+    total: "~1,200 new/modified lines"
+    highComplexity: ["header-ui.js", "sidebar-ui.js"]
+    mediumComplexity: ["settings-ui.js", "header.css", "sidebar.css", "index.html"]
+    lowComplexity: ["page-router.js", "constants.js", "settings.css", "app.js"]
+
+# =============================================================================
+# COMPLETION CRITERIA
+# =============================================================================
+
+completionCriteria:
+  - "Prototype verified working ✅"
+  - "Lucide version identified ✅"
+  - "Component dependencies mapped ✅"
+  - "Files affected documented ✅"
+  - "Implementation order determined ✅"
+  - "Risks identified ✅"
+
+status: "complete"
+readyFor: "analysis"

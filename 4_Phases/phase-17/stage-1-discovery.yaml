@@ -1,0 +1,74 @@
+metadata:
+  type: "artifact"
+  phase: 17
+  stage: "discovery"
+  name: "Governance Process Improvements"
+  created: "2026-01-19T19:45:29Z"
+  version: "1.0.0"
+
+lifecycle:
+  currentStage: "discovery"
+  status: "complete"
+  nextStage: "research"
+
+humanInterface:
+  checkpointRequired: true
+  nextCheckpoint: "Approve discovery scope before research"
+  context: "Phase 17 initiated to fix process gaps discovered in Phase 16"
+
+# =============================================================================
+# DISCOVERY STAGE
+# =============================================================================
+
+discovery:
+  
+  problemStatement:
+    summary: "Phase 16 revealed process gaps in tracking sync and discovery validation"
+    evidence:
+      - "CURRENT_STATE.yaml had wrong backlog counts (4 vs 8 complete)"
+      - "Discovery stage claimed items 'already done' without verification"
+      - "No checklist for tracking file sync in delivery stage"
+    source: "Phase 16 retrospective"
+  
+  scope:
+    included:
+      - id: "GOV-003"
+        name: "Delivery Stage Tracking Sync"
+        target: "pulse-protocol.yaml"
+        effort: "small"
+        description: "Add mandatory backlog count verification to delivery completionCriteria"
+      
+      - id: "GOV-004"
+        name: "Acceptance Criteria for Backlog"
+        target: "backlog.yaml template section"
+        effort: "small"
+        description: "Add acceptanceCriteria field to backlog item template"
+      
+      - id: "GOV-005"
+        name: "Discovery Validation Rule"
+        target: "pulse-protocol.yaml"
+        effort: "small"
+        description: "Require source-document verification before claiming 'done'"
+      
+      - id: "GOV-006"
+        name: "Governance Is Code Principle"
+        target: "constitution.yaml governanceManagement section"
+        effort: "small"
+        description: "Establish that LEAP governance YAML IS code - no skipping stages"
+        scope: "LEAP_Governance only - does NOT apply to GoldSource"
+    
+    excluded:
+      - "GoldSource changes (per user request)"
+      - "LEAP-007, LEAP-008, LEAP-009 (factory templates - deferred)"
+      - "Any scaffold or demo-output items"
+  
+  targetFiles:
+    - "1_LEAP/1_Governance/constitution.yaml"
+    - "1_LEAP/1_Governance/pulse-protocol.yaml"
+    - "1_LEAP/1_Governance/tracking/backlog.yaml (template section only)"
+
+gateRecord:
+  transition: "none → discovery"
+  timestamp: "2026-01-19T19:45:29Z"
+  authorization: "User requested Phase 17 with GOV-003, GOV-004, GOV-005, GOV-006"
+

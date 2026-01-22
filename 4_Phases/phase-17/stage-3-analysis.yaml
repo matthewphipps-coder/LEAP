@@ -1,0 +1,92 @@
+metadata:
+  type: "artifact"
+  phase: 17
+  stage: "analysis"
+  name: "Governance Process Improvements - Analysis"
+  created: "2026-01-19T20:13:44Z"
+  status: "complete"
+  gateApproval: "Research approved with !Proceed at 2026-01-19T20:11:18Z"
+  previousStage: "stage-2-research.yaml"
+
+lifecycle:
+  currentStage: "analysis"
+  status: "complete"
+  nextStage: "design"
+
+# =============================================================================
+# SCOPE DECISIONS (User confirmed)
+# =============================================================================
+
+scopeDecisions:
+
+  question1:
+    topic: "Should GOV-003 also update session-start.yaml?"
+    decision: "NO - Start with delivery completionCriteria only"
+    rationale: "The drift we caught was end-of-phase, not mid-session"
+    revisit: "If drift happens again, add session-start verification"
+  
+  question2:
+    topic: "Should GOV-006 also appear in new-agent.yaml?"
+    decision: "NO - Add to constitution only"
+    rationale: "Trust agents read constitution. Avoid maintenance burden of duplication"
+
+# =============================================================================
+# FINAL SCOPE
+# =============================================================================
+
+finalScope:
+  files: 3
+  items: 4
+  
+  changes:
+    - id: "GOV-003"
+      file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+      section: "completionCriteria.delivery"
+      action: "Add 'CURRENT_STATE backlog counts verified'"
+      
+    - id: "GOV-004"
+      file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+      section: "howToAdd.template"
+      action: "Add acceptanceCriteria field"
+      
+    - id: "GOV-005"
+      file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+      section: "completionCriteria.discovery"
+      action: "Add 'Already done claims verified against source'"
+      
+    - id: "GOV-006"
+      file: "1_LEAP/1_Governance/constitution.yaml"
+      section: "governanceManagement"
+      action: "Add Governance Is Code principle"
+
+# =============================================================================
+# RISK ASSESSMENT
+# =============================================================================
+
+risks:
+  - id: "RISK-001"
+    name: "Principle not enforced"
+    probability: "medium"
+    impact: "medium"
+    description: "Adding words to constitution doesn't change AI behavior"
+    mitigation: "Principle is explicit; lesson is fresh; we've already demonstrated proper research"
+  
+  - id: "RISK-002"
+    name: "Backlog adoption"
+    probability: "low"
+    impact: "low"
+    description: "Teams might not use acceptanceCriteria field"
+    mitigation: "We used it ourselves in Phase 17 - leading by example"
+
+rrmdDecision:
+  required: false
+  rationale: "3 files, small additive changes, no restructuring"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gateQuestion:
+  stageSummary: "Analysis complete. Scope locked at 3 files, 4 items. No expansion."
+  readyFor: "design"
+  requires: "!Proceed"

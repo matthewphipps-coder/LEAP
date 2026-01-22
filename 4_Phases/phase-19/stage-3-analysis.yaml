@@ -1,0 +1,147 @@
+# =============================================================================
+# PHASE 19: FACTORY TASK TEMPLATE
+# STAGE 3: ANALYSIS
+# =============================================================================
+
+metadata:
+  phase: 19
+  phaseName: "FactoryTaskTemplate"
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-20T13:14:00Z"
+  status: "complete"
+  author: "AI Architect"
+  previousStage: "stage-2-research.yaml"
+
+# =============================================================================
+# ANALYSIS OBJECTIVE
+# =============================================================================
+
+objective: "Assess risks, compare approaches, confirm recommended solution"
+
+# =============================================================================
+# RISK ASSESSMENT
+# =============================================================================
+
+risks:
+
+  - id: "RISK-001"
+    name: "AI ignores template"
+    description: "Factory AI might still create its own task.md instead of using the template"
+    likelihood: "Low"
+    impact: "High (defeats purpose)"
+    mitigation: |
+      Make template use an explicit numbered step in FACTORY_README.yaml firstSteps.
+      AI is very compliant with sequential numbered instructions.
+  
+  - id: "RISK-002"
+    name: "Template too verbose"
+    description: "If template is too long, AI might skim or miss key items"
+    likelihood: "Medium"
+    impact: "Medium"
+    mitigation: |
+      Keep template concise (~100-150 lines).
+      Use clear visual markers (⚠️) for critical compliance items.
+      Fixed items are brief, demo-specific items are placeholders.
+  
+  - id: "RISK-003"
+    name: "AI removes fixed items"
+    description: "AI might delete 'fixed' items when adapting template"
+    likelihood: "Low"
+    impact: "High"
+    mitigation: |
+      Mark fixed items clearly: "⚠️ REQUIRED - do not remove"
+      Separate fixed items from placeholder sections visually.
+  
+  - id: "RISK-004"
+    name: "Template drift over time"
+    description: "As governance evolves, template may become stale"
+    likelihood: "Medium"
+    impact: "Low"
+    mitigation: |
+      Template lives in 2_GoldSource/governance/ alongside other governance files.
+      LEAP can update it when governance changes.
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+
+approachOptions:
+
+  optionA:
+    name: "Full Stage-Scoped Governance (LEAP-033)"
+    description: "8 separate governance files, one per stage (~300 lines each)"
+    pros:
+      - "Comprehensive"
+      - "AI reads relevant stage file at stage entry"
+    cons:
+      - "2,100+ lines of new content"
+      - "Doesn't solve task.md problem (AI still creates own plan)"
+      - "Increases governance debt"
+    verdict: "REJECTED - too heavy, doesn't address root cause"
+  
+  optionB:
+    name: "Enhance existing templates"
+    description: "Add reminders to stage artifact templates"
+    pros:
+      - "No new files"
+      - "Reminders at evidence-creation time"
+    cons:
+      - "Templates are retrospective (evidence), not prospective (plan)"
+      - "AI uses templates at stage END, not stage START"
+      - "Doesn't address task.md problem"
+    verdict: "REJECTED - wrong intervention point"
+  
+  optionC:
+    name: "Factory Task Template"
+    description: "Single task template AI copies at session start, adapts for demo"
+    pros:
+      - "Addresses root cause (bakes requirements into task.md)"
+      - "Single file (~100-150 lines)"
+      - "Leverages AI's natural task.md creation behavior"
+      - "Explicit firstSteps instruction ensures adoption"
+    cons:
+      - "Requires AI to follow instruction to copy/adapt"
+      - "Template might drift from governance"
+    verdict: "RECOMMENDED - best fit for root cause"
+
+# =============================================================================
+# RECOMMENDED APPROACH
+# =============================================================================
+
+recommendedApproach:
+  name: "Option C: Factory Task Template"
+  
+  summary: |
+    Create FACTORY_TASK_TEMPLATE.md with all 8 stages. Each stage has:
+    - Stage objective
+    - Fixed compliance items (with location/naming reminders)
+    - Placeholder section for demo-specific items
+    
+    Update FACTORY_README.yaml firstSteps to include explicit copy/adapt steps.
+  
+  deliverables:
+    - file: "2_GoldSource/governance/FACTORY_TASK_TEMPLATE.md"
+      type: "new"
+      lines: "~100-150"
+    
+    - file: "2_GoldSource/governance/FACTORY_README.yaml"
+      type: "modify"
+      changes: "Add steps 9-10 to firstSteps"
+    
+    - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+      type: "modify"
+      changes: "Mark LEAP-033 as superseded, note other items addressed"
+  
+  backlogImpact:
+    superseded: ["LEAP-033"]
+    addressed: ["LEAP-003", "LEAP-009", "LEAP-019"]
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  focus: "Create detailed implementation plan with exact file contents"
+  requires: "!Proceed"

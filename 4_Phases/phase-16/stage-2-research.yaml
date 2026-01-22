@@ -1,0 +1,170 @@
+metadata:
+  type: "artifact"
+  phase: 16
+  stage: "research"
+  name: "Factory Governance Templates - Research"
+  created: "2026-01-19T18:58:53Z"
+  status: "complete"
+  gateApproval: "Discovery approved with !Proceed at 2026-01-19T18:58:53Z"
+  previousStage: "stage-1-discovery.yaml"
+
+lifecycle:
+  currentStage: "research"
+  status: "complete"
+  nextStage: "analysis"
+
+# =============================================================================
+# RESEARCH OBJECTIVE
+# =============================================================================
+
+researchObjective: "Determine if templates truly enforce consistency or just exist on paper"
+
+# =============================================================================
+# KEY FINDING: Templates Exist But Don't Enforce
+# =============================================================================
+
+keyFinding:
+  summary: "Templates exist but factory runs still produced 30 deviations"
+  evidence:
+    - "v1.0.1 and v1.0.2 both had access to same templates"
+    - "Factory comparison found 30 deviations including 5 critical"
+    - "Templates are 'suggestions' not 'requirements'"
+  
+  rootCause: "Templates lack mandatory fields, validation rules, and enforcement mechanism"
+
+# =============================================================================
+# ITEM-BY-ITEM RESEARCH
+# =============================================================================
+
+itemResearch:
+
+  LEAP001_StageArtifactTemplates:
+    backlogClaim: "Create mandatory YAML templates for each of the 8 factory stages"
+    
+    currentState:
+      templatesExist: true
+      templateLocation: "2_GoldSource/governance/templates/"
+      templateCount: 8
+      templateQuality:
+        stage1_discovery: "49 lines - decent structure"
+        stage2_research: "27 lines - MINIMAL (stub)"
+        stage3_analysis: "30 lines - MINIMAL (stub)"
+        stage4_design: "91 lines - good structure with wireframes"
+        stage5_implementation: "48 lines - reasonable"
+        stage6_validation: "61 lines - good structure"
+        stage7_testing: "59 lines - good but wrong ID format"
+        stage8_closure: "63 lines - good structure"
+    
+    gap: |
+      Templates EXIST but are NOT CONSISTENT:
+      - Stages 2-3 are stubs (27-30 lines) with minimal guidance
+      - No mandatory field enforcement
+      - Section names are not standardized (scaffoldResearch vs scaffoldPatterns)
+      - v1.0.1 used different structures than v1.0.2 despite both using templates
+    
+    verdict: "NEEDS WORK - templates need parity and enforcement"
+    
+    action:
+      - "Expand stage-2-research.yaml to match stage-1/4/6 quality"
+      - "Expand stage-3-analysis.yaml to match stage-1/4/6 quality"
+      - "Standardize section naming across all templates"
+      - "Add mandatory fields list to each template"
+
+  LEAP002_GateApprovalRecording:
+    backlogClaim: "Require gateApproval field in metadata after stage 1"
+    
+    currentState:
+      gateApprovalInTemplates: false
+      evidence:
+        - "Checked all 8 templates - NO gateApproval field in metadata"
+        - "Only 'nextStage.requires: !Proceed' exists (forward-looking)"
+        - "No 'previousStage' reference in post-stage-1 templates"
+    
+    gap: |
+      Critical gap confirmed:
+      - v1.0.1 had no gate approval timestamps (per factory comparison DEV-001)
+      - v1.0.2 added them manually, but template doesn't require them
+      - mandatoryMetadataTemplate in factory-comparison.yaml shows what's needed
+    
+    verdict: "CONFIRMED NEEDED - must add gateApproval + previousStage to templates"
+    
+    action:
+      - "Add gateApproval field to metadata in stages 2-8"
+      - "Add previousStage field to metadata in stages 2-8"
+      - "Reference factory-comparison mandatoryMetadataTemplate"
+
+  LEAP005_WireframesInDesign:
+    backlogClaim: "Make wireframes mandatory for UI features in stage 4"
+    
+    currentState:
+      sectionExists: true
+      templateLines: "17-25 in stage-4-design.yaml"
+      currentContent: |
+        wireframes:
+          requirement: "Generate wireframe images for any new UI elements"
+          tool: "AI image generation"
+          saveLocation: "Factory workspace (not demo output)"
+          images:
+            - name: "[feature-name]-wireframe.png"
+              description: "[What it shows]"
+    
+    gap: |
+      Section exists but:
+      - Not marked as MANDATORY vs optional
+      - v1.0.1 skipped wireframes entirely (per comparison DEV-004.stage4)
+      - No enforcement - template says "requirement" but it's in a placeholder
+    
+    verdict: "NEEDS STRENGTHENING - add mandatory marker and checklist"
+    
+    action:
+      - "Add 'mandatory: true' or 'required: true' flag"
+      - "Add wireframe checklist to traceabilityReview"
+      - "Clarify when wireframes are required (UI changes) vs not (backend only)"
+
+  LEAP006_TestCaseIDFormat:
+    backlogClaim: "Use consistent TC-001 format for test case IDs"
+    
+    currentState:
+      currentFormat: "TEST-001 and EDGE-001 (in template)"
+      v101Format: "T1 - Page Load"
+      v102Format: "TC-001: Dashboard Load"
+      templateUsed: "Neither - template uses TEST-001/EDGE-001"
+    
+    gap: |
+      THREE different formats observed:
+      - Template: TEST-001, EDGE-001
+      - v1.0.1: T1, T2, T3...
+      - v1.0.2: TC-001, TC-002...
+      Template itself doesn't match the TC-001 recommendation!
+    
+    verdict: "CONFIRMED NEEDED - standardize to TC-001 in template"
+    
+    action:
+      - "Change TEST-001 to TC-001 in stage-7-testing.yaml"
+      - "Change EDGE-001 to TC-101 or similar for edge cases"
+      - "Document format convention in template comments"
+
+# =============================================================================
+# RESEARCH CONCLUSION
+# =============================================================================
+
+researchConclusion:
+  summary: "All 4 items require action - user's skepticism was correct"
+  
+  revised_assessment:
+    LEAP001: "NEEDS WORK - 2 templates are stubs, no enforcement"
+    LEAP002: "CONFIRMED NEEDED - gateApproval field missing from all templates"
+    LEAP005: "NEEDS STRENGTHENING - section exists but not mandatory"
+    LEAP006: "CONFIRMED NEEDED - template uses wrong format"
+  
+  nextStage: "analysis"
+  nextStageGoal: "Risk assessment and approach options for fixes"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gateQuestion:
+  stageSummary: "Research confirms all 4 items need work. Templates exist but don't enforce."
+  readyFor: "analysis"
+  requires: "!Proceed"

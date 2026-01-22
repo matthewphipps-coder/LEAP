@@ -1,0 +1,161 @@
+# =============================================================================
+# STAGE 4: DESIGN - Governance Consolidation
+# =============================================================================
+
+metadata:
+  phase: 28
+  stage: 4
+  stageName: "design"
+  created: "2026-01-21T23:11:00Z"
+  lastUpdated: "2026-01-21T23:24:00Z"
+  status: "in-progress"
+  previousStage: "4_Phases/phase-28/stage-3-analysis.yaml"
+
+# =============================================================================
+# FACTORYTESTING FOLDER STRUCTURE (AGREED)
+# =============================================================================
+
+factoryTestingStructure:
+  description: "Self-contained folder for factory testing process"
+  
+  files:
+    - file: "INDEX.yaml"
+      type: "index"
+      purpose: "Directory index explaining each file"
+    
+    - file: "initiate-factory.yaml"
+      type: "workflow"
+      purpose: "How to start a factory run (copy GoldSource, generate prompt)"
+    
+    - file: "review-factory.yaml"
+      type: "workflow"
+      purpose: "How to run an inspection (locate → use guide → create report)"
+    
+    - file: "inspection-guide.yaml"
+      type: "guide"
+      purpose: "What specifically to check (locked files, naming, extensions, stages)"
+    
+    - file: "deviation-report.yaml"
+      type: "template"
+      purpose: "Where to record findings (rule, expected, actual, evidence)"
+  
+  folders:
+    - folder: "prompts/"
+      purpose: "Saved onboarding prompts for repeatability"
+    
+    - folder: "results/"
+      purpose: "Completed deviation reports from inspections"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PART 1: FOLDER SETUP
+# -----------------------------------------------------------------------------
+
+part1_folderSetup:
+
+  step1_renameArchive:
+    action: "Rename FactoryTestRuns → FactoryTestRuns_ARCHIVE"
+    command: "mv FactoryTestRuns FactoryTestRuns_ARCHIVE"
+  
+  step2_updateBacklogRefs:
+    action: "Update backlog.yaml references"
+    file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    find: "FactoryTestRuns/"
+    replace: "FactoryTestRuns_ARCHIVE/"
+    expectedChanges: "30+ occurrences"
+  
+  step3_createFactoryTesting:
+    action: "Create 3_FactoryTesting/ structure"
+    commands:
+      - "mkdir -p 3_FactoryTesting/prompts"
+      - "mkdir -p 3_FactoryTesting/results"
+  
+  step4_moveAndRenameWorkflows:
+    action: "Move workflow files to 3_FactoryTesting/"
+    moves:
+      - from: "1_LEAP/1_Governance/newfactory-workflow.yaml"
+        to: "3_FactoryTesting/initiate-factory.yaml"
+      - from: "1_LEAP/1_Governance/factory-review-workflow.yaml"
+        to: "3_FactoryTesting/review-factory.yaml"
+  
+  step5_createNewFiles:
+    action: "Create new files, delete old templates"
+    creates:
+      - "3_FactoryTesting/INDEX.yaml"
+      - "3_FactoryTesting/inspection-guide.yaml"
+      - "3_FactoryTesting/deviation-report.yaml"
+    deletes:
+      - "1_LEAP/1_Governance/templates/factory-comparison.yaml"
+      - "1_LEAP/1_Governance/templates/demo-output-comparison.yaml"
+  
+  step6_moveRunsHistory:
+    action: "Move factoryRunsCompleted from CURRENT_STATE to 3_FactoryTesting/INDEX.yaml"
+    from: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml (factoryRunsCompleted section)"
+    to: "3_FactoryTesting/INDEX.yaml"
+    note: "Workflows (initiate-factory, review-factory) will reference/update this"
+  
+  step7_updateAllRefs:
+    action: "Update ALL files mentioning factory"
+    files:
+      - file: "1_LEAP/1_Governance/INDEX.yaml"
+        changes:
+          - "newFactory → 3_FactoryTesting/initiate-factory.yaml"
+          - "factoryReview → 3_FactoryTesting/review-factory.yaml"
+          - "factoryTestRuns location → 3_FactoryTesting/"
+      
+      - file: "1_LEAP/1_Governance/constitution.yaml"
+        changes:
+          - "line 25 → 3_FactoryTesting/initiate-factory.yaml"
+          - "line 26 → 3_FactoryTesting/review-factory.yaml"
+      
+      - file: "ARCHITECTURE.yaml"
+        changes:
+          - "line 107 → 3_FactoryTesting/initiate-factory.yaml"
+      
+      - file: "1_LEAP/1_Governance/tracking/VISION.yaml"
+        changes:
+          - "line 60 → 3_FactoryTesting/review-factory.yaml"
+      
+      - file: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+        changes:
+          - "line 45 impactArea → 3_FactoryTesting/"
+      
+      - file: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+        changes:
+          - "Remove factoryRunsCompleted section (moved to 3_FactoryTesting/INDEX.yaml)"
+          - "Add reference: see 3_FactoryTesting/INDEX.yaml for run history"
+
+# -----------------------------------------------------------------------------
+# PART 2: FILE MERGES
+# -----------------------------------------------------------------------------
+
+part2_fileMerges:
+
+  step8_mergePeerReview:
+    action: "Merge PEER_REVIEW_CHECKLIST → agent-persona.yaml"
+    source: "1_LEAP/1_Governance/PEER_REVIEW_CHECKLIST.yaml"
+    target: "1_LEAP/1_Governance/agent-persona.yaml"
+    afterMerge: "Delete PEER_REVIEW_CHECKLIST.yaml"
+  
+  step9_createOnboardProtocol:
+    action: "Create ai-onboard-protocol.yaml from new-agent + session-start"
+    sources:
+      - "1_LEAP/1_Governance/checklists/new-agent.yaml"
+      - "1_LEAP/1_Governance/checklists/session-start.yaml"
+    target: "1_LEAP/1_Governance/ai-onboard-protocol.yaml"
+    type: "protocol (like bump-protocol, rrmd-protocol)"
+    afterMerge: "Delete new-agent.yaml and session-start.yaml"
+  
+  step10_finalRefUpdates:
+    action: "Update INDEX.yaml for merged/moved files"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gate:
+  question: "Design acceptable? Ready for Implementation?"
+  requires: "!Proceed"

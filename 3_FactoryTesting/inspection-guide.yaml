@@ -1,0 +1,88 @@
+# =============================================================================
+# FACTORY INSPECTION GUIDE
+# =============================================================================
+
+metadata:
+  name: "Factory Inspection Guide"
+  purpose: "What specifically to check when reviewing a factory run"
+  usedBy: "review-factory.yaml"
+
+# =============================================================================
+# INSPECTION CHECKLIST
+# =============================================================================
+
+inspectionChecklist:
+
+  1_lockedFiles:
+    name: "Locked Files Check"
+    purpose: "Verify locked files were NOT modified"
+    files:
+      - "core/state.js"
+      - "core/firebase.js"
+      - "core/constants.js"
+      - "core/logger.js"
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+    check: "Compare hash or content against GoldSource"
+    deviation: "CRITICAL if any locked file was modified"
+  
+  2_namingConventions:
+    name: "Naming Conventions Check"
+    purpose: "Verify naming matches GoldSource patterns"
+    patterns:
+      - pattern: "features/{singular}/ not {plural}/"
+        example: "features/incident/ not features/incidents/"
+      - pattern: "components: {name}-ui.js + {name}.css"
+        example: "incident-ui.js + incident.css"
+      - pattern: "services: {feature}-service.js"
+        example: "incident-service.js"
+    reference: "2_GoldSource/meta/architectural-standards.yaml pathNaming"
+    deviation: "HIGH if naming doesn't match patterns"
+  
+  3_extensionPoints:
+    name: "Extension Points Check"
+    purpose: "Verify Factory used correct extension mechanisms"
+    checks:
+      - "registerStateSlice() used for new state"
+      - "registerPage() used for new pages"
+      - "Settings extended properly"
+      - "Sidebar actions added correctly"
+    reference: "2_GoldSource/meta/archetype.yaml"
+    deviation: "HIGH if extension pattern not followed"
+  
+  4_stageArtifacts:
+    name: "Stage Artifacts Check"
+    purpose: "Verify all 8 stages have artifacts"
+    stages:
+      - "stage-1-discovery.yaml"
+      - "stage-2-research.yaml"
+      - "stage-3-analysis.yaml"
+      - "stage-4-design.yaml"
+      - "stage-5-implementation.yaml"
+      - "stage-6-validation.yaml"
+      - "stage-7-delivery.yaml"
+      - "stage-8-closure.yaml"
+    deviation: "HIGH if any stage artifact missing"
+  
+  5_gateRecords:
+    name: "Gate Records Check"
+    purpose: "Verify !Proceed gates were respected"
+    check: "Each stage transition has gate record"
+    deviation: "MEDIUM if gates skipped"
+  
+  6_documentation:
+    name: "Documentation Check"
+    purpose: "Verify required docs exist"
+    required:
+      - "README.md in demo output"
+      - "functionality.yaml in demo output"
+    deviation: "MEDIUM if docs missing"
+
+# =============================================================================
+# HOW TO USE
+# =============================================================================
+
+usage:
+  - "Run through each checklist item"
+  - "For each deviation found, record in deviation-report.yaml"
+  - "Present each deviation to user for decision"

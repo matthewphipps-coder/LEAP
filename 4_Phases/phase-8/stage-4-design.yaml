@@ -1,0 +1,54 @@
+metadata:
+  phase: 8
+  stage: 4
+  name: "design"
+  status: "complete"
+  date: "2026-01-19"
+
+implementationPlan:
+  approach: "Rewrite file with trimmed content (cleaner than editing)"
+  
+  newStructure:
+    - section: "metadata"
+      targetLines: 10
+    - section: "philosophy"
+      targetLines: 10
+    - section: "lifecycleStages"
+      targetLines: 35
+    - section: "phaseStartProtocol"
+      targetLines: 25
+    - section: "stateManagement"
+      targetLines: 18
+    - section: "stageTransitions"
+      targetLines: 80
+      changes:
+        - "Rule + gates list"
+        - "Reference checklist instead of examples"
+        - "CompletionCriteria as lists only"
+    - section: "gateRecords"
+      targetLines: 30
+    - section: "completionDefinition"
+      targetLines: 16
+    - section: "phaseClosure"
+      targetLines: 40
+    - section: "stageArtifacts"
+      targetLines: 35
+  
+  totalTarget: 300
+
+keyChanges:
+  - "Remove all good/bad example patterns"
+  - "Remove safetyProtocols, rulesOfEngagement, continuousSafety"
+  - "Reference checklists instead of duplicating rules"
+  - "Keep completion criteria as lists only"
+
+filesToModify:
+  - "1_LEAP/1_Governance/pulse-protocol.yaml (rewrite)"
+
+successCriteria:
+  - "File is ~300 lines"
+  - "Core content preserved"
+  - "References checklists for enforcement"
+  - "No duplicate content with other files"
+
+nextStage: "implementation"

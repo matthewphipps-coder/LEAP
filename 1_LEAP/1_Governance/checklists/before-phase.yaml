@@ -1,0 +1,29 @@
+# BEFORE PHASE START CHECKLIST
+# Complete before beginning any new phase
+
+metadata:
+  purpose: "Ensure proper phase initialization"
+  enforcement: "MANDATORY for all phases"
+
+checklist:
+  - step: 1
+    action: "Confirm phase name and goal with user"
+    question: "Are we starting Phase X: [name]?"
+    
+  - step: 2
+    action: "Start at Stage 1 (Discovery)"
+    warning: "NEVER skip to Implementation"
+    
+  - step: 3
+    action: "Update CURRENT_STATE.yaml"
+    requires: "!Proceed for this file operation"
+    
+  - step: 4
+    action: "Create phase directory"
+    location: "4_Phases/phase-X/"
+
+stages:
+  sequence: "discovery → research → analysis → design → implementation → validation → delivery → closure"
+  gates: "All transitions require !Proceed"
+
+fullRule: "pulse-protocol.yaml lifecycleStages"
