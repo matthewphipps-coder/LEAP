@@ -38,8 +38,16 @@ tracking:
   backlogCategories: "tracking/backlog-categories.yaml"
   bugs: "tracking/bugs.yaml"
 
-# Factory testing (at LEAP root, not in LEAP_Governance)
+# Factory testing (at LEAP root, not in 1_Governance)
 factoryTesting:
   location: "3_FactoryTesting/"
   purpose: "Factory workflows, inspection guides, and results"
   index: "3_FactoryTesting/INDEX.yaml"
+
+# Folder structure (for orientation)
+folderStructure:
+  1_LEAP: "Governance rules & build specifications"
+  2_GoldSource: "Master scaffold (self-contained)"
+  3_FactoryTesting: "Factory workflows & inspection"
+  4_Phases: "Phase history & artifacts"
+  X_Archives: "Old backups (GoldSource_Backup, FactoryTestRuns)"

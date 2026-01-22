@@ -102,6 +102,6 @@ usage:
     - "Use as north star for feature prioritization"
 
 references:
-  architecture: "ARCHITECTURE.yaml (system structure)"
-  functionality: "functionality.yaml (what exists, including Scenario Architect)"
+  folderStructure: "INDEX.yaml (folder map)"
+  functionality: "functionality.yaml (what exists)"
   currentState: "CURRENT_STATE.yaml (where we are now)"
