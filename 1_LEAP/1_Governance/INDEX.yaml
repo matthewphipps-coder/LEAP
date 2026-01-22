@@ -34,15 +34,29 @@ workflows:
 # Tracking references
 tracking:
   currentState: "tracking/CURRENT_STATE.yaml"
+  vision: "tracking/VISION.yaml"
   backlog: "tracking/backlog.yaml"
   backlogCategories: "tracking/backlog-categories.yaml"
   bugs: "tracking/bugs.yaml"
+
+# Templates for creating governance artifacts
+templates:
+  gateRecord: "templates/gate-record-template.yaml"
+  governance: "templates/governance.yaml"
+  phaseArtifact: "templates/phase-artifact.yaml"
+  workflow: "templates/workflow.yaml"
 
 # Factory testing (at LEAP root, not in 1_Governance)
 factoryTesting:
   location: "3_FactoryTesting/"
   purpose: "Factory workflows, inspection guides, and results"
   index: "3_FactoryTesting/INDEX.yaml"
+
+# Build specifications (functional specs for GoldSource)
+buildSpecs:
+  location: "2_Build_GoldSource/"
+  purpose: "Detailed functional specs for scaffold features"
+  specs: "2_Build_GoldSource/Functional_Specs/"
 
 # Folder structure (for orientation)
 folderStructure:
