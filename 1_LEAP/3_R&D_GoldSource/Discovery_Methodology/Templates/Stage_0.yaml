@@ -1,0 +1,19 @@
+stage: 0
+title: "Validate"
+status: pending
+governance:
+  check: "Sanity Gate"
+  drift_management: "REQUIRED: Audit against GoldSource baseline"
+  socratic_check: "Am I making any assumptions about GoldSource that I haven't verified?"
+objectives:
+  - "Final verification of assumptions and safety"
+  - "Formal Spec-Lock and handoff to Build"
+checklist:
+  - [ ] Drift Check: Verified GoldSource hasn't changed since Stage -5 audit
+  - [ ] Safety Check: Confirmed no pattern breakage or performance regressions
+  - [ ] Assumption Check: Verified existence of all assumed GoldSource hooks/APIs
+  - [ ] AI asked if there is anything missing
+  - [ ] Standalone !Proceed (Spec-Lock) received
+outputs:
+  - "SPEC-XXX.yaml (Final/Locked)"
+  - "discovery-phase-agreement.yaml (Updated)"

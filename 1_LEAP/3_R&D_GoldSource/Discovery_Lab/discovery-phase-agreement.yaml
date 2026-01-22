@@ -1,0 +1,47 @@
+# Discovery Phase Agreement: Spec Protocol
+
+agreement_id: DISCO-2026-001
+topic: Stage -5 (Ideation) Lock-in
+date: 2026-01-22
+status: PARTIAL_LOCK (Stage -5 only)
+
+## 🔒 Locked Decisions
+
+### 1. Stage -6: The DreamBig Idea!
+- The starting point of every discovery.
+- **Requirement**: The user provides a few sentences of their "Big Idea" vs technical requirements.
+
+### 2. Stage -5: Divergent Research & Ideation
+- This is a **Divergent** step focused on expansion rather than narrowing.
+- **Goal**: AI-driven web research and brainstorming to expand the problem space.
+
+### 3. Stage -4: Convergence & Scoping
+- This is a **Convergent** step.
+- **Goal**: Condense the Stage -5 output into a "Bold but Manageable" scope.
+- **Governance Patch (Anti-Fatigue)**: A forced breakpoint is recommended here to reset context window and combat human fatigue.
+
+### 4. Stage -3: Analysis & Risk
+- **Goal**: Thoroughly research bold ideas from every aspect (Technical, Risk, Feasibility).
+
+### 5. Stage -2: Define & Document
+- **Goal**: Utilize various methodologies (User Stories, Design Thinking, Diagrams) to formalize the research findings into a documented design.
+
+### 6. Stage -1: Functional Spec & Supporting Artifacts
+- **Goal**: Create the definitive `SPEC-XXX.yaml` and any prototypes or diagrams.
+- **Principle**: Provide exactly what the GoldSource build methodology needs—neither too vague nor too verbose.
+
+### 7. Stage 0: Validate
+- **Goal**: Perform a final sanity check before passing to the build phase.
+- **Governance Patch (Drift Management)**: MUST include an audit of current GoldSource files to ensure no "spec-drift" has occurred during the discovery period.
+- **Verification**:
+  - **No Assumptions**: Confirm we haven't assumed functionality exists in GoldSource that doesn't.
+  - **Safety**: Ensure proposed changes won't obviously break existing GoldSource patterns.
+  - **Readiness**: Confirm the spec is the "right thing" for the build phase.
+
+### 7. Persistent Logging
+- Every session MUST maintain a `DISCOVERY_LOG.md` in the `Discovery_Lab`.
+- This file serves as the AI's external context memory to prevent data loss.
+
+---
+// Approved by: USER
+// Codified by: Antigravity

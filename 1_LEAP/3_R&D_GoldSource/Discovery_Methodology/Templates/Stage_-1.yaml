@@ -1,0 +1,18 @@
+stage: -1
+title: "Functional Spec & Supporting Artifacts"
+status: pending
+governance:
+  standard: "Neither vague nor verbose"
+  socratic_check: "Does this provide everything needed for a Stage 5 Implementation?"
+objectives:
+  - "Author the definitive Functional Specification"
+  - "Create any necessary high-fidelity prototypes"
+checklist:
+  - [ ] Drafted SPEC-XXX.yaml with all Functional Requirements
+  - [ ] (Optional) Created prototype.html if requested/Type A
+  - [ ] Ensured spec aligns with GoldSource Triad patterns
+  - [ ] AI asked if there is anything missing
+  - [ ] Standalone !Proceed to move to Validation
+outputs:
+  - "SPEC-XXX.yaml (draft)"
+  - "prototype.html (optional)"
