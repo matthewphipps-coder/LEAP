@@ -20,7 +20,7 @@ checklist:
     
   - step: 4
     action: "Create phase directory"
-    location: "docs/phases/phase-X/"
+    location: "Phases/phase-X/"
 
 stages:
   sequence: "discovery → research → analysis → design → implementation → validation → delivery → closure"

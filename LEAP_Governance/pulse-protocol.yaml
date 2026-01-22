@@ -123,7 +123,7 @@ stageTransitions:
 
 gateRecords:
   purpose: "Audit trail for external compliance verification"
-  location: "docs/phases/phase-X/gate-records/"
+  location: "Phases/phase-X/gate-records/"
   naming: "gate-stage-N-to-N+1.yaml"
   
   contents:
@@ -178,7 +178,7 @@ phaseClosure:
 
 stageArtifacts:
   purpose: "Enable safe AI handoff between lifecycle stages"
-  location: "docs/phases/phase-{X}/"
+  location: "Phases/phase-{X}/"
   naming: "stage-{N}-{name}.yaml"
   
   requiredStages:

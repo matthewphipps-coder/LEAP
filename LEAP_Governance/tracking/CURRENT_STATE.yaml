@@ -41,7 +41,7 @@ currentPhase:
     status: "closed-incomplete"
     closedDate: "2026-01-21T22:58:00Z"
     note: "Partial completion - closed early due to collaboration breakdown"
-    closure: "docs/phases/phase-27/stage-8-closure.yaml"
+    closure: "Phases/phase-27/stage-8-closure.yaml"
 
 currentActivity:
   status: "closure"

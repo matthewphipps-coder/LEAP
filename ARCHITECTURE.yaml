@@ -62,9 +62,9 @@ folderStructure:
     architectureRef: "GoldSource/meta/ARCHITECTURE.yaml"
   
   docs:
-    path: "docs/"
+    path: "Phases/"
     purpose: "Phase history and artifacts"
-    structure: "docs/phases/phase-N/*.yaml"
+    structure: "Phases/phase-N/*.yaml"
 
 # =============================================================================
 # LIFECYCLE

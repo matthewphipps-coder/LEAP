@@ -1,0 +1,57 @@
+# =============================================================================
+# STAGE 2: RESEARCH - Governance Consolidation
+# =============================================================================
+
+metadata:
+  phase: 28
+  stage: 2
+  stageName: "research"
+  created: "2026-01-21T23:05:00Z"
+  status: "in-progress"
+  previousStage: "Phases/phase-28/stage-1-discovery.yaml"
+
+# =============================================================================
+# RESEARCH FROM PHASE 27 (Already Done)
+# =============================================================================
+
+priorResearch:
+  source: "Phases/phase-27/stage-2-research.yaml"
+  
+  folderReferences:
+    FactoryTestRuns: "50+ occurrences"
+    newfactory-workflow: "28 occurrences"
+    factory-review-workflow: "16 occurrences"
+  
+  keyFilesToUpdate:
+    - "INDEX.yaml (lines 32, 33, 43, 44)"
+    - "constitution.yaml (lines 25, 26)"
+    - "ARCHITECTURE.yaml (line 107)"
+    - "VISION.yaml (line 60)"
+    - "backlog-categories.yaml (line 45)"
+    - "backlog.yaml (30+ refs)"
+
+# =============================================================================
+# RESEARCH QUESTIONS
+# =============================================================================
+
+researchQuestions:
+
+  1_onboardingMerge:
+    question: "What content from new-agent + session-start should be preserved?"
+    status: "prior-research-sufficient"
+    note: "Will review proposal together in Design stage"
+  
+  2_peerReviewMerge:
+    question: "What content from PEER_REVIEW_CHECKLIST should go into agent-persona?"
+    status: "prior-research-sufficient"
+    note: "Will review proposal together in Design stage"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gate:
+  status: "complete"
+  completedDate: "2026-01-21T23:07:00Z"
+  question: "Research complete - ready for Analysis?"
+  requires: "!Proceed"

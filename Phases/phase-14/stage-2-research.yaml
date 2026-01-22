@@ -1,0 +1,236 @@
+metadata:
+  type: "stage-artifact"
+  phase: 14
+  phaseName: "Factory Vision Alignment"
+  stage: 2
+  stageName: "research"
+  created: "2026-01-19T11:37:00Z"
+  completedDate: "2026-01-19T11:46:00Z"
+  status: "complete"
+  previousStage: "Phases/phase-14/stage-1-discovery.yaml"
+
+researchObjective: "Determine exact folder structure, Gold Source contents, and restructuring plan"
+
+# =============================================================================
+# CURRENT STATE ANALYSIS
+# =============================================================================
+
+currentState:
+  
+  leapRootContents:
+    - "ARCHITECTURE.yaml - Playing field description"
+    - "DemoFactory/ - Contains scaffold (SHOULD BE GoldSource/)"
+    - "DemoFactoryResources/ - Standards and functionality.yaml"
+    - "LEAP_Governance/ - LEAP governance docs"
+    - "Tracking/ - CURRENT_STATE.yaml etc"
+    - "docs/ - Phase documentation"
+    - "templates/ - Various templates"
+  
+  demoFactoryContents:
+    location: "DemoFactory/src/"
+    fileCount: 22
+    structure:
+      core:
+        - "app.js - Orchestrator"
+        - "state.js - StateManager"
+        - "logger.js - Logging"
+        - "error-handler.js - Error handling"
+        - "mock-data.js - Mock data"
+      ui:
+        styles: ["variables.css", "base.css", "shell.css"]
+        components:
+          locked: ["header/", "nav/", "footer/"]
+          flexible: ["chat-panel/", "data-cards/", "action-buttons/"]
+      features:
+        - "dashboard/dashboard-service.js"
+      entry:
+        - "index.html"
+  
+  demoFactoryResourcesContents:
+    location: "DemoFactoryResources/"
+    files:
+      - "architectural-standards.yaml (12.9KB) - Code standards, patterns"
+      - "functionality.yaml (624B) - What exists"
+
+# =============================================================================
+# GOLD SOURCE REQUIREMENTS
+# =============================================================================
+
+goldSourceRequirements:
+  
+  principle: "Gold Source must contain EVERYTHING the factory needs to be successful"
+  
+  mustInclude:
+    code:
+      - "Scaffold (core locked components)"
+      - "Archetypes (UI patterns)"
+      - "Entry point (index.html)"
+    
+    metadata:
+      - "ARCHITECTURE.yaml (DUPLICATED - factory unaware of LEAP)"
+      - "architectural-standards.yaml (rules)"
+      - "functionality.yaml (what exists)"
+    
+    factoryInstructions:
+      - "FACTORY_README.yaml (how factory should operate)"
+      - "Factory CURRENT_STATE template (for demo tracking)"
+      - "Demo location + naming configuration"
+    
+    governance:
+      - "Stage definitions (identical to LEAP)"
+      - "Gate requirements (!Proceed at each stage)"
+
+# =============================================================================
+# FACTORY GOVERNANCE (SELF-CONTAINED GOLD COPY)
+# =============================================================================
+
+factoryGovernance:
+  
+  principle: |
+    Factory governance is a simplified, self-contained copy of LEAP governance.
+    Just enough for demo creation, nothing more.
+    Factory must not be aware of LEAP.
+  
+  structure:
+    folder: "GoldSource/governance/"
+    contents:
+      - file: "FACTORY_README.yaml"
+        purpose: "Entry point - what the factory is and how it works"
+      - file: "factory-protocol.yaml"
+        purpose: "How factory operates (adapted from pulse-protocol)"
+      - file: "lifecycle-stages.yaml"
+        purpose: "8 stages with gate definitions"
+      - file: "demo-rules.yaml"
+        purpose: "What demos can/cannot do for consistency"
+      - folder: "templates/"
+        purpose: "Stage artifact templates and CURRENT_STATE template"
+  
+  mappingFromLeap:
+    leapSource: "pulse-protocol.yaml"
+    factoryVersion: "factory-protocol.yaml (simplified)"
+    
+    leapSource: "rrmd-lifecycle.yaml"
+    factoryVersion: "lifecycle-stages.yaml (identical stages)"
+    
+    leapSource: "Stage templates"
+    factoryVersion: "templates/ folder (simplified for demos)"
+  
+  notNeeded:
+    - "constitution.yaml (factory is simpler)"
+    - "backlog.yaml (not needed for single demo)"
+    - "Phase management (demos don't have phases)"
+  
+  demoNaming:
+    pattern: "NEXUS vx.x.x-feature"
+    example: "NEXUS v1.0.0-itsm-dashboard"
+
+# =============================================================================
+# PROPOSED STRUCTURE
+# =============================================================================
+
+proposedStructure:
+  
+  option1_inLeap:
+    description: "Rename DemoFactory → GoldSource within LEAP"
+    structure: |
+      /LEAP/
+      ├── GoldSource/                    # Renamed from DemoFactory
+      │   ├── scaffold/                  # Move from src/
+      │   │   ├── core/
+      │   │   ├── ui/
+      │   │   └── features/
+      │   ├── archetypes/
+      │   │   └── agentic-dashboard/     # Template descriptor
+      │   ├── meta/                      # Factory metadata
+      │   │   ├── ARCHITECTURE.yaml      # Copy
+      │   │   ├── architectural-standards.yaml
+      │   │   ├── functionality.yaml
+      │   │   └── FACTORY_README.yaml    # NEW
+      │   └── templates/
+      │       └── CURRENT_STATE.yaml     # Template for demos
+      ├── DemoFactoryResources/          # Remove (absorbed into GoldSource)
+      └── ... (rest of LEAP unchanged)
+    
+    pros:
+      - "Clear naming (GoldSource = master copy)"
+      - "Single location for all factory needs"
+      - "DemoFactoryResources absorbed"
+    cons:
+      - "Requires renaming existing folder"
+      - "ARCHITECTURE.yaml duplication (or symlink?)"
+
+  option2_separateFolders:
+    description: "Keep structure but add factory metadata"
+    structure: |
+      /LEAP/
+      ├── DemoFactory/                   # Keep name
+      │   ├── src/                       # Scaffold (unchanged)
+      │   └── meta/                      # NEW
+      │       ├── FACTORY_README.yaml
+      │       └── CURRENT_STATE.template.yaml
+      ├── DemoFactoryResources/          # Keep (standards)
+      └── ...
+    
+    pros:
+      - "Minimal changes"
+      - "Keeps current structure"
+    cons:
+      - "Name 'DemoFactory' confusing (is it the factory or the gold source?)"
+      - "Gold Source spread across multiple folders"
+
+# =============================================================================
+# RESEARCH QUESTIONS ANSWERED
+# =============================================================================
+
+questionsAnswered:
+  
+  q1_folderStructure:
+    question: "Exact folder structure for GoldSource?"
+    answer: "Option 1 preferred - consolidate into single GoldSource/"
+    rationale: "Single source of truth, clear naming, factory is self-contained"
+  
+  q2_archetypePackaging:
+    question: "How should archetypes be packaged?"
+    answer: "Folder per archetype with manifest"
+    structure: |
+      GoldSource/archetypes/
+      ├── agentic-dashboard/
+      │   ├── archetype.yaml       # Manifest (name, description, components)
+      │   ├── components/          # Archetype-specific components
+      │   └── preview.png          # Optional preview image
+      └── [future-archetype]/
+  
+  q3_demoLocation:
+    question: "Where should demo instances be created?"
+    answer: "User-specified, but OUTSIDE /LEAP/"
+    default: "Sibling to LEAP or user's Documents folder"
+    example: "~/Documents/DemoInstances/[demo-name]/"
+  
+  q4_factoryEngine:
+    question: "What does the factory engine look like?"
+    answer: "Self-contained in Gold Source"
+    mechanism: |
+      1. FACTORY_README.yaml contains instructions for Factory AI
+      2. Factory AI reads this on session start
+      3. Instructions guide AI through 8 stages
+      4. No CLI needed - AI is the engine
+
+# =============================================================================
+# REMAINING QUESTIONS
+# =============================================================================
+
+remainingQuestions:
+  
+  - "Should ARCHITECTURE.yaml be duplicated or referenced?"
+  - "What exactly goes in FACTORY_README.yaml?"
+  - "How is demo naming handled (user input? auto-generated?)?"
+  - "What tracking exists in the demo instance folder?"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "analysis"
+  requires: "!Proceed"
+  focus: "Finalize structure decision and define FACTORY_README.yaml contents"

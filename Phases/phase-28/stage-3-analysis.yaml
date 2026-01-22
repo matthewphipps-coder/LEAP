@@ -1,0 +1,90 @@
+# =============================================================================
+# STAGE 3: ANALYSIS - Governance Consolidation
+# =============================================================================
+
+metadata:
+  phase: 28
+  stage: 3
+  stageName: "analysis"
+  created: "2026-01-21T23:08:00Z"
+  status: "in-progress"
+  previousStage: "Phases/phase-28/stage-2-research.yaml"
+
+# =============================================================================
+# RISK ASSESSMENT
+# =============================================================================
+
+riskAssessment:
+
+  1_folderRename:
+    action: "Rename FactoryTestRuns → FactoryTestRuns_ARCHIVE"
+    risk: "Low"
+    reason: "Simple rename, no content modification"
+    mitigation: "Update backlog.yaml refs in same operation"
+  
+  2_newFolderCreation:
+    action: "Create FactoryTesting/ structure"
+    risk: "Low"
+    reason: "New folder, no existing content affected"
+    mitigation: "None needed"
+  
+  3_fileMoves:
+    action: "Move workflows + templates to FactoryTesting/"
+    risk: "Medium"
+    reason: "Multiple references will break if not updated"
+    mitigation: "Update all refs identified in research before moving"
+  
+  4_fileMerges:
+    action: "Merge governance files"
+    risk: "Medium"
+    reason: "Content consolidation requires careful review"
+    mitigation: "Present merged content for user review before applying"
+  
+  5_referenceUpdates:
+    action: "Update 50+ references across governance"
+    risk: "Medium"
+    reason: "High volume of changes"
+    mitigation: "Use find/replace with verification"
+
+# =============================================================================
+# RRMD+ DECISION
+# =============================================================================
+
+rrmdDecision:
+  required: true
+  reason: "Modifying >3 files, changing multiple governance references"
+  approach: "Create detailed design with file-by-file changes for review"
+
+# =============================================================================
+# APPROACH DECISION
+# =============================================================================
+
+approachDecision:
+  selected: "Split - Sequential Implementation"
+  approvedBy: "Matthew Phipps"
+  timestamp: "2026-01-21T23:10:00Z"
+  
+  clarification: "One Design stage, one Implementation stage - but implement folders first, then merges"
+  
+  implementationOrder:
+    1_folderChanges:
+      - "Rename FactoryTestRuns → FactoryTestRuns_ARCHIVE"
+      - "Update backlog.yaml refs to archive"
+      - "Create FactoryTesting/ structure"
+      - "Move workflows: newfactory-workflow, factory-review-workflow"
+      - "Move templates: factory-comparison, demo-output-comparison"
+      - "Update INDEX.yaml, constitution.yaml, etc."
+    
+    2_fileMerges:
+      - "Merge PEER_REVIEW_CHECKLIST → agent-persona.yaml"
+      - "Merge new-agent + session-start → ai_onboard.yaml"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gate:
+  status: "complete"
+  completedDate: "2026-01-21T23:10:00Z"
+  question: "Analysis complete - ready for Design?"
+  requires: "!Proceed"
