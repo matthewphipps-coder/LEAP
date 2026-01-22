@@ -18,9 +18,9 @@ metadata:
 # =============================================================================
 
 summary:
-  totalFeatures: 6
+  totalFeatures: 7
   locked: 3
-  extensible: 3
+  extensible: 4
 
 # =============================================================================
 # AUTHENTICATION
