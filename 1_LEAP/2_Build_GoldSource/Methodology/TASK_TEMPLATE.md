@@ -1,7 +1,17 @@
 # GoldSource Phase: [PHASE_NUMBER] - [PHASE_NAME]
 
-> Copy this template to `4_Phases/phase-{X}/task.md` at Stage 2 start.
+> Copy this template to `4_Phases/phase-{X}/task.md` at Stage 1 end.
 > All references are to Methodology/ files - no Factory governance files.
+
+## ⚠️ CRITICAL: AI MUST NOT SKIP STAGES
+
+**This checklist enforces 8-stage compliance:**
+- ❌ "specOnly" does NOT mean skip stages - it means no prototype
+- ❌ Do NOT proceed to next stage without completing current stage
+- ❌ Do NOT combine multiple stage artifacts into one
+- ✅ Check off EVERY item before requesting !Proceed
+- ✅ Create EVERY stage artifact (stage-X-name.yaml)
+- ✅ Request !Proceed after EVERY stage
 
 ## Phase Reference
 

@@ -35,6 +35,55 @@ scope:
     This = GoldSource builds (specs, prototypes, scaffold code, factory governance)
 
 # =============================================================================
+# CRITICAL ENFORCEMENT RULES
+# =============================================================================
+
+enforcement:
+  noSkippingStages:
+    rule: "AI MUST complete ALL 8 stages in sequence"
+    clarification: |
+      The 'specOnly' and 'direct' workflows mean NO PROTOTYPE is needed.
+      They do NOT mean stages can be skipped.
+      Every phase requires ALL stage artifacts, regardless of workflow type.
+    
+    violation: "Skipping stages is a governance violation requiring post-mortem"
+  
+  mandatoryGates:
+    rule: "AI MUST stop and request !Proceed after EVERY stage"
+    stages:
+      - stage: 1
+        artifact: "stage-1-discovery.yaml"
+        gate: "!Proceed then END CONVERSATION"
+      - stage: 2
+        artifact: "stage-2-research.yaml"
+        gate: "!Proceed"
+      - stage: 3
+        artifact: "stage-3-analysis.yaml"
+        gate: "!Proceed"
+      - stage: 4
+        artifact: "stage-4-design.yaml"
+        gate: "!Proceed"
+      - stage: 5
+        artifact: "stage-5-implementation.yaml"
+        gate: "!Proceed"
+      - stage: 6
+        artifact: "stage-6-validation.yaml"
+        gate: "!Proceed"
+      - stage: 7
+        artifact: "stage-7-testing.yaml"
+        gate: "!Proceed"
+      - stage: 8
+        artifact: "stage-8-closure.yaml"
+        gate: "Human sign-off"
+  
+  taskMdEnforcement:
+    rule: "task.md is created in Stage 1, used as checklist in Stages 2-8"
+    aiMust:
+      - "Check off items in task.md as work is completed"
+      - "Not proceed to next stage until current stage items checked"
+      - "Not skip any checkbox items"
+
+# =============================================================================
 # THE SPEC → PROTOTYPE → GOLDSOURCE WORKFLOW
 # =============================================================================
 
@@ -130,7 +179,7 @@ stages:
 
   - stage: 1
     name: "Discovery"
-    purpose: "Define what GoldSource improvement is needed"
+    purpose: "Define what GoldSource improvement is needed AND set up phase folder"
     
     inputs:
       - "Backlog item or feature request"
@@ -142,9 +191,13 @@ stages:
       - "Define success criteria"
       - "Create or update SPEC-XXX.yaml (if recommended)"
       - "Determine workflow: full / specOnly / direct"
+      - "Create phase folder: mkdir -p 4_Phases/phase-{X}"
+      - "Copy TASK_TEMPLATE.md to phase folder and customize"
     
     outputs:
       - "SPEC-XXX.yaml (if applicable)"
+      - "4_Phases/phase-{X}/ folder created"
+      - "4_Phases/phase-{X}/task.md (copied and customized)"
       - "stage-1-discovery.yaml (required - enables handoff)"
     
     gate: "!Proceed"
@@ -153,37 +206,37 @@ stages:
       rule: "MANDATORY - End conversation after this stage"
       reason: "Prevents discovery fatigue from affecting execution"
       nextStep: "Human starts new conversation for Stage 2"
+      taskMdReady: "task.md already exists in phase folder for Stage 2 AI"
   
   - stage: 2
     name: "Research"
     purpose: "Understand current scaffold and impact"
     
     inputs:
+      - "4_Phases/phase-{X}/task.md (ALREADY EXISTS from Stage 1)"
       - "stage-1-discovery.yaml (from previous conversation)"
       - "SPEC-XXX.yaml (if exists)"
       - "2_GoldSource/ (current scaffold)"
     
     firstSteps:
-      rule: "MANDATORY setup before research"
+      rule: "MANDATORY - read in this exact order"
       items:
-        - step: "Create phase folder"
-          command: "mkdir -p 4_Phases/phase-{X}"
+        - step: "Read task.md from phase folder"
+          action: "This is your checklist - follow it exactly"
+        - step: "Read goldsource-increment.yaml"
+          action: "Refresh understanding of 8-stage process"
         - step: "Update CURRENT_STATE.yaml"
           update: "currentPhase: {number, name, status: 'in-progress', stage: 2}"
-        - step: "Copy task template"
-          command: "cp 1_LEAP/2_Build_GoldSource/Methodology/TASK_TEMPLATE.md 4_Phases/phase-{X}/task.md"
     
     activities:
-      - "Create phase folder and update CURRENT_STATE (FIRST)"
-      - "Copy and adapt TASK_TEMPLATE.md"
+      - "Read task.md and goldsource-increment.yaml FIRST"
+      - "Update CURRENT_STATE.yaml"
       - "Read discovery artifact from Stage 1"
       - "Read affected scaffold files"
       - "Research patterns in archetypes/ (technical context)"
       - "Identify integration points"
     
     outputs:
-      - "4_Phases/phase-{X}/ folder created"
-      - "task.md copied and adapted"
       - "CURRENT_STATE.yaml updated"
       - "stage-2-research.yaml with file impact assessment"
     
