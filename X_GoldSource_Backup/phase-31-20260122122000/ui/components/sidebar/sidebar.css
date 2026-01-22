@@ -1,0 +1,165 @@
+/**
+ * @file sidebar.css
+ * @purpose Sidebar component styles - floating pill with contextual actions
+ * @layer ui
+ * @dependencies [variables.css]
+ * @dependents [index.html]
+ * @locked false
+ * @modifyImpact [sidebar appearance]
+ * @spec SPEC-003
+ */
+
+/* =============================================================================
+   SIDEBAR CONTAINER - Floating Pill
+   ============================================================================= */
+
+.sidebar {
+    position: fixed;
+    top: calc(var(--header-height) + var(--sidebar-gap) + 40px);
+    left: var(--sidebar-gap);
+    width: var(--sidebar-pill-width);
+    z-index: var(--z-sidebar);
+    padding: var(--space-md) var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    border-radius: calc(var(--sidebar-pill-width) / 2);
+    overflow: visible;
+
+    /* Glass effect */
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+
+    /* Transition for show/hide */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Hidden state - sidebar disappears when page has no actions */
+.sidebar.hidden {
+    opacity: 0;
+    transform: translateX(-20px);
+    pointer-events: none;
+}
+
+/* =============================================================================
+   SIDEBAR NAVIGATION
+   ============================================================================= */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+/* Section separator line */
+.nav-separator {
+    width: 32px;
+    height: 1px;
+    background: var(--glass-border);
+    margin: var(--space-xs) 0;
+}
+
+/* =============================================================================
+   NAV ITEMS - Circular Buttons
+   ============================================================================= */
+
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--sidebar-button-size);
+    height: var(--sidebar-button-size);
+    border: none;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.nav-item i,
+.nav-item svg {
+    width: 22px;
+    height: 22px;
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+    background: var(--glass-bg);
+}
+
+.nav-item.active {
+    color: var(--brand-primary);
+    background: rgba(98, 216, 78, 0.15);
+}
+
+/* Light theme adjustments */
+.light-theme .nav-item {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .nav-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .nav-item.active {
+    background: rgba(98, 216, 78, 0.2);
+}
+
+/* =============================================================================
+   TOOLTIPS
+   ============================================================================= */
+
+.nav-tooltip {
+    position: absolute;
+    left: calc(100% + 16px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-fast);
+    z-index: var(--z-tooltip);
+    pointer-events: none;
+}
+
+.nav-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid var(--glass-border);
+}
+
+.nav-item:hover .nav-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =============================================================================
+   SIDEBAR COUNT BADGE
+   ============================================================================= */
+
+.sidebar .count-badge,
+.nav-item .count-badge {
+    top: 2px;
+    right: 2px;
+}

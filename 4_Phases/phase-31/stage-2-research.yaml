@@ -1,0 +1,180 @@
+# =============================================================================
+# STAGE 2: RESEARCH - Phase 31: UI State Patterns
+# =============================================================================
+
+metadata:
+  phase: 31
+  phaseName: "UIStatePatterns"
+  stage: 2
+  stageName: "Research"
+  artifact: "stage-2-research.yaml"
+  created: "2026-01-22T12:13:00Z"
+  status: "complete"
+
+# =============================================================================
+# SPEC REQUIREMENTS (from SPEC-002 deferred items)
+# =============================================================================
+
+specRequirements:
+  source: "SPEC-002-design-system.yaml"
+  
+  items:
+    - id: "DEFER-001"
+      name: "Loading State Pattern"
+      description: ".loading-skeleton - Animated shimmer for async loading"
+      cssRequirements:
+        - "Shimmer animation (left-to-right gradient sweep)"
+        - "Neutral background color"
+        - "Works in dark and light themes"
+    
+    - id: "DEFER-002"
+      name: "Empty State Pattern"
+      description: ".empty-state - Centered message for empty lists"
+      cssRequirements:
+        - "Centered layout (flexbox)"
+        - "Subtle text color"
+        - "Optional icon styling"
+    
+    - id: "DEFER-003"
+      name: "Error State Pattern"
+      description: ".error-state - Styled error feedback"
+      cssRequirements:
+        - "Error color from --error variable"
+        - "Visible but not alarming styling"
+        - "Optional icon styling"
+    
+    - id: "DEFER-005"
+      name: "Glass Variations"
+      description: ".glass-subtle, .glass-heavy variants"
+      cssRequirements:
+        - ".glass-subtle: Less blur, more transparent"
+        - ".glass-heavy: More blur, more opaque"
+        - "Both work in dark and light themes"
+
+# =============================================================================
+# CURRENT SCAFFOLD STATE
+# =============================================================================
+
+currentState:
+  
+  baseCSS:
+    file: "ui/styles/base.css"
+    lines: 177
+    glassClass:
+      exists: true
+      location: "lines 116-122"
+      implementation: |
+        Uses CSS variables from variables.css:
+        - --glass-bg
+        - --glass-border
+        - --glass-blur
+        - --glass-shadow
+    existingUtilities:
+      - ".text-primary, .text-secondary, .text-accent"
+      - ".visually-hidden"
+    missing:
+      - ".loading-skeleton"
+      - ".empty-state"
+      - ".error-state"
+      - ".glass-subtle"
+      - ".glass-heavy"
+  
+  variablesCSS:
+    file: "ui/styles/variables.css"
+    lines: 122
+    glassTokens:
+      dark:
+        - "--glass-bg: rgba(255, 255, 255, 0.05)"
+        - "--glass-border: rgba(255, 255, 255, 0.1)"
+        - "--glass-blur: 20px"
+        - "--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)"
+      light:
+        - "--glass-bg: rgba(255, 255, 255, 0.88)"
+        - "--glass-border: rgba(0, 0, 0, 0.08)"
+        - "--glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06)"
+    semanticColors:
+      - "--success: #22c55e"
+      - "--error: #ef4444"
+      - "--warning: #f59e0b"
+      - "--info: #3b82f6"
+  
+  designSystemYAML:
+    file: "scaffold/meta/design-system.yaml"
+    exists: false
+    note: "Will need to create or document elsewhere"
+
+# =============================================================================
+# LEGACY REFERENCE (from SPEC-002)
+# =============================================================================
+
+legacyReference:
+  source: "Old NEXUS code (for understanding only)"
+  glassVariations: |
+    /* Subtle: blur(8px), rgba(2, 6, 23, 0.3) */
+    /* Standard: blur(12px), rgba(2, 6, 23, 0.4) */
+    /* Heavy: blur(20px), rgba(2, 6, 23, 0.6) */
+
+# =============================================================================
+# IMPLEMENTATION APPROACH
+# =============================================================================
+
+implementationApproach:
+  
+  strategy: "Add utility classes to base.css using existing CSS variables"
+  
+  newClasses:
+    - name: ".loading-skeleton"
+      addTo: "base.css"
+      approach: |
+        - Neutral gray background
+        - @keyframes shimmer animation
+        - Overflow hidden with gradient pseudo-element
+    
+    - name: ".empty-state"
+      addTo: "base.css"
+      approach: |
+        - Flexbox centered container
+        - Subdued text using --text-secondary
+        - Padding for spacing
+    
+    - name: ".error-state"
+      addTo: "base.css"
+      approach: |
+        - Uses --error color variable
+        - Border or background tint for visibility
+        - Icon and text styling
+    
+    - name: ".glass-subtle"
+      addTo: "base.css"
+      approach: |
+        - Less blur (10px vs 20px)
+        - More transparent background
+        - Subtle border
+    
+    - name: ".glass-heavy"
+      addTo: "base.css"
+      approach: |
+        - More blur (30px)
+        - More opaque background
+        - Stronger shadow
+  
+  lightThemeConsiderations:
+    - "Each pattern needs .light-theme override"
+    - "Glass variations already have light theme tokens to leverage"
+    - "Skeleton shimmer colors need light mode adjustment"
+
+# =============================================================================
+# HANDOFF TO STAGE 3
+# =============================================================================
+
+handoff:
+  researchComplete: true
+  readyForAnalysis: true
+  nextStep: "Stage 3 - RRMD+ Risk Analysis"
+  
+  keyFindings:
+    - "base.css has .glass utility to extend"
+    - "CSS variables fully support dark/light themes"
+    - "Semantic color tokens (--error) already exist"
+    - "No breaking changes required - pure additions"
+    - "design-system.yaml doesn't exist; document in ARCHITECTURE.yaml instead"

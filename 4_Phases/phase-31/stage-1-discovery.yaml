@@ -1,0 +1,126 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Phase 31: UI State Patterns
+# =============================================================================
+
+metadata:
+  phase: 31
+  phaseName: "UIStatePatterns"
+  stage: 1
+  stageName: "Discovery"
+  artifact: "stage-1-discovery.yaml"
+  created: "2026-01-22T12:07:00Z"
+  status: "complete"
+
+# =============================================================================
+# BACKLOG ITEM
+# =============================================================================
+
+backlogItem:
+  id: "LEAP-060"
+  name: "UI State Patterns"
+  description: "Loading, empty, error state patterns plus glass variations"
+  source: "Split from LEAP-039 (SPEC-002 deferred items)"
+  deferredItems:
+    - "DEFER-001: Loading State Pattern (.loading-skeleton)"
+    - "DEFER-002: Empty State Pattern (.empty-state)"
+    - "DEFER-003: Error State Pattern (.error-state)"
+    - "DEFER-005: Glass Variations (.glass-subtle, .glass-heavy)"
+
+# =============================================================================
+# CURRENT STATE ASSESSMENT
+# =============================================================================
+
+currentState:
+  hasGlassClass: true
+  hasStatePatterns: false
+  
+  existingFile: "2_GoldSource/scaffold/ui/styles/base.css"
+  existingPatterns:
+    - ".glass - basic glassmorphism utility"
+    - ".text-primary, .text-secondary, .text-accent"
+    - ".visually-hidden - accessibility utility"
+  
+  missingPatterns:
+    - ".loading-skeleton - animated shimmer for loading states"
+    - ".empty-state - centered message for empty lists"
+    - ".error-state - styled error feedback"
+    - ".glass-subtle - lighter glass effect"
+    - ".glass-heavy - stronger glass effect"
+
+# =============================================================================
+# WORKFLOW DECISION
+# =============================================================================
+
+workflowDecision:
+  type: "specOnly"
+  reason: |
+    - SPEC-002 already defines requirements (DEFER items)
+    - Changes are pure CSS utility classes
+    - No complex UI to validate with prototype
+    - Can verify directly in browser with test HTML
+  
+  specReference: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-002-design-system.yaml"
+  prototypeNeeded: false
+
+# =============================================================================
+# SCOPE DEFINITION
+# =============================================================================
+
+scope:
+  inScope:
+    - "Add .loading-skeleton class with shimmer animation"
+    - "Add .empty-state class for empty list feedback"
+    - "Add .error-state class for error feedback"
+    - "Add .glass-subtle (less blur, more transparent)"
+    - "Add .glass-heavy (more blur, more opaque)"
+    - "Document patterns in meta/design-system.yaml"
+    - "Ensure patterns work in both dark and light themes"
+  
+  outOfScope:
+    - "Priority color system (LEAP-061 Card System)"
+    - "Confetti celebration (LEAP-062)"
+    - "Complex loading spinners (just shimmer skeleton)"
+
+# =============================================================================
+# SUCCESS CRITERIA  
+# =============================================================================
+
+successCriteria:
+  - ".loading-skeleton shows animated shimmer"
+  - ".empty-state centers content with icon/message"
+  - ".error-state shows error styling (red/warning)"
+  - ".glass-subtle is less prominent than .glass"
+  - ".glass-heavy is more prominent than .glass"
+  - "All patterns work in dark theme"
+  - "All patterns work in light theme"
+  - "Patterns documented in design-system.yaml"
+
+# =============================================================================
+# ESTIMATED IMPACT
+# =============================================================================
+
+estimatedImpact:
+  filesCreated: []  # All going into existing files
+  filesModified:
+    - file: "ui/styles/base.css"
+      changes: "Add state utility classes and glass variants"
+    - file: "meta/design-system.yaml"
+      changes: "Add statePatterns section"
+  
+  riskLevel: "low"
+  breakingChanges: false
+  factoryGovernanceImpact: false
+
+# =============================================================================
+# HANDOFF TO STAGE 2
+# =============================================================================
+
+handoff:
+  discoveryComplete: true
+  workflowConfirmed: "specOnly"
+  readyForResearch: true
+  nextStep: "Start new conversation for Stage 2"
+  
+  filesCreated:
+    - "4_Phases/phase-31/task.md"
+    - "4_Phases/phase-31/stage-1-discovery.yaml"

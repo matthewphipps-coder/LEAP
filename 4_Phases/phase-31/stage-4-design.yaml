@@ -1,0 +1,280 @@
+# =============================================================================
+# STAGE 4: DESIGN - Phase 31: UI State Patterns
+# =============================================================================
+
+metadata:
+  phase: 31
+  phaseName: "UIStatePatterns"
+  stage: 4
+  stageName: "Design"
+  artifact: "stage-4-design.yaml"
+  created: "2026-01-22T12:17:00Z"
+  status: "complete"
+
+# =============================================================================
+# IMPLEMENTATION PLAN
+# =============================================================================
+
+implementationPlan:
+  
+  summary: |
+    Add 5 CSS utility classes to base.css for UI state patterns and glass variations.
+    All classes use existing CSS variables and support dark/light themes.
+  
+  # ---------------------------------------------------------------------------
+  # FILE CHANGES
+  # ---------------------------------------------------------------------------
+  
+  fileChanges:
+    
+    - file: "ui/styles/base.css"
+      action: "MODIFY"
+      changeType: "Append new CSS sections"
+      
+      sections:
+        
+        # --- Section 1: State Patterns ---
+        - name: "STATE PATTERN UTILITIES"
+          location: "After FOCUS STATES section (~line 177)"
+          css: |
+            /* =============================================================================
+               STATE PATTERN UTILITIES
+               ============================================================================= */
+            
+            /* --- Loading Skeleton Shimmer --- */
+            @keyframes shimmer {
+              0% {
+                background-position: -200% 0;
+              }
+              100% {
+                background-position: 200% 0;
+              }
+            }
+            
+            .loading-skeleton {
+              background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 75%
+              );
+              background-size: 200% 100%;
+              animation: shimmer 1.5s ease-in-out infinite;
+              border-radius: var(--radius-sm);
+            }
+            
+            /* Light theme loading skeleton */
+            .light-theme .loading-skeleton {
+              background: linear-gradient(
+                90deg,
+                rgba(0, 0, 0, 0.05) 25%,
+                rgba(0, 0, 0, 0.1) 50%,
+                rgba(0, 0, 0, 0.05) 75%
+              );
+              background-size: 200% 100%;
+            }
+            
+            /* --- Empty State --- */
+            .empty-state {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: var(--space-2xl);
+              text-align: center;
+              color: var(--text-secondary);
+            }
+            
+            .empty-state-icon {
+              font-size: 3rem;
+              margin-bottom: var(--space-md);
+              opacity: 0.5;
+            }
+            
+            .empty-state-title {
+              font-size: var(--text-lg);
+              font-weight: var(--font-medium);
+              color: var(--text-primary);
+              margin-bottom: var(--space-sm);
+            }
+            
+            .empty-state-message {
+              font-size: var(--text-sm);
+              color: var(--text-secondary);
+              max-width: 300px;
+            }
+            
+            /* --- Error State --- */
+            .error-state {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: var(--space-lg);
+              text-align: center;
+              color: var(--error);
+              background: rgba(239, 68, 68, 0.1);
+              border: 1px solid rgba(239, 68, 68, 0.3);
+              border-radius: var(--radius-md);
+            }
+            
+            .error-state-icon {
+              font-size: 2rem;
+              margin-bottom: var(--space-sm);
+            }
+            
+            .error-state-title {
+              font-size: var(--text-base);
+              font-weight: var(--font-medium);
+              margin-bottom: var(--space-xs);
+            }
+            
+            .error-state-message {
+              font-size: var(--text-sm);
+              opacity: 0.9;
+            }
+            
+            /* Light theme error state */
+            .light-theme .error-state {
+              background: rgba(239, 68, 68, 0.08);
+              border-color: rgba(239, 68, 68, 0.25);
+            }
+        
+        # --- Section 2: Glass Variations ---
+        - name: "GLASS VARIATIONS"
+          location: "After STATE PATTERN UTILITIES"
+          css: |
+            /* =============================================================================
+               GLASS VARIATIONS
+               ============================================================================= */
+            
+            /* --- Glass Subtle (lighter effect) --- */
+            .glass-subtle {
+              background: rgba(255, 255, 255, 0.02);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            }
+            
+            .light-theme .glass-subtle {
+              background: rgba(255, 255, 255, 0.6);
+              backdrop-filter: blur(6px);
+              -webkit-backdrop-filter: blur(6px);
+              border: 1px solid rgba(0, 0, 0, 0.05);
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            }
+            
+            /* --- Glass Heavy (stronger effect) --- */
+            .glass-heavy {
+              background: rgba(255, 255, 255, 0.1);
+              backdrop-filter: blur(30px);
+              -webkit-backdrop-filter: blur(30px);
+              border: 1px solid rgba(255, 255, 255, 0.15);
+              box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            }
+            
+            .light-theme .glass-heavy {
+              background: rgba(255, 255, 255, 0.95);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
+              border: 1px solid rgba(0, 0, 0, 0.12);
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+# =============================================================================
+# VERIFICATION PLAN
+# =============================================================================
+
+verificationPlan:
+  
+  approach: |
+    Since these are pure CSS utilities, verification will be done via browser testing.
+    Create a test HTML page to display all patterns in both themes.
+  
+  manualTests:
+    
+    - id: "VT-001"
+      name: "Loading Skeleton Animation"
+      steps:
+        - "Open scaffold/index.html in browser"
+        - "Open DevTools console"
+        - "Run: document.body.innerHTML = '<div class=\"loading-skeleton\" style=\"width:200px;height:40px\"></div>'"
+        - "Observe shimmer animation (left-to-right gradient)"
+        - "Toggle to light theme via settings"
+        - "Confirm animation still works with adjusted colors"
+      expectedResult: "Shimmer animates smoothly in both themes"
+    
+    - id: "VT-002"
+      name: "Empty State Display"
+      steps:
+        - "In DevTools, add empty state HTML to page"
+        - "Verify centered layout, muted colors"
+        - "Test in both themes"
+      expectedResult: "Empty state appears centered with proper styling"
+    
+    - id: "VT-003"
+      name: "Error State Display"
+      steps:
+        - "In DevTools, add error state HTML to page"
+        - "Verify red tint, proper contrast"
+        - "Test in both themes"
+      expectedResult: "Error state visible with red styling, readable in both themes"
+    
+    - id: "VT-004"
+      name: "Glass Subtle vs Standard"
+      steps:
+        - "Create two divs side by side: .glass and .glass-subtle"
+        - "Compare visual intensity"
+        - "Test in both themes"
+      expectedResult: ".glass-subtle is less prominent than .glass"
+    
+    - id: "VT-005"
+      name: "Glass Heavy vs Standard"
+      steps:
+        - "Create two divs side by side: .glass and .glass-heavy"
+        - "Compare visual intensity"
+        - "Test in both themes"
+      expectedResult: ".glass-heavy is more prominent than .glass"
+
+# =============================================================================
+# IMPLEMENTATION STEPS
+# =============================================================================
+
+implementationSteps:
+  
+  - step: 1
+    action: "Create timestamped backup"
+    command: "cp -r 2_GoldSource/scaffold X_GoldSource_Backup/phase-31-$(date +%Y%m%d%H%M%S)"
+  
+  - step: 2
+    action: "Add STATE PATTERN UTILITIES section to base.css"
+    location: "After line 177 (after FOCUS STATES section)"
+    includes:
+      - "@keyframes shimmer"
+      - ".loading-skeleton (+ light theme)"
+      - ".empty-state, .empty-state-icon, .empty-state-title, .empty-state-message"
+      - ".error-state (+ light theme), .error-state-icon, .error-state-title, .error-state-message"
+  
+  - step: 3
+    action: "Add GLASS VARIATIONS section to base.css"
+    location: "After STATE PATTERN UTILITIES"
+    includes:
+      - ".glass-subtle (+ light theme)"
+      - ".glass-heavy (+ light theme)"
+  
+  - step: 4
+    action: "WIP git commit"
+    command: "git add -A && git commit -m 'WIP: Phase 31 - UI State Patterns (LEAP-060)'"
+
+# =============================================================================
+# HANDOFF TO STAGE 5
+# =============================================================================
+
+handoff:
+  designComplete: true
+  readyForImplementation: true
+  nextStep: "Stage 5 - Implementation"
+  
+  estimatedLines: "~120 lines of CSS"
+  estimatedTime: "10-15 minutes"
