@@ -1,0 +1,92 @@
+# =============================================================================
+# STAGE 6: VALIDATION - Phase 31: UI State Patterns
+# =============================================================================
+
+metadata:
+  phase: 31
+  phaseName: "UIStatePatterns"
+  stage: 6
+  stageName: "Validation"
+  artifact: "stage-6-validation.yaml"
+  created: "2026-01-22T12:30:00Z"
+  status: "complete"
+
+# =============================================================================
+# VALIDATION RESULTS
+# =============================================================================
+
+validationResults:
+  
+  overallStatus: "PASS"
+  
+  darkTheme:
+    status: "PASS"
+    screenshot: "phase_31_dark_theme_1769084957967.png"
+    findings:
+      glassVariations: "Visible difference between subtle < standard < heavy"
+      loadingSkeleton: "Shimmer animation working (1.5s loop)"
+      emptyState: "Centered layout with muted colors"
+      errorState: "Red-tinted background visible"
+  
+  lightTheme:
+    status: "PASS"
+    screenshot: "phase_31_light_theme_1769084973983.png"
+    findings:
+      glassVariations: "Adapted colors for light background"
+      loadingSkeleton: "Darker shimmer gradient visible"
+      emptyState: "Text contrast maintained"
+      errorState: "Reduced opacity for subtlety, still visible"
+
+# =============================================================================
+# PATTERN-BY-PATTERN VALIDATION
+# =============================================================================
+
+patternValidation:
+  
+  - pattern: ".loading-skeleton"
+    darkTheme: "PASS"
+    lightTheme: "PASS"
+    notes: "Shimmer animation smooth at 1.5s, gradient visible in both themes"
+  
+  - pattern: ".empty-state"
+    darkTheme: "PASS"
+    lightTheme: "PASS"
+    notes: "Centered layout, icon/title/message hierarchy clear"
+  
+  - pattern: ".error-state"
+    darkTheme: "PASS"
+    lightTheme: "PASS"
+    notes: "Red tint visible, warning icon prominent"
+  
+  - pattern: ".glass-subtle"
+    darkTheme: "PASS"
+    lightTheme: "PASS"
+    notes: "Noticeably lighter than .glass"
+  
+  - pattern: ".glass-heavy"
+    darkTheme: "PASS"
+    lightTheme: "PASS"
+    notes: "Noticeably heavier than .glass"
+
+# =============================================================================
+# SCREENSHOTS
+# =============================================================================
+
+screenshots:
+  darkTheme:
+    path: "/Users/matthew.phipps/.gemini/antigravity/brain/de03d266-c742-4750-8efa-cce78261b41a/phase_31_dark_theme_1769084957967.png"
+    description: "All patterns rendered in dark theme"
+  
+  lightTheme:
+    path: "/Users/matthew.phipps/.gemini/antigravity/brain/de03d266-c742-4750-8efa-cce78261b41a/phase_31_light_theme_1769084973983.png"
+    description: "All patterns rendered in light theme"
+
+# =============================================================================
+# HANDOFF TO STAGE 7
+# =============================================================================
+
+handoff:
+  validationComplete: true
+  allPatternsPassed: true
+  readyForTesting: true
+  nextStep: "Stage 7 - Testing (final browser verification)"
