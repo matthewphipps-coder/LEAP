@@ -19,6 +19,8 @@ import {
     sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { createUserProfile, loadUserPreferences, updateLastLogin } from './user-service.js';
+import { setTheme } from './theme-manager.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -51,6 +53,16 @@ export function setupAuthListener(onAuthChange) {
                 photoURL: userData?.photoURL || null
             };
             setUser(user);
+
+            // FR-001: Update lastLoginAt on each login
+            await updateLastLogin(firebaseUser.uid);
+
+            // FR-002: Load user preferences and apply theme
+            const prefs = await loadUserPreferences(firebaseUser.uid);
+            if (prefs?.theme) {
+                setTheme(prefs.theme, true); // Skip sync - just loaded from Firestore
+            }
+
             if (onAuthChange) onAuthChange(user);
         } else {
             info('Auth: No user');
@@ -95,16 +107,14 @@ export async function signup(email, password, displayName = null) {
     try {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
 
-        // Create user document in Firestore
-        // FR-001: Complete user profile with role and xp
-        const userDoc = {
+        // Create user document in Firestore via user-service
+        // FR-001: Complete user profile with role, xp, lastLoginAt, and preferences
+        await createUserProfile(credential.user.uid, {
             email,
             displayName: displayName || email.split('@')[0],
             role: 'member',
-            xp: 0,
-            createdAt: new Date().toISOString()
-        };
-        await setDoc(doc(db, 'users', credential.user.uid), userDoc);
+            xp: 0
+        });
 
         return credential;
     } catch (err) {

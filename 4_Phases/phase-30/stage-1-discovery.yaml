@@ -1,0 +1,110 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Phase 30: LEAP-038 Data Conventions
+# =============================================================================
+
+metadata:
+  phase: 30
+  phaseName: "DataConventionsImplementation"
+  stage: 1
+  stageName: "Discovery"
+  backlogId: "LEAP-038"
+  specRef: "SPEC-004-data-conventions.yaml"
+  createdAt: "2026-01-22T10:51:00Z"
+  createdBy: "AI"
+  gateApproval:
+    status: "approved"
+    approvedBy: "Matthew Phipps"
+    approvedAt: "2026-01-22T10:51:17Z"
+
+# =============================================================================
+# DISCOVERY FINDINGS
+# =============================================================================
+
+currentState:
+  summary: "Firebase working, auth creates partial user profile, no preference sync"
+  
+  implemented:
+    - feature: "Firebase initialization"
+      file: "core/firebase.js"
+      status: "complete"
+    
+    - feature: "Auth service (login/signup/logout)"
+      file: "core/auth-service.js"
+      status: "complete"
+    
+    - feature: "User profile on signup"
+      file: "core/auth-service.js"
+      status: "partial"
+      note: "Creates doc with email, displayName, role, xp, createdAt - missing lastLoginAt"
+  
+  notImplemented:
+    - FR-002: "User Preferences Storage"
+    - FR-003: "Ring-Fenced Data Convention (not documented)"
+    - FR-004: "Data Service Template"
+    - FR-005: "Theme Preference Sync (localStorage only)"
+
+# =============================================================================
+# WORKFLOW DECISION
+# =============================================================================
+
+workflowDecision:
+  selected: "specOnly"
+  reason: "No UI changes - SPEC-004 has complete code examples for all requirements"
+  
+  prototypeNeeded: false
+  specComplete: true
+
+# =============================================================================
+# PROPOSED CHANGES
+# =============================================================================
+
+proposedChanges:
+  new:
+    - file: "core/user-service.js"
+      purpose: "User profile and preferences CRUD"
+    
+    - file: "docs/DATA_CONVENTIONS.md"
+      purpose: "Ring-fenced data pattern documentation"
+  
+  modify:
+    - file: "core/auth-service.js"
+      changes:
+        - "Add lastLoginAt on signup"
+        - "Load preferences on login"
+    
+    - file: "core/theme-manager.js"
+      changes:
+        - "Sync theme to Firestore via user-service"
+        - "Keep localStorage fallback"
+    
+    - file: "meta/ARCHITECTURE.yaml"
+      changes:
+        - "Add firestoreConventions section"
+    
+    - file: "meta/architectural-standards.yaml"
+      changes:
+        - "Add Data Service Pattern section"
+
+# =============================================================================
+# SUCCESS CRITERIA
+# =============================================================================
+
+successCriteria:
+  - "User profile created in Firestore on signup with all fields"
+  - "Theme preference syncs to Firestore on change"
+  - "Theme loads from Firestore on login (different device test)"
+  - "localStorage fallback works when offline"
+  - "Ring-fenced data pattern documented"
+  - "Data service template pattern documented"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  required: "Start new conversation for Stage 2"
+  reason: "Per GoldSource Increment methodology - discovery fatigue prevention"
+  stage2FirstActions:
+    - "Update CURRENT_STATE.yaml to Phase 30, Stage 2"
+    - "Copy TASK_TEMPLATE.md to phase folder"
+    - "Create stage-2-research.yaml"

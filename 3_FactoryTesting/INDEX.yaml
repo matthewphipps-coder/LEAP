@@ -85,5 +85,11 @@ completedRuns:
   - demo: "NEXUS v2.1.0-change-approval"
     location: "~/Documents/DemoOutput/NEXUS-v2.1.0-change-approval/"
     addedDate: "2026-01-21"
+  
+  - demo: "NEXUS v2.2.0-cmdb-explorer"
+    location: "~/Documents/DemoOutput/NEXUS-v2.2.0-cmdb-explorer/"
+    addedDate: "2026-01-22"
+    status: "complete"
+    inspectionResult: "PASS (0 deviations)"
 
 nextRun: "TBD"

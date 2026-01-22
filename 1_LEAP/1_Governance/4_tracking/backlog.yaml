@@ -708,7 +708,9 @@ priorities:
       name: "Authentication System Enhancement"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-22"
+      completedIn: "Phase 29"
       description: "Complete auth system: user profile creation, password reset, domain validation, accessibility"
       rationale: "Current scaffold has working login/signup but missing 5 key features per SPEC-001 analysis"
       estimatedEffort: "medium"
@@ -834,7 +836,9 @@ priorities:
       name: "Login Page Cleanup"
       category: "scaffold-conventions"
       priority: "short-term"
-      status: "proposed"
+      status: "complete"
+      completedDate: "2026-01-22"
+      completedIn: "Phase 29"
       description: "Clean up login.html for consistency with index.html and code quality"
       rationale: |
         Forensic audit of Phase 22 revealed login.html is inconsistent with index.html:
@@ -1219,6 +1223,57 @@ priorities:
       dependencies: []
       addedDate: "2026-01-21"
       source: "factory-comparison-v2.1.0-vs-v2.2.0.yaml areasForImprovement"
+
+    # -------------------------------------------------------------------------
+    # v2.2.0-cmdb-explorer Improvements (2026-01-22)
+    # -------------------------------------------------------------------------
+
+    - id: "LEAP-058"
+      name: "State Slice Usage Examples"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+        Add explicit code examples to 2_GoldSource/meta/ARCHITECTURE.yaml showing
+        correct registerStateSlice() usage pattern. Factory AI initially used
+        incorrect setState() pattern that doesn't exist.
+      rationale: |
+        v2.2.0-cmdb-explorer Factory AI attempted wrong API pattern:
+          setState('feature', 'setFieldName', value)  // WRONG - doesn't exist
+        Correct pattern:
+          const stateAPI = registerStateSlice('feature', {...}, {...});
+          stateAPI.setFieldName(value);  // Correct
+        Factory self-corrected during Stage 6, but pattern should be clearer.
+      acceptanceCriteria:
+        - "ARCHITECTURE.yaml includes registerStateSlice code example"
+        - "Example shows correct API object destructuring pattern"
+        - "Next Factory run uses correct pattern without self-correction"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-22"
+      source: "Factory v2.2.0-cmdb-explorer Stage 8 Closure (LL-001/GSI-001)"
+
+    - id: "LEAP-059"
+      name: "Modal Pattern Documentation"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+        Document the HTML <dialog> modal pattern in 2_GoldSource/meta/design-system.yaml.
+        Include when to use <dialog> vs custom popover, accessibility considerations,
+        and keyboard handling (Escape to close).
+      rationale: |
+        v2.2.0-cmdb-explorer used <dialog> for CI detail popup successfully.
+        Pattern works well but is not documented in design system, leading to
+        potential inconsistency in future Factory runs.
+      acceptanceCriteria:
+        - "design-system.yaml includes modal/dialog pattern section"
+        - "Documents <dialog> element usage with showModal()/close() methods"
+        - "Includes accessibility notes (Escape key, focus trap)"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-22"
+      source: "Factory v2.2.0-cmdb-explorer Stage 8 Closure (GSI-002)"
 
   mediumTerm: []
   future: []

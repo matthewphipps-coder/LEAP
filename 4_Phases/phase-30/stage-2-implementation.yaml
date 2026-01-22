@@ -1,0 +1,127 @@
+# =============================================================================
+# STAGE 2: IMPLEMENTATION - Phase 30: LEAP-038 Data Conventions
+# =============================================================================
+
+metadata:
+  phase: 30
+  phaseName: "DataConventionsImplementation"
+  stage: 2
+  stageName: "Implementation"
+  backlogId: "LEAP-038"
+  specRef: "SPEC-004-data-conventions.yaml"
+  createdAt: "2026-01-22T10:53:00Z"
+  createdBy: "AI"
+
+# =============================================================================
+# IMPLEMENTATION COMPLETED
+# =============================================================================
+
+implementedItems:
+
+  # FR-001: User Profile on Signup
+  - requirement: "FR-001"
+    name: "User Profile on Signup"
+    status: "complete"
+    files:
+      - file: "core/user-service.js"
+        action: "NEW"
+        changes:
+          - "createUserProfile() function with full user doc"
+          - "updateLastLogin() function with serverTimestamp()"
+      - file: "core/auth-service.js"
+        action: "MODIFY"
+        changes:
+          - "Import and call createUserProfile on signup"
+          - "Call updateLastLogin on each auth state change"
+
+  # FR-002: User Preferences Storage
+  - requirement: "FR-002"
+    name: "User Preferences Storage"
+    status: "complete"
+    files:
+      - file: "core/user-service.js"
+        action: "NEW"
+        changes:
+          - "loadUserPreferences() with defaults merge"
+          - "savePreference() for individual preference sync"
+      - file: "core/auth-service.js"
+        action: "MODIFY"
+        changes:
+          - "Load preferences on login"
+          - "Apply theme from Firestore prefs"
+
+  # FR-003: Ring-Fenced Data Convention
+  - requirement: "FR-003"
+    name: "Ring-Fenced Data Convention"
+    status: "complete"
+    files:
+      - file: "docs/DATA_CONVENTIONS.md"
+        action: "NEW"
+        changes:
+          - "Ring-fenced data structure documented"
+          - "User profile schema documented"
+          - "Data service template documented"
+          - "Preference sync pattern documented"
+      - file: "meta/ARCHITECTURE.yaml"
+        action: "MODIFY"
+        changes:
+          - "Added firestoreConventions section"
+      - file: "meta/architectural-standards.yaml"
+        action: "MODIFY"
+        changes:
+          - "Added dataServicePattern section"
+
+  # FR-004: Data Service Template
+  - requirement: "FR-004"
+    name: "Data Service Template"
+    status: "complete"
+    files:
+      - file: "core/user-service.js"
+        action: "NEW"
+        note: "Reference implementation for all future data services"
+        patterns:
+          - "MODULE_CONTRACT declaration"
+          - "Ring-fenced collection helpers"
+          - "CRUD operations with serverTimestamp"
+          - "Error handling with logging"
+
+  # FR-005: Theme Preference Sync
+  - requirement: "FR-005"
+    name: "Theme Preference Sync"
+    status: "complete"
+    files:
+      - file: "core/theme-manager.js"
+        action: "MODIFY"
+        changes:
+          - "Import savePreference from user-service.js"
+          - "Add skipFirestoreSync parameter to setTheme()"
+          - "Sync to Firestore unless called from login flow"
+          - "Keep localStorage as offline fallback"
+
+# =============================================================================
+# FILE SUMMARY
+# =============================================================================
+
+fileSummary:
+  new:
+    - "core/user-service.js (151 lines)"
+    - "docs/DATA_CONVENTIONS.md (106 lines)"
+  
+  modified:
+    - "core/auth-service.js"
+    - "core/theme-manager.js"
+    - "meta/ARCHITECTURE.yaml"
+    - "meta/architectural-standards.yaml"
+
+# =============================================================================
+# NEXT STEPS
+# =============================================================================
+
+nextSteps:
+  stage: 7
+  name: "Testing"
+  actions:
+    - "Run application and test signup (verify Firestore doc)"
+    - "Test theme change (verify Firestore preference sync)"
+    - "Test login from different session (verify theme loads)"
+    - "Create stage-7-testing.yaml with results"
