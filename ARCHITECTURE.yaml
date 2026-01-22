@@ -104,7 +104,7 @@ entryPoints:
   
   creatingDemo:
     action: "Use /newfactory command"
-    workflow: "LEAP_Governance/newfactory-workflow.yaml"
+    workflow: "FactoryTesting/initiate-factory.yaml"
   
   understandingScaffold:
     action: "Read scaffold architecture"

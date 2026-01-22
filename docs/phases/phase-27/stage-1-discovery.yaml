@@ -1,0 +1,461 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Factory Workflow Overhaul + Governance Cleanup
+# =============================================================================
+
+metadata:
+  demo: "LEAP Phase 27"
+  phase: 27
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-21T21:50:00Z"
+  updated: "2026-01-21T22:00:00Z"
+  status: "complete"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: "Factory workflow has structural issues AND governance files need cleanup"
+  
+  userObservation: |
+    Matthew Phipps (2026-01-21):
+    "LEAP should 'setup' the factory by creating a new folder/goldsource copy.
+    LEAP should create a simple test prompt to tell the factory where to put the 
+    demo output and what demo to build; the prompt should not give advice to the 
+    factory that overrules the factories own governance."
+  
+  additionalRequest: |
+    "I was just looking at docs and there's little bit everywhere. Please explicitly 
+    review EVERY doc in /LEAP_Governance"
+
+# =============================================================================
+# GOVERNANCE AUDIT - COMPLETE FILE INVENTORY
+# =============================================================================
+
+governanceAudit:
+  totalFiles: 25
+  filesReviewed: 25
+  excludedFolders: ["SprintFunctionalSpecs"]
+  
+  summary:
+    clean: 16
+    phaseTargets: 4
+    staleOrDuplicate: 3
+    overlapCandidates: 2
+
+# =============================================================================
+# ROOT LEVEL FILES (10)
+# =============================================================================
+
+rootLevelFiles:
+
+  - file: "INDEX.yaml"
+    size: "1.4KB"
+    status: "✅ Good"
+    purpose: "Entry point for AI navigation"
+    issues: []
+
+  - file: "constitution.yaml"
+    size: "5.6KB"
+    status: "✅ Good"
+    purpose: "15 partnership rules"
+    issues: []
+
+  - file: "pulse-protocol.yaml"
+    size: "8.7KB"
+    status: "⚠️ Large"
+    purpose: "Development methodology, 8 stages, gates"
+    issues:
+      - "242 lines - could split lifecycle stages into separate file"
+    action: "Defer - not blocking"
+
+  - file: "agent-persona.yaml"
+    size: "5.3KB"
+    status: "✅ Good"
+    purpose: "6 elite A-Team personas for peer review"
+    issues: []
+
+  - file: "safety-protocol.yaml"
+    size: "5.3KB"
+    status: "✅ Good"
+    purpose: "Stage-based backup rules"
+    issues: []
+
+  - file: "rrmd-protocol.yaml"
+    size: "1.6KB"
+    status: "✅ Good"
+    purpose: "Risk/Research/Mitigate/Document/Verify"
+    issues: []
+
+  - file: "bump-protocol.yaml"
+    size: "1.2KB"
+    status: "✅ Good"
+    purpose: "Agent recovery (!bump)"
+    issues: []
+
+  - file: "PEER_REVIEW_CHECKLIST.yaml"
+    size: "6.1KB"
+    status: "🔴 Stale"
+    purpose: "Peer review guidance"
+    issues:
+      - id: "STALE-001"
+        problem: "References non-existent files"
+        lines: "23-30"
+        staleRefs:
+          - "PAIRING_CONSTITUTION.md (doesn't exist)"
+          - ".agent/workflows/pulse.yaml (doesn't exist)"
+        shouldBe:
+          - "constitution.yaml"
+          - "pulse-protocol.yaml"
+    action: "P0 - Fix stale references"
+
+  - file: "newfactory-workflow.yaml"
+    size: "4.1KB"
+    status: "🔴 Phase 27 Target"
+    purpose: "Create new factory instances"
+    issues:
+      - id: "FACTORY-001"
+        problem: "Onboarding prompt coaches Factory"
+        lines: "65-85"
+        description: "Prompt tells Factory what to do, duplicating/conflicting with FACTORY_README"
+      - id: "FACTORY-002"
+        problem: "Prompts not saved"
+        description: "No storage step for repeatability"
+      - id: "FACTORY-003"
+        problem: "Two-workspace concept not explained"
+        description: "Factory Workspace vs Demo Output not clarified in prompt"
+    action: "P1 - Redesign with minimal prompt"
+
+  - file: "factory-review-workflow.yaml"
+    size: "6.7KB"
+    status: "🔴 Phase 27 Target"
+    purpose: "Compare factory runs, populate backlog"
+    issues:
+      - id: "REVIEW-001"
+        problem: "Recommendations instead of deviations"
+        lines: "101-140"
+        description: "Produces recommendations, not objective deviation reports"
+      - id: "REVIEW-002"
+        problem: "Batch backlog addition"
+        description: "Items added in bulk, then presented. Should be per-deviation human review"
+    action: "P1 - Redesign with deviation-based methodology"
+
+# =============================================================================
+# CHECKLISTS FOLDER (4)
+# =============================================================================
+
+checklistFiles:
+
+  - file: "checklists/before-file-op.yaml"
+    size: "690B"
+    status: "✅ Good"
+    purpose: "3-step !Proceed enforcement"
+    issues: []
+
+  - file: "checklists/before-phase.yaml"
+    size: "822B"
+    status: "✅ Good"
+    purpose: "Phase initialization checklist"
+    issues: []
+
+  - file: "checklists/new-agent.yaml"
+    size: "3KB"
+    status: "⚠️ Overlap"
+    purpose: "New AI onboarding"
+    issues:
+      - id: "OVERLAP-001"
+        problem: "80% content overlap with session-start.yaml"
+        overlappingContent:
+          - "Critical rules about !Proceed"
+          - "Constitution Rule 3, 5 references"
+          - "Common mistakes warnings"
+    action: "P2 - Consolidate with session-start.yaml"
+
+  - file: "checklists/session-start.yaml"
+    size: "2.6KB"
+    status: "⚠️ Overlap"
+    purpose: "Session start checklist"
+    issues:
+      - id: "OVERLAP-002"
+        problem: "80% content overlap with new-agent.yaml"
+    action: "P2 - Consolidate with new-agent.yaml"
+
+# =============================================================================
+# TEMPLATES FOLDER (6)
+# =============================================================================
+
+templateFiles:
+
+  - file: "templates/factory-comparison.yaml"
+    size: "6.8KB"
+    status: "🔴 Phase 27 Target"
+    purpose: "Template for comparing factory runs"
+    issues:
+      - id: "TEMPLATE-001"
+        problem: "Uses 'recommendations' structure"
+        lines: "127-144"
+        currentStructure: "recommendations: critical/high/medium/low"
+        shouldBe: "deviations with rule references and evidence"
+    action: "P1 - Replace with deviation-based template"
+
+  - file: "templates/demo-output-comparison.yaml"
+    size: "7.4KB"
+    status: "🔴 Phase 27 Target"
+    purpose: "Template for comparing demo outputs"
+    issues:
+      - id: "TEMPLATE-002"
+        problem: "Uses 'recommendations' structure"
+        lines: "157-161"
+        currentStructure: "recommendations: critical/high/medium/low"
+        shouldBe: "deviations with rule references and evidence"
+    action: "P1 - Replace with deviation-based template"
+
+  - file: "templates/gate-record-template.yaml"
+    size: "1.2KB"
+    status: "✅ Good"
+    purpose: "Audit record at stage gates"
+    issues: []
+
+  - file: "templates/governance.yaml"
+    size: "1.5KB"
+    status: "✅ Good"
+    purpose: "Generic governance document template"
+    issues: []
+
+  - file: "templates/phase-artifact.yaml"
+    size: "2.3KB"
+    status: "✅ Good"
+    purpose: "Research/analysis/spec/closure template"
+    issues: []
+
+  - file: "templates/workflow.yaml"
+    size: "1.3KB"
+    status: "✅ Good"
+    purpose: "Workflow document template"
+    issues: []
+
+# =============================================================================
+# TRACKING FOLDER (5)
+# =============================================================================
+
+trackingFiles:
+
+  - file: "tracking/CURRENT_STATE.yaml"
+    size: "7.5KB"
+    status: "🔴 Duplicate Data"
+    purpose: "Current project state tracker"
+    issues:
+      - id: "DUPE-001"
+        problem: "Two backlogState sections with conflicting data"
+        location1: "Lines 56-63 (totalItems: 60)"
+        location2: "Lines 143-168 (totalItems: 52)"
+        description: "Duplicate YAML key with different values"
+      - id: "STALE-002"
+        problem: "aiReminders section is stale"
+        lines: "189-196"
+        content: "References Phase 21 IN PROGRESS - but we're in Phase 27"
+    action: "P0 - Remove duplicate, update stale content"
+
+  - file: "tracking/backlog.yaml"
+    size: "60.2KB"
+    status: "✅ Working"
+    purpose: "Feature backlog (62 items)"
+    issues:
+      - "Large file but necessary for tracking"
+
+  - file: "tracking/backlog-categories.yaml"
+    size: "5.5KB"
+    status: "✅ Good"
+    purpose: "7 backlog categories defined"
+    issues: []
+
+  - file: "tracking/VISION.yaml"
+    size: "4.2KB"
+    status: "✅ Good"
+    purpose: "Core vision document"
+    issues: []
+
+  - file: "tracking/bugs.yaml"
+    size: "837B"
+    status: "✅ Good"
+    purpose: "Bug tracker (0 active)"
+    issues: []
+
+# =============================================================================
+# ISSUES SUMMARY
+# =============================================================================
+
+issuesSummary:
+
+  byPriority:
+    P0_immediate:
+      count: 2
+      items:
+        - id: "DUPE-001"
+          file: "CURRENT_STATE.yaml"
+          action: "Remove duplicate backlogState section"
+          effort: "5 minutes"
+        - id: "STALE-001"
+          file: "PEER_REVIEW_CHECKLIST.yaml"
+          action: "Update stale file references"
+          effort: "5 minutes"
+    
+    P1_phaseCore:
+      count: 6
+      items:
+        - id: "FACTORY-001"
+          file: "newfactory-workflow.yaml"
+          action: "Replace with minimal prompt"
+        - id: "FACTORY-002"
+          file: "newfactory-workflow.yaml"
+          action: "Add prompt storage step"
+        - id: "FACTORY-003"
+          file: "newfactory-workflow.yaml"
+          action: "Remove workspace explanation from prompt"
+        - id: "REVIEW-001"
+          file: "factory-review-workflow.yaml"
+          action: "Replace recommendations with deviations"
+        - id: "REVIEW-002"
+          file: "factory-review-workflow.yaml"
+          action: "Add per-deviation human review"
+        - id: "TEMPLATE-001/002"
+          file: "comparison templates"
+          action: "Create new deviation-based template"
+    
+    P2_consolidation:
+      count: 2
+      items:
+        - id: "OVERLAP-001/002"
+          files: ["new-agent.yaml", "session-start.yaml"]
+          action: "Consolidate into single onboarding.yaml"
+
+  byFileStatus:
+    clean: 16
+    phaseTargets: 4
+    staleOrDuplicate: 3
+    overlapCandidates: 2
+
+# =============================================================================
+# SCOPE DECISION
+# =============================================================================
+
+scopeDecision:
+  selected: "Option C - Full Governance Cleanup"
+  approvedBy: "Matthew Phipps"
+  approvedDate: "2026-01-21T22:20:00Z"
+
+# =============================================================================
+# CONSOLIDATION PLAN (Agreed with User)
+# =============================================================================
+
+consolidationPlan:
+  principle: "Single source of truth - each concept in ONE file"
+  
+  merges:
+    - merge: "Peer Review Consolidation"
+      source: "PEER_REVIEW_CHECKLIST.yaml"
+      target: "agent-persona.yaml"
+      rationale: "One file for personas + procedural checklist"
+      afterMerge: "Delete PEER_REVIEW_CHECKLIST.yaml"
+    
+    - merge: "AI Onboarding Consolidation"
+      source: ["new-agent.yaml", "session-start.yaml"]
+      target: "checklists/ai_onboard.yaml"
+      rationale: "80% overlap, one file for all onboarding"
+      afterMerge: "Delete new-agent.yaml and session-start.yaml"
+  
+  updates:
+    - file: "INDEX.yaml"
+      action: "Update references to point to new files"
+
+# =============================================================================
+# FILES TO MODIFY (Option C - Full Cleanup)
+# =============================================================================
+
+filesToModify:
+
+  p0QuickFixes:
+    - file: "tracking/CURRENT_STATE.yaml"
+      action: "Remove duplicate backlogState ✅ DONE"
+      status: "complete"
+    - file: "tracking/CURRENT_STATE.yaml"
+      action: "Remove stale aiReminders section"
+      status: "pending"
+  
+  p1FactoryWorkflow:
+    - file: "newfactory-workflow.yaml"
+      action: "Redesign with minimal prompt + storage"
+    - file: "factory-review-workflow.yaml"
+      action: "Add deviation methodology + per-item review"
+    - file: "templates/deviation-report.yaml"
+      action: "Create new template"
+    - file: "templates/factory-prompt.md"
+      action: "Create minimal prompt template"
+  
+  p2Consolidation:
+    - merge: "PEER_REVIEW_CHECKLIST → agent-persona.yaml"
+      steps:
+        - "Extract useful checklist content"
+        - "Add peerReviewChecklist section to agent-persona.yaml"
+        - "Delete PEER_REVIEW_CHECKLIST.yaml"
+    
+    - merge: "new-agent + session-start → ai_onboard.yaml"
+      steps:
+        - "Combine content into checklists/ai_onboard.yaml"
+        - "Delete new-agent.yaml"
+        - "Delete session-start.yaml"
+    
+    - update: "INDEX.yaml"
+      action: "Update references to new file locations"
+
+# =============================================================================
+# PROPOSED FILE STRUCTURE (After Phase 27)
+# =============================================================================
+
+proposedStructure:
+  description: "Net result: -2 files, cleaner governance"
+  
+  files:
+    root:
+      - "INDEX.yaml (update refs)"
+      - "constitution.yaml (unchanged)"
+      - "pulse-protocol.yaml (unchanged)"
+      - "agent-persona.yaml ← MERGED with peer review checklist"
+      - "safety-protocol.yaml (unchanged)"
+      - "rrmd-protocol.yaml (unchanged)"
+      - "bump-protocol.yaml (unchanged)"
+      - "newfactory-workflow.yaml ← REDESIGNED"
+      - "factory-review-workflow.yaml ← REDESIGNED"
+    
+    checklists:
+      - "ai_onboard.yaml ← NEW (merged new-agent + session-start)"
+      - "before-file-op.yaml (unchanged)"
+      - "before-phase.yaml (unchanged)"
+    
+    deleted:
+      - "PEER_REVIEW_CHECKLIST.yaml (merged into agent-persona)"
+      - "new-agent.yaml (merged into ai_onboard)"
+      - "session-start.yaml (merged into ai_onboard)"
+
+# =============================================================================
+# GATE QUESTION
+# =============================================================================
+
+gateQuestion:
+  stageSummary: |
+    Discovery complete with full governance audit of 25 files.
+    
+    Agreed Option C scope with user:
+    1. P0 Quick fixes (CURRENT_STATE backlogState ✅, aiReminders pending)
+    2. P1 Factory workflow redesign (minimal prompt, deviation-based review)
+    3. P2 Consolidation (peer review → agent-persona, onboarding → ai_onboard.yaml)
+    
+    Net result: Delete 3 files, merge content, cleaner governance.
+  
+  question: "Ready to proceed to Research stage?"
+  requires: "!Proceed"
+
+nextStage:
+  name: "research"
+  artifact: "stage-2-research.yaml"

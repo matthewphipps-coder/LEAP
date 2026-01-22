@@ -1,0 +1,68 @@
+# =============================================================================
+# DEVIATION REPORT TEMPLATE
+# =============================================================================
+# Copy this template for each factory run inspection
+# Save as: results/deviation-report-vX.X.X.yaml
+
+metadata:
+  runVersion: "[VERSION]"
+  inspectedDate: "[DATE]"
+  inspectedBy: "LEAP AI"
+
+# =============================================================================
+# DEVIATIONS FOUND
+# =============================================================================
+
+deviations:
+
+  # Example deviation:
+  # - id: DEV-001
+  #   category: "locked-files | naming | extension | stages | gates | docs"
+  #   severity: "CRITICAL | HIGH | MEDIUM | LOW"
+  #   
+  #   rule: "Which governance rule was violated"
+  #   ruleSource: "File and section where rule is defined"
+  #   
+  #   expected: "What should have happened"
+  #   actual: "What actually happened"
+  #   evidence: "File paths, line numbers, or other proof"
+  #   
+  #   humanDecision: null  # Filled by user: backlog | skip | factory-bug
+  #   backlogItem: null    # If backlog, the LEAP-XXX ID
+  
+  - id: DEV-001
+    category: "[category]"
+    severity: "[severity]"
+    rule: "[rule violated]"
+    ruleSource: "[governance file]"
+    expected: "[expected behavior]"
+    actual: "[actual behavior]"
+    evidence: "[proof]"
+    humanDecision: null
+    backlogItem: null
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalDeviations: 0
+  bySeverity:
+    critical: 0
+    high: 0
+    medium: 0
+    low: 0
+  
+  humanDecisions:
+    addedToBacklog: 0
+    skipped: 0
+    factoryBug: 0
+
+# =============================================================================
+# SIGN-OFF
+# =============================================================================
+
+signOff:
+  reviewedWith: "[Human name]"
+  reviewDate: "[Date]"
+  allDeviationsAddressed: false

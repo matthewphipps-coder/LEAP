@@ -60,37 +60,37 @@ steps:
       - "cp -r GoldSource/* ~/Documents/DemoInstances/Factory-[version]/"
   
   3_generateOnboardingPrompt:
-    action: "Generate and display factory onboarding prompt"
+    action: "Generate minimal factory onboarding prompt"
     display: true
+    principle: "No coaching - Factory reads its own governance"
     template: |
-      ═══════════════════════════════════════════════════════════════════════════
-      FACTORY ONBOARDING PROMPT - Copy this to a NEW AI conversation
-      ═══════════════════════════════════════════════════════════════════════════
-      
-      You are a DemoFactory AI. Your job is to create a demo for the user.
-      
-      CRITICAL INSTRUCTIONS:
-      1. Read the Gold Source governance files at:
-         [FACTORY_WORKSPACE]/governance/FACTORY_README.yaml
-      
-      2. Demo details:
-         - Name: NEXUS [VERSION]
-         - Scenario: [SCENARIO]
-         - Output location: [DEMO_OUTPUT]
-         - Factory workspace: [FACTORY_WORKSPACE]
-      
-      3. Follow the 8-stage lifecycle with !Proceed gates.
-      
-      Start by reading governance/FACTORY_README.yaml, then begin Discovery.
-      ═══════════════════════════════════════════════════════════════════════════
+      # DemoFactory Onboarding
+
+      You are a DemoFactory AI.
+
+      **Factory workspace:** [FACTORY_WORKSPACE]
+      **Demo output:** [DEMO_OUTPUT]
+      **Demo:** NEXUS [VERSION]
+      **Scenario:** [SCENARIO]
+
+      Start by reading: `governance/FACTORY_README.yaml`
   
-  4_confirmReady:
+  4_savePrompt:
+    action: "Save prompt for repeatability"
+    destination: "FactoryTesting/prompts/prompt-[VERSION].md"
+    purpose: "Enable identical test re-runs after governance changes"
+    commands:
+      - "mkdir -p FactoryTesting/prompts"
+      - "Save generated prompt to FactoryTesting/prompts/prompt-[VERSION].md"
+  
+  5_confirmReady:
     action: "Confirm factory is ready"
     message: |
       ✅ Factory instance created!
       
       Factory workspace: [FACTORY_WORKSPACE]
       Demo output: [DEMO_OUTPUT]
+      Prompt saved: FactoryTesting/prompts/prompt-[VERSION].md
       
       NEXT STEPS:
       1. Copy the onboarding prompt above

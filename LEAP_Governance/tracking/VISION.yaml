@@ -57,7 +57,7 @@ vision:
       6_prioritizeWithUser: "Human decides next phase of improvement"
     
     result: "Each cycle improves LEAP → better factory → more consistent demos"
-    workflow: "LEAP_Governance/factory-review-workflow.yaml"
+    workflow: "FactoryTesting/review-factory.yaml"
   
   targetAudiences:
     leapUsers:

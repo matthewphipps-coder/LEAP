@@ -42,7 +42,7 @@ categories:
       - "Gold Source compliance checking"
       - "Backlog deduplication process"
       - "Demo vs scaffold regression detection"
-    impactArea: "FactoryTestRuns/, factory-review-workflow.yaml"
+    impactArea: "FactoryTesting/, review-factory.yaml"
     owner: "LEAP"
 
   # ---------------------------------------------------------------------------

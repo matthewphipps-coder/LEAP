@@ -274,7 +274,7 @@ priorities:
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-002"
       name: "Enforce Gate Approval Recording"
@@ -288,7 +288,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-005"
       name: "Require Wireframes in Design Stage"
@@ -302,7 +302,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-006"
       name: "Standardize Test Case ID Format"
@@ -316,7 +316,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-007"
       name: "Add Dependency Graph to Design"
@@ -330,7 +330,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-008"
       name: "Require Complexity Estimates"
@@ -344,7 +344,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-009"
       name: "Mandate Test Evidence Files"
@@ -359,8 +359,8 @@ priorities:
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
       source:
-        - "FactoryTestRuns/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
-        - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-007)"
+        - "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.1-vs-v1.0.2.yaml"
+        - "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-007)"
     
     # -------------------------------------------------------------------------
     # Gold Source Scaffold Items (from demo output comparison)
@@ -378,8 +378,8 @@ priorities:
       dependencies: []
       addedDate: "2026-01-19"
       source:
-        - "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
-        - "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-002)"
+        - "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+        - "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-002)"
       verificationNote: "Already in architectural-standards.yaml phase18Conventions.pathNaming (line 135): 'Singular (features/incident/, not incidents/)'"
     
     - id: "LEAP-004"
@@ -394,7 +394,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-012"
       name: "Standardize State Shapes"
@@ -408,7 +408,7 @@ priorities:
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-016"
       name: "Define Service Function Patterns"
@@ -422,7 +422,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     - id: "LEAP-017"
       name: "Standardize Status/Enum Values"
@@ -436,7 +436,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     # -------------------------------------------------------------------------
     # Demo Output Standards (from demo output comparison)
@@ -453,7 +453,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
       verificationNote: "Already in artifact-manifest.yaml (lines 72-76) and lifecycle-stages.yaml Stage 5 outputs"
     
     - id: "LEAP-015"
@@ -468,7 +468,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
     
     # -------------------------------------------------------------------------
     # Archetype/Domain Items (from demo output comparison)
@@ -485,7 +485,7 @@ priorities:
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
       supersessionNote: "Issue from v1.0.x era. Recent runs (v2.0.0, v2.0.1, v2.0.2) show Factory AI generates consistent component structures without templates."
     
     - id: "LEAP-018"
@@ -500,7 +500,7 @@ priorities:
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v1.0.1-vs-v1.0.2.yaml"
       supersessionNote: "Issue from v1.0.x era. Recent runs show Factory AI reads existing data patterns and follows them consistently."
     
     # -------------------------------------------------------------------------
@@ -518,7 +518,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-001)"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-001)"
       acceptanceCriteria:
         - "architectural-standards.yaml includes component creation decision tree"
         - "Clear criteria for 'create new' vs 'modify existing'"
@@ -535,7 +535,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-005)"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-005)"
       acceptanceCriteria:
         - "stage-3-analysis.yaml template has standardized approach comparison section"
     
@@ -551,7 +551,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: ["LEAP-001"]
       addedDate: "2026-01-19"
-      source: "FactoryTestRuns/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-006)"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v1.0.2-vs-v1.0.3.yaml (DEV-006)"
       acceptanceCriteria:
         - "stage-6-validation.yaml template includes detailed feature validation matrix"
         - "Template includes data model validation section"
@@ -586,7 +586,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml (DEV-001)"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v2.0.0-vs-v2.0.1.yaml (DEV-001)"
       acceptanceCriteria:
         - "architectural-standards.yaml includes AI service pattern guidance"
         - "Clear criteria for dedicated service vs inline approach"
@@ -603,7 +603,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "FactoryTestRuns/factory-comparison-v2.0.0-vs-v2.0.1.yaml (CR-002)"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v2.0.0-vs-v2.0.1.yaml (CR-002)"
       acceptanceCriteria:
         - "GoldSource/meta/ARCHITECTURE.yaml includes pathDepths section"
         - "All folder locations documented with correct relative depth"
@@ -638,7 +638,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-003)"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-003)"
       acceptanceCriteria:
         - "architectural-standards.yaml includes accessibility requirements section"
         - "Component template includes keyboard handler example"
@@ -655,7 +655,7 @@ priorities:
       estimatedEffort: "small"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "FactoryTestRuns/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-005)"
+      source: "FactoryTestRuns_ARCHIVE/demo-output-comparison-v2.0.0-vs-v2.0.1.yaml (CODE-005)"
       acceptanceCriteria:
         - "architectural-standards.yaml includes component initialization guidance"
         - "Clear criteria for lazy vs explicit init pattern"
@@ -675,7 +675,7 @@ priorities:
       estimatedEffort: "medium"
       dependencies: []
       addedDate: "2026-01-20"
-      source: "FactoryTestRuns/factory-comparison-v2.0.1-vs-v2.0.2.yaml"
+      source: "FactoryTestRuns_ARCHIVE/factory-comparison-v2.0.1-vs-v2.0.2.yaml"
       acceptanceCriteria:
         - "state.js exports registerStateSlice(name, initialState, setters) or equivalent"
         - "Registered slices accessible via getState('sliceName')"
@@ -1034,7 +1034,7 @@ priorities:
         Investigation on 2026-01-21 found FACTORY_TASK_TEMPLATE.md exists at 
         GoldSource/governance/FACTORY_TASK_TEMPLATE.md (5,236 bytes). The original analysis
         incorrectly claimed the file was missing. The v2.1.0 factory comparison report
-        (FactoryTestRuns/factory-comparison-v2.0.4-vs-v2.1.0.yaml) confirmed all 9/9 tests passed.
+        (FactoryTestRuns_ARCHIVE/factory-comparison-v2.0.4-vs-v2.1.0.yaml) confirmed all 9/9 tests passed.
         Missing stages 6-8 were due to early user approval, not missing template.
       estimatedEffort: "small"
       dependencies: []

@@ -22,8 +22,8 @@ documentHierarchy:
   triggeredWorkflows:  # Activated by command or condition
     - "rrmd-protocol.yaml - Risk assessment (>3 files, core files, failures)"
     - "bump-protocol.yaml - Agent recovery (!bump)"
-    - "newfactory-workflow.yaml - New factory (/newfactory)"
-    - "factory-review-workflow.yaml - Compare runs (after 2+ factory runs)"
+    - "FactoryTesting/initiate-factory.yaml - New factory (/newfactory)"
+    - "FactoryTesting/review-factory.yaml - Compare runs (after 2+ factory runs)"
     
   reference:
     - "CURRENT_STATE.yaml - Current state tracker"

@@ -6,8 +6,7 @@ metadata:
   version: "1.2.0"
 
 readFirst:
-  newAgent: "checklists/new-agent.yaml"
-  sessionStart: "checklists/session-start.yaml"
+  aiOnboard: "ai-onboard-protocol.yaml"  # Session start for all AI agents
   
 beforeActions:
   fileOperations: "checklists/before-file-op.yaml"
@@ -29,8 +28,8 @@ protocols:
   
 # Workflows
 workflows:
-  newFactory: "newfactory-workflow.yaml"        # /newfactory command
-  factoryReview: "factory-review-workflow.yaml" # Compare runs, populate backlog
+  newFactory: "FactoryTesting/initiate-factory.yaml"
+  factoryReview: "FactoryTesting/review-factory.yaml"
 
 # Tracking references
 tracking:
@@ -39,10 +38,8 @@ tracking:
   backlogCategories: "tracking/backlog-categories.yaml"
   bugs: "tracking/bugs.yaml"
 
-# Factory test runs (at LEAP root, not in LEAP_Governance)
-factoryTestRuns:
-  location: "FactoryTestRuns/"
-  purpose: "Factory comparison documents and analysis"
-  templates:
-    - "templates/factory-comparison.yaml"
-    - "templates/demo-output-comparison.yaml"
+# Factory testing (at LEAP root, not in LEAP_Governance)
+factoryTesting:
+  location: "FactoryTesting/"
+  purpose: "Factory workflows, inspection guides, and results"
+  index: "FactoryTesting/INDEX.yaml"

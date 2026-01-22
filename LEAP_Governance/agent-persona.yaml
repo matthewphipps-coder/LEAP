@@ -150,3 +150,54 @@ peerReviewProcess:
     - "Implement with surgical precision"
     - "Maintain all 6 persona standards"
     - "Document decisions and rationale"
+
+# =============================================================================
+# PEER REVIEW CHECKLIST (merged from PEER_REVIEW_CHECKLIST.yaml)
+# =============================================================================
+
+peerReviewChecklist:
+  
+  whatToRead:
+    required:
+      - "CURRENT_STATE.yaml - Understand current phase/context"
+      - "constitution.yaml - Know the 15 partnership rules"
+      - "pulse-protocol.yaml - Understand !pulse compliance"
+    optional:
+      - "pulse-protocol.yaml lifecycle stages (if reviewing phase transitions)"
+  
+  constitutionChecks:
+    - rule: 1
+      name: "Recursive Summary"
+      check: "Is problem and solution clearly stated?"
+    - rule: 2
+      name: "Proposed Impact"
+      check: "Are all files to be modified listed?"
+    - rule: 3
+      name: "Proceed Air-Gap"
+      check: "Was !Proceed received before code changes?"
+    - rule: 5
+      name: "No-Assumption Shield"
+      check: "Were infrastructure/services verified, not assumed?"
+    - rule: 7
+      name: "Hard Stop"
+      check: "Are all rules being respected?"
+    - rule: 9
+      name: "RRMD+"
+      check: "If significant changes, was RRMD+ completed?"
+  
+  qualityChecks:
+    - "Code follows LEAP naming conventions"
+    - "Error handling is present"
+    - "No console.logs left in production code"
+    - "Changes are minimal and focused"
+  
+  reportFormat:
+    use: "Peer review lenses summary"
+    format: |
+      ## Peer Review Summary
+      - **Architect**: [strategic alignment]
+      - **Surgeon**: [precision concerns]
+      - **Guardian**: [safety issues]
+      - **Strategist**: [performance impacts]
+      - **Advocate**: [UX considerations]
+      - **Archivist**: [documentation needs]

@@ -1,30 +1,28 @@
 # LEAP
 
-> Vision pending - clean room rebuild in progress
+> AI Speed + Governance Rigor
 
 ---
 
 ## 📚 Governance Framework
 
 ### Core Documents
-- **[CURRENT_STATE.yaml](CURRENT_STATE.yaml)** - Current phase and status (read first)
-- **[constitution.yaml](constitution.yaml)** - 12 partnership rules (mandatory)
-- **[pulse-protocol.yaml](pulse-protocol.yaml)** - Development methodology
+- **[CURRENT_STATE.yaml](LEAP_Governance/tracking/CURRENT_STATE.yaml)** - Current phase and status (read first)
+- **[constitution.yaml](LEAP_Governance/constitution.yaml)** - 15 partnership rules (mandatory)
+- **[pulse-protocol.yaml](LEAP_Governance/pulse-protocol.yaml)** - Development methodology
 
 ### Standards & Safety
-- **[architectural-standards.yaml](architectural-standards.yaml)** - Code structure patterns
-- **[safety-protocol.yaml](safety-protocol.yaml)** - Backup & deployment safety
-- **[regression-protocol.yaml](regression-protocol.yaml)** - Zero-regression rules
-- **[agent-persona.yaml](agent-persona.yaml)** - AI review standards
+- **[safety-protocol.yaml](LEAP_Governance/safety-protocol.yaml)** - Backup & deployment safety
+- **[agent-persona.yaml](LEAP_Governance/agent-persona.yaml)** - AI review standards
+- **[rrmd-protocol.yaml](LEAP_Governance/rrmd-protocol.yaml)** - Risk assessment
 
 ### Tracking
-- **[bugs.yaml](bugs.yaml)** - Known issues
-- **[backlog.yaml](backlog.yaml)** - Feature roadmap
-- **[functionality.yaml](functionality.yaml)** - Implemented features
+- **[bugs.yaml](LEAP_Governance/tracking/bugs.yaml)** - Known issues
+- **[backlog.yaml](LEAP_Governance/tracking/backlog.yaml)** - Feature roadmap
 
 ### Workflows
+- **[FactoryTesting/](FactoryTesting/)** - Factory workflows and inspection guides
 - **[.agent/workflows/pulse.md](.agent/workflows/pulse.md)** - `!pulse` protocol
-- **[.agent/workflows/rrmd.md](.agent/workflows/rrmd.md)** - Risk assessment
 
 ---
 
@@ -37,4 +35,4 @@ npm run dev
 
 ---
 
-**Status:** Pending new vision definition
+**Status:** Active development

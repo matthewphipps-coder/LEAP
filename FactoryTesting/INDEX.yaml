@@ -1,0 +1,89 @@
+# =============================================================================
+# FACTORYTESTING INDEX
+# =============================================================================
+
+metadata:
+  name: "Factory Testing Index"
+  purpose: "Directory of factory testing files and completed runs"
+  lastUpdated: "2026-01-21"
+
+# =============================================================================
+# FILES IN THIS FOLDER
+# =============================================================================
+
+files:
+  - file: "initiate-factory.yaml"
+    type: "workflow"
+    purpose: "How to start a factory run (copy GoldSource, generate prompt)"
+    trigger: "/newfactory"
+  
+  - file: "review-factory.yaml"
+    type: "workflow"
+    purpose: "How to run an inspection (locate → use guide → create report)"
+    trigger: "After factory run completes"
+  
+  - file: "inspection-guide.yaml"
+    type: "guide"
+    purpose: "What specifically to check during factory review"
+  
+  - file: "deviation-report.yaml"
+    type: "template"
+    purpose: "Where to record findings (rule, expected, actual, evidence)"
+
+folders:
+  - folder: "prompts/"
+    purpose: "Saved onboarding prompts for repeatability"
+  
+  - folder: "results/"
+    purpose: "Completed deviation reports from inspections"
+
+# =============================================================================
+# COMPLETED FACTORY RUNS
+# =============================================================================
+
+completedRuns:
+  - demo: "NEXUS v0.0.1-firstTest"
+    location: "~/Documents/DemoOutput/Nexus 0.0.1-firstTest/"
+    addedDate: "2026-01-15"
+  
+  - demo: "NEXUS v1.0.0-firstIteration"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.0-firstIteration/"
+    addedDate: "2026-01-17"
+  
+  - demo: "NEXUS v1.0.1-incidentList"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.1-incidentList/"
+    addedDate: "2026-01-17"
+  
+  - demo: "NEXUS v1.0.2-incidentDetail"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.2-incidentDetail/"
+    addedDate: "2026-01-17"
+  
+  - demo: "NEXUS v1.0.3-incidentFull"
+    location: "~/Documents/DemoOutput/NEXUS-v1.0.3-incidentFull/"
+    addedDate: "2026-01-18"
+  
+  - demo: "NEXUS v2.0.0-baseline"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.0-baseline/"
+    addedDate: "2026-01-18"
+  
+  - demo: "NEXUS v2.0.1-improvedGates"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.1-improvedGates/"
+    addedDate: "2026-01-18"
+  
+  - demo: "NEXUS v2.0.2-complexScenario"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.2-complexScenario/"
+    addedDate: "2026-01-19"
+  
+  - demo: "NEXUS v2.0.3-patternTest"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.3-patternTest/"
+    addedDate: "2026-01-20"
+  
+  - demo: "NEXUS v2.0.4-archetypeValidation"
+    location: "~/Documents/DemoOutput/NEXUS-v2.0.4-archetypeValidation/"
+    addedDate: "2026-01-20"
+  
+  - demo: "NEXUS v2.1.0-change-approval"
+    location: "~/Documents/DemoOutput/NEXUS-v2.1.0-change-approval/"
+    addedDate: "2026-01-21"
+
+nextRun: "TBD"

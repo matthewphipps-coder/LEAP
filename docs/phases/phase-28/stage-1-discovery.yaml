@@ -1,0 +1,73 @@
+# =============================================================================
+# STAGE 1: DISCOVERY - Governance Consolidation
+# =============================================================================
+
+metadata:
+  phase: 28
+  stage: 1
+  stageName: "discovery"
+  created: "2026-01-21T23:02:00Z"
+  completedDate: "2026-01-21T23:05:00Z"
+  status: "complete"
+
+# =============================================================================
+# PHASE GOAL
+# =============================================================================
+
+goal: "Complete Factory folder consolidation and governance file cleanup with proper collaboration"
+
+# =============================================================================
+# PROBLEM STATEMENT
+# =============================================================================
+
+problemStatement:
+  summary: "Factory-related files are scattered across multiple folders"
+  
+  currentState:
+    - "FactoryTestRuns/ contains old comparison results"
+    - "LEAP_Governance/ contains factory workflows"
+    - "LEAP_Governance/templates/ contains factory templates"
+    - "Governance files have duplication (PEER_REVIEW, onboarding)"
+  
+  desiredState:
+    - "FactoryTesting/ as single consolidated folder"
+    - "Old results archived in FactoryTestRuns_ARCHIVE/"
+    - "Merged governance files (no duplication)"
+
+# =============================================================================
+# SCOPE (from Phase 27 handoff)
+# =============================================================================
+
+scope:
+  folderChanges:
+    - "Rename FactoryTestRuns → FactoryTestRuns_ARCHIVE"
+    - "Create FactoryTesting/ with subfolders"
+    - "Move workflows and templates to FactoryTesting/"
+  
+  fileMerges:
+    - "PEER_REVIEW_CHECKLIST → agent-persona.yaml"
+    - "new-agent + session-start → ai_onboard.yaml"
+  
+  referenceUpdates:
+    - "INDEX.yaml"
+    - "constitution.yaml"
+    - "ARCHITECTURE.yaml"
+    - "VISION.yaml"
+    - "backlog.yaml (30+ refs)"
+
+# =============================================================================
+# DISCOVERY QUESTIONS
+# =============================================================================
+
+discoveryQuestions:
+  - "Is the scope clear and achievable?"
+  - "Should we tackle folder changes and file merges together or separately?"
+  - "Any concerns about the proposed structure?"
+
+# =============================================================================
+# GATE
+# =============================================================================
+
+gate:
+  question: "Discovery complete - ready for Research?"
+  requires: "!Proceed"

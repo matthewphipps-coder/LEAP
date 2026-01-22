@@ -44,8 +44,8 @@ steps:
 
   2_compareArtifacts:
     action: "Compare factory stage artifacts (1-8)"
-    template: "LEAP_Governance/templates/factory-comparison.yaml"
-    output: "FactoryTestRuns/factory-comparison-{vA}-vs-{vB}.yaml"
+    # Use inspection-guide.yaml and deviation-report.yaml for capturing findings
+    output: "FactoryTesting/results/comparison-{vA}-vs-{vB}.yaml"
     focus:
       - "Artifact structure consistency"
       - "Metadata and gate tracking"
@@ -54,8 +54,8 @@ steps:
 
   3_compareDemoCode:
     action: "Compare actual demo code outputs"
-    template: "LEAP_Governance/templates/demo-output-comparison.yaml"
-    output: "FactoryTestRuns/demo-output-comparison-{vA}-vs-{vB}.yaml"
+    # Use inspection-guide.yaml and deviation-report.yaml for capturing findings
+    output: "FactoryTesting/results/demo-comparison-{vA}-vs-{vB}.yaml"
     focus:
       - "Directory structure"
       - "File naming conventions"
@@ -95,7 +95,7 @@ steps:
         reference: "GoldSource layout"
     
     output:
-      file: "FactoryTestRuns/goldsource-compliance-{version}.yaml"
+      file: "FactoryTesting/results/goldsource-compliance-{version}.yaml"
       includeIn: "demo-output-comparison report"
 
   4_categorizeDeviations:
@@ -153,15 +153,15 @@ steps:
 
 outputs:
   comparison:
-    - "FactoryTestRuns/factory-comparison-{vA}-vs-{vB}.yaml"
-    - "FactoryTestRuns/demo-output-comparison-{vA}-vs-{vB}.yaml"
+    - "FactoryTesting/results/comparison-{vA}-vs-{vB}.yaml"
+    - "FactoryTesting/results/demo-comparison-{vA}-vs-{vB}.yaml"
   
   backlog:
     - "Updated LEAP_Governance/tracking/backlog.yaml"
   
-  templates:
-    - "LEAP_Governance/templates/factory-comparison.yaml"
-    - "LEAP_Governance/templates/demo-output-comparison.yaml"
+  guide:
+    - "FactoryTesting/inspection-guide.yaml"
+    - "FactoryTesting/deviation-report.yaml"
 
 # =============================================================================
 # CONTINUOUS IMPROVEMENT
