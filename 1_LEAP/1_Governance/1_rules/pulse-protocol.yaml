@@ -93,7 +93,7 @@ stageTransitions:
   enforcement:
     requirement: "Explicit '!Proceed' or 'Proceed'"
     invalid: "'yes', 'yep', 'sounds good', 'go ahead', 'continue'"
-    checklist: "1_LEAP/1_Governance/checklists/before-file-op.yaml"
+    checklist: "1_LEAP/1_Governance/3_checklists/before-file-op.yaml"
   
   criticalGate:
     transition: "design → implementation"
@@ -136,7 +136,7 @@ gateRecords:
     rule: "Gate records cannot be modified after creation"
     reference: "constitution.yaml Rule 15"
   
-  template: "1_LEAP/1_Governance/templates/gate-record-template.yaml"
+  template: "1_LEAP/1_Governance/5_templates/gate-record-template.yaml"
 
 # =============================================================================
 # COMPLETION & CLOSURE
@@ -207,7 +207,7 @@ stageArtifacts:
     - "No re-work required when AI changes mid-phase"
     - "Audit trail of decisions at each stage"
   
-  template: "1_LEAP/1_Governance/templates/phase-artifact.yaml"
+  template: "1_LEAP/1_Governance/5_templates/phase-artifact.yaml"
 
 # =============================================================================
 # AI TRACKING CONSTRAINT - No duplicate tracking
@@ -237,5 +237,5 @@ aiTrackingConstraint:
 
 workflowCreation:
   purpose: "Standard format for new workflow documents"
-  template: "1_LEAP/1_Governance/templates/workflow.yaml"
+  template: "1_LEAP/1_Governance/5_templates/workflow.yaml"
   location: "1_LEAP/1_Governance/ or .agent/workflows/"

@@ -22,12 +22,12 @@ deliverySummary:
   
   filesDelivered:
     governance:
-      - "1_LEAP/1_Governance/constitution.yaml"
-      - "1_LEAP/1_Governance/pulse-protocol.yaml"
-      - "1_LEAP/1_Governance/tracking/backlog.yaml"
+      - "1_LEAP/1_Governance/1_rules/constitution.yaml"
+      - "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
+      - "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     
     tracking:
-      - "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+      - "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
     
     phaseArtifacts:
       - "4_Phases/phase-17/stage-1-discovery.yaml"

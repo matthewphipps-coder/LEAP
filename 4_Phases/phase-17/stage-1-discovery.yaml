@@ -63,9 +63,9 @@ discovery:
       - "Any scaffold or demo-output items"
   
   targetFiles:
-    - "1_LEAP/1_Governance/constitution.yaml"
-    - "1_LEAP/1_Governance/pulse-protocol.yaml"
-    - "1_LEAP/1_Governance/tracking/backlog.yaml (template section only)"
+    - "1_LEAP/1_Governance/1_rules/constitution.yaml"
+    - "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
+    - "1_LEAP/1_Governance/4_tracking/backlog.yaml (template section only)"
 
 gateRecord:
   transition: "none → discovery"

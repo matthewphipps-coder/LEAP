@@ -49,14 +49,14 @@ filesModified:
       - "Step 10: Adapt task.md with demo name, paths, and demo-specific items"
       - "Renumbered subsequent steps (9→11, 10→12)"
   
-  - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+  - file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     changes:
       - "LEAP-033: status changed to 'superseded', added supersessionNote"
       - "LEAP-003: added phase19Note about Stage 5 reading guide"
       - "LEAP-009: added phase19Note about Stage 7 reading guide"
       - "LEAP-019: added phase19Note about Stage 5 reading guide"
   
-  - file: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+  - file: "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
     changes:
       - "Updated stage to 'implementation'"
       - "Updated stageArtifact reference"

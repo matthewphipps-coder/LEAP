@@ -34,8 +34,8 @@ filesDelivered:
     - "2_GoldSource/governance/templates/stage-8-closure.yaml"
   
   tracking:
-    - "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
-    - "1_LEAP/1_Governance/tracking/backlog.yaml"
+    - "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
+    - "1_LEAP/1_Governance/4_tracking/backlog.yaml"
   
   phaseArtifacts:
     - "4_Phases/phase-16/stage-1-discovery.yaml"

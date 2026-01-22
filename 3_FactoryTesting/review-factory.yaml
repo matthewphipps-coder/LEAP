@@ -100,7 +100,7 @@ steps:
 
   4_categorizeDeviations:
     action: "Categorize deviations by root cause"
-    reference: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+    reference: "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
     categories:
       - "factory-governance: Factory process needs improvement"
       - "scaffold-conventions: Gold Source scaffold needs patterns"
@@ -109,7 +109,7 @@ steps:
 
   5_addToBacklog:
     action: "Add LEAP improvement items to backlog"
-    location: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    location: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     
     # -------------------------------------------------------------------------
     # LEAP-025: Deduplication Checklist
@@ -157,7 +157,7 @@ outputs:
     - "3_FactoryTesting/results/demo-comparison-{vA}-vs-{vB}.yaml"
   
   backlog:
-    - "Updated 1_LEAP/1_Governance/tracking/backlog.yaml"
+    - "Updated 1_LEAP/1_Governance/4_tracking/backlog.yaml"
   
   guide:
     - "3_FactoryTesting/inspection-guide.yaml"

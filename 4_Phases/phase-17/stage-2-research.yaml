@@ -25,7 +25,7 @@ researchObjective: "Understand target files, dependencies, and ripple effects be
 
 GOV006_Research:
   
-  targetFile: "1_LEAP/1_Governance/constitution.yaml"
+  targetFile: "1_LEAP/1_Governance/1_rules/constitution.yaml"
   targetSection: "governanceManagement (lines 33-40)"
   
   currentContent:
@@ -60,7 +60,7 @@ GOV006_Research:
 
 GOV003_Research:
   
-  targetFile: "1_LEAP/1_Governance/pulse-protocol.yaml"
+  targetFile: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
   targetSection: "stageTransitions.completionCriteria.delivery (line 109)"
   
   currentContent:
@@ -85,7 +85,7 @@ GOV003_Research:
 
 GOV005_Research:
   
-  targetFile: "1_LEAP/1_Governance/pulse-protocol.yaml"
+  targetFile: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
   targetSection: "stageTransitions.completionCriteria.discovery (line 103)"
   
   currentContent:
@@ -103,7 +103,7 @@ GOV005_Research:
 
 GOV004_Research:
   
-  targetFile: "1_LEAP/1_Governance/tracking/backlog.yaml"
+  targetFile: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
   targetSection: "howToAdd.template (lines 374-385)"
   
   currentTemplate:
@@ -131,7 +131,7 @@ scopeQuestion:
     items: ["constitution.yaml", "pulse-protocol.yaml", "backlog.yaml"]
   
   potentialExpansion:
-    file: "1_LEAP/1_Governance/checklists/session-start.yaml"
+    file: "1_LEAP/1_Governance/3_checklists/session-start.yaml"
     reason: "GOV-003 may need reinforcement in !Pulse orient section"
     effort: "small - one line addition"
   

@@ -36,11 +36,11 @@ deliverySummary:
       purpose: "Updated firstSteps with template copy/adapt steps"
       modification: "Added steps 9-10"
     
-    - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    - file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
       purpose: "Updated backlog with superseded/addressed items"
       modification: "LEAP-033 superseded, notes on LEAP-003/009/019"
     
-    - file: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+    - file: "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
       purpose: "Updated project state"
       modification: "Phase 19 progress tracking"
     
@@ -65,8 +65,8 @@ gitCommit:
     Files changed:
     - 2_GoldSource/governance/FACTORY_TASK_TEMPLATE.md (new)
     - 2_GoldSource/governance/FACTORY_README.yaml (modified)
-    - 1_LEAP/1_Governance/tracking/backlog.yaml (modified)
-    - 1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml (modified)
+    - 1_LEAP/1_Governance/4_tracking/backlog.yaml (modified)
+    - 1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml (modified)
     - 4_Phases/phase-19/* (new - 7 stage artifacts)
 
 # =============================================================================

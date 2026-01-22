@@ -40,22 +40,22 @@ finalScope:
   
   changes:
     - id: "GOV-003"
-      file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+      file: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
       section: "completionCriteria.delivery"
       action: "Add 'CURRENT_STATE backlog counts verified'"
       
     - id: "GOV-004"
-      file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+      file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
       section: "howToAdd.template"
       action: "Add acceptanceCriteria field"
       
     - id: "GOV-005"
-      file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+      file: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
       section: "completionCriteria.discovery"
       action: "Add 'Already done claims verified against source'"
       
     - id: "GOV-006"
-      file: "1_LEAP/1_Governance/constitution.yaml"
+      file: "1_LEAP/1_Governance/1_rules/constitution.yaml"
       section: "governanceManagement"
       action: "Add Governance Is Code principle"
 

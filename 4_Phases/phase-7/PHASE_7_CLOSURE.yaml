@@ -29,10 +29,10 @@ metrics:
   deletions: 3997
   
   newFiles:
-    - "1_LEAP/1_Governance/INDEX.yaml"
-    - "1_LEAP/1_Governance/checklists/session-start.yaml"
-    - "1_LEAP/1_Governance/checklists/before-file-op.yaml"
-    - "1_LEAP/1_Governance/checklists/before-phase.yaml"
+    - "1_LEAP/1_Governance/0_start/INDEX.yaml"
+    - "1_LEAP/1_Governance/3_checklists/session-start.yaml"
+    - "1_LEAP/1_Governance/3_checklists/before-file-op.yaml"
+    - "1_LEAP/1_Governance/3_checklists/before-phase.yaml"
     - "4_Phases/phase-7/stage-*.yaml (5 artifacts)"
 
 handoff:

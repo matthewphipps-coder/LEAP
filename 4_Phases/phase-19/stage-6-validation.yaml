@@ -70,7 +70,7 @@ deliverableValidation:
         detail: "Now 12 steps total (was 10)"
   
   - deliverable: "backlog.yaml updates"
-    location: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    location: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     status: "✅ MODIFIED"
     
     contentValidation:

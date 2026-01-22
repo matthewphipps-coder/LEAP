@@ -26,7 +26,7 @@ problemStatement:
   currentState:
     - "FactoryTestRuns/ contains old comparison results"
     - "1_LEAP/1_Governance/ contains factory workflows"
-    - "1_LEAP/1_Governance/templates/ contains factory templates"
+    - "1_LEAP/1_Governance/5_templates/ contains factory templates"
     - "Governance files have duplication (PEER_REVIEW, onboarding)"
   
   desiredState:

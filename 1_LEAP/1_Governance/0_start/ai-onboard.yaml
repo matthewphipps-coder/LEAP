@@ -23,7 +23,7 @@ onboardingSteps:
 
   step1_orient:
     action: "Read CURRENT_STATE.yaml"
-    location: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+    location: "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
     purpose: "Understand current phase, stage, and context"
     time: "2 minutes"
   
@@ -34,7 +34,7 @@ onboardingSteps:
   
   step3_readGovIfNeeded:
     action: "Read governance files if unfamiliar"
-    entryPoint: "1_LEAP/1_Governance/INDEX.yaml"
+    entryPoint: "1_LEAP/1_Governance/0_start/INDEX.yaml"
     core: ["constitution.yaml", "pulse-protocol.yaml"]
 
 # =============================================================================

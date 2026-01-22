@@ -22,15 +22,15 @@ implementationSummary:
   filesModified: 3
   
   changes:
-    - file: "1_LEAP/1_Governance/constitution.yaml"
+    - file: "1_LEAP/1_Governance/1_rules/constitution.yaml"
       item: "GOV-006"
       action: "Added Governance Is Code principle (4 fields) + updated file limit 15→25"
       
-    - file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+    - file: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
       items: ["GOV-003", "GOV-005"]
       action: "Added discovery source verification + delivery count verification"
       
-    - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    - file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
       item: "GOV-004"
       action: "Added acceptanceCriteria field to howToAdd template"
 

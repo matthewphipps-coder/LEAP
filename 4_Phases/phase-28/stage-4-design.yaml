@@ -62,7 +62,7 @@ part1_folderSetup:
   
   step2_updateBacklogRefs:
     action: "Update backlog.yaml references"
-    file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     find: "FactoryTestRuns/"
     replace: "FactoryTestRuns_ARCHIVE/"
     expectedChanges: "30+ occurrences"
@@ -88,25 +88,25 @@ part1_folderSetup:
       - "3_FactoryTesting/inspection-guide.yaml"
       - "3_FactoryTesting/deviation-report.yaml"
     deletes:
-      - "1_LEAP/1_Governance/templates/factory-comparison.yaml"
-      - "1_LEAP/1_Governance/templates/demo-output-comparison.yaml"
+      - "1_LEAP/1_Governance/5_templates/factory-comparison.yaml"
+      - "1_LEAP/1_Governance/5_templates/demo-output-comparison.yaml"
   
   step6_moveRunsHistory:
     action: "Move factoryRunsCompleted from CURRENT_STATE to 3_FactoryTesting/INDEX.yaml"
-    from: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml (factoryRunsCompleted section)"
+    from: "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml (factoryRunsCompleted section)"
     to: "3_FactoryTesting/INDEX.yaml"
     note: "Workflows (initiate-factory, review-factory) will reference/update this"
   
   step7_updateAllRefs:
     action: "Update ALL files mentioning factory"
     files:
-      - file: "1_LEAP/1_Governance/INDEX.yaml"
+      - file: "1_LEAP/1_Governance/0_start/INDEX.yaml"
         changes:
           - "newFactory → 3_FactoryTesting/initiate-factory.yaml"
           - "factoryReview → 3_FactoryTesting/review-factory.yaml"
           - "factoryTestRuns location → 3_FactoryTesting/"
       
-      - file: "1_LEAP/1_Governance/constitution.yaml"
+      - file: "1_LEAP/1_Governance/1_rules/constitution.yaml"
         changes:
           - "line 25 → 3_FactoryTesting/initiate-factory.yaml"
           - "line 26 → 3_FactoryTesting/review-factory.yaml"
@@ -115,15 +115,15 @@ part1_folderSetup:
         changes:
           - "line 107 → 3_FactoryTesting/initiate-factory.yaml"
       
-      - file: "1_LEAP/1_Governance/tracking/VISION.yaml"
+      - file: "1_LEAP/1_Governance/4_tracking/VISION.yaml"
         changes:
           - "line 60 → 3_FactoryTesting/review-factory.yaml"
       
-      - file: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+      - file: "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
         changes:
           - "line 45 impactArea → 3_FactoryTesting/"
       
-      - file: "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+      - file: "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
         changes:
           - "Remove factoryRunsCompleted section (moved to 3_FactoryTesting/INDEX.yaml)"
           - "Add reference: see 3_FactoryTesting/INDEX.yaml for run history"
@@ -137,15 +137,15 @@ part2_fileMerges:
   step8_mergePeerReview:
     action: "Merge PEER_REVIEW_CHECKLIST → agent-persona.yaml"
     source: "1_LEAP/1_Governance/PEER_REVIEW_CHECKLIST.yaml"
-    target: "1_LEAP/1_Governance/agent-persona.yaml"
+    target: "1_LEAP/1_Governance/2_protocols/agent-persona.yaml"
     afterMerge: "Delete PEER_REVIEW_CHECKLIST.yaml"
   
   step9_createOnboardProtocol:
     action: "Create ai-onboard-protocol.yaml from new-agent + session-start"
     sources:
-      - "1_LEAP/1_Governance/checklists/new-agent.yaml"
-      - "1_LEAP/1_Governance/checklists/session-start.yaml"
-    target: "1_LEAP/1_Governance/ai-onboard-protocol.yaml"
+      - "1_LEAP/1_Governance/3_checklists/new-agent.yaml"
+      - "1_LEAP/1_Governance/3_checklists/session-start.yaml"
+    target: "1_LEAP/1_Governance/0_start/ai-onboard.yaml"
     type: "protocol (like bump-protocol, rrmd-protocol)"
     afterMerge: "Delete new-agent.yaml and session-start.yaml"
   

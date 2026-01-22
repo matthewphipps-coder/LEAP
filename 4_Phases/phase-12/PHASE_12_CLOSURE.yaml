@@ -14,12 +14,12 @@ whatWasAccomplished:
       action: "deleted"
       reason: "Legacy template - replaced by distributed template pattern"
     
-    - file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+    - file: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
       action: "modified"
       changes: ["Added gateRecords.template reference", "Added stageArtifacts.template reference", "Added workflowCreation section"]
       version: "4.2.0"
     
-    - file: "1_LEAP/1_Governance/constitution.yaml"
+    - file: "1_LEAP/1_Governance/1_rules/constitution.yaml"
       action: "modified"
       changes: ["Added governanceTemplates section listing all 5 templates"]
       version: "3.1.0"

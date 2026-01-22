@@ -8,16 +8,16 @@ metadata:
 implementationPlan:
 
   create:
-    - file: "1_LEAP/1_Governance/INDEX.yaml"
+    - file: "1_LEAP/1_Governance/0_start/INDEX.yaml"
       lines: 20
       purpose: "Entry point - guides AI to right file"
-    - file: "1_LEAP/1_Governance/checklists/session-start.yaml"
+    - file: "1_LEAP/1_Governance/3_checklists/session-start.yaml"
       lines: 20
       purpose: "Session onboarding checklist"
-    - file: "1_LEAP/1_Governance/checklists/before-file-op.yaml"
+    - file: "1_LEAP/1_Governance/3_checklists/before-file-op.yaml"
       lines: 20
       purpose: "Proceed checklist (replaces PROCEED_PROTOCOL)"
-    - file: "1_LEAP/1_Governance/checklists/before-phase.yaml"
+    - file: "1_LEAP/1_Governance/3_checklists/before-phase.yaml"
       lines: 25
       purpose: "Phase start checklist"
 

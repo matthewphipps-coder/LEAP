@@ -129,7 +129,7 @@ recommendedApproach:
       type: "modify"
       changes: "Add steps 9-10 to firstSteps"
     
-    - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+    - file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
       type: "modify"
       changes: "Mark LEAP-033 as superseded, note other items addressed"
   

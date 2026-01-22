@@ -22,7 +22,7 @@ filesToModify:
   # ---------------------------------------------------------------------------
   # FILE 1: constitution.yaml (GOV-006 + governance file limit update)
   # ---------------------------------------------------------------------------
-  - file: "1_LEAP/1_Governance/constitution.yaml"
+  - file: "1_LEAP/1_Governance/1_rules/constitution.yaml"
     item: "GOV-006"
     location: "Lines 33-40 (governanceManagement section)"
     
@@ -47,7 +47,7 @@ filesToModify:
   # ---------------------------------------------------------------------------
   # FILE 2: pulse-protocol.yaml (GOV-003, GOV-005)
   # ---------------------------------------------------------------------------
-  - file: "1_LEAP/1_Governance/pulse-protocol.yaml"
+  - file: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
     items: ["GOV-003", "GOV-005"]
     location: "Lines 102-110 (completionCriteria section)"
     
@@ -71,7 +71,7 @@ filesToModify:
   # ---------------------------------------------------------------------------
   # FILE 3: backlog.yaml (GOV-004)
   # ---------------------------------------------------------------------------
-  - file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+  - file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
     item: "GOV-004"
     location: "Lines 374-385 (howToAdd.template)"
     

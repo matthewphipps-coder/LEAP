@@ -101,8 +101,8 @@ filesChanged:
       delta: "+204"
       
   trackingChanges:
-    - "1_LEAP/1_Governance/tracking/backlog.yaml"
-    - "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
+    - "1_LEAP/1_Governance/4_tracking/backlog.yaml"
+    - "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
 
 # =============================================================================
 # STAGE ARTIFACTS

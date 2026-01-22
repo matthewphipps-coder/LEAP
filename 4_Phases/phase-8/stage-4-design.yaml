@@ -43,7 +43,7 @@ keyChanges:
   - "Keep completion criteria as lists only"
 
 filesToModify:
-  - "1_LEAP/1_Governance/pulse-protocol.yaml (rewrite)"
+  - "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml (rewrite)"
 
 successCriteria:
   - "File is ~300 lines"

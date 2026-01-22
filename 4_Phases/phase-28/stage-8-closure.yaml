@@ -59,23 +59,23 @@ filesChanged:
     - "3_FactoryTesting/review-factory.yaml"
     - "3_FactoryTesting/inspection-guide.yaml"
     - "3_FactoryTesting/deviation-report.yaml"
-    - "1_LEAP/1_Governance/ai-onboard-protocol.yaml"
+    - "1_LEAP/1_Governance/0_start/ai-onboard.yaml"
   
   deleted:
     - "1_LEAP/1_Governance/PEER_REVIEW_CHECKLIST.yaml"
-    - "1_LEAP/1_Governance/checklists/new-agent.yaml"
-    - "1_LEAP/1_Governance/checklists/session-start.yaml"
-    - "1_LEAP/1_Governance/templates/factory-comparison.yaml"
-    - "1_LEAP/1_Governance/templates/demo-output-comparison.yaml"
+    - "1_LEAP/1_Governance/3_checklists/new-agent.yaml"
+    - "1_LEAP/1_Governance/3_checklists/session-start.yaml"
+    - "1_LEAP/1_Governance/5_templates/factory-comparison.yaml"
+    - "1_LEAP/1_Governance/5_templates/demo-output-comparison.yaml"
   
   modified:
-    - "1_LEAP/1_Governance/INDEX.yaml"
-    - "1_LEAP/1_Governance/constitution.yaml"
-    - "1_LEAP/1_Governance/agent-persona.yaml"
-    - "1_LEAP/1_Governance/tracking/CURRENT_STATE.yaml"
-    - "1_LEAP/1_Governance/tracking/backlog.yaml"
-    - "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
-    - "1_LEAP/1_Governance/tracking/VISION.yaml"
+    - "1_LEAP/1_Governance/0_start/INDEX.yaml"
+    - "1_LEAP/1_Governance/1_rules/constitution.yaml"
+    - "1_LEAP/1_Governance/2_protocols/agent-persona.yaml"
+    - "1_LEAP/1_Governance/0_start/CURRENT_STATE.yaml"
+    - "1_LEAP/1_Governance/4_tracking/backlog.yaml"
+    - "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
+    - "1_LEAP/1_Governance/4_tracking/VISION.yaml"
     - "ARCHITECTURE.yaml"
   
   renamed:

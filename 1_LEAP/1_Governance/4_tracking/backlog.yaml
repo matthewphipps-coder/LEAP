@@ -21,7 +21,7 @@ summary:\n  totalItems: 62
   
   note: "Added LEAP-057: patternVerification enforcement (2026-01-21)"
   
-  categoriesRef: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+  categoriesRef: "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
 
 priorities:
   immediate:
@@ -1220,8 +1220,8 @@ priorities:
   future: []
 
 howToAdd:
-  templateRef: "1_LEAP/1_Governance/templates/tracking.yaml"
-  categoriesRef: "1_LEAP/1_Governance/tracking/backlog-categories.yaml"
+  templateRef: "1_LEAP/1_Governance/5_templates/tracking.yaml"
+  categoriesRef: "1_LEAP/1_Governance/4_tracking/backlog-categories.yaml"
   template: |
     - id: "FEATURE-XXX"
       name: "Feature name"

@@ -244,7 +244,7 @@ deliverable2:
 # =============================================================================
 
 deliverable3:
-  file: "1_LEAP/1_Governance/tracking/backlog.yaml"
+  file: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
   type: "modify"
   
   changes:

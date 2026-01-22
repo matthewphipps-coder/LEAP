@@ -20,6 +20,6 @@ deliveryResults:
       - "stage-6-validation.yaml"
     
     modifiedFiles:
-      - "1_LEAP/1_Governance/pulse-protocol.yaml (864→207 lines)"
+      - "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml (864→207 lines)"
 
 nextStage: "closure"

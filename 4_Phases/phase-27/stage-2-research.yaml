@@ -65,7 +65,7 @@ findings:
       factory-review-workflow: "16 occurrences"
     
     keyFilesToUpdate:
-      - file: "1_LEAP/1_Governance/INDEX.yaml"
+      - file: "1_LEAP/1_Governance/0_start/INDEX.yaml"
         lines: [32, 33, 43, 44]
         updates: "workflow paths + factoryTestRuns location"
       - file: "constitution.yaml"
