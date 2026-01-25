@@ -3,7 +3,11 @@
 > Copy this template to `4_Phases/phase-{X}/task.md` at Stage 1 end.
 > All references are to Methodology/ files - no Factory governance files.
 
-## ⚠️ CRITICAL: AI MUST NOT SKIP STAGES
+## ⚠️ CRITICAL RULES
+- **ROOT DISCIPLINE**: ALWAYS run commands from project root. (`/Users/matthew.phipps/Documents/LEAP`)
+- **FOLDER JAIL**: ALL artifacts MUST be in `4_Phases/phase-{X}/`.
+- **NO ROOT FILES**: Never create files in `1_LEAP/` unless strictly authorized.
+- **AI MUST NOT SKIP STAGES**:
 
 **This checklist enforces 8-stage compliance:**
 - ❌ "specOnly" does NOT mean skip stages - it means no prototype

@@ -1,0 +1,67 @@
+metadata:
+  type: "stage-artifact"
+  stage: 3
+  name: "Analysis"
+  phase: 35
+  project: "SafetyNet"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+analysis:
+  scriptDesign:
+    language: "bash"
+    location: "1_LEAP/1_Governance/3_resources/gov-check.sh"
+    structure: |
+      #!/bin/bash
+      ERRORS=0
+      
+      # Functions
+      error() { echo "❌ $1"; ERRORS=$((ERRORS+1)); }
+      pass() { echo "✅ $1"; }
+      
+      check_forbidden() {
+          PATTERN=$1
+          FILES=$2
+          MSG=$3
+          if grep -r "$PATTERN" $FILES > /dev/null 2>&1; then
+             error "$MSG"
+             grep -r "$PATTERN" $FILES | awk '{print "   " $0}'
+          else
+             pass "$4 (Clean)"
+          fi
+      }
+      
+      check_required() {
+          # Logic to ensure pattern exists in files
+      }
+
+  ruleDefinition:
+    forbidden:
+      - pattern: "document\\.getElementById"
+        files: "1_LEAP/2_GoldSource/scaffold/features/**/*-service.js"
+        message: "DOM access in Service Layer detected!"
+      
+      - pattern: "setTimeout"
+        files: "1_LEAP/2_GoldSource/scaffold/core/app.js"
+        message: "setTimeout detected in core boot sequence (Race Condition Risk)!"
+        
+      - pattern: "updateSidebarForPage"
+        files: "1_LEAP/2_GoldSource/scaffold/**/*.js"
+        message: "Imperative Sidebar update detected! Use state subscription."
+
+    required:
+      - pattern: "MODULE_CONTRACT"
+        files: "1_LEAP/2_GoldSource/scaffold/features/**/*-service.js"
+        message: "Missing MODULE_CONTRACT in service."
+
+  integrationPlan:
+    file: "1_LEAP/2_Build_GoldSource/Methodology/goldsource-increment.yaml"
+    location: "Stage 6 (Validation)"
+    action: "Add step: Run `bash 1_LEAP/1_Governance/3_resources/gov-check.sh`"
+
+riskAssessment:
+  falsePositives: "Grep is dumb. Might flag comments. Will add exclusion for lines starting with // or *."
+  maintenance: "Project needs to own this script. Added to LEAP-072 items."
+
+nextStep: "Stage 4: Design (Writing the full script code)"

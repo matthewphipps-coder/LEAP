@@ -1,0 +1,38 @@
+metadata:
+  type: "stage-artifact"
+  stage: 1
+  name: "Discovery"
+  phase: 35
+  project: "SafetyNet"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+discovery:
+  problemStatement: |
+    Governance success currently relies on "Trust". We ask the AI "Did you check the architecture?" and it says "Yes".
+    We need "Proof". We need a script that fails the build if the AI uses banned patterns.
+  
+  scope:
+    included:
+      - "Create 1_LEAP/1_Governance/3_resources/gov-check.sh"
+      - "Define regex patterns for banned code (e.g., direct DOM manipulation, setTimeout)"
+      - "Define regex patterns for mandatory code (e.g., MODULE_CONTRACT)"
+      - "Update goldsource-increment.yaml to require this script in Stage 6"
+    excluded:
+      - "Modifying the actual GoldSource scaffold code (only adding the checking tool)"
+  
+  constraints:
+    protocol: "Pulse Protocol"
+    scripting: "Bash / Grep (Simple, portable, no deps)"
+    
+  successCriteria:
+    - "Script detects 'updateSidebarForPage' and FAILS"
+    - "Script detects 'setTimeout' in initialization and FAILS"
+    - "Script detects missing 'MODULE_CONTRACT' and FAILS"
+    - "Script PASSES on clean code"
+
+  questionsForUser:
+    - "Are there any specific 'Banned Patterns' you've seen recently that we should add to the blacklist immediately?"
+
+nextStep: "Stage 2: Research (Identify all patterns to ban/enforce)"

@@ -1,0 +1,60 @@
+metadata:
+  type: "stage-artifact"
+  stage: 2
+  name: "Research"
+  phase: 35
+  project: "SafetyNet"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+research:
+  patternAssessment:
+    forbidden:
+      - pattern: "document.getElementById|querySelector"
+        scope: "*-service.js"
+        reason: "Service layer must not access DOM (Triad Pattern)"
+      
+      - pattern: "onclick=|onchange="
+        scope: "*.html|*.js"
+        reason: "Inline event handlers forbidden (Coding Standards)"
+      
+      - pattern: "sidebar.update\\(|header.update\\("
+        scope: "*.js"
+        reason: "Imperative UI updates violate Unidirectional Flow (Phase 33)"
+      
+      - pattern: "setTimeout"
+        scope: "init*|DOMContentLoaded"
+        reason: "Race condition indicator (Phase 33)"
+      
+      - pattern: "require\\("
+        scope: "*.js"
+        reason: "CommonJS forbidden; use ES Modules"
+
+    required:
+      - pattern: "registerStateSlice"
+        scope: "*-service.js"
+        reason: "Features must register state slice"
+      
+      - pattern: "MODULE_CONTRACT"
+        scope: "*-service.js|*-ui.js"
+        reason: "Standard module interface required"
+      
+      - pattern: "@file|@purpose"
+        scope: "*.js"
+        reason: "AI-First file headers required"
+
+  implementationStrategy:
+    tool: "Bash script (gov-check.sh)"
+    logic: |
+      Iterate over file types.
+      Run grep patterns.
+      Count failures.
+      Exit 1 if failures > 0.
+    location: "1_LEAP/1_Governance/3_resources/gov-check.sh"
+
+  riskAssessment:
+    falsePositives: "Possible (e.g. comments). Script should ignore comments if simple."
+    performance: "Negligible (grep is fast)."
+
+nextStep: "Stage 3: Analysis (Defining the script structure and command)"

@@ -275,7 +275,7 @@ priorities:
       name: "R&D Deconstruction Audit"
       category: "governance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Add "Stage -0.5: Deconstruction Audit" to the `/newspec` workflow.
         Require explicit extraction of "Magic Values" (tokens) and "Complex Logic" 
@@ -318,7 +318,7 @@ priorities:
       name: "Salvage Protocol (Rollback Plan)"
       category: "governance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Update `bump-protocol.yaml` and `goldsource-increment.yaml` with a 
         mandatory "Salvage Scan". Before deleting a failed phase, the AI must 
@@ -340,7 +340,7 @@ priorities:
       name: "Folder Context Enforcement"
       category: "governance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Hardcode artifact paths in `task.md` templates to force usage of `4_Phases/`.
         Update `coding-standards.yaml` to explicitly forbid writing phase artifacts 
@@ -382,7 +382,7 @@ priorities:
       name: "Master Lessons Registry"
       category: "governance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Create `1_LEAP/1_Governance/3_resources/LESSONS_LEARNED.md`.
         Update `Stage-8` checklist to require appending new lessons.

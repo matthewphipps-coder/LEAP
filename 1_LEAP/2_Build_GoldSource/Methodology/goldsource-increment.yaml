@@ -373,6 +373,7 @@ stages:
       - "Verify all requirements implemented"
       - "Check for regressions in existing features"
       - "Validate documentation updated"
+      - "Run Governance Check: `bash 1_LEAP/1_Governance/3_resources/gov-check.sh` (MUST PASS)"
     
     outputs:
       - "stage-6-validation.yaml with comparison results"

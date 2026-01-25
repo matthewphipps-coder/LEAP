@@ -26,7 +26,7 @@ draft_phases:
   "-0.5": { title: "Deconstruction Audit", stage: "Technical Handoff", methodology: "Code Extraction", outcome: "deconstruction_audit.md", gold_source_check: "REQUIRED: Compare prototype plan against ARCHITECTURE.yaml" }
   "-4": { title: "Convergence & Scoping", mode: "CONVERGENT", goal: "Condense -5 output into a manageable bold scope", anti_fatigue: "FORCED BREAKPOINT: Reset context/fatigue" }
   "-3": { title: "Analysis & Risk", methodology: "Deep Dive Research", goal: "Thoroughly research bold ideas from every aspect (Risk/Feasibility)" }
-  "-2": { title: "Define & Document", methodology: "Flexible (User Stories / Design Thinking / Diagrams)", goal: "Utilize various methodologies to formalize the design" }
+  "-2": { title: "Visual Prototyping", methodology: "Rapid HTML/CSS Iteration", goal: "Build a throwaway prototype using `prototype_template.html` so the user can FEEL the design.", visual_anchor: "SPEC-XXX-prototype.html" }
   "-1": { title: "Functional Spec & Supporting Artifacts", methodology: "Spec Authoring", goal: "Produce the actionable requirements needed for GoldSource build success" }
   "0":  { title: "Validate", methodology: "Sanity Check / Build-Readiness", goal: "Final validation of assumptions, build-readiness, and GoldSource safety", drift_audit: "REQUIRED: Baseline sync check" }
 
