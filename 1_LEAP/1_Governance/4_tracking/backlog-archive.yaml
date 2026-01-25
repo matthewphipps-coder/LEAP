@@ -22,11 +22,11 @@ metadata:
   archivedFrom: "1_LEAP/1_Governance/4_tracking/backlog.yaml"
 
 summary:
-  totalArchived: 57
-  completed: 45
+  totalArchived: 65
+  completed: 53
   superseded: 12
-  archiveDate: "2026-01-22"
-  note: "Initial archive - backlog hygiene operation"
+  archiveDate: "2026-01-25"
+  note: "Added 8 items from Phase 34-37 (7-Point Remediation Plan)"
 
 # =============================================================================
 # COMPLETED ITEMS (45 items)
@@ -923,6 +923,194 @@ completed:
     dependencies: []
     addedDate: "2026-01-21"
     source: "factory-comparison-v2.1.0-vs-v2.2.0.yaml areasForImprovement"
+
+  # ---------------------------------------------------------------------------
+  # Phase 34-37: 7-Point Remediation Plan (2026-01-25)
+  # ---------------------------------------------------------------------------
+  - id: "LEAP-061"
+    name: "Card System"
+    category: "scaffold-conventions"
+    priority: "short-term"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 37"
+    description: "Standardized card component system with priority/severity color coding"
+    rationale: "Validated in DISCO-004 (Phase 31). Ready for GoldSource implementation."
+    acceptanceCriteria:
+      - "Card base styles documented in design-system.yaml"
+      - "Priority/severity color system (critical, high, medium, low)"
+      - "Card variants (.card-compact, .card-detailed) if needed"
+    estimatedEffort: "medium"
+    dependencies: ["LEAP-036"]
+    addedDate: "2026-01-22"
+    source: "Split from LEAP-039 (generalized from DEFER-004)"
+    specRef: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/SPEC-004-card-canvas.yaml"
+
+  - id: "LEAP-067"
+    name: "Reactive State Compliance (Fix Race Conditions)"
+    category: "architecture"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 36-37"
+    description: |
+      Refactor GoldSource to comply with the existing 'Unidirectional Data Flow' 
+      contract in ARCHITECTURE.yaml.
+      1. Remove imperative updates (e.g., `updateSidebarForPage`).
+      2. Implement Observer Pattern: Sidebar/Header must subscribe to `state.js`.
+      3. Move `currentPage` and `user` data into `state.js`.
+    rationale: |
+      Solves Point 2 (Architecture Ignored) and Point 3 (Race/Load Errors).
+      The "Initialization Hang" was caused by `page-router` trying to update 
+      the Sidebar before it existed. Subscription decouples this timing.
+    acceptanceCriteria:
+      - "No usage of setTimeout in initApp()"
+      - "Sidebar auto-updates when state.currentPage changes"
+      - "page-router.js is strictly a state-dispatcher, not a UI-updater"
+    estimatedEffort: "medium"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 2 & 3)"
+
+  - id: "LEAP-068"
+    name: "R&D Deconstruction Audit"
+    category: "governance"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 34"
+    description: |
+      Add "Stage -0.5: Deconstruction Audit" to the `/newspec` workflow.
+      Require explicit extraction of "Magic Values" (tokens) and "Complex Logic" 
+      (layout algorithms, DnD rules) from the prototype *before* build starts.
+    rationale: |
+      Solves Point 1 (R&D Guidance Failure).
+      The Build AI treated prototypes as visual suggestions, ignoring technical intent.
+      This forces the AI to read the code, not just the pixels.
+    acceptanceCriteria:
+      - "newspec.md includes Stage -0.5"
+      - "deconstruction_audit_template.md created"
+      - "Build AI must cite specific logic from audit during implementation"
+    estimatedEffort: "small"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 1)"
+
+  - id: "LEAP-069"
+    name: "Global Layout Contract"
+    category: "styling"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 36-37"
+    description: |
+      Define and enforce global CSS variables for App Shell dimensions.
+      1. Define `--header-height`, `--sidebar-width` in `variables.css`.
+      2. Update components to use these variables for positioning (`top`, `left`).
+    rationale: |
+      Fixes the physical overlap bugs (Scaffold Blindness).
+      Components currently "guess" their position, causing them to render behind 
+      the fixed Header/Sidebar.
+    acceptanceCriteria:
+      - "variables.css contains shell dimensions"
+      - "Canvas component uses `calc(var(--header-height) + ...)`"
+    estimatedEffort: "small"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Technical Gap - Scaffold Blindness)"
+
+  - id: "LEAP-070"
+    name: "Salvage Protocol (Rollback Plan)"
+    category: "governance"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 34"
+    description: |
+      Update `bump-protocol.yaml` and `goldsource-increment.yaml` with a 
+      mandatory "Salvage Scan". Before deleting a failed phase, the AI must 
+      scan for valid artifacts (like Phase 31's masonry prototype) and 
+      move them to a `_Salvage/` directory or `snippets/` folder.
+    rationale: |
+      Solves Point 4 (Documentation Rollback Plan).
+      We lost superior code in Phase 31 because "Delete" meant "Destroy".
+      Failed phases often contain successful components.
+    acceptanceCriteria:
+      - "bump-protocol.yaml includes Salvage Scan step"
+      - "AI checks 4_Phases/* before claiming 'no previous work exists'"
+    estimatedEffort: "small"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 4)"
+
+  - id: "LEAP-071"
+    name: "Folder Context Enforcement"
+    category: "governance"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 34"
+    description: |
+      Hardcode artifact paths in `task.md` templates to force usage of `4_Phases/`.
+      Update `coding-standards.yaml` to explicitly forbid writing phase artifacts 
+      to the project root or `1_LEAP/`.
+    rationale: |
+      Solves Point 5 (Folder Discipline).
+      AI agents default to the root directory when context is weak. 
+      Explicit paths in the checklist effectively "jail" the agent to the correct folder.
+    acceptanceCriteria:
+      - "task.md template uses absolute or relative-to-root specific paths"
+      - "No new artifacts appear in project root during Phase 34"
+    estimatedEffort: "small"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 5)"
+
+  - id: "LEAP-072"
+    name: "Automated Governance Checks"
+    category: "governance"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 35"
+    description: |
+      Create a simple "Linting Script" for Stage 6 (Validation).
+      Script should grep for banned patterns (e.g., `updateSidebarForPage` export, 
+      `setTimeout` usage) and required patterns (e.g., `MODULE_CONTRACT`).
+    rationale: |
+      Solves Point 6 (False Compliance).
+      Replaces "I promise I checked" with "The script says PASS".
+      Removes the "Box Ticking" bias.
+    acceptanceCriteria:
+      - "governance-check.sh created"
+      - "Stage 6 checklist requires running the script"
+    estimatedEffort: "medium"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 6)"
+
+  - id: "LEAP-073"
+    name: "Master Lessons Registry"
+    category: "governance"
+    priority: "immediate"
+    status: "complete"
+    completedDate: "2026-01-25"
+    completedIn: "Phase 34"
+    description: |
+      Create `1_LEAP/1_Governance/3_resources/LESSONS_LEARNED.md`.
+      Update `Stage-8` checklist to require appending new lessons.
+      Update `Stage-1` checklist to require Reading this file.
+    rationale: |
+      Solves Point 7 (Systemic Amnesia).
+      Ensures that knowledge (like "Masonry works better than Grid") persists 
+      even if the Phase folder is deleted.
+    acceptanceCriteria:
+      - "LESSONS_LEARNED.md created"
+      - "Methodology updated to force Read/Write of this file"
+    estimatedEffort: "small"
+    dependencies: []
+    addedDate: "2026-01-25"
+    source: "7-Point Remediation Plan (Point 7)"
 
 
 # =============================================================================
