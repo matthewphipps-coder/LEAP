@@ -1,0 +1,72 @@
+# =============================================================================
+# FACTORY COMPARISON REPORT
+# =============================================================================
+
+metadata:
+  date: "2026-01-25"
+  runA: 
+    version: "v2.2.0-cmdb-explorer"
+    status: "PASS"
+    path: "~/Documents/DemoOutput/NEXUS-v2.2.0-cmdb-explorer/"
+  
+  runB: 
+    version: "v2.2.1-cmdb-explorer"
+    status: "PASS (with structural deviations)"
+    path: "~/Documents/DemoOutput/NEXUS-v2.2.1-cmdb-explorer/"
+
+# =============================================================================
+# KEY FINDINGS
+# =============================================================================
+
+findings:
+
+  1_StructuralDeviation:
+    severity: "High"
+    description: "Major difference in implementation strategy for the same feature."
+    runA: "Implemented as a standalone feature (`features/cmdb/`) with its own service and components."
+    runB: "Implemented within the existing `card` and `canvas` components (`canvas-ui-v2.js`), lacking a dedicated feature folder."
+    impact: "Run B approach is less modular and harder to maintain. It overloaded the canvas component instead of extending it."
+    recommendation: "Enforce 'New Feature = New Folder' rule in architectural governance."
+
+  2_CodeSafety:
+    severity: "Low"
+    description: "Gold Source locked files check."
+    result: "Both runs respected locked files (state.js, variables.css)."
+    note: "Run B effectively busted cache by renaming `canvas-ui.js` to `canvas-ui-v2.js`, which was a clever but non-standard hack."
+
+  3_Documentation:
+    severity: "Medium"
+    description: "Documentation quality comparison."
+    runA: "Excellent README, strictly followed template."
+    runB: "Good README, but file structure section didn't match reality (claimed features/cmdb existed when it didn't)."
+  
+  4_ArtifactManagement:
+    severity: "Medium"
+    description: "Stage artifact location."
+    runA: "Artifacts in `governance/` folder (standard)."
+    runB: "Artifacts in root directory `~/Documents/DemoInstances/Factory-v2.2.1-cmdb-explorer/` (deviation)."
+    impact: "Clutter in root directory."
+
+# =============================================================================
+# BACKLOG ADDITIONS
+# =============================================================================
+
+newBacklogItems:
+  - id: "LEAP-074"
+    title: "Enforce Feature Modularity"
+    category: "factory-governance"
+    description: "Factory v2.2.1 implemented a major feature inside an existing component instead of creating a new feature module. Governance must explicitly require new folders for new domains."
+  
+  - id: "LEAP-075"
+    title: "Standardize Cache Busting"
+    category: "scaffold-conventions"
+    description: "Factory v2.2.1 resorted to file renaming (v2.js) to fix caching. We need a standard build-time or runtime cache buster in GoldSource."
+
+# =============================================================================
+# CONCLUSION
+# =============================================================================
+
+summary: |
+  v2.2.0 was the superior implementation architecturally (clean separation of concerns).
+  v2.2.1 worked functionally but degraded the codebase by overloading the canvas component.
+  This highlights a need for the 'Architect' persona to enforce modularity earlier in the design phase.

@@ -653,6 +653,58 @@ priorities:
       source: "DISCO-002 Discovery Lab (T-0 Validated)"
       specRef: "3_R&D_GoldSource/Discovery_Lab/DISCO-002_NEXUS_Integration_Layer/T-2_Define/SPEC-NEXUS-integration.yaml"
 
+    # -------------------------------------------------------------------------
+    # Governance & Standards (from v2.2 Factory Review)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-074"
+      name: "Enforce Feature Modularity"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+    # -------------------------------------------------------------------------
+    # Governance & Standards (from v2.2 Factory Review)
+    # -------------------------------------------------------------------------
+    - id: "LEAP-074"
+      name: "Enforce Feature Modularity"
+      category: "factory-governance"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+        Update factory governance to explicitly require that new features be implemented
+        in their own `features/{feature-name}` folder, rather than overloading existing
+        components (e.g., adding CMDB logic to `canvas-ui.js`).
+      rationale: |
+        Factory v2.2.1 implemented CMDB Explorer inside the existing Card/Canvas component,
+        breaking the "Change Approval" pattern of separation. This degrades modularity.
+      acceptanceCriteria:
+        - "FACTORY_README.yaml explicitly forbids implementing new domains in existing feature folders"
+        - "Architectural standards updated to enforce 1-to-1 mapping of Domain to Feature Folder"
+      estimatedEffort: "small"
+      dependencies: []
+      addedDate: "2026-01-25"
+      source: "v2.2.0 vs v2.2.1 Comparison Report"
+
+    - id: "LEAP-075"
+      name: "Standardize Cache Busting"
+      category: "scaffold-conventions"
+      priority: "short-term"
+      status: "proposed"
+      description: |
+        Implement a standard cache-busting mechanism in GoldSource (e.g., hash-based filenames
+        or query parameters in a build step) to avoid manual file renaming/versioning.
+      rationale: |
+        Factory v2.2.1 had to rename `canvas-ui.js` to `canvas-ui-v2.js` to bypass
+        browser caching. This is a hack that shouldn't be necessary.
+      acceptanceCriteria:
+        - "GoldSource build process includes automatic cache busting"
+        - "OR run_server.py sends no-cache headers for local dev"
+      estimatedEffort: "medium"
+      dependencies: []
+      addedDate: "2026-01-25"
+      source: "v2.2.0 vs v2.2.1 Comparison Report"
+
+
   mediumTerm: []
   
   future:

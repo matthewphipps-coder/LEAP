@@ -92,4 +92,9 @@ completedRuns:
     status: "complete"
     inspectionResult: "PASS (0 deviations)"
 
+  - demo: "NEXUS v2.2.1-cmdb-explorer"
+    location: "~/Documents/DemoOutput/NEXUS-v2.2.1-cmdb-explorer/"
+    addedDate: "2026-01-25"
+    status: "in-progress"
+
 nextRun: "TBD"
