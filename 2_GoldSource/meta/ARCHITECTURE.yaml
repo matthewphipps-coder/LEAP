@@ -124,6 +124,9 @@ dependencyMap:
     "ai-service.js":
       imports: ["logger.js"]
       exportedTo: ["future chat components"]
+    "card-service.js":
+      imports: []
+      exportedTo: ["canvas-ui.js"]
   
   uiModules:
     "header-ui.js":
@@ -131,7 +134,7 @@ dependencyMap:
     "sidebar-ui.js":
       imports: ["state.js"]
     "canvas-ui.js":
-      imports: []
+      imports: ["card-service.js", "state.js"]
 
 # =============================================================================
 # DATA FLOW

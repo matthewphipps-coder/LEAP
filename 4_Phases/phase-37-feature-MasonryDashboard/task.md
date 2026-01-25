@@ -22,14 +22,14 @@
 - [x] **Checkpoint**: `git commit -m 'WIP Phase 37: Data & Config Schema'`
 
 ## Stage 4: Logical Layer (Architecture)
-- [/] **Canvas Render Loop**: Implement `canvas-ui.js` to render cards based on `currentHorizon` and `layoutMode`.
-- [ ] **Render Logic**: Implement "Masonry Filter" (Group by Horizon) logic.
-- [ ] **Sidebar Event Bus**: Update `sidebar-ui.js` to emit `sidebar-action` events (Decoupled).
-- [ ] **Drag & Drop**: Implement Native D&D handlers in `sidebar-ui.js` (Drop Zone) and `canvas-ui.js` (Draggable).
-- [ ] **Checkpoint**: `git commit -m 'WIP Phase 37: Logic & Event Bus'`
+- [x] **Canvas Render Loop**: Implement `canvas-ui.js` to render cards based on `currentHorizon` and `layoutMode`.
+- [x] **Render Logic**: Implement "Masonry Filter" (Group by Horizon) logic.
+- [x] **Sidebar Event Bus**: Update `sidebar-ui.js` to emit `sidebar-action` events (Decoupled).
+- [x] **Drag & Drop**: Implement Native D&D handlers in `sidebar-ui.js` (Drop Zone) and `canvas-ui.js` (Draggable).
+- [x] **Checkpoint**: `git commit -m 'WIP Phase 37: Logic & Event Bus'`
 
 ## Stage 5: State & Meta-Data (Gov Compliance)
-- [ ] **State Update**: Add `viewPreferences` to `state.js`.
+- [/] **State Update**: Add `viewPreferences` to `state.js`.
 - [ ] **Per-Horizon Logic**: Ensure switching horizons restores the correct Layout Mode.
 - [ ] **Meta-Docs Update**:
     - [ ] `meta/functionality.yaml`: Add 'Masonry Dashboard' feature entry.

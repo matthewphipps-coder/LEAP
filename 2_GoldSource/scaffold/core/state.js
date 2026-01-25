@@ -15,7 +15,7 @@ import { debug, info, warn } from './logger.js';
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['getState', 'setUser', 'setTheme', 'setCurrentPage', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
+    provides: ['getState', 'setUser', 'setTheme', 'setCurrentPage', 'setSidebarCollapsed', 'setViewPreference', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
     requires: ['logger.js']
 };
 
@@ -33,8 +33,47 @@ const INITIAL_STATE = {
     user: null,                 // Set on auth: { uid, email, displayName, photoURL }
     theme: 'dark',              // 'dark' or 'light'
     sidebarCollapsed: false,    // Sidebar expand/collapse state
-    currentPage: 'inbox'        // Current active page ID (Source of Truth)
+    currentPage: 'inbox',       // Current active page ID (Source of Truth)
+    viewPreferences: {          // MASONRY FEATURE: Per-horizon layout modes
+        inbox: 'list',
+        now: 'grid',
+        next: 'grid',
+        later: 'list',
+        all: 'list',
+        incidents: 'list' // Default fallback
+    }
 };
+
+// ... (existing code)
+
+/**
+ * @function setCurrentPage
+ * @purpose Set current active page
+ * @param {string} pageId - Page ID (e.g. 'inbox', 'my-work')
+ */
+export function setCurrentPage(pageId) {
+    if (state.currentPage === pageId) return;
+    debug('State: setCurrentPage', { pageId });
+    state.currentPage = pageId;
+    notifySubscribers('setCurrentPage');
+}
+
+/**
+ * @function setViewPreference
+ * @purpose Set layout mode for a specific horizon
+ * @param {string} horizon - 'inbox', 'now', etc.
+ * @param {string} mode - 'grid', 'list', 'freeform'
+ */
+export function setViewPreference(horizon, mode) {
+    if (state.viewPreferences[horizon] === mode) return;
+
+    debug('State: setViewPreference', { horizon, mode });
+    state.viewPreferences = {
+        ...state.viewPreferences,
+        [horizon]: mode
+    };
+    notifySubscribers('setViewPreference');
+}
 
 // Private state
 let state = { ...INITIAL_STATE };

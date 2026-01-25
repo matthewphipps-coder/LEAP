@@ -41,6 +41,12 @@ colors:
     glass:
       background: "rgba(0, 0, 0, 0.02)"
       border: "rgba(0, 0, 0, 0.08)"
+      
+  masonry:
+    cardBg: "rgba(20, 20, 25, 0.8)"
+    badgeUrgent: "#ef4444"
+    badgeWarning: "#f59e0b"
+    badgeNeutral: "rgba(255, 255, 255, 0.15)"
 
 # =============================================================================
 # TYPOGRAPHY

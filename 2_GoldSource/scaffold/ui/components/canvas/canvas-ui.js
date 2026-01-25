@@ -8,7 +8,7 @@
  */
 
 import { CardService } from '../../features/card/card-service.js';
-import { getState, subscribe } from '../../core/state.js';
+import { getState, subscribe, setViewPreference } from '../../core/state.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -56,7 +56,7 @@ export function initCanvas() {
   toggles.forEach(btn => {
     btn.addEventListener('click', () => {
       const mode = btn.dataset.layout;
-      setLayoutMode(mode);
+      setViewPreference(currentHorizon, mode); // Persist to state
     });
   });
 
@@ -70,8 +70,16 @@ export function initCanvas() {
     }
   });
 
+  // STATE SUBSCRIPTION: Layout Changes
+  subscribe((state, source) => {
+    if (source === 'setViewPreference') {
+      const newMode = state.viewPreferences[currentHorizon];
+      setLayoutMode(newMode);
+    }
+  });
+
   // Initial Render
-  renderCards();
+  setHorizon('inbox'); // Will trigger renderCards and read layout
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
   console.log('[Canvas] Initialized');
@@ -84,12 +92,17 @@ export function initCanvas() {
 function setHorizon(horizon) {
   currentHorizon = horizon;
   document.getElementById('horizon-title').textContent = horizon === 'all' ? 'All Cards' : horizon;
-  renderCards();
+
+  // RESTORE LAYOUT PREFERENCE
+  const state = getState();
+  const savedMode = state.viewPreferences[horizon] || 'grid';
+  setLayoutMode(savedMode);
 }
 
 function setLayoutMode(mode) {
   currentLayout = mode;
   const canvas = document.getElementById('nexus-canvas');
+  if (!canvas) return; // Guard
 
   canvas.className = 'nexus-scroll-area nexus-canvas'; // Reset
   canvas.classList.add(`${mode}-mode`);

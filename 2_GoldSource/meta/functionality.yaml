@@ -185,3 +185,26 @@ features:
       - "Input patterns (text, textarea, select)"
     extensionPoint: false
     locked: true
+    
+# =============================================================================
+# MASONRY DASHBOARD (SPEC-006)
+# =============================================================================
+
+  - id: "DASH-001"
+    name: "Masonry Dashboard"
+    status: "implemented"
+    description: "My Work dashboard with Masonry/List/Freeform layouts and Drag & Drop"
+    spec: "SPEC-006"
+    phase: "37 - MasonryDashboard"
+    files:
+      - "features/card/card-service.js"
+      - "ui/components/card/card.css"
+      - "ui/components/canvas/canvas-ui.js"
+      - "ui/components/canvas/canvas.css"
+    capabilities:
+      - "Per-Horizon Layout Persistence (Grid, List, Freeform)"
+      - "Masonry Grid Visuals (CSS Columns)"
+      - "Drag & Drop to Sidebar Actions"
+      - "Urgent/Warning Badges"
+    extensionPoint: true
+    extensionNotes: "Factory can add new Card Types or Sidebar Actions via constants.js"
