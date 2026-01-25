@@ -1,0 +1,175 @@
+# =============================================================================
+# DEMO RULES
+# =============================================================================
+# Consistency rules for all demos created by the factory.
+# These ensure demos are reliable, maintainable, and high quality.
+# =============================================================================
+
+purpose: "Ensure consistent, reliable demos across all factory runs"
+
+# =============================================================================
+# CODE STANDARDS
+# =============================================================================
+
+codeStandards:
+  
+  aiFirstHeaders:
+    required: true
+    format: |
+      /**
+       * @file [filename]
+       * @purpose [what this file does]
+       * @layer [core|ui|features]
+       * @dependencies [files this imports from]
+       * @dependents [files that import this]
+       * @locked [true|false]
+       */
+  
+  fileLength:
+    maxLines: 500
+    recommendation: "Keep files focused and under 300 lines"
+  
+  moduleContracts:
+    required: true
+    format: |
+      export const MODULE_CONTRACT = {
+        provides: ['functionName1', 'functionName2'],
+        requires: ['dependency1.js', 'dependency2.js']
+      };
+  
+  noInlineStyles:
+    rule: true
+    reason: "Use CSS variables and classes"
+  
+  stylingReference:
+    rule: "Use CSS variables from design-system.yaml"
+    reference: "meta/design-system.yaml"
+    guide: "meta/theme-extension-guide.yaml"
+    keyVariables:
+      - "--brand-primary, --brand-secondary, --brand-accent (theming)"
+      - "--glass-bg, --glass-border (glassmorphism)"
+    keyClasses:
+      - ".glass (glassmorphism effect)"
+      - ".animate-in (entrance animation)"
+      - ".hover-lift (hover effect)"
+
+# =============================================================================
+# SCAFFOLD RULES
+# =============================================================================
+
+scaffoldRules:
+  
+  locked:
+    description: "Do not modify these in demos"
+    items:
+      - "core/* - Core modules (state, logger, error-handler, user-service)"
+      - "ui/styles/* - Base CSS (variables, base, shell)"
+      - "ui/components/header/* - Header component"
+      - "ui/components/nav/* - Navigation component"
+      - "ui/components/footer/* - Footer component"
+  
+  flexible:
+    description: "Can be modified or extended in demos"
+    items:
+      - "ui/components/chat-panel/* - Chat interface"
+      - "ui/components/data-cards/* - Data display"
+      - "ui/components/action-buttons/* - Quick actions"
+      - "features/* - Feature services"
+  
+  addNew:
+    allowed: true
+    rule: "New components must follow AI-First standards"
+    location: "ui/components/[new-name]/"
+
+# =============================================================================
+# NAMING CONVENTIONS
+# =============================================================================
+
+namingConventions:
+  
+  demoName:
+    pattern: "NEXUS vx.x.x-feature"
+    examples:
+      - "NEXUS v1.0.0-itsm-dashboard"
+      - "NEXUS v1.1.0-approval-flow"
+      - "NEXUS v2.0.0-data-explorer"
+  
+  files:
+    style: "kebab-case"
+    examples:
+      - "data-cards-ui.js"
+      - "dashboard-service.js"
+  
+  functions:
+    style: "camelCase"
+    examples:
+      - "initDataCards"
+      - "handleUserAction"
+  
+  cssClasses:
+    style: "kebab-case or BEM"
+    examples:
+      - "data-card"
+      - "data-card__header"
+      - "data-card--active"
+  
+  cssVariables:
+    style: "--category-name"
+    examples:
+      - "--color-primary"
+      - "--spacing-md"
+
+# =============================================================================
+# PROHIBITED ACTIONS
+# =============================================================================
+
+prohibited:
+  - action: "External API calls without user approval"
+    reason: "Security and reliability"
+  
+  - action: "File system access outside demo folder"
+    reason: "Containment"
+  
+  - action: "Modifying Gold Source"
+    reason: "Preserve master copy"
+  
+  - action: "Skipping stages or gates"
+    reason: "Governance"
+  
+  - action: "Auto-running unsafe commands"
+    reason: "Safety"
+
+# =============================================================================
+# REQUIRED ACTIONS
+# =============================================================================
+
+required:
+  - action: "Stage artifact for every stage"
+    reason: "Tracking and documentation"
+  
+  - action: "Human approval at every gate"
+    reason: "Oversight"
+  
+  - action: "README.md for completed demo"
+    reason: "Usability"
+  
+  - action: "Lessons learned in Closure"
+    reason: "Continuous improvement"
+
+# =============================================================================
+# QUALITY CHECKLIST
+# =============================================================================
+
+qualityChecklist:
+  beforeDelivery:
+    - "All code has AI-First headers"
+    - "No lint errors"
+    - "All components render correctly"
+    - "Navigation works"
+    - "Theme toggle works (if applicable)"
+    - "Console has no errors"
+  
+  documentation:
+    - "README.md exists"
+    - "Setup instructions are clear"
+    - "All stage artifacts exist"

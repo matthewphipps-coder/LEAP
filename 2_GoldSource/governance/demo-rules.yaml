@@ -62,7 +62,7 @@ scaffoldRules:
   locked:
     description: "Do not modify these in demos"
     items:
-      - "core/* - Core modules (state, logger, error-handler, user-service)"
+      - "core/* - Core modules (state, logger, error-handler)"
       - "ui/styles/* - Base CSS (variables, base, shell)"
       - "ui/components/header/* - Header component"
       - "ui/components/nav/* - Navigation component"

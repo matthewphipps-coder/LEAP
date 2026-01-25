@@ -1,0 +1,276 @@
+# =============================================================================
+# FACTORY README - READ THIS FIRST
+# =============================================================================
+# This file is the entry point for the Factory AI.
+# It explains what the factory is and how to operate.
+# =============================================================================
+
+# =============================================================================
+# WHAT IS "GOLDSOURCE"?
+# =============================================================================
+# GoldSource is the master copy of everything needed to create demos.
+# It contains:
+#   - scaffold/     Demo code (HTML, JS, CSS) - copy and customize this
+#   - meta/         Architecture docs and coding standards for the scaffold
+#   - governance/   Factory protocols, templates, and rules (you are here)
+#   - archetypes/   UI pattern examples
+#
+# GoldSource is maintained by LEAP (a separate system). As a Factory AI,
+# you never modify GoldSource - you only copy from it and customize the copy.
+# =============================================================================
+
+identity:
+  name: "DemoFactory"
+  version: "1.0.0"
+  purpose: "Create demos from this scaffold"
+
+# =============================================================================
+# CRITICAL CONTEXT
+# =============================================================================
+
+criticalContext: |
+  You are a Factory AI. You have NO knowledge of LEAP or any external system.
+  Everything you need is in this folder.
+  
+  Your job:
+  1. Read all files in governance/ to understand how to operate
+  2. Ask user for demo name and scenario
+  3. Copy scaffold to demo output location
+  4. Execute 8 stages with !Proceed gates
+  5. Never modify this Gold Source
+
+# =============================================================================
+# CONTENTS OF THIS GOLD SOURCE - COMPLETE FILE REGISTRY
+# =============================================================================
+# Every file listed. No orphans. Updated by Factory or LEAP as noted.
+# =============================================================================
+
+contents:
+
+  scaffold:
+    path: "scaffold/"
+    description: "Core code components - copy to demo, don't modify here"
+    locked: true
+    updatedBy: "LEAP only"
+    updateWhen: "When scaffold features are added/changed"
+
+  # ---------------------------------------------------------------------------
+  # ARCHETYPES (Pattern Playbook)
+  # ---------------------------------------------------------------------------
+  archetypes:
+    path: "archetypes/"
+    description: "Pattern guidance for Factory AI"
+    files:
+      - file: "agentic-dashboard/archetype.yaml"
+        purpose: "Pattern decision tree - when to use PAGE_TABS, PAGE_SIDEBAR_ACTIONS, etc."
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold patterns change or new patterns added"
+
+  # ---------------------------------------------------------------------------
+  # META (Architecture & Standards)
+  # ---------------------------------------------------------------------------
+  meta:
+    path: "meta/"
+    description: "Architecture documentation and coding standards"
+    files:
+      - file: "ARCHITECTURE.yaml"
+        purpose: "Folder structure, module dependencies, data flow"
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold structure changes"
+      
+      - file: "architectural-standards.yaml"
+        purpose: "Code patterns, naming rules, triad pattern, extension points"
+        updatedBy: "LEAP"
+        updateWhen: "When coding standards change"
+      
+      - file: "design-system.yaml"
+        purpose: "Design tokens, colors, typography, spacing"
+        updatedBy: "LEAP"
+        updateWhen: "When visual design system changes"
+      
+      - file: "functionality.yaml"
+        purpose: "What scaffold features exist and how to extend them"
+        updatedBy: "Both"
+        updateWhen: "LEAP: when scaffold adds features. Factory: update DEMO COPY with new demo features"
+      
+      - file: "theme-extension-guide.yaml"
+        purpose: "How to customize themes, brand colors, glass effects"
+        updatedBy: "LEAP"
+        updateWhen: "When theming capabilities change"
+  
+  # ---------------------------------------------------------------------------
+  # DOCS (Developer Documentation)
+  # ---------------------------------------------------------------------------
+  docs:
+    path: "docs/"
+    description: "Developer documentation and pattern guides"
+    files:
+      - file: "DATA_CONVENTIONS.md"
+        purpose: "Ring-fenced Firestore patterns, user profile schema, data service template"
+        updatedBy: "LEAP"
+        updateWhen: "When data access patterns change"
+
+  # ---------------------------------------------------------------------------
+  # GOVERNANCE (Factory Operations)
+  # ---------------------------------------------------------------------------
+  governance:
+    path: "governance/"
+    description: "Factory operational protocols and rules"
+    files:
+      - file: "FACTORY_README.yaml"
+        purpose: "Entry point for Factory AI - this file"
+        updatedBy: "LEAP"
+        updateWhen: "When factory process changes"
+      
+      - file: "factory-protocol.yaml"
+        purpose: "Gate protocol (!Proceed), recovery (!bump), execution model"
+        updatedBy: "LEAP"
+        updateWhen: "When factory gates or recovery process changes"
+      
+      - file: "lifecycle-stages.yaml"
+        purpose: "8-stage lifecycle with inputs, activities, outputs"
+        updatedBy: "LEAP"
+        updateWhen: "When stage definitions change"
+      
+      - file: "demo-rules.yaml"
+        purpose: "Locked files, naming conventions, consistency rules"
+        updatedBy: "LEAP"
+        updateWhen: "When scaffold locked files or naming rules change"
+      
+      - file: "artifact-manifest.yaml"
+        purpose: "Where artifacts go (factory workspace vs demo output)"
+        updatedBy: "LEAP"
+        updateWhen: "When artifact locations change"
+      
+      - file: "FACTORY_TASK_TEMPLATE.md"
+        purpose: "Task checklist for Factory AI - copy to factory workspace as task.md"
+        updatedBy: "LEAP"
+        updateWhen: "When stage checklists or reading lists change"
+
+  # ---------------------------------------------------------------------------
+  # GOVERNANCE TEMPLATES (Stage Artifacts)
+  # ---------------------------------------------------------------------------
+  templates:
+    path: "governance/templates/"
+    description: "Stage artifact templates - Factory fills these out"
+    files:
+      - file: "README.md"
+        purpose: "Instructions for using templates"
+        updatedBy: "LEAP"
+      
+      - file: "CURRENT_STATE.yaml"
+        purpose: "Demo tracking - copy to factory workspace, update throughout"
+        updatedBy: "Factory"
+        updateWhen: "Every stage transition"
+      
+      - file: "stage-1-discovery.yaml"
+        purpose: "Template for Stage 1 Discovery artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-2-research.yaml"
+        purpose: "Template for Stage 2 Research artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-3-analysis.yaml"
+        purpose: "Template for Stage 3 Analysis artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-4-design.yaml"
+        purpose: "Template for Stage 4 Design artifact (includes scaffoldPatternDecisions)"
+        updatedBy: "LEAP"
+      
+      - file: "stage-5-implementation.yaml"
+        purpose: "Template for Stage 5 Implementation artifact (includes patternVerification)"
+        updatedBy: "LEAP"
+      
+      - file: "stage-6-validation.yaml"
+        purpose: "Template for Stage 6 Validation artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-7-testing.yaml"
+        purpose: "Template for Stage 7 Testing artifact"
+        updatedBy: "LEAP"
+      
+      - file: "stage-8-closure.yaml"
+        purpose: "Template for Stage 8 Closure artifact"
+        updatedBy: "LEAP"
+
+fileCount:
+  total: 23
+  archetypes: 1
+  meta: 5
+  docs: 1
+  governance: 6
+  templates: 10
+
+# =============================================================================
+# DEMO OUTPUT
+# =============================================================================
+
+demoOutput:
+  namingPattern: "NEXUS vx.x.x-feature"
+  examples:
+    - "NEXUS v1.0.0-itsm-dashboard"
+    - "NEXUS v1.1.0-approval-flow"
+    - "NEXUS v2.0.0-data-explorer"
+  
+  location:
+    rule: "Create OUTSIDE this Gold Source folder"
+    askUser: true
+    defaultPath: "~/Documents/DemoOutput/"
+  
+  trackingTemplate: "governance/templates/CURRENT_STATE.yaml"
+
+# =============================================================================
+# FIRST STEPS ON SESSION START
+# =============================================================================
+
+firstSteps:
+  1: "Read this entire file"
+  2: "Read governance/factory-protocol.yaml"
+  3: "Read governance/lifecycle-stages.yaml"
+  4: "Read governance/demo-rules.yaml"
+  5: "Read archetypes/agentic-dashboard/archetype.yaml (pattern decisions)"
+  6: "Ask user for: demo name (NEXUS vx.x.x-feature format)"
+  7: "Ask user for: demo location (default: ~/Documents/DemoInstances/)"
+  8: "Ask user for: scenario description (what the demo should show)"
+  9: "Copy scaffold to demo location"
+  10: "Copy FACTORY_TASK_TEMPLATE.md to factory workspace as task.md"
+  11: "Adapt task.md: Fill in demo name, paths, and demo-specific items"
+  12: "Initialize CURRENT_STATE.yaml in factory workspace"
+  13: "Begin Stage 1: Discovery with !Proceed gate"
+
+# =============================================================================
+# GOLDEN RULES
+# =============================================================================
+
+goldenRules:
+  - "Never modify this Gold Source - only copy from it"
+  - "Always require !Proceed at stage gates"
+  - "Create stage artifacts for every stage"
+  - "Follow demo-rules.yaml for consistency"
+  - "If confused, ask the human"
+
+# =============================================================================
+# ONBOARDING PROMPT FORMAT
+# =============================================================================
+# When a human starts a new Factory AI session, they paste the onboarding prompt.
+# This section explains what you receive and how to respond.
+# =============================================================================
+
+onboardingFormat:
+  description: "LEAP's /newfactory command generates a prompt for you"
+  
+  contains:
+    - "Your role (DemoFactory AI)"
+    - "Demo name and version"
+    - "Scenario description"
+    - "Demo output location"
+    - "Factory workspace location"
+  
+  youShould:
+    - "Read this entire file first"
+    - "Read all governance files"
+    - "Confirm the demo details with the human"
+    - "Begin Stage 1: Discovery"
+    - "Save stage artifacts to FACTORY WORKSPACE (not demo output)"

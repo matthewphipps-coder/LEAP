@@ -1,0 +1,73 @@
+/**
+ * @file footer.css
+ * @purpose Footer component styles
+ * @layer ui
+ * @dependencies [variables.css, shell.css]
+ * @dependents []
+ * @locked true
+ * @modifyImpact [footer visual appearance]
+ */
+
+/* ==========================================================================
+   FOOTER STATUS INDICATOR
+   ========================================================================== */
+
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.footer-status__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--border-radius-full);
+    background-color: var(--color-gray-400);
+}
+
+.footer-status__indicator--online {
+    background-color: var(--color-success);
+}
+
+.footer-status__indicator--offline {
+    background-color: var(--color-error);
+}
+
+.footer-status__indicator--connecting {
+    background-color: var(--color-warning);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ==========================================================================
+   FOOTER VERSION
+   ========================================================================== */
+
+.footer-version {
+    color: var(--color-text-muted);
+}
+
+.footer-archetype {
+    color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .footer-archetype {
+        display: none;
+    }
+}

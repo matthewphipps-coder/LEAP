@@ -14,7 +14,7 @@
 
 export const MODULE_CONTRACT = {
   provides: [
-    'APP_NAME', 'APP_VERSION', 'ALLOWED_EMAIL_DOMAINS', 'ENV', 'isDev', 'isProd', 'CHECKPOINT_PREFIX',
+    'APP_NAME', 'APP_VERSION', 'ENV', 'isDev', 'isProd', 'CHECKPOINT_PREFIX',
     // SPEC-003 configs
     'PAGE_TABS', 'PAGE_SIDEBAR_ACTIONS', 'SETTINGS_MENU', 'SETTINGS_SECTIONS'
   ],
@@ -27,13 +27,6 @@ export const MODULE_CONTRACT = {
 
 export const APP_NAME = 'NEXUS';
 export const APP_VERSION = '2.0.0';
-
-/**
- * @constant ALLOWED_EMAIL_DOMAINS
- * @purpose Restrict signup to specific email domains (FR-005)
- * @extensible Set to empty array to allow any domain
- */
-export const ALLOWED_EMAIL_DOMAINS = [];  // e.g., ['@servicenow.com']
 
 // =============================================================================
 // ENVIRONMENT DETECTION
@@ -69,7 +62,7 @@ export const CHECKPOINT_PREFIX = '[NEXUS]';
  * @extensible Factory can add pages by appending to this array
  */
 export const PAGE_TABS = [
-  { id: 'my-work', icon: 'layout-dashboard', label: 'My Work' },
+  { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
   { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
   { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
   { id: 'calendar', icon: 'calendar', label: 'Calendar' },
@@ -85,14 +78,8 @@ export const PAGE_TABS = [
  * @extensible Factory can add actions by extending page arrays
  */
 export const PAGE_SIDEBAR_ACTIONS = {
-  'my-work': [
-    { id: 'inbox', icon: 'inbox', label: 'Inbox', badge: 3 },
-    { id: 'now', icon: 'zap', label: 'Now', badge: 2 },
-    { id: 'next', icon: 'clock', label: 'Next', badge: 5 },
-    { id: 'later', icon: 'calendar', label: 'Later', badge: 8 },
-    { id: 'all', icon: 'list', label: 'All' },
-    { id: 'done', icon: 'check-circle', label: 'Done' },
-    { id: 'optimise', icon: 'sparkles', label: 'Optimise' }
+  dashboard: [
+    { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
   ],
   incidents: [
     { id: 'new-incident', icon: 'plus', label: 'New Incident' },

@@ -1,35 +1,31 @@
 /**
  * @file auth-service.js
- * @purpose Authentication functions - MOCK IMPLEMENTATION
+ * @purpose Authentication functions - login state, user data, logout
  * @layer core
- * @dependencies [state.js, logger.js]
+ * @dependencies [firebase.js, state.js, logger.js]
  * @dependents [app.js, login.js, header-ui.js]
  * @locked false
  * @modifyImpact [authentication flow, user display]
  */
 
+import { auth, db } from './firebase.js';
 import { setUser, reset } from './state.js';
 import { info, error as logError } from './logger.js';
-import { setTheme } from './theme-manager.js';
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // =============================================================================
 // MODULE CONTRACT
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['setupAuthListener', 'login', 'signup', 'logout', 'sendPasswordReset', 'fetchUserData', 'createUserAvatarHTML'],
-    requires: ['state.js', 'logger.js']
-};
-
-// =============================================================================
-// MOCK DATA
-// =============================================================================
-
-const MOCK_USER = {
-    uid: 'mock-user-123',
-    email: 'demo@nexus.ai',
-    displayName: 'Nexus User',
-    photoURL: null
+    provides: ['setupAuthListener', 'login', 'signup', 'logout', 'fetchUserData', 'createUserAvatarHTML'],
+    requires: ['firebase.js', 'state.js', 'logger.js']
 };
 
 // =============================================================================
@@ -38,21 +34,29 @@ const MOCK_USER = {
 
 /**
  * @function setupAuthListener
- * @purpose Watch Auth state (Mocked)
+ * @purpose Watch Firebase auth state and update app state
  * @param {Function} onAuthChange - Callback with (user) on state change
  * @returns {Function} Unsubscribe function
  */
 export function setupAuthListener(onAuthChange) {
-    info('Auth: Initializing Mock Auth Listener');
-
-    // Simulate async auth check
-    setTimeout(() => {
-        info('Auth: Mock user automatic login');
-        setUser(MOCK_USER);
-        if (onAuthChange) onAuthChange(MOCK_USER);
-    }, 500);
-
-    return () => { }; // Unsubscribe no-op
+    return onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+            info('Auth: User signed in', { uid: firebaseUser.uid });
+            const userData = await fetchUserData(firebaseUser.uid);
+            const user = {
+                uid: firebaseUser.uid,
+                email: firebaseUser.email,
+                displayName: userData?.displayName || firebaseUser.email?.split('@')[0] || 'User',
+                photoURL: userData?.photoURL || null
+            };
+            setUser(user);
+            if (onAuthChange) onAuthChange(user);
+        } else {
+            info('Auth: No user');
+            setUser(null);
+            if (onAuthChange) onAuthChange(null);
+        }
+    });
 }
 
 // =============================================================================
@@ -61,48 +65,64 @@ export function setupAuthListener(onAuthChange) {
 
 /**
  * @function login
- * @purpose Sign in mock
+ * @purpose Sign in with email and password
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @returns {Promise<Object>} User credential
  */
 export async function login(email, password) {
-    info('Auth: Mock login attempt', { email });
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    setUser(MOCK_USER);
-    return { user: MOCK_USER };
+    info('Auth: Login attempt', { email });
+    try {
+        const credential = await signInWithEmailAndPassword(auth, email, password);
+        return credential;
+    } catch (err) {
+        logError('Auth: Login failed', { error: err.message });
+        throw err;
+    }
 }
 
 /**
  * @function signup
- * @purpose Sign up mock
+ * @purpose Create new account with email and password
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @param {string} displayName - Optional display name
+ * @returns {Promise<Object>} User credential
  */
 export async function signup(email, password, displayName = null) {
-    info('Auth: Mock signup attempt', { email });
-    await new Promise(resolve => setTimeout(resolve, 800));
+    info('Auth: Signup attempt', { email });
+    try {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
 
-    setUser(MOCK_USER);
-    return { user: MOCK_USER };
+        // Create user document in Firestore
+        const userDoc = {
+            email,
+            displayName: displayName || email.split('@')[0],
+            createdAt: new Date().toISOString()
+        };
+        await setDoc(doc(db, 'users', credential.user.uid), userDoc);
+
+        return credential;
+    } catch (err) {
+        logError('Auth: Signup failed', { error: err.message });
+        throw err;
+    }
 }
 
 /**
  * @function logout
- * @purpose Sign out mock
+ * @purpose Sign out and redirect to login
  */
 export async function logout() {
-    info('Auth: Mock logout');
-    reset(); // Reset state
-    // Redirect logic usually handled by app, but here we just reset state
-    // In a real app we might reload or change window.location
-    window.location.reload();
-}
-
-/**
- * @function sendPasswordReset
- * @purpose Mock reset
- */
-export async function sendPasswordReset(email) {
-    info('Auth: Mock password reset', { email });
-    await new Promise(resolve => setTimeout(resolve, 500));
+    info('Auth: Logout');
+    try {
+        await signOut(auth);
+        reset(); // Reset state
+        window.location.href = 'login.html';
+    } catch (err) {
+        logError('Auth: Logout failed', { error: err.message });
+        throw err;
+    }
 }
 
 // =============================================================================
@@ -111,20 +131,25 @@ export async function sendPasswordReset(email) {
 
 /**
  * @function fetchUserData
- * @purpose Get mock user data
+ * @purpose Get user data from Firestore
+ * @param {string} uid - User ID
+ * @returns {Promise<Object|null>} User data or null
  */
 export async function fetchUserData(uid) {
-    return {
-        displayName: 'Nexus User',
-        role: 'admin',
-        xp: 1250,
-        preferences: { theme: 'dark' }
-    };
+    try {
+        const docSnap = await getDoc(doc(db, 'users', uid));
+        return docSnap.exists() ? docSnap.data() : null;
+    } catch (err) {
+        logError('Auth: Failed to fetch user data', { uid, error: err.message });
+        return null;
+    }
 }
 
 /**
  * @function createUserAvatarHTML
  * @purpose Generate avatar HTML for user display
+ * @param {Object} user - User object with displayName and photoURL
+ * @returns {string} HTML string for avatar
  */
 export function createUserAvatarHTML(user) {
     if (user?.photoURL) {

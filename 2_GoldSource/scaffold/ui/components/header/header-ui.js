@@ -80,7 +80,7 @@ export function initHeader(user, onLogout, onThemeToggle, onSettingsOpen) {
         <button class="btn-icon" id="notifications-btn" aria-label="Notifications">
           <i data-lucide="bell"></i>
         </button>
-        <span class="count-badge" id="notification-count" style="display:none">0</span>
+        <span class="count-badge" id="notification-count">5</span>
       </div>
       
       <!-- Settings -->
@@ -113,9 +113,6 @@ export function initHeader(user, onLogout, onThemeToggle, onSettingsOpen) {
     }
   });
 
-  // Listen for Card Updates (DISCO-004)
-  window.addEventListener('card-update', handleCardUpdate);
-
   // Set initial theme state
   updateThemeToggle();
 
@@ -145,51 +142,10 @@ export function renderPageTabs() {
       title="${tab.label}"
     >
       <i data-lucide="${tab.icon}"></i>
-      ${tab.badge ? `<span class="count-badge">${tab.badge}</span>` : `<span class="count-badge" style="display:none"></span>`}
+      ${tab.badge ? `<span class="count-badge">${tab.badge}</span>` : ''}
       <span class="tab-tooltip">${tab.label}</span>
     </button>
   `).join('');
-}
-
-// =============================================================================
-// EVENT HANDLERS
-// =============================================================================
-
-function handleCardUpdate(e) {
-  const stats = e.detail.stats;
-  if (!stats) return;
-
-  // 1. Update Notification Bell (Inbox count)
-  const notifBadge = document.getElementById('notification-count');
-  if (notifBadge && stats.horizons.inbox) {
-    const inbox = stats.horizons.inbox;
-    notifBadge.textContent = inbox.count;
-    notifBadge.style.display = inbox.count > 0 ? 'flex' : 'none';
-
-    notifBadge.classList.remove('urgent', 'warning');
-    if (inbox.urgent) notifBadge.classList.add('urgent');
-    else if (inbox.warning) notifBadge.classList.add('warning');
-  }
-
-  // 2. Update 'My Work' Page Tab
-  const myWorkTab = document.querySelector('[data-page="my-work"] .count-badge');
-  if (myWorkTab && stats.horizons.all) { // Use 'all' or specific horizon?
-    // For My Work tab, let's use 'Inbox' + 'Now' + 'Next' count? Or just 'Now'?
-    // SPEC says: "Badge color: Red if > 0.8... Count: cards in page"
-    // Since 'My Work' is the page, it effectively contains all cards except Done?
-    // Let's use 'now' + 'next' + 'inbox' for count.
-
-    // Simplification: Use 'now' count for default focus
-    const nowStats = stats.horizons.now;
-    if (nowStats) {
-      myWorkTab.textContent = nowStats.count;
-      myWorkTab.style.display = nowStats.count > 0 ? 'flex' : 'none';
-
-      myWorkTab.classList.remove('urgent', 'warning');
-      if (nowStats.urgent) myWorkTab.classList.add('urgent');
-      else if (nowStats.warning) myWorkTab.classList.add('warning');
-    }
-  }
 }
 
 // =============================================================================

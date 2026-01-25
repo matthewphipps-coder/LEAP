@@ -1,0 +1,72 @@
+/**
+ * @file animations.css
+ * @purpose Reusable animation utilities
+ * @layer effects
+ * @dependencies [variables.css]
+ * @dependents [components using .animate-in, .hover-lift]
+ * @locked false
+ * @modifyImpact [entrance and hover animations]
+ */
+
+/* =============================================================================
+   FR-003: ENTRANCE ANIMATION - .animate-in
+   ============================================================================= */
+
+.animate-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* Staggered delays for sequential elements */
+.animate-in:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.animate-in:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.animate-in:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.animate-in:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.animate-in:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.animate-in:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   FR-004: HOVER LIFT - .hover-lift
+   ============================================================================= */
+
+.hover-lift {
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme hover shadow */
+.light-theme .hover-lift:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}

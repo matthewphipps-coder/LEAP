@@ -108,20 +108,6 @@
   --z-modal-backdrop: 300;
   --z-modal: 400;
   --z-notification: 500;
-  /* DISCO-004: Card & Canvas Tokens */
-  --card-bg: rgba(20, 20, 25, 0.8);
-  --card-medium: 400px;
-  /* Width */
-  --card-large: 480px;
-  /* Width */
-
-  /* DISCO-004: Badge Colors */
-  --badge-urgent: #ef4444;
-  /* Red */
-  --badge-warning: #f59e0b;
-  /* Amber */
-  --badge-neutral: rgba(255, 255, 255, 0.15);
-  /* Gray */
 }
 
 /* =============================================================================
@@ -138,7 +124,4 @@
   --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 
   --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-
-  /* DISCO-004: Card Light Mode */
-  --card-bg: var(--glass-bg);
 }

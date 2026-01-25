@@ -389,7 +389,10 @@ stages:
       - "Validated GoldSource"
     
     activities:
-      - "Run scaffold locally (python3 -m http.server)"
+      - "Managing Local Server Port:"
+          - "Check if port 8080 is free: `lsof -i :8080`"
+          - "If busy: Kill the process OR use port 8081/8082"
+      - "Run scaffold locally (python3 -m http.server [PORT])"
       - "Test new feature end-to-end"
       - "Test existing features for regressions"
       - "Capture screenshots/recordings"

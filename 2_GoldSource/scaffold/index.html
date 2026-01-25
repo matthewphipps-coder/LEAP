@@ -36,7 +36,6 @@
   <link rel="stylesheet" href="ui/components/header/header.css">
   <link rel="stylesheet" href="ui/components/sidebar/sidebar.css">
   <link rel="stylesheet" href="ui/components/canvas/canvas.css">
-  <link rel="stylesheet" href="ui/components/card/card.css">
   <link rel="stylesheet" href="ui/components/settings/settings.css">
 
   <!-- Lucide Icons (SPEC-003) -->
@@ -68,13 +67,11 @@
     <!-- Canvas with Multi-Page System (SPEC-003) -->
     <main class="canvas" id="canvas">
 
-      <!-- My Work Page (DISCO-004) -->
-      <section class="page page--active" data-page="my-work" id="page-my-work" aria-hidden="false">
-        <div class="page-content" style="padding: 0;">
-          <!-- Canvas Container -->
-          <div id="nexus-canvas" class="nexus-canvas-grid">
-            <div class="empty-state">initializing...</div>
-          </div>
+      <!-- Dashboard Page -->
+      <section class="page page--active" data-page="dashboard" id="page-dashboard" aria-hidden="false">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Dashboard</h1>
+          <!-- Content rendered by features -->
         </div>
       </section>
 
@@ -107,7 +104,7 @@
   </div>
 
   <!-- Application JavaScript -->
-  <script type="module" src="core/app.js?v=sidebar_fix_final"></script>
+  <script type="module" src="core/app.js"></script>
 </body>
 
 </html>

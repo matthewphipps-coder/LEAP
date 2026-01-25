@@ -13,7 +13,6 @@
 
 import { setTheme as setStateTheme, getState } from './state.js';
 import { info } from './logger.js';
-import { savePreference } from './user-service.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -73,7 +72,7 @@ export function getTheme() {
  * @purpose Set and persist theme
  * @param {string} theme - 'dark' or 'light'
  */
-export function setTheme(theme, skipFirestoreSync = false) {
+export function setTheme(theme) {
     if (theme !== 'dark' && theme !== 'light') {
         return;
     }
@@ -81,12 +80,6 @@ export function setTheme(theme, skipFirestoreSync = false) {
     applyTheme(theme);
     setStateTheme(theme);
     localStorage.setItem(STORAGE_KEY, theme);
-
-    // FR-005: Sync to Firestore (unless called from auth-service during login)
-    // skipFirestoreSync prevents infinite loops and unnecessary writes on login
-    if (!skipFirestoreSync) {
-        savePreference('theme', theme);
-    }
 
     info('Theme changed', { theme });
 }

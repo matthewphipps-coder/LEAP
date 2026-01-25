@@ -37,8 +37,6 @@ let currentPage = null;
 export function initPageRouter() {
     // Set initial page to first tab
     const defaultPage = PAGE_TABS[0]?.id || 'dashboard';
-
-    // Set initial page immediately (State handles synchronization)
     switchPage(defaultPage);
 
     // Listen for tab clicks (delegated)

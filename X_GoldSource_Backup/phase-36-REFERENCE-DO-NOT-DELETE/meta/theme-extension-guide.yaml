@@ -1,0 +1,225 @@
+# =============================================================================
+# THEME EXTENSION GUIDE - GoldSource v2.0
+# =============================================================================
+# Purpose: How-to guide for Factory AI to customize themes and styling
+# Audience: Factory AI during demo creation
+# =============================================================================
+
+metadata:
+  type: "guide"
+  name: "Theme Extension Guide"
+  version: "1.0.0"
+  created: "2026-01-21"
+  status: "active"
+
+# =============================================================================
+# INTRODUCTION
+# =============================================================================
+
+introduction:
+  purpose: "This guide shows how to customize themes and styling in demos"
+  audience: "Factory AI creating demos from GoldSource scaffold"
+  keyPrinciple: "Use CSS variables - never hardcode colors"
+  
+  relatedDocs:
+    - "design-system.yaml - Design tokens and patterns"
+    - "architectural-standards.yaml - Code standards"
+    - "variables.css - CSS implementation"
+
+# =============================================================================
+# BRAND CUSTOMIZATION (3-Color System)
+# =============================================================================
+
+brandCustomization:
+  description: "The scaffold uses a 3-color brand system for easy theming"
+  
+  variables:
+    - name: "--brand-primary"
+      default: "#62d84e"
+      purpose: "Primary brand color (green)"
+      usage: "Plasma bubble 1, accent highlights"
+    
+    - name: "--brand-secondary"
+      default: "#8b5cf6"
+      purpose: "Secondary brand color (purple)"
+      usage: "Plasma bubble 2, secondary accents"
+    
+    - name: "--brand-accent"
+      default: "#38bdf8"
+      purpose: "Accent brand color (sky blue)"
+      usage: "Plasma bubble 3, tertiary accents"
+  
+  howToCustomize:
+    method: "Override in component CSS file"
+    example: |
+      /* In your component CSS file */
+      :root {
+        --brand-primary: #ff6b6b;    /* Red theme */
+        --brand-secondary: #4ecdc4;  /* Teal */
+        --brand-accent: #ffe66d;     /* Yellow */
+      }
+    
+    placement: "Add to component CSS that loads AFTER variables.css"
+    note: "Changes automatically cascade to plasma bubbles via --plasma-1/2/3"
+  
+  doNot:
+    - "Hardcode hex colors in component CSS"
+    - "Modify GoldSource/scaffold/ui/styles/variables.css (locked file)"
+    - "Use var(--plasma-*) directly - use --brand-* instead"
+
+# =============================================================================
+# GLASS UTILITY PATTERNS
+# =============================================================================
+
+glassPatterns:
+  description: "Glassmorphism effect via .glass utility class"
+  file: "ui/styles/base.css"
+  
+  usage:
+    html: '<div class="glass">Content</div>'
+    effect: "Semi-transparent background with blur and subtle border"
+  
+  darkTheme:
+    variables:
+      - "--glass-bg: rgba(255, 255, 255, 0.05)"
+      - "--glass-border: rgba(255, 255, 255, 0.1)"
+      - "--glass-blur: 20px"
+      - "--glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)"
+  
+  lightTheme:
+    description: "IMPORTANT: Light theme uses very different values"
+    variables:
+      - "--glass-bg: rgba(255, 255, 255, 0.88)"
+      - "--glass-border: rgba(0, 0, 0, 0.08)"
+      - "--glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06)"
+    
+    note: "Light theme glass is more opaque, less blur-dependent"
+  
+  cssImplementation: |
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+# =============================================================================
+# ANIMATION UTILITIES
+# =============================================================================
+
+animationPatterns:
+  description: "Reusable animation classes for micro-interactions"
+  file: "ui/styles/animations.css"
+  
+  animateIn:
+    class: ".animate-in"
+    purpose: "Fade-up entrance animation"
+    behavior: "Opacity 0→1, translateY 30px→0"
+    
+    stagger:
+      description: "Automatic staggered delays via nth-child"
+      delays: ["1st: 0ms", "2nd: 100ms", "3rd: 200ms", "4th: 300ms", "5th: 400ms", "6th: 500ms"]
+    
+    usage: |
+      <div class="card animate-in">First card</div>
+      <div class="card animate-in">Second card (100ms delay)</div>
+      <div class="card animate-in">Third card (200ms delay)</div>
+  
+  hoverLift:
+    class: ".hover-lift"
+    purpose: "Subtle lift effect on hover"
+    behavior: "translateY(-4px) with enhanced shadow"
+    usage: |
+      <div class="card hover-lift">Hoverable card</div>
+  
+  buttonFeedback:
+    selector: ".btn-primary:active, .btn-secondary:active"
+    behavior: "scale(0.97) for tactile press feedback"
+    note: "Built into button styles - no extra class needed"
+
+# =============================================================================
+# LIGHT THEME QUIRKS
+# =============================================================================
+
+lightThemeQuirks:
+  description: "Key differences when demo runs in light mode"
+  trigger: ".light-theme class on body element"
+  
+  differentValues:
+    - variable: "--bg-primary"
+      dark: "#0a0a0c"
+      light: "#f8fafc"
+    
+    - variable: "--text-primary"
+      dark: "#ffffff"
+      light: "#0f172a"
+    
+    - variable: "--glass-bg"
+      dark: "rgba(255, 255, 255, 0.05)"
+      light: "rgba(255, 255, 255, 0.88)"
+      note: "Much more opaque in light mode"
+    
+    - variable: "--shadow-card"
+      dark: "rgba(0, 0, 0, 0.5)"
+      light: "rgba(0, 0, 0, 0.15)"
+      note: "Lighter shadows in light mode"
+  
+  plasmaBackground:
+    change: "Opacity reduced to 0.15"
+    selector: ".light-theme .plasma-bubble"
+    reason: "Prevents overwhelming bright backgrounds"
+  
+  testingReminder: |
+    Always test demos in BOTH dark and light themes.
+    Use the theme toggle button in the header.
+
+# =============================================================================
+# COMMON MISTAKES
+# =============================================================================
+
+commonMistakes:
+  
+  - mistake: "Hardcoding hex colors"
+    wrong: "color: #62d84e;"
+    right: "color: var(--brand-primary);"
+    reason: "Hardcoded colors don't respond to theme changes"
+  
+  - mistake: "Forgetting light theme"
+    symptom: "Demo looks wrong in light mode"
+    fix: "Test with theme toggle, add .light-theme overrides if needed"
+  
+  - mistake: "Using wrong variable names"
+    wrong: "var(--primary-color)"
+    right: "var(--brand-primary)"
+    fix: "Check variables.css for exact names"
+  
+  - mistake: "Modifying locked files"
+    files: ["variables.css", "base.css", "buttons.css", "inputs.css"]
+    fix: "Create new CSS file in your component folder"
+  
+  - mistake: "Missing webkit prefix for backdrop-filter"
+    wrong: "backdrop-filter: blur(20px);"
+    right: |
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    reason: "Safari requires -webkit prefix"
+
+# =============================================================================
+# QUICK REFERENCE
+# =============================================================================
+
+quickReference:
+  brandColors:
+    - "--brand-primary (green #62d84e)"
+    - "--brand-secondary (purple #8b5cf6)"
+    - "--brand-accent (sky #38bdf8)"
+  
+  utilityClasses:
+    - ".glass - Glassmorphism effect"
+    - ".animate-in - Fade-up entrance"
+    - ".hover-lift - Hover lift effect"
+  
+  themeToggle:
+    mechanism: ".light-theme class on body"
+    toggle: "Header theme button"

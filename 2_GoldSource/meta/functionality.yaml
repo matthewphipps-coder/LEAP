@@ -18,9 +18,9 @@ metadata:
 # =============================================================================
 
 summary:
-  totalFeatures: 7
+  totalFeatures: 6
   locked: 3
-  extensible: 4
+  extensible: 3
 
 # =============================================================================
 # AUTHENTICATION
@@ -44,54 +44,6 @@ features:
       - "Auth state persistence"
       - "Redirect to login if not authenticated"
     extensionPoint: false
-
-# =============================================================================
-# USER DATA & PREFERENCES
-# =============================================================================
-
-  - id: "DATA-001"
-    name: "User Profile & Preferences"
-    status: "implemented"
-    description: "Ring-fenced Firestore data patterns for user profiles and preferences"
-    spec: "SPEC-004"
-    phase: "30 - DataConventions"
-    files:
-      - "core/user-service.js"
-      - "docs/DATA_CONVENTIONS.md"
-    capabilities:
-      - "User profile CRUD (createUserProfile, updateLastLogin)"
-      - "User preferences (loadUserPreferences, savePreference)"
-      - "Ring-fenced data pattern (/users/{uid}/*)"
-      - "Data service template for future services"
-    extensionPoint: true
-    extensionNotes: |
-      Factory uses user-service.js as reference implementation:
-      - Follow MODULE_CONTRACT pattern
-      - Use ring-fenced collection helpers
-      - Apply serverTimestamp() for timestamps
-
-# =============================================================================
-# WORK MANAGEMENT
-# =============================================================================
-
-  - id: "CARD-001"
-    name: "Card & Canvas UI"
-    status: "implemented"
-    description: "Visual work management with dynamic cards and horizon planning"
-    spec: "SPEC-004"
-    phase: "32 - CardCanvasImplementation"
-    files:
-      - "features/card/card-service.js"
-      - "ui/components/card/*"
-      - "ui/components/canvas/*"
-    capabilities:
-      - "Dynamic Nexus Cards (P1/P2/P3)"
-      - "Canvas Grid & Layout Controller"
-      - "Horizon Filtering (Inbox, Now, Next, Later, Done)"
-      - "Drag-and-Drop Organization"
-      - "AI Optimization Simulation"
-    extensionPoint: true
-    extensionNotes: "Service uses 'cards' state slice. UI uses event-driven updates."
 
 # =============================================================================
 # DASHBOARD SHELL

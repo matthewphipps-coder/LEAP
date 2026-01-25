@@ -61,7 +61,6 @@ folderStructure:
       purpose: "Feature modules - extensible"
       files:
         - "ai/ai-service.js - AI provider interface"
-        - "card/card-service.js - Card data & logic"
     
     ui:
       location: "scaffold/ui/"
@@ -76,7 +75,6 @@ folderStructure:
             - "header/ - Top navigation (LOCKED)"
             - "sidebar/ - Left navigation"
             - "canvas/ - Main content area"
-            - "card/ - Card component primitives"
   
   meta:
     location: "meta/"
@@ -115,12 +113,8 @@ dependencyMap:
       exportedTo: ["app.js", "login.js", "header-ui.js"]
     
     "theme-manager.js":
-      imports: ["state.js", "logger.js", "user-service.js"]
-      exportedTo: ["app.js", "header-ui.js", "auth-service.js"]
-    
-    "user-service.js":
-      imports: ["firebase.js", "logger.js"]
-      exportedTo: ["auth-service.js", "theme-manager.js"]
+      imports: ["state.js", "logger.js"]
+      exportedTo: ["app.js", "header-ui.js"]
     
     "app.js":
       imports: ["logger.js", "state.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js", "canvas-ui.js"]
@@ -166,18 +160,7 @@ dataFlow:
   authFlow:
     - "login.js → auth-service.js → Firebase Auth"
     - "auth-service.js → state.js (setUser)"
-    - "app.js watches auth state → init UI (initPageRouter)"
-    - "initPageRouter → state.js (setCurrentPage) → sidebar-ui.js (subscribe)"
-  
-  firestoreConventions:
-    pattern: "Ring-Fenced User Data"
-    documentation: "docs/DATA_CONVENTIONS.md"
-    structure:
-      - "/users/{uid} → User profile + preferences"
-      - "/users/{uid}/cards/{cardId} → User's cards (future)"
-      - "/users/{uid}/conversations/{id} → AI chat history (future)"
-    services:
-      - "user-service.js → Profile and preference CRUD (reference implementation)"
+    - "app.js watches auth state → init UI or redirect"
 
 # =============================================================================
 # CSS ARCHITECTURE

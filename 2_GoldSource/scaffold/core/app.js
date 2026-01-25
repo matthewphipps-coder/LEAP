@@ -9,7 +9,7 @@
  * @spec SPEC-003
  */
 
-import { info, error } from './logger.js';
+import { info, error as logError } from './logger.js';
 import { getState } from './state.js';
 import { setupAuthListener, logout } from './auth-service.js';
 import { initTheme, setTheme, getTheme } from './theme-manager.js';
@@ -18,7 +18,6 @@ import { initSidebar } from '../ui/components/sidebar/sidebar-ui.js';
 import { initCanvas } from '../ui/components/canvas/canvas-ui.js';
 import { initPageRouter } from './page-router.js';
 import { initSettings, openSettings } from '../ui/components/settings/settings-ui.js';
-import { initCardService } from '../features/card/card-service.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -41,18 +40,15 @@ export const MODULE_CONTRACT = {
  * @function initApp
  * @purpose Bootstrap the application
  */
-export async function initApp() {
+async function initApp() {
     info('App: Initializing NEXUS');
 
-    // 1. Initialize theme (before rendering)
     try {
-        info('App: calling initTheme');
+        // 1. Initialize theme (before rendering)
         initTheme();
 
         // 2. Set up auth listener and wait for auth state
-        info('App: calling setupAuthListener');
         setupAuthListener((user) => {
-            info('App: Auth listener callback fired', user);
             if (!user) {
                 // Not authenticated, redirect to login
                 info('App: No user, redirecting to login');
@@ -62,18 +58,11 @@ export async function initApp() {
 
             // User is authenticated, initialize UI
             info('App: User authenticated, initializing UI', { email: user.email });
-            try {
-                initializeUI(user);
-            } catch (uiErr) {
-                console.error('[CRITICAL] UI Init Failed:', uiErr);
-                error('App: UI Init Failed', { error: uiErr.message });
-                alert('UI Init Failed: ' + uiErr.message);
-            }
+            initializeUI(user);
         });
 
     } catch (err) {
-        console.error('[CRITICAL] App initialization failed', err);
-        error('App: Initialization failed', { error: err.message });
+        logError('App: Initialization failed', { error: err.message });
     }
 }
 
@@ -86,24 +75,11 @@ function initializeUI(user) {
     info('App: Initializing UI components');
 
     // Initialize SPEC-003 components
-    info('App: initHeader');
     initHeader(user, handleLogout, handleThemeToggle, handleSettingsOpen);
-
-    info('App: initSidebar');
     initSidebar();
-
-    info('App: initSettings');
     initSettings();
-
-    info('App: initPageRouter');
     initPageRouter();  // Connect page changes to sidebar (via State)
-
-    info('App: initCanvas');
     initCanvas();
-
-    // Initialize Features
-    info('App: initCardService');
-    initCardService();
 
     info('App: Initialization complete (SPEC-003)');
 }

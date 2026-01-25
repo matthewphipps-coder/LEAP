@@ -251,7 +251,7 @@ priorities:
       name: "Reactive State Compliance (Fix Race Conditions)"
       category: "architecture"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Refactor GoldSource to comply with the existing 'Unidirectional Data Flow' 
         contract in ARCHITECTURE.yaml.
@@ -295,9 +295,9 @@ priorities:
     # [Technical Gap] Scaffold Blindness (Root Cause 3)
     - id: "LEAP-069"
       name: "Global Layout Contract"
-      category: "scaffold-conventions"
+      category: "styling"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Define and enforce global CSS variables for App Shell dimensions.
         1. Define `--header-height`, `--sidebar-width` in `variables.css`.

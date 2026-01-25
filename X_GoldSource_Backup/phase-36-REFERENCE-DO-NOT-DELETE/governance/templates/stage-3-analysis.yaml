@@ -1,0 +1,109 @@
+# =============================================================================
+# STAGE 3: ANALYSIS TEMPLATE
+# =============================================================================
+# Risk assessment and approach options before design.
+# =============================================================================
+
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 3
+  stageName: "analysis"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 2 approved with !Proceed at [timestamp]"
+  previousStage: "stage-2-research.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 3"
+    - "stageName: analysis"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-2-research.yaml"
+  
+  content:
+    - "risks: At least one risk identified"
+    - "approachOptions: At least two options compared"
+    - "recommendedApproach: Selected option with rationale"
+    - "rrmdDecision: Whether RRMD+ is needed"
+
+# =============================================================================
+# ANALYSIS OBJECTIVE
+# =============================================================================
+
+analysisObjective: "Risk assessment and approach options"
+
+# =============================================================================
+# RISKS
+# =============================================================================
+
+risks:
+  - id: "RISK-001"
+    name: "[Risk name]"
+    probability: "[low|medium|high]"
+    impact: "[low|medium|high]"
+    description: "[What could go wrong]"
+    mitigation: "[How to address it]"
+
+# =============================================================================
+# APPROACH OPTIONS
+# =============================================================================
+# APPROACH FORMAT (LEAP-021):
+# Use consistent APPROACH-A/B/C naming. Each option MUST include:
+# - option: Letter identifier (A, B, C...)
+# - name: Descriptive name
+# - description: What this approach does
+# - pros: Benefits
+# - cons: Drawbacks
+# - recommended: true|false
+# =============================================================================
+
+approachOptions:
+  - option: "A"
+    name: "[Option name]"
+    description: "[What this approach does]"
+    pros: "[Benefits]"
+    cons: "[Drawbacks]"
+    recommended: "[true|false]"
+  
+  - option: "B"
+    name: "[Alternative option]"
+    description: "[What this approach does]"
+    pros: "[Benefits]"
+    cons: "[Drawbacks]"
+    recommended: "[true|false]"
+
+# =============================================================================
+# RECOMMENDED APPROACH
+# =============================================================================
+
+recommendedApproach:
+  option: "[A or B]"
+  rationale: "[Why this option was selected]"
+
+# =============================================================================
+# RRMD+ DECISION
+# =============================================================================
+
+rrmdDecision:
+  required: "[true|false]"
+  triggers:
+    moreThan3Files: "[true|false]"
+    coreFiles: "[true|false]"
+    dataSchema: "[true|false]"
+    buildDeploy: "[true|false]"
+    previousFailures: "[true|false]"
+  rationale: "[Why RRMD+ is or isn't needed]"
+
+# =============================================================================
+# NEXT STAGE
+# =============================================================================
+
+nextStage:
+  name: "design"
+  requires: "!Proceed"
