@@ -1,0 +1,183 @@
+metadata:
+  type: "stage-artifact"
+  stage: 4
+  name: "Design"
+  phase: 34
+  project: "GovernanceShield"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+design:
+  description: "Exact text drafts for Phase 34 implementation."
+
+  drafts:
+    
+    # -------------------------------------------------------------------------
+    # 1. THE NEW PROTOTYPE TEMPLATE (Salvaged from Phase 31)
+    # -------------------------------------------------------------------------
+    "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/Templates/prototype_template.html": |
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>SPEC-XXX: Prototype</title>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+          <script src="https://unpkg.com/lucide@latest"></script>
+          <style>
+              /* =============================================================================
+                 GOLDSOURCE DESIGN TOKENS (Salvaged from Phase 31 Masonry Build)
+                 ============================================================================= */
+              :root {
+                  /* Theme Colors */
+                  --bg-primary: #0a0a0c;
+                  --accent-primary: #62d84e;
+                  --accent-glow: rgba(98, 216, 78, 0.2);
+                  --text-primary: #ffffff;
+                  --text-secondary: #94a3b8;
+                  --brand-primary: #62d84e;
+                  --brand-secondary: #8b5cf6;
+                  
+                  /* Glassmorphism */
+                  --glass-bg: rgba(255, 255, 255, 0.05);
+                  --glass-border: rgba(255, 255, 255, 0.1);
+                  --glass-blur: 20px;
+                  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                  
+                  /* Layout Dimensions (Global Contract) */
+                  --header-height: 64px;
+                  --sidebar-width: 68px;
+                  --sidebar-gap: 20px;
+                  --space-md: 16px;
+                  --space-xl: 32px;
+                  --radius-md: 12px;
+                  
+                  /* Z-Indices */
+                  --z-sidebar: 100;
+                  --z-header: 200;
+              }
+
+              body {
+                  font-family: 'Inter', sans-serif;
+                  background: var(--bg-primary);
+                  color: var(--text-primary);
+                  margin: 0;
+                  overflow-x: hidden;
+              }
+
+              /* --- LAYOUT STRUCTURE --- */
+              .app-layout {
+                  display: grid;
+                  grid-template-areas: "header header" "sidebar canvas";
+                  grid-template-columns: calc(var(--sidebar-width) + var(--sidebar-gap)*2) 1fr;
+                  grid-template-rows: var(--header-height) 1fr;
+                  height: 100vh;
+              }
+
+              .header { grid-area: header; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; padding: 0 24px; }
+              .sidebar { grid-area: sidebar; border-right: 1px solid var(--glass-border); }
+              
+              /* --- MASONRY LAYOUT ENGINE (The Fix) --- */
+              .canvas-container {
+                  grid-area: canvas;
+                  padding: var(--space-xl);
+                  overflow-y: auto;
+              }
+
+              .nexus-canvas.masonry-mode {
+                  display: block;
+                  column-count: 3;
+                  column-gap: var(--space-xl);
+              }
+
+              .nexus-card {
+                  background: var(--glass-bg);
+                  border: 1px solid var(--glass-border);
+                  border-radius: var(--radius-md);
+                  padding: var(--space-md);
+                  margin-bottom: var(--space-xl);
+                  break-inside: avoid; /* CRITICAL FOR MASONRY */
+              }
+
+              @media (max-width: 1200px) { .nexus-canvas.masonry-mode { column-count: 2; } }
+              @media (max-width: 700px) { .nexus-canvas.masonry-mode { column-count: 1; } }
+          </style>
+      </head>
+      <body>
+          <!-- BASE SCAFFOLD MOCKUP -->
+          <div class="app-layout">
+              <header class="header">
+                  <h3>NEXUS Prototype</h3>
+              </header>
+              <aside class="sidebar">
+                  <!-- Sidebar placeholder -->
+              </aside>
+              <main class="canvas-container">
+                  <!-- PROTOTYPE CONTENT GOES HERE -->
+                  <div class="nexus-canvas masonry-mode">
+                      <div class="nexus-card">Card 1</div>
+                      <div class="nexus-card">Card 2</div>
+                      <div class="nexus-card">Card 3</div>
+                  </div>
+              </main>
+          </div>
+      </body>
+      </html>
+
+    # -------------------------------------------------------------------------
+    # 2. LESSONS LEARNED REGISTRY
+    # -------------------------------------------------------------------------
+    "1_LEAP/1_Governance/3_resources/LESSONS_LEARNED.md": |
+      # LEAP Master Lessons Registry
+      
+      ## Purpose
+      This file prevents "Systemic Amnesia." AI Agents must read this before starting research.
+      
+      ## Registry
+      ### [Phase 31] Layout Engine: Masonry vs Grid
+      - **Context:** Canvas card layout implementation.
+      - **Failure:** CSS Grid causes gaps because it aligns rows.
+      - **Success:** CSS Columns (`column-count: 3`) creates a true masonry packing.
+      - **Rule:** Use `column-count` and `break-inside: avoid` for card walls.
+      
+      ### [Phase 33] Architecture: Unidirectional Flow
+      - **Context:** Sidebar initialization race conditions.
+      - **Failure:** Router calling `sidebar.update()` directly.
+      - **Rule:** UI components must *subscribe* to state. Never push updates to them.
+
+    # -------------------------------------------------------------------------
+    # 3. PROTOCOL INJECTIONS (YAML Snippets)
+    # -------------------------------------------------------------------------
+    
+    # bump-protocol.yaml
+    salvageProtocol:
+      trigger: "Before ANY deletion of a phase folder"
+      steps:
+        - "Scan folder for working components/prototypes"
+        - "Copy valid files to `_Salvage/snippets/`"
+        - "Log salvage in `_Salvage/inventory.md`"
+        - "ONLY THEN delete the folder"
+
+    # goldsource-increment.yaml (Stage 1)
+    - step: "Read LESSONS_LEARNED.md"
+      action: "Absorb past failures to prevent regression"
+
+    # spec-discovery-protocol.yaml
+    "-0.5":
+      title: "Deconstruction Audit"
+      stage: "Technical Handoff"
+      methodology: "Code Extraction"
+      outcome: "deconstruction_audit.md"
+      gold_source_check: "REQUIRED: Compare prototype plan against ARCHITECTURE.yaml"
+
+    # goldsource-increment.yaml (Stage 8 - Freshness Rule)
+    - file: "3_R&D_GoldSource/Discovery_Methodology/Templates/prototype_template.html"
+      updateWhen: "If design tokens or layout engine changed"
+
+validationPlan:
+  - "Verify prototype_template.html renders correctly in browser."
+  - "Verify LESSONS_LEARNED.md is readable."
+  - "Verify all YAML insertions validate."
+
+nextStep: "Stage 5: Implementation (Writing these files to disk)"

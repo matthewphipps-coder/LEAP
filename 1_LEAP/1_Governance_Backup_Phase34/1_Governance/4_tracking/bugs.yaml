@@ -1,0 +1,38 @@
+metadata:
+  type: "tracking"
+  name: "LEAP Bug Tracker"
+  purpose: "Known issues and defects"
+  version: "2.0.0"
+  created: "2026-01-16"
+  lastUpdated: "2026-01-16"
+  status: "active"
+
+summary:
+  totalBugs: 0
+  critical: 0
+  high: 0
+  medium: 0
+  low: 0
+  
+  note: "Fresh project - no bugs to track yet"
+
+activeBugs: []
+
+resolvedBugs: []
+
+howToLog:
+  templateRef: "1_LEAP/1_Governance/5_templates/tracking.yaml"
+  template: |
+    - id: "BUG-XXX"
+      severity: "critical|high|medium|low"
+      status: "open|in-progress|resolved"
+      summary: "Brief description"
+      description: "Detailed description"
+      stepsToReproduce:
+        - "Step 1"
+        - "Step 2"
+      expectedBehavior: "What should happen"
+      actualBehavior: "What actually happens"
+      affectedFiles: []
+      reportedDate: "YYYY-MM-DD"
+      resolvedDate: null

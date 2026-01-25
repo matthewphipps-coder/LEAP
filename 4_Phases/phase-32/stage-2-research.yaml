@@ -1,0 +1,56 @@
+metadata:
+  phase: "32"
+  stage: "2"
+  name: "Research"
+  status: "complete"
+  date: "2026-01-24"
+
+research_findings:
+  scaffold_state:
+    description: "GoldSource v2.0.0 scaffold is healthy and modular."
+    header: "Ready. Supports PAGE_TABS config."
+    sidebar: "Ready. Supports PAGE_SIDEBAR_ACTIONS config. Perfect fit for Horizon controls."
+    canvas: "Exists but empty (no-op). Ready for implementation."
+    design_system: "variables.css contains 80% of needed tokens. Needs extension."
+
+  integration_strategy:
+    my_work_page:
+      strategy: "Rename 'Dashboard' to 'My Work' in constants.js."
+      sidebar_actions: "Define Inbox, Now, Next, Later, Done, Optimise as sidebar actions for 'My Work' page."
+      implication: "Uses existing sidebar-ui.js without modification, just config update."
+    
+    badges:
+      strategy: "Enhance header-ui.js to allow dynamic tab badge updates."
+      logic: "Card service will emit events or update state; UI components subscribe."
+    
+    canvas_layout:
+      strategy: "Implement CanvasController in canvas-ui.js."
+      responsibility: "Manage grid/freeform modes and render cards."
+    
+    cards:
+      strategy: "Create new 'card' component directory."
+      style: "nexus-card-ui.js and card.css."
+
+impact_assessment:
+  new_files:
+    - "2_GoldSource/scaffold/ui/components/card/nexus-card-ui.js" (Card Component)
+    - "2_GoldSource/scaffold/ui/components/card/card.css" (Card Styles)
+    - "2_GoldSource/scaffold/features/card/card-service.js" (Business Logic & State)
+  
+  modified_files:
+    - "2_GoldSource/scaffold/core/constants.js" (Config updates)
+    - "2_GoldSource/scaffold/ui/styles/variables.css" (New tokens)
+    - "2_GoldSource/scaffold/ui/components/canvas/canvas-ui.js" (Canvas logic)
+    - "2_GoldSource/scaffold/ui/components/canvas/canvas.css" (Grid styles)
+    - "2_GoldSource/scaffold/ui/components/header/header-ui.js" (Badge update logic)
+    - "2_GoldSource/scaffold/core/app.js" (Import/Init card service)
+
+  risk_analysis:
+    breaking_changes: "Low. 'Dashboard' rename is configuration only."
+    complexity: "Medium. Drag-and-drop state management is the trickiest part."
+    mitigation: "Use proven patterns from prototype. Incremental commits."
+
+plan:
+  - "Stage 3: Confirm this plan (RRMD+ not strictly needed as no breaking changes to locked infra, but good for safety)."
+  - "Stage 4: Create detailed implementation plan (Direct workflow - prototype already exists)."
+  - "Stage 5: Execute file creation and modification."

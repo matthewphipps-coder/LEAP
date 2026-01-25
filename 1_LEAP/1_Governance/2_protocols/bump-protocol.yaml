@@ -31,6 +31,14 @@ whenInvoked:
   - step: 6
     action: "WAIT for !Proceed before continuing"
 
+salvageProtocol:
+  trigger: "Before ANY deletion of a phase folder"
+  steps:
+    - "Scan folder for working components/prototypes"
+    - "Copy valid files to `_Salvage/snippets/`"
+    - "Log salvage in `_Salvage/inventory.md`"
+    - "ONLY THEN delete the folder"
+
 agentShouldNot:
   - "Feel bad or apologize excessively"
   - "Make excuses"

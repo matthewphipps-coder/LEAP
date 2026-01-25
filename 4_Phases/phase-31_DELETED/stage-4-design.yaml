@@ -1,0 +1,29 @@
+metadata:
+  type: "stage-artifact"
+  stage: 4
+  name: "Design"
+  phase: 31
+  project: "LEAP-061 Card System"
+  date: "2026-01-24"
+
+design:
+  prototype:
+    file: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-004-prototype.html"
+    status: "Created"
+    keyFeatures:
+      - "Drag-and-drop to sidebar horizons"
+      - "Dynamic card sizing (Large/Medium/Compact)"
+      - "Priority-based badge colors (Urgent/Warning/Neutral)"
+      - "AI Re-sort simulation"
+  
+  decisions:
+    componentArchitecture:
+      - "nexus-canvas will own the Sidebar logic (Horizon filters)"
+      - "nexus-card will be purely presentational data-driven component"
+      - "State management will handle 'cards' array and 'horizon' filters"
+    
+    integrationStrategies:
+      - "Sidebar: Injected into main layout or handled via 'canvas-ui.js' equivalent"
+      - "Since 'My Work' is a page, the 'Sidebar' for Horizons fits best as a floating pill specific to that page context, as shown in prototype."
+
+nextStep: "Stage 5: Implementation (Scaffold Modification)"

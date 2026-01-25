@@ -71,6 +71,29 @@ features:
       - Apply serverTimestamp() for timestamps
 
 # =============================================================================
+# WORK MANAGEMENT
+# =============================================================================
+
+  - id: "CARD-001"
+    name: "Card & Canvas UI"
+    status: "implemented"
+    description: "Visual work management with dynamic cards and horizon planning"
+    spec: "SPEC-004"
+    phase: "32 - CardCanvasImplementation"
+    files:
+      - "features/card/card-service.js"
+      - "ui/components/card/*"
+      - "ui/components/canvas/*"
+    capabilities:
+      - "Dynamic Nexus Cards (P1/P2/P3)"
+      - "Canvas Grid & Layout Controller"
+      - "Horizon Filtering (Inbox, Now, Next, Later, Done)"
+      - "Drag-and-Drop Organization"
+      - "AI Optimization Simulation"
+    extensionPoint: true
+    extensionNotes: "Service uses 'cards' state slice. UI uses event-driven updates."
+
+# =============================================================================
 # DASHBOARD SHELL
 # =============================================================================
 

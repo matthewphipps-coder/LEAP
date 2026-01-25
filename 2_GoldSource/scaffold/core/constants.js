@@ -69,7 +69,7 @@ export const CHECKPOINT_PREFIX = '[NEXUS]';
  * @extensible Factory can add pages by appending to this array
  */
 export const PAGE_TABS = [
-  { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+  { id: 'my-work', icon: 'layout-dashboard', label: 'My Work' },
   { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
   { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
   { id: 'calendar', icon: 'calendar', label: 'Calendar' },
@@ -85,8 +85,14 @@ export const PAGE_TABS = [
  * @extensible Factory can add actions by extending page arrays
  */
 export const PAGE_SIDEBAR_ACTIONS = {
-  dashboard: [
-    { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
+  'my-work': [
+    { id: 'inbox', icon: 'inbox', label: 'Inbox', badge: 3 },
+    { id: 'now', icon: 'zap', label: 'Now', badge: 2 },
+    { id: 'next', icon: 'clock', label: 'Next', badge: 5 },
+    { id: 'later', icon: 'calendar', label: 'Later', badge: 8 },
+    { id: 'all', icon: 'list', label: 'All' },
+    { id: 'done', icon: 'check-circle', label: 'Done' },
+    { id: 'optimise', icon: 'sparkles', label: 'Optimise' }
   ],
   incidents: [
     { id: 'new-incident', icon: 'plus', label: 'New Incident' },

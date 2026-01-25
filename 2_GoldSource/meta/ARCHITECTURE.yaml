@@ -61,6 +61,7 @@ folderStructure:
       purpose: "Feature modules - extensible"
       files:
         - "ai/ai-service.js - AI provider interface"
+        - "card/card-service.js - Card data & logic"
     
     ui:
       location: "scaffold/ui/"
@@ -75,6 +76,7 @@ folderStructure:
             - "header/ - Top navigation (LOCKED)"
             - "sidebar/ - Left navigation"
             - "canvas/ - Main content area"
+            - "card/ - Card component primitives"
   
   meta:
     location: "meta/"

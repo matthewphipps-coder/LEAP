@@ -1,0 +1,43 @@
+metadata:
+  type: "stage-artifact"
+  stage: 2
+  name: "Research"
+  phase: 31
+  project: "LEAP-061 Card System"
+  date: "2026-01-24"
+
+research:
+  scaffoldAnalysis:
+    currentCapabilities:
+      - "GoldSource v2.0 scaffold active"
+      - "Page routing via #page-{id} sections in index.html"
+      - "Existing 'Dashboard' page displays 'data-cards' component"
+    
+    impacts:
+      - "Renaming 'Dashboard' to 'My Work' in core/constants.js"
+      - "Replacing 'data-cards' component with 'nexus-canvas'"
+      - "Injecting 'nexus-sidebar' into the My Work page (or main sidebar integration)"
+      - "New CSS variables for card sizes and priorities"
+  
+  fileImpact:
+    modify:
+      - "scaffold/core/constants.js" (Rename Dashboard -> My Work)
+      - "scaffold/index.html" (Layout structure, CSS links)
+      - "scaffold/ui/styles/components.css" (Import new styles)
+    
+    new:
+      - "scaffold/ui/components/nexus-card/nexus-card.css"
+      - "scaffold/ui/components/nexus-card/nexus-card-ui.js"
+      - "scaffold/ui/components/nexus-canvas/nexus-canvas.css"
+      - "scaffold/ui/components/nexus-canvas/nexus-canvas-ui.js"
+    
+    deprecate:
+      - "scaffold/ui/components/data-cards/" (Superseded)
+      - "scaffold/ui/components/canvas/canvas-ui.js" (Legacy no-op, replace or reuse)
+
+  integrationPoints:
+    - "Router: Ensure 'My Work' page ID matches 'dashboard' or update router logic"
+    - "State: Need new state slice for 'cards' in state.js (or registered dynamically)"
+    - "Styles: Extend design system tokens in variables.css or new css"
+
+nextStep: "Stage 3: Analysis (RRMD+ Risk Assessment)"

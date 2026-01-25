@@ -40,7 +40,11 @@ export function initPageRouter(onPageChange) {
 
     // Set initial page to first tab
     const defaultPage = PAGE_TABS[0]?.id || 'dashboard';
-    switchPage(defaultPage, false); // Don't trigger callback on init
+
+    // Defer initial page switch to ensure all components are ready (Fix for Sidebar Persistence)
+    setTimeout(() => {
+        switchPage(defaultPage, true);
+    }, 50);
 
     // Listen for tab clicks (delegated)
     document.addEventListener('click', (e) => {

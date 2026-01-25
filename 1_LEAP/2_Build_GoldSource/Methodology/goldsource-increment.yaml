@@ -223,6 +223,8 @@ stages:
       items:
         - step: "Read task.md from phase folder"
           action: "This is your checklist - follow it exactly"
+        - step: "Read LESSONS_LEARNED.md"
+          action: "Absorb past failures to prevent regression"
         - step: "Read goldsource-increment.yaml"
           action: "Refresh understanding of 8-stage process"
         - step: "Update CURRENT_STATE.yaml"
@@ -423,6 +425,8 @@ stages:
           updateWhen: "If new stage template fields needed"
         - file: "FACTORY_README.yaml"
           updateWhen: "If file registry changed"
+        - file: "3_R&D_GoldSource/Discovery_Methodology/Templates/prototype_template.html"
+          updateWhen: "If design tokens or layout engine changed"
     
     outputs:
       - "stage-8-closure.yaml with lessons learned"

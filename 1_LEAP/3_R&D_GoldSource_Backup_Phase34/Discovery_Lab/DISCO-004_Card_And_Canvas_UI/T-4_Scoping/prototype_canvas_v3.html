@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - Full Core Prototype v3.0</title>
+    <style>
+        :root {
+            /* Color System */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0f0f16;
+            --bg-tertiary: #161621;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-blur: 14px;
+
+            /* Priority Colors */
+            --p1: #ef4444;
+            --p2: #f59e0b;
+            --p3: #10b981;
+            --p4: #6b7280;
+
+            /* Sizing */
+            --sidebar-width: 260px;
+            --card-radius: 12px;
+            --transition: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding-left: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-secondary);
+            gap: 12px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .badge {
+            margin-left: auto;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .badge.active {
+            background: var(--accent-primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .badge.urgent {
+            background: var(--p1);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Canvas Main */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button.primary {
+            background: var(--accent-primary);
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: var(--glass-bg);
+            border-color: var(--accent-primary);
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Card Patterns */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s var(--transition), opacity 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Sizing R9/R11 */
+        .card.size-large {
+            grid-column: span 2;
+        }
+
+        .card.size-compact {
+            padding: 12px 16px;
+        }
+
+        .card.size-compact .card-summary {
+            display: none;
+        }
+
+        .card.size-compact .card-title {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .card-p-strip {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: block;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .card-summary {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 12px;
+            margin-top: auto;
+        }
+
+        /* List View */
+        .list-group {
+            margin-bottom: 40px;
+        }
+
+        .list-group-header {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            background: var(--bg-tertiary);
+            padding: 14px 24px;
+            border-radius: 8px;
+            gap: 24px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+        .list-item:hover {
+            background: var(--glass-bg);
+            transform: translateX(4px);
+        }
+
+        .li-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .li-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .li-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            width: 140px;
+        }
+
+        .li-tag {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Notification */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-primary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            transform: translateX(400px);
+            transition: 0.5s var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        /* Animation for AI Re-sort */
+        .sorting {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(0.98) rotate(-0.5deg);
+            }
+
+            75% {
+                transform: scale(0.99) rotate(0.5deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">NEXUS</div>
+
+        <div class="nav-section">
+            <div class="nav-label">Horizon</div>
+            <div class="nav-item" id="nav-inbox" onclick="setView('inbox')">
+                <span>📥</span> Inbox <span id="inbox-badge" class="badge">0</span>
+            </div>
+            <div class="nav-item active" id="nav-now" onclick="setView('now')">
+                <span>⚡</span> Now <span class="badge" id="now-count">4</span>
+            </div>
+            <div class="nav-item" id="nav-next" onclick="setView('next')">
+                <span>🗓️</span> Next <span class="badge" id="next-count">5</span>
+            </div>
+            <div class="nav-item" id="nav-later" onclick="setView('later')">
+                <span>⏳</span> Later <span class="badge" id="later-count">8</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-label">Management</div>
+            <div class="nav-item" id="nav-all" onclick="setView('all')">
+                <span>🌐</span> All (List View)
+            </div>
+            <div class="nav-item">
+                <span>✅</span> Done
+            </div>
+        </div>
+
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
+            <p style="font-size: 10px; color: var(--text-muted); text-align: center; margin-bottom: 4px;">SIMULATION
+                CONTROLS</p>
+            <button onclick="simulateArrival()">Assign New P1</button>
+            <button onclick="simulateUpdate()">Update Existing</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <header class="header">
+            <div class="header-title">
+                <h2 id="view-title">Now</h2>
+                <p id="view-subtitle">High-focus items requiring immediate action</p>
+            </div>
+            <div class="controls">
+                <button id="resort-btn" onclick="resort()">AI Re-sort (Spatial Update)</button>
+            </div>
+        </header>
+
+        <div class="content" id="canvas-content">
+            <!-- Dynamic Card View -->
+            <div class="card-grid" id="gridView">
+                <!-- Cards will be injected here -->
+            </div>
+
+            <!-- Management List View -->
+            <div id="listView" style="display: none;">
+                <!-- List groups will be injected here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- UI Elements -->
+    <div id="toast" class="toast">
+        <div class="toast-icon">📥</div>
+        <div>
+            <div style="font-weight: 700; margin-bottom: 2px;">New Item in Inbox</div>
+            <div id="toast-msg" style="font-size: 12px; color: var(--text-secondary);">Major VPN outage assigned to you.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATASET: 20+ Items across horizons
+        const dataset = [
+            /* NOW */
+            { id: 'INC0010001', horizon: 'now', title: '🔥 VPN Outage - Major Core Failure', meta: 'NETWORK • P1', summary: 'Multiple branch offices report complete connectivity loss since 08:45. Critical impact on sales ops.', sla: '18 min remaining', priority: 1, size: 'large', accent: 'var(--p1)' },
+            { id: 'INC0010045', horizon: 'now', title: 'Database Response Latency', meta: 'DBA • P2', summary: 'Order checkout taking >10 seconds. 400 user sessions affected.', sla: '1h 22m remaining', priority: 2, size: 'medium', accent: 'var(--p2)' },
+            { id: 'TASK00543', horizon: 'now', title: 'Security Audit: Root Access Log Review', meta: 'SECURITY • P2', summary: 'Unauthorized access attempts detected on production jump host.', sla: 'Due 4pm', priority: 2, size: 'medium', accent: 'var(--p2)' },
+            { id: 'INC0012999', horizon: 'now', title: 'VIP Email Issue - CEO Office', meta: 'OFFICE365 • P1', summary: 'CEO cannot send encrypted attachments.', sla: '30 min remaining', priority: 1, size: 'medium', accent: 'var(--p1)' },
+
+            /* NEXT */
+            { id: 'CHG0005432', horizon: 'next', title: 'Firewall Rule Update - Marketing SaaS', meta: 'SECURITY • P3', summary: 'Scheduled update to allow connectivity for new marketing dashboard.', sla: 'Friday 6pm', priority: 3, size: 'medium', accent: 'var(--p3)' },
+            { id: 'TASK00888', horizon: 'next', title: 'Update Onboarding Documentation', meta: 'WIKI • P3', summary: 'Add the new NEXUS architecture diagrams to the developer portal.', sla: 'Monday', priority: 3, size: 'medium', accent: 'var(--p3)' },
+            { id: 'INC0010088', horizon: 'next', title: 'UI Bug: Dashboard Flicker', meta: 'UX • P4', summary: 'Occasional flicker on Safari 17.2.', sla: 'Next Sprint', priority: 4, size: 'compact', accent: 'var(--p4)' },
+            { id: 'REQ000123', horizon: 'next', title: 'New Hardware: Monitor Upgrade', meta: 'PROCUREMENT • P3', summary: 'Request for dual 27-inch monitors for NOC setup.', sla: 'In Approval', priority: 3, size: 'medium', accent: 'var(--p3)' },
+            { id: 'TASK00911', horizon: 'next', title: 'Cert Renewal: Frontend SSL', meta: 'CERT • P2', summary: 'Production SSL certificate expiring in 4 days.', sla: 'Due Mon', priority: 2, size: 'medium', accent: 'var(--p2)' },
+
+            /* LATER */
+            { id: 'TASK001', horizon: 'later', title: 'Legacy Cleanup: Delete old Vlans', meta: 'NETWORK', priority: 4, size: 'compact', accent: 'var(--p4)' },
+            { id: 'TASK002', horizon: 'later', title: 'Refactor Auth Middleware', meta: 'CODE', priority: 3, size: 'compact', accent: 'var(--p3)' },
+            { id: 'TASK003', horizon: 'later', title: 'Update Team Photos', meta: 'INTERNAL', priority: 4, size: 'compact', accent: 'var(--p4)' },
+            { id: 'TASK004', horizon: 'later', title: 'Domain Research: Web3 Auth', meta: 'R&D', priority: 4, size: 'compact', accent: 'var(--p4)' },
+            { id: 'TASK005', horizon: 'later', title: 'Sync with ServiceNow Montreal Team', meta: 'MEETING', priority: 3, size: 'compact', accent: 'var(--p3)' },
+            { id: 'TASK006', horizon: 'later', title: 'Quarterly Planning Prep', meta: 'MANAGEMENT', priority: 3, size: 'compact', accent: 'var(--p3)' },
+            { id: 'TASK007', horizon: 'later', title: 'Clean up Dev Environment', meta: 'OPS', priority: 4, size: 'compact', accent: 'var(--p4)' },
+            { id: 'TASK008', horizon: 'later', title: 'Read: New AI Governance policy', meta: 'COMPLIANCE', priority: 3, size: 'compact', accent: 'var(--p3)' }
+        ];
+
+        let inbox = [];
+        let view = 'now';
+
+        function render() {
+            const grid = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            const content = document.getElementById('canvas-content');
+
+            grid.innerHTML = '';
+            listView.innerHTML = '';
+
+            if (view === 'all') {
+                grid.style.display = 'none';
+                listView.style.display = 'block';
+                renderList(listView);
+            } else {
+                grid.style.display = 'grid';
+                listView.style.display = 'none';
+                renderGrid(grid);
+            }
+
+            // Sync counts
+            document.getElementById('inbox-badge').innerText = inbox.length;
+            document.getElementById('inbox-badge').classList.toggle('urgent', inbox.some(i => i.priority === 1));
+            document.getElementById('now-count').innerText = dataset.filter(i => i.horizon === 'now').length;
+            document.getElementById('next-count').innerText = dataset.filter(i => i.horizon === 'next').length;
+            document.getElementById('later-count').innerText = dataset.filter(i => i.horizon === 'later').length;
+        }
+
+        function renderGrid(container) {
+            const items = view === 'inbox' ? inbox : dataset.filter(i => i.horizon === view);
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `card size-${item.size || 'medium'}`;
+                card.innerHTML = `
+                    <div class="card-p-strip" style="background: ${item.accent}"></div>
+                    <span class="card-meta">${item.meta} • ${item.id}</span>
+                    <span class="card-title">${item.title}</span>
+                    <p class="card-summary">${item.summary || ''}</p>
+                    <div class="card-footer">
+                        <span>${item.sla || 'No Due Date'}</span>
+                        <span style="opacity: 0.5">${item.id.includes('INC') ? 'ServiceNow' : 'Local'}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderList(container) {
+            const horizons = ['inbox', 'now', 'next', 'later'];
+            horizons.forEach(h => {
+                const items = h === 'inbox' ? inbox : dataset.filter(i => i.horizon === h);
+                if (items.length === 0) return;
+
+                const group = document.createElement('div');
+                group.className = 'list-group';
+                group.innerHTML = `<div class="list-group-header"><span>${h}</span> <span>${items.length}</span></div>`;
+
+                items.forEach(item => {
+                    const li = document.createElement('div');
+                    li.className = 'list-item';
+                    li.innerHTML = `
+                        <div class="li-badge" style="color: ${item.accent}">P${item.priority || 4}</div>
+                        <div class="li-title">${item.title}</div>
+                        <div class="li-meta">${item.id}</div>
+                        <div class="li-tag">${h}</div>
+                    `;
+                    group.appendChild(li);
+                });
+                container.appendChild(group);
+            });
+        }
+
+        function setView(v) {
+            view = v;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`nav-${v}`).classList.add('active');
+
+            const title = document.getElementById('view-title');
+            const subtitle = document.getElementById('view-subtitle');
+
+            const titles = {
+                inbox: "Inbox", now: "Now", next: "Next", later: "Later", all: "All My Work"
+            };
+            const subs = {
+                inbox: "New items waiting for your review",
+                now: "High-focus items requiring immediate action",
+                next: "Scheduled for tomorrow or after current tasks",
+                later: "Backlog items to monitor for changes",
+                all: "Holistic management surface (Drag/Drop to reorganize)"
+            };
+
+            title.innerText = titles[v];
+            subtitle.innerText = subs[v];
+
+            render();
+        }
+
+        function simulateArrival() {
+            const newItem = {
+                id: 'INC0099999',
+                horizon: 'now',
+                title: '🔥 EMERGENCY: Data Center PDU Failure',
+                meta: 'INFRA • P1',
+                summary: 'Secondary PDU on Rack 4 failed. One server down, no redundancy.',
+                sla: '15 min remaining',
+                priority: 1,
+                size: 'large',
+                accent: 'var(--p1)'
+            };
+            inbox.unshift(newItem);
+            showNotification(newItem.title);
+            render();
+        }
+
+        function simulateUpdate() {
+            const nowItems = dataset.filter(i => i.horizon === 'now');
+            const target = nowItems[Math.floor(Math.random() * nowItems.length)];
+
+            // Check if already in inbox
+            if (!inbox.some(i => i.id === target.id)) {
+                inbox.unshift(target);
+            }
+            showNotification(`Update to ${target.id}: Comment added by manager.`);
+            render();
+        }
+
+        function showNotification(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        function resort() {
+            const content = document.getElementById('canvas-content');
+            content.classList.add('sorting');
+
+            // Simulate AI picking any Inbox items that should be in the current view
+            if (view === 'now' && inbox.length > 0) {
+                const toIngest = inbox.filter(i => i.horizon === 'now');
+                toIngest.forEach(i => dataset.unshift(i));
+                inbox = inbox.filter(i => i.horizon !== 'now');
+            }
+
+            setTimeout(() => {
+                content.classList.remove('sorting');
+                render();
+            }, 500);
+        }
+
+        // Init
+        render();
+    </script>
+</body>
+
+</html>

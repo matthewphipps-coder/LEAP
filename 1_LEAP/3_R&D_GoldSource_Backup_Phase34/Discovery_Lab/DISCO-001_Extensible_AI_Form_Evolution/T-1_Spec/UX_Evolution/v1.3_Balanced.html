@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Workbench | GoldSource v1.3</title>
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #050608;
+            --bg-surface: #0a0c10;
+            --bg-glass: rgba(13, 17, 23, 0.82);
+            --bg-pill: rgba(255, 255, 255, 0.04);
+
+            --emerald: #62d84e;
+            --emerald-vibrant: #4ade80;
+            --emerald-glow: rgba(98, 216, 78, 0.15);
+
+            --text-high: #ffffff;
+            --text-med: #94a3b8;
+            --text-low: #4b5563;
+
+            --border-glass: rgba(255, 255, 255, 0.07);
+            --radius-lg: 28px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+
+            --blur-std: 30px;
+            --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --spring: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-high);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(98, 216, 78, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+        }
+
+        .canvas-16-9 {
+            width: 100vw;
+            height: 56.25vw;
+            max-height: 100vh;
+            max-width: 177.78vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .workbench {
+            width: 90%;
+            height: 90%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(var(--blur-std));
+            -webkit-backdrop-filter: blur(var(--blur-std));
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            display: flex;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: workbenchFadeUp 0.6s var(--spring);
+        }
+
+        @keyframes workbenchFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .window-ctrl {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+        }
+
+        .btn-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* 50:50 Balanced Split */
+        .pane-left {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .pane-right {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }
+
+        /* Minimalist "Now Assist" Header */
+        .chat-header {
+            padding: 32px 40px;
+        }
+
+        .brand-light {
+            font-family: 'Outfit';
+            font-size: 1.25rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--emerald);
+        }
+
+        /* Compact Chat Stream */
+        .chat-stream {
+            flex: 1;
+            padding: 0 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 14px 20px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: msgIn 0.3s ease-out backwards;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-bottom-left-radius: 4px;
+            color: var(--text-med);
+        }
+
+        .msg-human {
+            align-self: flex-end;
+            background: var(--emerald);
+            color: var(--bg-deep);
+            font-weight: 600;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Compact Input */
+        .input-area {
+            padding: 32px 40px;
+        }
+
+        .input-capsule {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 12px 20px;
+            gap: 16px;
+        }
+
+        .input-capsule span {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-low);
+        }
+
+        .input-btns {
+            display: flex;
+            gap: 12px;
+            color: var(--text-low);
+            font-size: 1rem;
+        }
+
+        .input-btns i {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+
+        .input-btns i:hover {
+            opacity: 1;
+            color: var(--text-high);
+        }
+
+        /* Visual Companion */
+        .viz-info {
+            margin-bottom: 32px;
+        }
+
+        .viz-info span {
+            font-size: 0.65rem;
+            color: var(--text-low);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .viz-info h2 {
+            font-family: 'Outfit';
+            font-size: 1.15rem;
+            color: var(--text-high);
+            margin-top: 4px;
+        }
+
+        .form-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            animation: fieldFade 0.4s ease-out backwards;
+        }
+
+        @keyframes fieldFade {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+        }
+
+        .field-lbl {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-low);
+            text-transform: uppercase;
+        }
+
+        .field-val {
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.4s var(--smooth);
+        }
+
+        /* Simplified Ghosting */
+        .field.ghost .field-val {
+            background: var(--emerald-glow);
+            border-color: var(--emerald);
+            color: var(--emerald-vibrant);
+        }
+
+        .ai-mark {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--emerald);
+            text-transform: uppercase;
+            margin-left: 8px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .field.ghost .ai-mark {
+            opacity: 1;
+        }
+
+        /* Commit Interaction */
+        .action-tray {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-finalize {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-vibrant));
+            border-radius: 14px;
+            border: none;
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--bg-deep);
+            cursor: pointer;
+            box-shadow: 0 10px 30px var(--emerald-glow);
+            transition: all 0.3s var(--spring);
+        }
+
+        .btn-finalize:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+        }
+
+        .footer-link {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-low);
+        }
+
+        .footer-link a {
+            color: var(--emerald);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Demo Controller */
+        .demo-nav {
+            position: absolute;
+            bottom: 32px;
+            left: 32px;
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .nav-pt {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-low);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .nav-pt.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-high);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="canvas-16-9">
+        <div class="workbench">
+            <div class="window-ctrl">
+                <div class="btn-close" onclick="alert('Dialog Dismissed')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Left: Now Assist (50%) -->
+            <section class="pane-left">
+                <header class="chat-header">
+                    <div class="brand-light">
+                        <div class="brand-dot"></div>
+                        Now Assist
+                    </div>
+                </header>
+
+                <div class="chat-stream" id="stream">
+                    <!-- Dynamic Messages -->
+                </div>
+
+                <div class="input-area">
+                    <div class="input-capsule">
+                        <span>How can I help?</span>
+                        <div class="input-btns">
+                            <i title="Attach">📂</i>
+                            <i title="Record">🎤</i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: Visual Companion (50%) -->
+            <section class="pane-right">
+                <div class="viz-info">
+                    <span>Active Incident</span>
+                    <h2 id="inc-id">INC0012345</h2>
+                </div>
+
+                <div class="form-list">
+                    <div class="field">
+                        <span class="field-lbl">Short Description</span>
+                        <div class="field-val">Slow performance on London VPN Cluster</div>
+                    </div>
+
+                    <div class="field" id="f-priority">
+                        <div style="display: flex; align-items: center;">
+                            <span class="field-lbl">Priority</span>
+                            <span class="ai-mark">Suggestion</span>
+                        </div>
+                        <div class="field-val" id="v-priority">3 - Moderate</div>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-lbl">Group</span>
+                        <div class="field-val">Network Eng</div>
+                    </div>
+
+                    <div class="field hidden" id="f-caller">
+                        <span class="field-lbl">Caller</span>
+                        <div class="field-val">John Doe <span style="opacity: 0.4;">(Global VP)</span></div>
+                    </div>
+
+                    <div class="field hidden" id="f-notes">
+                        <div style="display: flex; align-items: center;">
+                            <span class="field-lbl">Work Notes</span>
+                            <span class="ai-mark">Added</span>
+                        </div>
+                        <div class="field-val" id="v-notes">---</div>
+                    </div>
+                </div>
+
+                <div class="action-tray hidden" id="tray">
+                    <button class="btn-finalize" onclick="alert('Committed')">Approve Update</button>
+                    <div class="footer-link">No longer needed? <a href="#">Cancel ↗</a></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Dev Nav -->
+    <div class="demo-nav">
+        <button class="nav-pt active" onclick="go(0)">Initial</button>
+        <button class="nav-pt" onclick="go(1)">Reveal</button>
+        <button class="nav-pt" onclick="go(2)">Proposal</button>
+    </div>
+
+    <script>
+        const stream = document.getElementById('stream');
+        const tray = document.getElementById('tray');
+
+        const scenes = [
+            {
+                chat: [{ w: 'ai', t: "Hello! I'm ready to assist with this incident. I've anchored the core fields for you." }],
+                reveal: [], ghosts: {}, action: false
+            },
+            {
+                chat: [{ w: 'human', t: "Who raised this?" }, { w: 'ai', t: "It was John Doe. Expanding the caller details for you now." }],
+                reveal: ['f-caller'], ghosts: {}, action: false
+            },
+            {
+                chat: [{ w: 'human', t: "Escalate it." }, { w: 'ai', t: "Scaling to Critical and adding work notes for the server team. Please review." }],
+                reveal: ['f-caller', 'f-notes'],
+                ghosts: { 'f-priority': '1 - Critical', 'f-notes': 'Escalated due to high impact on London cluster.' },
+                action: true
+            }
+        ];
+
+        function go(idx) {
+            const s = scenes[idx];
+            document.querySelectorAll('.nav-pt').forEach((p, i) => p.classList.toggle('active', i === idx));
+
+            if (idx === 0) stream.innerHTML = '';
+            s.chat.forEach(m => {
+                const d = document.createElement('div');
+                d.className = `msg msg-${m.w === 'ai' ? 'ai' : 'human'}`;
+                d.textContent = m.t;
+                stream.appendChild(d);
+            });
+            stream.scrollTop = stream.scrollHeight;
+
+            document.querySelectorAll('.field').forEach(f => {
+                if (['f-caller', 'f-notes'].includes(f.id)) f.classList.add('hidden');
+                f.classList.remove('ghost');
+            });
+            document.getElementById('v-priority').textContent = '3 - Moderate';
+
+            s.reveal.forEach(id => document.getElementById(id).classList.remove('hidden'));
+            for (let id in s.ghosts) {
+                const el = document.getElementById(id);
+                el.classList.add('ghost');
+                el.querySelector('.field-val').textContent = s.ghosts[id];
+            }
+
+            tray.classList.toggle('hidden', !s.action);
+        }
+
+        go(0);
+    </script>
+</body>
+
+</html>

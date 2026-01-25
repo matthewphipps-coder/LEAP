@@ -1,0 +1,170 @@
+# GoldSource Phase: 31 - LEAP-061 Card System
+
+> Copy this template to `4_Phases/phase-{X}/task.md` at Stage 1 end.
+> All references are to Methodology/ files - no Factory governance files.
+
+## ⚠️ CRITICAL: AI MUST NOT SKIP STAGES
+
+**This checklist enforces 8-stage compliance:**
+- ❌ "specOnly" does NOT mean skip stages - it means no prototype
+- ❌ Do NOT proceed to next stage without completing current stage
+- ❌ Do NOT combine multiple stage artifacts into one
+- ✅ Check off EVERY item before requesting !Proceed
+- ✅ Create EVERY stage artifact (stage-X-name.yaml)
+- ✅ Request !Proceed after EVERY stage
+
+## Phase Reference
+
+- **SPEC**: SPEC-004-card-canvas.yaml
+- **Visual Guide**: VISUAL-GUIDE.md (Design Authority)
+- **Prototype**: N/A (Do not use as reference)
+- **Workflow**: full
+- **Discovery Artifact**: `4_Phases/phase-31/stage-1-discovery.yaml`
+- **Backup Location**: `X_GoldSource_Backup/phase-31-{timestamp}`
+
+---
+
+## ⚠️ Recovery Instructions (!bump)
+
+**If session restarts or you receive "continue":**
+
+1. **DO NOT assume previous work is complete**
+2. Read `CURRENT_STATE.yaml` for current stage
+3. Read this `task.md` - checkboxes show completed work  
+4. Read latest `stage-X-*.yaml` artifact for context
+5. Report status to human before proceeding
+
+**Rollback if needed:**
+```bash
+rm -rf 2_GoldSource
+cp -r X_GoldSource_Backup/phase-{X}-{timestamp} 2_GoldSource
+```
+
+---
+
+## Stage 2: Research
+**Objective**: Setup phase and understand scaffold impact
+
+📖 **Read before starting**:
+- `stage-1-discovery.yaml` (from previous conversation)
+- `1_LEAP/2_Build_GoldSource/Methodology/coding-standards.yaml`
+- `2_GoldSource/meta/ARCHITECTURE.yaml` (technical context)
+- `2_GoldSource/archetypes/` (pattern guidance - OK to read)
+
+### First Steps (MANDATORY):
+- [x] Create phase folder: `mkdir -p 4_Phases/phase-{X}`
+- [x] Update `CURRENT_STATE.yaml` (status: in-progress, stage: 2)
+- [x] Copy this template to phase folder
+
+### Research:
+- [x] Read discovery artifact from Stage 1
+- [x] Read affected scaffold files (Standards and Architecture read)
+- [x] List files to modify with impact assessment
+- [x] Create `stage-2-research.yaml`
+- [x] Request !Proceed
+
+---
+
+## Stage 3: Analysis
+**Objective**: RRMD+ risk assessment (ALWAYS required)
+
+📖 **Read before starting**:
+- `1_LEAP/2_Build_GoldSource/Methodology/goldsource-increment.yaml` (riskAssessment section)
+
+- [x] Document what is being changed
+- [x] Assess demo compatibility impact
+- [x] Identify rollback strategy
+- [x] Compare implementation approaches
+- [x] Create `stage-3-analysis.yaml` with RRMD+
+- [x] Request !Proceed
+
+---
+
+## Stage 4: Design
+**Objective**: Validate approach before implementation
+
+📖 **Read before starting**:
+- `1_LEAP/2_Build_GoldSource/Methodology/coding-standards.yaml` (keyPatterns)
+
+**For full workflow (with prototype):**
+- [x] Create SPEC-XXX-prototype.html
+- [x] Human reviews prototype in browser
+
+**For direct workflow (no prototype):**
+- [ ] Create implementation plan (files, approach)
+- [ ] Get human approval
+
+- [x] Create `stage-4-design.yaml`
+- [ ] Request !Proceed
+
+---
+
+## Stage 5: Implementation
+**Objective**: Implement in GoldSource
+
+📖 **Read before starting**:
+- `1_LEAP/2_Build_GoldSource/Methodology/coding-standards.yaml`
+
+### ⚠️ MANDATORY BACKUP FIRST:
+```bash
+cp -r 2_GoldSource X_GoldSource_Backup/phase-{X}-$(date +%Y%m%d-%H%M)
+```
+
+- [ ] **Create timestamped backup of GoldSource FIRST**
+- [ ] Modify scaffold files per design
+- [ ] WIP commit: `git commit -m 'WIP Phase {X}: [description]'`
+- [ ] Follow Triad pattern for new features
+- [ ] Add AI-First file headers
+
+### Documentation Updates (check each for relevance):
+- [ ] `meta/functionality.yaml` - if features added/changed
+- [ ] `meta/ARCHITECTURE.yaml` - if folder/module structure changed
+- [ ] `meta/architectural-standards.yaml` - if new code patterns
+- [ ] `meta/design-system.yaml` - if new design tokens/colors
+- [ ] `meta/theme-extension-guide.yaml` - if theme capabilities changed
+
+- [ ] Create `stage-5-implementation.yaml`
+- [ ] Request !Proceed
+
+---
+
+## Stage 6: Validation
+**Objective**: Verify GoldSource matches design intent
+
+- [ ] Compare GoldSource to prototype/spec/plan
+- [ ] Verify all requirements implemented
+- [ ] Check for regressions in existing features
+- [ ] Validate documentation updated
+- [ ] Create `stage-6-validation.yaml`
+- [ ] Request !Proceed
+
+---
+
+## Stage 7: Testing
+**Objective**: Full scaffold testing
+
+- [ ] Start server: `python3 -m http.server 8080` in `2_GoldSource/scaffold/`
+- [ ] Test new feature end-to-end
+- [ ] Test existing features for regressions
+- [ ] Capture screenshots to `4_Phases/phase-{X}/`
+- [ ] Create `stage-7-testing.yaml`
+- [ ] Request !Proceed
+
+---
+
+## Stage 8: Closure
+**Objective**: Finalize and document
+
+- [ ] Final commit: `git commit -m 'Phase {X}: [phase name] complete'`
+- [ ] Update `CURRENT_STATE.yaml` (status: complete)
+- [ ] Update `backlog.yaml` (close items)
+- [ ] Document lessons learned
+
+### Factory Governance Check (if patterns changed):
+- [ ] `governance/demo-rules.yaml` - if locked files or naming changed
+- [ ] `governance/lifecycle-stages.yaml` - if stage expectations changed
+- [ ] `governance/templates/*.yaml` - if new template fields needed
+- [ ] `governance/FACTORY_README.yaml` - if file registry changed
+
+- [ ] Create `stage-8-closure.yaml`
+- [ ] Request human sign-off

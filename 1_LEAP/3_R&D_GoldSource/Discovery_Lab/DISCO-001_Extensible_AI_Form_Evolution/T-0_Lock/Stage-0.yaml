@@ -1,0 +1,42 @@
+stage: 0
+title: "Validate"
+status: pending
+
+governance:
+  check: "Sanity Gate"
+  drift_management: "REQUIRED: Audit against GoldSource baseline"
+  socratic_check: "Am I making any assumptions about GoldSource that I haven't verified?"
+
+objectives:
+  - "Final verification of assumptions and safety"
+  - "Formal Spec-Lock and handoff to Build"
+
+checklist:
+  drift_check_verified: false
+  safety_check_confirmed: false
+  assumption_check_verified: false
+  ai_asked_if_missing: false
+  proceed_speclock_received: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Diff summary carousel"
+    - "Validation checklist table"
+    - "Before/after comparison"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "SPEC-XXX.yaml (Final/Locked)"
+  - "discovery-phase-agreement.yaml (Updated)"
+
+outcomes: null
+# AI populates on stage lock with:
+# spec_locked: true
+# spec_id: "SPEC-XXX"
+# validation_results:
+#   drift_check: "passed/failed"
+#   safety_check: "passed/failed"
+#   assumption_check: "passed/failed"
+# handoff_ready: true

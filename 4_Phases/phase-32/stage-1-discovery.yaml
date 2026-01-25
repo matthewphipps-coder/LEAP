@@ -1,0 +1,42 @@
+metadata:
+  phase: "32"
+  name: "CardCanvasImplementation"
+  stage: "1"
+  stageName: "Discovery"
+  status: "complete"
+  date: "2026-01-24"
+  ai_version: "gemini-2.0"
+
+discovery:
+  gap_analysis:
+    current_state: "GoldSource has a basic app shell but lacks the core Card & Canvas UI."
+    desired_state: "GoldSource implements DISCO-004 specifications (Card components, Canvas layout modes, Header updates, Navigation integration)."
+    gap: "Missing critical UI components and logic defined in SPEC-004."
+
+  inputs:
+    spec: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/SPEC-004-card-canvas.yaml"
+    prototype: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/SPEC-004-prototype.html"
+    visual_guide: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/VISUAL-GUIDE.md"
+
+  scaffold_review:
+    location: "2_GoldSource/scaffold/"
+    status: "Located and accessible."
+    integration_points:
+      - "src/ui/components/header-ui.js" (Header toggles)
+      - "src/ui/components/sidebar-ui.js" (Navigation badges)
+      - "src/core/constants.js" (Page registration)
+      - "src/ui/styles/design-system.css" (New tokens)
+
+  workflow_determination:
+    selected: "full"
+    reason: "Major UI feature with completed spec AND validated prototype. Complexity warrants full lifecycle."
+
+  success_criteria:
+    - "GoldSource matches SPEC-004-prototype.html behavior exactly."
+    - "New components (Nexus Card, Canvas, Tombstone) implemented."
+    - "Design system extended with new tokens."
+    - "No regression in existing App Shell features."
+
+next_steps:
+  - "Start Stage 2 (Research) in NEW CONVERSATION."
+  - "Update CURRENT_STATE.yaml (in Stage 2)."

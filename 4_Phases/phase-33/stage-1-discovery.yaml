@@ -1,0 +1,28 @@
+metadata:
+  phase: "33"
+  name: "Recovery Protocol - Spec Alignment"
+  stage: "1"
+  stageName: "Discovery (Recovery)"
+  status: "active"
+  date: "2026-01-25"
+  ai_version: "gemini-2.0"
+
+discovery:
+  gap_analysis:
+    current_state: "GoldSource build (Phase 32) uses CSS Grid. Prototype input uses CSS Columns (Masonry). DISCO-004 Visual Guide contains contradictory instructions."
+    desired_state: "Specifications (v2) accurately reflect the Prototype's Masonry behavior and Plasma/Animation richness."
+    gap: "Discrepancy between Inputs and Desired Outcome requires reverse-engineering."
+
+  inputs:
+    prototype: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/SPEC-004-prototype.html"
+    legacy_spec: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/SPEC-004-card-canvas.yaml"
+    legacy_guide: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-0_Lock/VISUAL-GUIDE.md"
+
+  recovery_plan:
+    - "Deconstruct Prototype CSS & JS."
+    - "Draft v2 Specifications."
+    - "Verify v2 against Prototype."
+
+next_steps:
+  - "Generate SPEC-004-card-canvas-v2.yaml"
+  - "Generate VISUAL-GUIDE-v2.md"

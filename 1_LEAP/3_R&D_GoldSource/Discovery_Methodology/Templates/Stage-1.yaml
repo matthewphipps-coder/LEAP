@@ -1,0 +1,39 @@
+stage: -1
+title: "Functional Spec & Supporting Artifacts"
+status: pending
+
+governance:
+  standard: "Neither vague nor verbose"
+  socratic_check: "Does this provide everything needed for a Stage 5 Implementation?"
+
+objectives:
+  - "Author the definitive Functional Specification"
+  - "Create any necessary high-fidelity prototypes"
+
+checklist:
+  spec_drafted: false
+  prototype_created_if_needed: false
+  aligned_with_goldsource: false
+  ai_asked_if_missing: false
+  proceed_received: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Full HTML prototype"
+    - "Carousel of screens"
+    - "Data flow diagram"
+    - "API contract examples"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "SPEC-XXX.yaml (draft)"
+  - "prototype.html (optional)"
+
+outcomes: null
+# AI populates on stage lock with:
+# spec_id: "SPEC-XXX"
+# spec_path: "..."
+# prototype_path: "..." (if created)
+# functional_requirements: [...]

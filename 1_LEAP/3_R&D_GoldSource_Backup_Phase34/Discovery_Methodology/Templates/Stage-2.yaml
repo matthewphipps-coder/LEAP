@@ -1,0 +1,39 @@
+stage: -2
+title: "Define & Document"
+status: pending
+
+governance:
+  mode: "Flexible Methodology"
+  socratic_check: "Does this documentation describe the HOW without writing the code?"
+
+objectives:
+  - "Formalize the logic and design"
+  - "Select and apply the best methodology (User Stories, Diagrams, etc.)"
+
+checklist:
+  methodology_selected: false
+  core_logic_documented: false
+  diagrams_created: false
+  ai_asked_if_missing: false
+  proceed_received: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "HTML prototype"
+    - "Carousel of UI states"
+    - "Component diagrams"
+    - "User story cards"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "Logic breakdown in DISCOVERY_LOG.md"
+  - "Mermaid diagram code"
+
+outcomes: null
+# AI populates on stage lock with:
+# design_methodology: "..."
+# components: [...]
+# user_flows: [...]
+# prototype_path: "..." (if created)

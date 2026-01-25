@@ -1,0 +1,241 @@
+metadata:
+  type: "governance"
+  name: "LEAP Pulse Protocol"
+  purpose: "Development methodology for AI-agentic systems"
+  version: "4.2.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-19"
+  owner: "Matthew Phipps (Executive Authority)"
+  executor: "AI Architect"
+  status: "binding"
+
+philosophy:
+  principle: "Strategic Flow"
+  approach: "Move with precision and harden as we build"
+  notApproach: "Move fast and break things"
+  motto: "Precision over velocity. Experience over features."
+
+# =============================================================================
+# LIFECYCLE STAGES - The authoritative development methodology
+# =============================================================================
+
+lifecycleStages:
+  description: "8 sequential stages for all development work"
+  
+  stages:
+    - stage: 1
+      name: "discovery"
+      description: "Initial exploration and problem identification"
+    - stage: 2
+      name: "research"
+      description: "Gather information, understand context"
+    - stage: 3
+      name: "analysis"
+      description: "Analyze findings, assess risks, create RRMD+ if needed"
+    - stage: 4
+      name: "design"
+      description: "Create implementation plan, get executive authorization"
+    - stage: 5
+      name: "implementation"
+      description: "Active code modification and feature building"
+    - stage: 6
+      name: "validation"
+      description: "Testing, verification, quality checks"
+    - stage: 7
+      name: "delivery"
+      description: "Deploy, document, finalize, git commit"
+    - stage: 8
+      name: "closure"
+      description: "Phase retrospective, lessons learned, handoff"
+
+phaseStartProtocol:
+  rule: "Starting a phase = Starting Stage 1 (Discovery), not starting Implementation"
+  
+  beforeDiscovery:
+    sessionOnboarding:
+      files: ["CURRENT_STATE.yaml", "bugs.yaml", "backlog.yaml"]
+      time: "~10 minutes"
+    technicalOnboarding:
+      trigger: "Phase involves modifying code files"
+      files: ["bugs.yaml", "Affected files"]
+      time: "~20-30 minutes"
+      reference: "constitution.yaml Rule 13"
+
+stateManagement:
+  rule: "Update CURRENT_STATE.yaml at phase and stage transitions"
+  
+  atPhaseStart:
+    - "Update currentPhase with number, name, status: 'in-progress'"
+    - "Update lastUpdated timestamp"
+  atStageTransition:
+    - "Update currentActivity.stage with new stage name"
+  atPhaseComplete:
+    - "Update currentPhase.status to 'complete'"
+    - "Update completedDate"
+
+# =============================================================================
+# STAGE TRANSITIONS - Gate enforcement
+# =============================================================================
+
+stageTransitions:
+  rule: "All stage transitions require explicit !Proceed"
+  
+  gates:
+    - "discovery → research"
+    - "research → analysis"
+    - "analysis → design"
+    - "design → implementation"
+    - "implementation → validation"
+    - "validation → delivery"
+    - "delivery → closure"
+    - "closure → next phase"
+  
+  enforcement:
+    requirement: "Explicit '!Proceed' or 'Proceed'"
+    invalid: "'yes', 'yep', 'sounds good', 'go ahead', 'continue'"
+    checklist: "1_LEAP/1_Governance/3_checklists/before-file-op.yaml"
+  
+  criticalGate:
+    transition: "design → implementation"
+    reason: "File operations begin - requires !Proceed per Constitution Rule 3"
+  
+  completionCriteria:
+    discovery: ["Problem identified", "Scope understood", "Questions for research defined", "'Already done' claims verified against source"]
+    research: ["Information gathered", "Context understood", "Findings documented"]
+    analysis: ["Risks identified", "RRMD+ decision made", "Approach options identified"]
+    design: ["Implementation plan created", "Files to modify listed", "Executive authorization received"]
+    implementation: ["All planned changes made", "No syntax errors"]
+    validation: ["Tests run", "Manual verification complete", "No errors found"]
+    delivery: ["Backup created if required", "Closure document created", "Git commit done", "CURRENT_STATE backlog counts verified"]
+    closure: ["Lessons learned documented", "Executive sign-off received"]
+  
+  selfAdvancement:
+    rule: "AI should NEVER self-advance to next stage without user approval"
+    even: "Even if completion criteria met, WAIT for approval"
+  
+  backwardMovement:
+    rule: "AI can return to earlier stage if issues are discovered"
+    requirement: "Must report why returning and what will be fixed"
+
+# =============================================================================
+# GATE RECORDS - Audit trail
+# =============================================================================
+
+gateRecords:
+  purpose: "Audit trail for external compliance verification"
+  location: "4_Phases/phase-X/gate-records/"
+  naming: "gate-stage-N-to-N+1.yaml"
+  
+  contents:
+    - "Timestamp of transition"
+    - "!pulse summary"
+    - "!Proceed authorization"
+    - "Files approved for modification"
+  
+  immutability:
+    rule: "Gate records cannot be modified after creation"
+    reference: "constitution.yaml Rule 15"
+  
+  template: "1_LEAP/1_Governance/5_templates/gate-record-template.yaml"
+
+# =============================================================================
+# COMPLETION & CLOSURE
+# =============================================================================
+
+completionDefinition:
+  name: "The DONE State"
+  criteria:
+    - "Logic verified via validation"
+    - "Tests are green"
+    - "Documentation updated"
+    - "Executive sign-off received"
+
+phaseClosure:
+  name: "Memorialization"
+  description: "Every phase must be properly closed before moving to next"
+  
+  closureChecklist:
+    - "All objectives completed or documented as deferred"
+    - "Backup created if required"
+    - "Closure document created (PHASE_N_CLOSURE.yaml)"
+    - "Lessons learned documented"
+    - "Executive sign-off received"
+  
+  closureDocumentSections:
+    - "What Was Accomplished"
+    - "Lessons Learned"
+    - "Metrics (files changed, commits)"
+    - "Handoff to next phase"
+  
+  tone:
+    rule: "Never rush the user. Phase closure is a natural pause point."
+    good: "Phase closed. What would you like to do next?"
+    bad: "Phase done. Starting next phase..."
+
+# =============================================================================
+# STAGE ARTIFACTS - AI handoff
+# =============================================================================
+
+stageArtifacts:
+  purpose: "Enable safe AI handoff between lifecycle stages"
+  location: "4_Phases/phase-{X}/"
+  naming: "stage-{N}-{name}.yaml"
+  
+  requiredStages:
+    - stage: 1
+      artifact: "stage-1-discovery.yaml"
+      contains: ["problem statement", "scope", "questions"]
+    - stage: 2
+      artifact: "stage-2-research.yaml"
+      contains: ["findings", "files affected", "context"]
+    - stage: 3
+      artifact: "stage-3-analysis.yaml"
+      contains: ["risk assessment", "RRMD+ decision", "approach"]
+    - stage: 4
+      artifact: "stage-4-design.yaml"
+      contains: ["implementation plan", "files to modify", "approval status"]
+    - stage: 6
+      artifact: "stage-6-validation.yaml"
+      contains: ["tests run", "results", "validation status"]
+  
+  handoffProtocol:
+    rule: "Before starting any stage, AI must read previous stage artifact"
+    recovery: "If artifact missing, AI must ask user for context"
+  
+  benefits:
+    - "New AI can pick up at any stage without context loss"
+    - "No re-work required when AI changes mid-phase"
+    - "Audit trail of decisions at each stage"
+  
+  template: "1_LEAP/1_Governance/5_templates/phase-artifact.yaml"
+
+# =============================================================================
+# AI TRACKING CONSTRAINT - No duplicate tracking
+# =============================================================================
+
+aiTrackingConstraint:
+  rule: "AI MUST NOT create separate task.md or tracking files"
+  reason: "LEAP's stage artifacts and CURRENT_STATE.yaml are the single source of truth"
+  corollary: "If a phase needs separate tracking, it's too big — break it down"
+  
+  authorizedTrackingFiles:
+    - "CURRENT_STATE.yaml"
+    - "Stage artifacts (stage-N-*.yaml)"
+    - "Gate records"
+    - "backlog.yaml"
+    - "bugs.yaml"
+  
+  prohibited:
+    - "task.md"
+    - "progress.md"
+    - "TODO.md"
+    - "Any custom tracking files"
+
+# =============================================================================
+# WORKFLOW CREATION
+# =============================================================================
+
+workflowCreation:
+  purpose: "Standard format for new workflow documents"
+  template: "1_LEAP/1_Governance/5_templates/workflow.yaml"
+  location: "1_LEAP/1_Governance/ or .agent/workflows/"

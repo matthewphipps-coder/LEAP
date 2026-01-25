@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEC-004: Card & Canvas UI Prototype</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =============================================================================
+           DESIGN TOKENS
+           ============================================================================= */
+        :root {
+            --bg-primary: #0a0a0c;
+            --accent-primary: #62d84e;
+            --accent-glow: rgba(98, 216, 78, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --brand-primary: #62d84e;
+            --brand-secondary: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 20px;
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-full: 9999px;
+            --transition-fast: 150ms ease-out;
+            --transition-normal: 300ms ease-out;
+            --header-height: 64px;
+            --sidebar-width: 68px;
+            --sidebar-gap: 20px;
+            --z-sidebar: 100;
+            --z-header: 200;
+            --card-bg: rgba(20, 20, 25, 0.8);
+            --badge-urgent: #ef4444;
+            --badge-warning: #f59e0b;
+            --badge-neutral: rgba(255, 255, 255, 0.15);
+        }
+
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --card-bg: var(--glass-bg);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .plasma-background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .plasma-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            mix-blend-mode: screen;
+            opacity: 0.5;
+        }
+
+        .plasma-bubble.b1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation: float 45s infinite;
+        }
+
+        .plasma-bubble.b2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation: float 55s infinite reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .app-layout {
+            display: grid;
+            grid-template-areas: "header header" "sidebar canvas";
+            grid-template-columns: calc(var(--sidebar-width) + var(--sidebar-gap)*2) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            min-height: 100vh;
+        }
+
+        .header {
+            grid-area: header;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-header);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            height: var(--header-height);
+        }
+
+        .header-brand {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 600;
+            margin-right: var(--space-xl);
+        }
+
+        .page-tabs {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .page-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .page-tab:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .page-tab.active {
+            background: rgba(98, 216, 78, 0.15);
+            color: var(--brand-primary);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: calc(var(--header-height) + var(--sidebar-gap) + 40px);
+            left: var(--sidebar-gap);
+            width: var(--sidebar-width);
+            z-index: var(--z-sidebar);
+            padding: var(--space-md) var(--space-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            border-radius: calc(var(--sidebar-width)/2);
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .nav-item.active {
+            color: var(--brand-primary);
+            background: rgba(98, 216, 78, 0.15);
+        }
+
+        .nav-separator {
+            width: 32px;
+            height: 1px;
+            background: var(--glass-border);
+            margin: var(--space-sm) 0;
+        }
+
+        .count-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: var(--badge-neutral);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .count-badge.warning {
+            background: var(--badge-warning);
+        }
+
+        .count-badge.urgent {
+            background: var(--badge-urgent);
+        }
+
+        .nav-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(16px);
+        }
+
+        .canvas-container {
+            grid-area: canvas;
+            padding: var(--space-xl);
+            overflow-y: auto;
+        }
+
+        .nexus-canvas.grid-mode {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-md);
+            align-content: start;
+            padding-bottom: 100px;
+        }
+
+        /* List Mode & Done Mode share styles */
+        .nexus-canvas.list-mode {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+            padding-bottom: 100px;
+        }
+
+        /* Done Mode specific: Less gap, no groups to separate */
+        .nexus-canvas.done-mode {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            padding-bottom: 100px;
+        }
+
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            min-height: 50px;
+        }
+
+        .list-group-header {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .list-group.drag-group-active {
+            background: rgba(98, 216, 78, 0.02);
+            border-radius: var(--radius-md);
+        }
+
+        /* List/Done Mode Card styling */
+        .nexus-canvas.list-mode .nexus-card,
+        .nexus-canvas.done-mode .nexus-card {
+            grid-column: span 1 !important;
+            min-height: auto !important;
+            flex-direction: row;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .nexus-canvas.list-mode .card-header,
+        .nexus-canvas.done-mode .card-header {
+            margin: 0;
+            min-width: 120px;
+        }
+
+        .nexus-canvas.list-mode .card-title,
+        .nexus-canvas.done-mode .card-title {
+            margin: 0;
+            flex: 1;
+            font-size: var(--text-base);
+        }
+
+        .nexus-canvas.list-mode .card-summary,
+        .nexus-canvas.done-mode .card-summary {
+            display: none;
+        }
+
+        .nexus-canvas.list-mode .card-footer,
+        .nexus-canvas.done-mode .card-footer {
+            margin: 0;
+            min-width: 100px;
+            justify-content: flex-end;
+        }
+
+        .nexus-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* No hover lift for done items if we want them static? Keeping hover for now as per "card" */
+        .nexus-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .nexus-card[data-size="compact"] {
+            min-height: 140px;
+        }
+
+        .nexus-card[data-size="medium"] {
+            min-height: 200px;
+        }
+
+        .nexus-card[data-size="large"] {
+            min-height: 260px;
+            grid-column: span 2;
+        }
+
+        @media (max-width: 1000px) {
+            .nexus-card[data-size="large"] {
+                grid-column: span 1;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-sm);
+        }
+
+        .card-meta {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .card-summary {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: var(--space-sm);
+            flex-grow: 1;
+        }
+
+        .nexus-card[data-size="compact"] .card-summary {
+            display: none;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: var(--space-sm);
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            margin-top: auto;
+            align-items: center;
+        }
+
+        .card-priority-badge {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .card-priority-badge.p1 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .card-priority-badge.p2 {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .card-priority-badge.p3 {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-color: var(--glass-border);
+        }
+
+        .nexus-card.dragging {
+            opacity: 0.5;
+            border: 2px dashed var(--brand-primary);
+        }
+
+        .nexus-card[data-stale="true"] {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        .nexus-card[data-stale="true"] .card-title {
+            text-decoration: line-through;
+        }
+
+        /* INSERTION MARKERS */
+        .nexus-canvas.grid-mode .nexus-card.drop-before {
+            border-top: 4px solid var(--brand-primary);
+            margin-top: -4px;
+            transition: none;
+        }
+
+        .nexus-canvas.list-mode .nexus-card.drop-before {
+            border-top: 2px solid var(--brand-primary);
+            margin-top: -2px;
+            transition: none;
+        }
+
+        .list-group.drag-over-empty {
+            outline: 2px dashed var(--brand-primary);
+            background: rgba(98, 216, 78, 0.05);
+        }
+
+        @keyframes pulse-border {
+            0% {
+                border-color: var(--badge-urgent);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                border-color: var(--badge-urgent);
+            }
+        }
+
+        .nexus-card[data-animate="true"] {
+            animation: pulse-border 2s infinite;
+            border-color: var(--badge-urgent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="plasma-background">
+        <div class="plasma-bubble b1"></div>
+        <div class="plasma-bubble b2"></div>
+    </div>
+
+    <div class="app-layout">
+        <header class="header">
+            <div class="header-brand">NEXUS</div>
+            <nav class="page-tabs">
+                <button class="page-tab active" data-page="my-work">
+                    <i data-lucide="layout-dashboard" style="width:20px;"></i>
+                    <span class="count-badge urgent" id="tab-badge-my-work">3</span>
+                    <span class="nav-tooltip">My Work</span>
+                </button>
+                <button class="page-tab" data-page="incidents">
+                    <i data-lucide="alert-triangle" style="width:20px;"></i>
+                    <span class="nav-tooltip">Incidents</span>
+                </button>
+            </nav>
+            <div style="margin-left:auto; display:flex; gap:12px;">
+                <div class="has-badge" style="position:relative;">
+                    <button class="page-tab"><i data-lucide="bell" style="width:20px;"></i></button>
+                    <span class="count-badge warning" id="notification-badge">5</span>
+                </div>
+                <div
+                    style="width:32px; height:32px; background:linear-gradient(135deg, #62d84e, #8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold;">
+                    MP</div>
+            </div>
+        </header>
+
+        <aside class="sidebar glass" id="sidebar-droppable">
+            <nav class="sidebar-nav">
+                <button class="nav-item" data-horizon="inbox" onclick="filterHorizon('inbox')">
+                    <i data-lucide="inbox"></i>
+                    <span class="count-badge" id="badge-inbox">3</span>
+                    <span class="nav-tooltip">Inbox</span>
+                </button>
+                <button class="nav-item active" data-horizon="now" onclick="filterHorizon('now')">
+                    <i data-lucide="zap"></i>
+                    <span class="count-badge urgent" id="badge-now">2</span>
+                    <span class="nav-tooltip">Now</span>
+                </button>
+                <button class="nav-item" data-horizon="next" onclick="filterHorizon('next')">
+                    <i data-lucide="clock"></i>
+                    <span class="count-badge warning" id="badge-next">5</span>
+                    <span class="nav-tooltip">Next</span>
+                </button>
+                <button class="nav-item" data-horizon="later" onclick="filterHorizon('later')">
+                    <i data-lucide="calendar"></i>
+                    <span class="count-badge" id="badge-later">8</span>
+                    <span class="nav-tooltip">Later</span>
+                </button>
+                <button class="nav-item" data-horizon="all" onclick="filterHorizon('all')">
+                    <i data-lucide="list"></i>
+                    <span class="nav-tooltip">All</span>
+                </button>
+                <button class="nav-item" data-horizon="done" onclick="filterHorizon('done')">
+                    <i data-lucide="check-circle"></i>
+                    <span class="nav-tooltip">Done</span>
+                </button>
+
+                <div class="nav-separator"></div>
+
+                <button class="nav-item" id="ai-resort-btn" onclick="triggerAIResort()">
+                    <i data-lucide="sparkles"></i>
+                    <span class="nav-tooltip">Optimise</span>
+                </button>
+            </nav>
+        </aside>
+
+        <main class="canvas-container" id="main-canvas">
+            <div class="nexus-canvas grid-mode" id="card-canvas"></div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let cards = [
+            { id: 'c1', title: 'Server Outage (INC-102)', summary: 'Production DB cluster failure affecting 400 users.', priority: 'P1', score: 0.95, horizon: 'now', size: 'large', type: 'incident', time: '10m ago' },
+            { id: 'c2', title: 'Deploy Hotfix', summary: 'Security patch for API gateway.', priority: 'P1', score: 0.85, horizon: 'now', size: 'medium', type: 'change', time: '1h ago', animate: true },
+            { id: 'c3', title: 'Review Q3 Goals', summary: 'Quarterly planning document draft.', priority: 'P2', score: 0.6, horizon: 'next', size: 'medium', type: 'task', time: '2h ago' },
+            { id: 'c4', title: 'Update Docs', summary: '', priority: 'P3', score: 0.3, horizon: 'next', size: 'compact', type: 'task', time: '1d ago' },
+            { id: 'c5', title: 'Onboard New Hire', summary: 'Setup laptop and accounts.', priority: 'P2', score: 0.55, horizon: 'next', size: 'medium', type: 'task', time: '3h ago' },
+            { id: 'c6', title: 'Legacy Migration', summary: 'Move user data to new schema.', priority: 'P3', score: 0.2, horizon: 'later', size: 'compact', type: 'project', time: '1w ago' },
+            { id: 'c7', title: 'New Feature Spec', summary: 'Draft specification for Search v2.', priority: 'P2', score: 0.5, horizon: 'inbox', size: 'medium', type: 'doc', time: 'Just now', inbox: true },
+            { id: 'c8', title: 'Tombstoned Item', summary: 'This record was deleted.', priority: 'P3', score: 0, horizon: 'inbox', size: 'compact', stale: true, type: 'task', time: '---', inbox: true },
+            { id: 'c9', title: 'Team Sync', summary: 'Weekly standup notes.', priority: 'P3', score: 0.4, horizon: 'inbox', size: 'compact', type: 'meeting', time: 'Yesterday', inbox: true },
+            { id: 'c10', title: 'Extra Now Item', summary: 'Something else in Now to demo sorting.', priority: 'P1', score: 0.75, horizon: 'now', size: 'medium', type: 'task', time: '5m ago' },
+            // Add some 'done' items for demo
+            { id: 'c11', title: 'Previous Incident', summary: 'Resolved last week.', priority: 'P1', score: 0.1, horizon: 'done', size: 'compact', type: 'incident', time: '3d ago' },
+            { id: 'c12', title: 'Old Task', summary: 'Completed.', priority: 'P3', score: 0.05, horizon: 'done', size: 'compact', type: 'task', time: '5d ago' }
+        ];
+
+        let currentHorizon = 'now';
+        let draggedId = null;
+
+        function init() {
+            renderCards();
+            updateBadges();
+            initDragAndDrop();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('card-canvas');
+            container.innerHTML = '';
+            container.className = 'nexus-canvas'; // reset
+
+            if (currentHorizon === 'all') {
+                container.classList.add('list-mode');
+                renderListMode(container);
+            } else if (currentHorizon === 'done') {
+                container.classList.add('done-mode');
+                renderDoneMode(container);
+            } else {
+                container.classList.add('grid-mode');
+                renderGridMode(container);
+            }
+            lucide.createIcons();
+        }
+
+        function renderGridMode(container) {
+            const filtered = cards.filter(c => {
+                if (currentHorizon === 'inbox') return c.inbox === true;
+                return c.horizon === currentHorizon && !c.inbox;
+            });
+            filtered.sort((a, b) => b.score - a.score);
+            filtered.forEach(c => {
+                const cardEl = createCardElement(c);
+                // Grid Drag Targets
+                cardEl.addEventListener('dragover', handleCardDragOver);
+                cardEl.addEventListener('dragleave', handleCardDragLeave);
+                cardEl.addEventListener('drop', handleCardDrop);
+                container.appendChild(cardEl);
+            });
+            if (filtered.length === 0) container.innerHTML = emptyState();
+        }
+
+        function renderListMode(container) {
+            const groups = ['Inbox', 'Now', 'Next', 'Later']; // Removed 'Done' from All view per implicit 'Done' separation? Or user said "All" list. Assuming "All" includes active work. 'Done' is separate.
+
+            groups.forEach(groupName => {
+                const grpLower = groupName.toLowerCase();
+                let subset = [];
+                if (grpLower === 'inbox') subset = cards.filter(c => c.inbox);
+                else subset = cards.filter(c => c.horizon === grpLower && !c.inbox);
+
+                const groupTitle = document.createElement('div');
+                groupTitle.className = 'list-group-header';
+                groupTitle.textContent = groupName;
+                container.appendChild(groupTitle);
+
+                const groupContainer = document.createElement('div');
+                groupContainer.className = 'list-group';
+                groupContainer.dataset.horizon = grpLower;
+
+                groupContainer.addEventListener('dragover', handleGroupContainerDragOver);
+                groupContainer.addEventListener('dragleave', handleGroupContainerDragLeave);
+                groupContainer.addEventListener('drop', handleGroupContainerDrop);
+
+                if (subset.length > 0) {
+                    subset.sort((a, b) => b.score - a.score);
+                    subset.forEach(c => {
+                        const cardEl = createCardElement(c);
+                        // List Reordering
+                        cardEl.addEventListener('dragover', handleCardDragOver);
+                        cardEl.addEventListener('dragleave', handleCardDragLeave);
+                        cardEl.addEventListener('drop', handleCardDrop);
+                        groupContainer.appendChild(cardEl);
+                    });
+                } else {
+                    groupContainer.style.minHeight = '40px';
+                    groupContainer.style.border = '1px dashed var(--glass-border)';
+                    groupContainer.innerHTML = '<span style="font-size:10px; color:var(--text-secondary); padding:10px; display:block;">Empty</span>';
+                }
+                container.appendChild(groupContainer);
+            });
+        }
+
+        function renderDoneMode(container) {
+            // Flat list, no grouping, no drag listeners on cards
+            const filtered = cards.filter(c => c.horizon === 'done' && !c.inbox);
+
+            // Sort by time? or score.
+            filtered.sort((a, b) => b.score - a.score);
+
+            filtered.forEach(c => {
+                // Create non-draggable card for 'done'
+                const cardEl = createCardElement(c, false);
+                container.appendChild(cardEl);
+            });
+            if (filtered.length === 0) container.innerHTML = emptyState();
+        }
+
+        function emptyState() {
+            return `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-secondary);">No cards in this horizon.</div>`;
+        }
+
+        function createCardElement(c, draggable = true) {
+            const card = document.createElement('div');
+            card.className = `nexus-card`;
+            if (draggable) {
+                card.draggable = true;
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            } else {
+                card.style.cursor = 'default';
+                card.style.opacity = '0.8'; // Slight visual cue
+            }
+
+            card.dataset.id = c.id;
+            card.dataset.size = c.size; // in list modes css overrides this
+            if (c.stale) card.dataset.stale = "true";
+
+            const pClass = c.priority === 'P1' ? 'p1' : (c.priority === 'P2' ? 'p2' : 'p3');
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-meta">${c.type.toUpperCase()}</span>
+                    <span class="card-priority-badge ${pClass}">${c.priority}</span>
+                </div>
+                <div class="card-title">${c.title}</div>
+                <div class="card-summary">${c.summary}</div>
+                <div class="card-footer">
+                    <span><i data-lucide="clock" style="width:12px;display:inline;"></i> ${c.time}</span>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function filterHorizon(horizon) {
+            currentHorizon = horizon;
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`[data-horizon="${horizon}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderCards();
+        }
+
+        function updateBadges() {
+            const horizons = ['inbox', 'now', 'next', 'later', 'done'];
+            horizons.forEach(h => {
+                let count = 0;
+                let subset = [];
+                if (h === 'inbox') subset = cards.filter(c => c.inbox);
+                else subset = cards.filter(c => c.horizon === h && !c.inbox);
+                count = subset.length;
+                const badge = document.getElementById(`badge-${h}`);
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count === 0 ? 'none' : 'flex';
+                    const maxScore = Math.max(...subset.map(c => c.score), 0);
+                    badge.className = 'count-badge';
+                    if (maxScore > 0.8) badge.classList.add('urgent');
+                    else if (maxScore > 0.5) badge.classList.add('warning');
+                }
+            });
+            const urgentCount = cards.filter(c => c.priority === 'P1' && (c.horizon === 'now' || c.inbox)).length;
+            const tabBadge = document.getElementById('tab-badge-my-work');
+            tabBadge.textContent = cards.filter(c => (c.horizon === 'now' || c.inbox) && c.horizon !== 'done').length;
+            if (urgentCount > 0) tabBadge.className = 'count-badge urgent';
+            else tabBadge.className = 'count-badge';
+        }
+
+        /* DRAG EVENTS */
+        function handleDragStart(e) {
+            draggedId = this.dataset.id;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.drop-before').forEach(el => el.classList.remove('drop-before'));
+            document.querySelectorAll('.drag-group-active').forEach(el => el.classList.remove('drag-group-active'));
+            draggedId = null;
+        }
+
+        function initDragAndDrop() {
+            const targets = document.querySelectorAll('.nav-item[data-horizon]');
+            targets.forEach(target => {
+                target.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    target.style.transform = 'scale(1.2)';
+                });
+                target.addEventListener('dragleave', (e) => {
+                    target.style.transform = '';
+                });
+                target.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    target.style.transform = '';
+                    const horizon = target.dataset.horizon;
+                    moveCardToHorizon(draggedId, horizon);
+                });
+            });
+        }
+
+        function handleCardDragOver(e) {
+            if (draggedId === this.dataset.id) return;
+            e.preventDefault();
+            this.classList.add('drop-before');
+        }
+        function handleCardDragLeave(e) {
+            this.classList.remove('drop-before');
+        }
+        function handleCardDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('drop-before');
+            insertCardBefore(draggedId, this.dataset.id);
+        }
+
+        function handleGroupContainerDragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-group-active');
+        }
+        function handleGroupContainerDragLeave(e) {
+            this.classList.remove('drag-group-active');
+        }
+        function handleGroupContainerDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-group-active');
+            moveCardToHorizon(draggedId, this.dataset.horizon);
+        }
+
+        function insertCardBefore(activeId, targetId) {
+            const activeCard = cards.find(c => c.id === activeId);
+            const targetCard = cards.find(c => c.id === targetId);
+            if (!activeCard || !targetCard) return;
+            activeCard.horizon = targetCard.horizon;
+            activeCard.inbox = targetCard.inbox;
+            activeCard.score = targetCard.score + 0.001;
+            cards.sort((a, b) => b.score - a.score);
+            renderCards();
+            updateBadges();
+        }
+
+        function moveCardToHorizon(id, newHorizon) {
+            const card = cards.find(c => c.id === id);
+            if (!card) return;
+            if (newHorizon === 'inbox') {
+                card.inbox = true;
+            } else if (newHorizon === 'all') {
+                filterHorizon('all');
+                return;
+            } else {
+                card.horizon = newHorizon;
+                card.inbox = false;
+            }
+            updateBadges();
+            renderCards();
+        }
+
+        window.triggerAIResort = function () {
+            const btn = document.getElementById('ai-resort-btn');
+            btn.style.animation = 'spin 1s linear infinite';
+            setTimeout(() => {
+                btn.style.animation = '';
+                cards.forEach(c => {
+                    if (c.horizon !== 'done') { // Don't reshuffle done
+                        if (c.priority === 'P1') { c.size = 'large'; c.score = 0.9 + Math.random() * 0.1; }
+                        else if (c.priority === 'P2') { c.size = 'medium'; c.score = 0.5 + Math.random() * 0.3; }
+                        else { c.size = 'compact'; c.score = Math.random() * 0.4; }
+                    }
+                });
+                renderCards();
+                updateBadges();
+                alert('AI Optimization Complete');
+            }, 800);
+        };
+
+        window.filterHorizon = filterHorizon;
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

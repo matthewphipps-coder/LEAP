@@ -1,0 +1,50 @@
+stage: -5
+title: "Divergent Research & Ideation"
+status: complete
+
+governance:
+  mode: "DIVERGENT"
+  socratic_check: "Did I find a way to make this even bolder?"
+
+objectives:
+  - "Expand the problem space via web research"
+  - "Discover alternative concepts and domain standards"
+
+checklist:
+  web_search_performed: true
+  brainstorming_added_to_log: true
+  bold_outcomes_identified: true
+  ai_asked_if_missing: true
+  proceed_received: true
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Comparison tables"
+    - "ASCII architecture diagrams"
+    - "Screenshot references"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "Research notes in DISCOVERY_LOG.md"
+
+outcomes:
+  research_themes:
+    - "Card UI core principles (one concept, hierarchy, whitespace)"
+    - "2025 trends (glassmorphism, animated transitions, swipeable)"
+    - "Priority visualization methods (color, size, position, animation)"
+    - "Grid vs freeform canvas trade-offs"
+  paradigm_shifts:
+    - "R11 (relative priority) is novel - no existing tools do this well"
+    - "AI-driven layout allocation is innovative territory"
+    - "NEXUS is pioneering visual weight allocation"
+  bold_ideas:
+    - "Swipeable cards for quick archive action"
+    - "Grid with dynamic sizing (best of both)"
+    - "Newspaper-style headline allocation"
+  carry_forward:
+    - "Match workbench glassmorphism aesthetic"
+    - "Hover-to-expand confirmed as good pattern"
+    - "Grid layout with dynamic card sizing"
+    - "Consider swipe gestures for mobile"

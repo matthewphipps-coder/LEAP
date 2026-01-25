@@ -1,0 +1,55 @@
+metadata:
+  type: "stage-artifact"
+  stage: 3
+  name: "Analysis"
+  phase: 31
+  project: "LEAP-061 Card System"
+  date: "2026-01-24"
+
+# RRMD+ Risk Assessment
+# (Required for all GoldSource increments)
+
+changes:
+  description: "Implementing Card & Canvas UI (LEAP-061)"
+  
+  coreBreakingChanges:
+    - change: "Rename 'Dashboard' page ID/Label to 'My Work'"
+      impact: "User orientation, router configuration, possible hardcoded links"
+      riskLevel: "Medium"
+      mitigation: "Ensure `dashboard` ID key remains `dashboard` in constants if possible, or update all references."
+    
+    - change: "Remove 'data-cards' component execution from 'Dashboard' page"
+      impact: "Loss of current metric cards display"
+      riskLevel: "Low (data-cards was placeholder/legacy)"
+      mitigation: "New nexus-card system provides superior functionality."
+
+  scaffoldModifications:
+    - "New CSS files imported in index.html"
+    - "New JS modules imported in app.js"
+    - "Modification of core constants"
+
+demoCompatibility:
+  risk: "Existing demos relying on 'Dashboard' page appearance will change drastically."
+  assessment: "Acceptable. GoldSource is the 'Demo Factory' base. Upgrading the base enhances future demos. Old demos (if any exist) are snapshots and shouldn't be affected unless they pull live GoldSource updates (which they shouldn't per governance)."
+  
+rollbackStrategy:
+  strategy: "Standard Phase Backup"
+  steps:
+    - "1. Restore from `X_GoldSource_Backup/phase-31-{timestamp}`"
+    - "2. Revert `task.md` to Stage 2"
+    - "3. Delete new components `nexus-card` and `nexus-canvas`"
+
+approaches:
+  approach1: "Monolithic file injection (Prototype style)"
+    - pros: "Fastest implementation"
+    - cons: "Violates modular architecture, hard to maintain"
+    - verdict: "REJECTED (Design Authority constraint)"
+
+  approach2: "Modular Component Architecture (Recommended)"
+    - pros: "Scalable, follows GoldSource standards, separating UI/Logic/Style"
+    - cons: "More files involved"
+    - verdict: "ACCEPTED"
+
+recommendation:
+  text: "Proceed with Modular Component Architecture."
+  nextStep: "Stage 4: Design (Create Prototype or Plan)"

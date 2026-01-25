@@ -1,0 +1,939 @@
+metadata:
+  type: "governance"
+  name: "LEAP Architectural Standards & Code Hygiene"
+  purpose: "Mandatory structural rules for LEAP codebase"
+  version: "2.0.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-19"
+  status: "active"
+
+lifecycle:
+  currentStage: "delivery"
+  status: "complete"
+  nextStage: "N/A (living document)"
+
+humanInterface:
+  checkpointRequired: false
+  context: "Active governance - AI Agents must adhere to these patterns"
+
+preamble:
+  purpose: "Prevent re-emergence of monolithic, unmaintainable code"
+  enforcement: "Mandatory for all AI Agents"
+
+separationOfConcerns:
+  name: "The Triad Pattern"
+  description: "Every new feature must be split into three distinct layers"
+  
+  serviceLayer:
+    name: "Service Layer"
+    location: "src/features/[feature-name]/[feature]-service.js"
+    responsibility:
+      - "Business logic"
+      - "Data transformations"
+      - "API calls"
+      - "State calculation"
+    rule: "NO DOM MANIPULATION"
+    principle: "Services take input, perform logic, return data or update State Manager"
+  
+  uiRenderingLayer:
+    name: "UI Rendering Layer"
+    location: "src/ui/components/[component]-ui.js"
+    responsibility:
+      - "Creating HTML structures"
+      - "Applying classes"
+      - "Handling direct user events (clicks, inputs)"
+    rule: "NO HEAVY LOGIC"
+    principle: "UI layer calls Service layer for data - acts as dumb view that knows how to look good"
+  
+  styleLayer:
+    name: "Style Layer"
+    location: "src/ui/components/[component].css or src/core/"
+    responsibility: "Visual presentation only"
+    rule: "Component-specific styles in own .css file"
+    globalOverrides: "Strictly for base.css"
+    legacyProhibition:
+      - "NO root-level component CSS files (e.g., cards.css, task-styles.css)"
+      - "All styles must live in src/ui/ or be imported via modular index.css"
+      - "Ensures CSS specificity remains predictable"
+      - "Prevents Brand Leaks"
+
+codeHygieneRules:
+  
+  lineLimit:
+    name: "500-Line Limit"
+    rule: "No single JavaScript file should exceed 500 lines"
+    enforcement: "MUST be refactored into smaller, utility-based sub-modules"
+    examples:
+      - "task-formatter.js"
+      - "task-validators.js"
+  
+  eventManagement:
+    rules:
+      - "Do not use inline onclick attributes in HTML"
+      - "Always use addEventListener within ui.js file for relevant component"
+      - "Ensure event listeners are cleaned up if component is destroyed (prevent memory leaks)"
+  
+  stateFlow:
+    directDBAccessIsSin:
+      rule: "Components should never call Firestore directly"
+      requirement: "Must use a Service function"
+    
+    stateAsSourceOfTruth:
+      rule: "UI should reflect state provided by StateManager"
+      prohibition: "Do not store vital application state in DOM"
+      example: "Checking a class to see if agent is active (WRONG)"
+  
+  namingConventions:
+    functions:
+      prefixes:
+        - "get..."
+        - "set..."
+        - "handle..."
+        - "render..."
+        - "calculate..."
+    
+    booleanVariables:
+      prefixes:
+        - "is..."
+        - "has..."
+        - "should..."
+      example: "isAgentActive"
+    
+    css:
+      style: "BEM-lite naming"
+      examples:
+
+enforcementForAIAgents:
+  description: "If tasked with adding a feature"
+  
+  steps:
+    - step: 1
+      action: "Draft the Interface"
+      description: "Define what the Service will do before writing UI"
+    
+    - step: 2
+      action: "Verify the Hookup"
+      description: "Ensure app.js (orchestrator) only calls initialization functions, not containing logic itself"
+    
+    - step: 3
+      action: "Modular CSS"
+      description: "Create new .css file for feature and link in index.html"
+      prohibition: "Do not append to base.css unless it is global variable change"
+  
+  consequence: "Failure to follow these rules will result in code rejection"
+  motto: "Keep the Zen in the codebase as much as the UI"
+
+# =============================================================================
+# PHASE 18 CONVENTIONS (NexusReturns)
+# =============================================================================
+
+phase18Conventions:
+  name: "Scaffold v2.0 Conventions"
+  addedDate: "2026-01-19"
+  
+  pathNaming:
+    features: "Singular (features/incident/, not incidents/)"
+    components: "kebab-case (header-ui.js, not headerUI.js)"
+    services: "{feature}-service.js pattern"
+  
+  componentStructure:
+    pattern: "{name}-ui.js + {name}.css co-located"
+    location: "ui/components/{name}/"
+  
+  lockedFiles:
+    description: "Files that Factory CANNOT modify"
+    list:
+      - "core/state.js"
+      - "core/firebase.js"
+      - "core/constants.js"
+      - "core/logger.js"
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+      - "ui/styles/buttons.css"
+      - "ui/styles/inputs.css"
+  
+  extensionPoints:
+    description: "Where Factory CAN add features"
+    list:
+      - "features/* - new feature modules"
+      - "ui/components/* - new components"
+      - "index.html - add component containers and CSS links"
+      - "core/app.js - register new components (import and init)"
+  
+  esModuleRules:
+    description: "Scaffold uses ES Modules - NO CommonJS"
+    rules:
+      - "NEVER use require() - it does not work in browser ES modules"
+      - "ALWAYS use import/export at top of file"
+      - "Dynamic imports: use import() if needed"
+    learnedFrom: "Phase 18 bug - require() in app.js broke theme toggle"
+
+# =============================================================================
+# PHASE 23: PAGE REGISTRATION PATTERN (LEAP-043)
+# =============================================================================
+
+pageRegistrationPattern:
+  name: "Config-Driven Page and Sidebar Extension"
+  purpose: "Factory can add pages and sidebar actions via config-only changes"
+  addedDate: "2026-01-21"
+  source: "Phase 23 - ExtensibleAppShell (SPEC-003)"
+  spec: "SPEC-003"
+  
+  pageTabs:
+    location: "core/constants.js"
+    constant: "PAGE_TABS"
+    type: "Array of page config objects"
+    
+    schema:
+      required:
+        - name: "id"
+          type: "string"
+          purpose: "Unique page identifier (used in data-page attribute)"
+        - name: "icon"
+          type: "string"
+          purpose: "Lucide icon name (e.g., 'layout-dashboard', 'alert-triangle')"
+        - name: "label"
+          type: "string"
+          purpose: "User-visible tab label (shown in tooltip)"
+      optional:
+        - name: "badge"
+          type: "number"
+          purpose: "Count badge displayed on tab"
+    
+    example: |
+      export const PAGE_TABS = [
+        { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+        { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
+        { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
+      ];
+    
+    factoryUsage: |
+      To add a new page:
+      1. Append to PAGE_TABS array in constants.js
+      2. Create HTML for page container (see multiPageSystem)
+  
+  sidebarActions:
+    location: "core/constants.js"
+    constant: "PAGE_SIDEBAR_ACTIONS"
+    type: "Object mapping pageId to action arrays"
+    
+    schema:
+      key: "Page ID (must match a PAGE_TABS entry)"
+      value: "Array of action objects"
+      actionFields:
+        required:
+          - name: "id"
+            type: "string"
+            purpose: "Unique action identifier"
+          - name: "icon"
+            type: "string"
+            purpose: "Lucide icon name"
+          - name: "label"
+            type: "string"
+            purpose: "Tooltip label"
+        optional:
+          - name: "badge"
+            type: "number"
+            purpose: "Count badge on action button"
+    
+    example: |
+      export const PAGE_SIDEBAR_ACTIONS = {
+        dashboard: [
+          { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
+        ],
+        incidents: [
+          { id: 'new-incident', icon: 'plus', label: 'New Incident' },
+          { id: 'filter', icon: 'filter', label: 'Filter' },
+        ],
+        reports: [],  // No sidebar actions for this page
+      };
+    
+    behavior: |
+      - Sidebar hides if page has empty actions array
+      - First action is automatically set as 'active'
+      - Custom events dispatched on action click (sidebar-action)
+  
+  settingsConfigs:
+    location: "core/constants.js"
+    constants: ["SETTINGS_MENU", "SETTINGS_SECTIONS"]
+    purpose: "Config-driven settings dialog sections"
+    
+    SETTINGS_MENU:
+      description: "Left sidebar menu structure"
+      example: |
+        export const SETTINGS_MENU = [
+          { group: 'DISPLAY', items: [
+            { id: 'appearance', icon: 'palette', label: 'Appearance' },
+            { id: 'branding', icon: 'image', label: 'Branding' },
+          ]}
+        ];
+    
+    SETTINGS_SECTIONS:
+      description: "Section-specific configuration"
+      example: |
+        export const SETTINGS_SECTIONS = {
+          appearance: {
+            colorModes: ['dark', 'light', 'system'],
+            accentColors: [...]
+          },
+          branding: {
+            logoMaxHeight: 32,
+            supportedFormats: ['svg', 'png', 'jpg', 'webp']
+          }
+        };
+
+# =============================================================================
+# PHASE 23: MULTI-PAGE CANVAS SYSTEM (LEAP-045)
+# =============================================================================
+
+multiPageSystem:
+  name: "Multi-Page Canvas System"
+  purpose: "Support multiple content pages with tab-based navigation"
+  addedDate: "2026-01-21"
+  source: "Phase 23 - ExtensibleAppShell (SPEC-003)"
+  spec: "SPEC-003"
+  
+  htmlStructure:
+    container: "#canvas"
+    pageElement: ".page"
+    activeClass: ".active"
+    
+    template: |
+      <main id="canvas" class="canvas glass">
+        <div class="page active" id="page-dashboard" data-page="dashboard">
+          <h1 class="page-title animate-in">Dashboard</h1>
+          <!-- Dashboard content -->
+        </div>
+        <div class="page" id="page-incidents" data-page="incidents">
+          <h1 class="page-title animate-in">Incidents</h1>
+          <!-- Incidents content -->
+        </div>
+      </main>
+    
+    requirements:
+      - "Each page needs id='page-{id}' and data-page='{id}'"
+      - "Only one page has 'active' class at a time"
+      - "Page id must match PAGE_TABS entry id"
+  
+  pageRouter:
+    file: "core/page-router.js"
+    function: "selectTab(pageId)"
+    behavior:
+      - "Updates PAGE_TABS active state"
+      - "Shows/hides page containers"
+      - "Calls updateSidebarForPage(pageId)"
+      - "Dispatches 'page-change' custom event"
+    
+    example: |
+      import { selectTab } from '../core/page-router.js';
+      
+      // Switch to incidents page
+      selectTab('incidents');
+  
+  factoryUsage: |
+    To add a new page:
+    1. Add entry to PAGE_TABS in constants.js
+    2. Add page actions to PAGE_SIDEBAR_ACTIONS (or empty array)
+    3. Create page container in index.html:
+       <div class="page" id="page-mypage" data-page="mypage">
+         <h1 class="page-title animate-in">My Page</h1>
+       </div>
+    4. (Optional) Create page-specific components in ui/components/
+agentEngagementRules:
+  name: "The Pair Protocol"
+  purpose: "Ensure high-fidelity collaboration between User and AI"
+  
+  rules:
+    pauseAndPivot:
+      description: "Do not begin implementation until high-level architecture and UX discussed and agreed upon in chat"
+    
+    consultativePartnering:
+      description: "Propose multiple solutions (Option A vs Option B) for complex problems"
+      principle: "Do not assume most efficient path is best for the brand"
+    
+    finalGate:
+      name: "HARD STOP"
+      requirement: "Must receive exact word 'Proceed' as standalone message before executing write_to_file or replace_file_content"
+      prohibition: "No assumptions about platform infrastructure (Email servers, Backend APIs, environment variables) without prior inquiry"
+      question: "Always ask: Are you ready for me to proceed with development?"
+
+folderOrganization:
+  name: "Folder Organization Rules"
+  purpose: "Maintain clean, predictable project structure"
+  enforcement: "Mandatory for all AI Agents"
+  
+  establishedFolders:
+    description: "Use existing folders - do not create new ones without approval"
+    
+    folders:
+      src:
+        purpose: "All source code"
+        subfolders:
+          - "core/ - Application core (app.js, state, firebase)"
+          - "features/ - Feature modules (tasks, ai, nexus)"
+          - "ui/ - UI components and styles"
+      
+      docs:
+        purpose: "All documentation"
+        subfolders:
+          - "guides/ - How-to guides and protocols"
+          - "specs/ - Technical specifications"
+          - "phases/ - Phase artifacts and closures"
+      
+      demos:
+        purpose: "ONLY for active, useful demo files"
+        allowed:
+          - "Theme testing tools (theme-preview.html)"
+          - "Live presentation demos"
+          - "Interactive prototypes for stakeholders"
+        prohibited:
+          - "Old mockups (delete after implementation)"
+          - "Test files (use tests/ folder)"
+          - "Experimental code (use src/ with feature flags)"
+        rule: "Delete demo files after they're no longer needed"
+      
+      tests:
+        purpose: "Automated test files only"
+      
+      templates:
+        purpose: "YAML templates for documentation"
+      
+      schemas:
+        purpose: "JSON schemas for YAML validation"
+      
+      scripts:
+        purpose: "Utility scripts (deploy, backup, etc.)"
+  
+  prohibitions:
+    - rule: "Do NOT create new folders in root"
+      examples:
+        - "old-docs/ ❌"
+        - "backups/ ❌"
+        - "sessions/ ❌"
+        - "design/ ❌"
+      reason: "Leads to clutter and confusion"
+    
+    - rule: "Do NOT create 'temp' or 'scratch' folders"
+      reason: "Use git branches for experimental work"
+    
+    - rule: "Do NOT keep obsolete files 'just in case'"
+      reason: "Git history preserves everything"
+  
+  cleanupPolicy:
+    when: "After feature implementation or phase completion"
+    action: "Delete demo files, mockups, and temporary artifacts"
+    backup: "Git history is the backup"
+
+documentation:
+  name: "Required Documentation"
+  purpose: "Mandatory documentation that must exist and be maintained"
+  enforcement: "AI Agents must verify these exist before code changes"
+  
+  required:
+    architecture:
+      file: "ARCHITECTURE.yaml"
+      purpose: "System architecture reference"
+      location: "Root directory"
+      mustContain:
+        - "System overview and entry points"
+        - "Module structure (core, features, ui)"
+        - "Data flow (Firebase → State → UI)"
+        - "Dependency map (what depends on what)"
+        - "Key architectural patterns (Triad, State management)"
+        - "CSS architecture and loading order"
+        - "Extension points (how to add features)"
+      
+      updateWhen:
+        - "Adding new modules or features"
+        - "Changing module dependencies"
+        - "Modifying data flow patterns"
+        - "Refactoring architecture"
+        - "Adding new architectural patterns"
+      
+      verificationRequired:
+        - "Before making code changes, verify ARCHITECTURE.yaml exists"
+        - "After architectural changes, update ARCHITECTURE.yaml"
+        - "During !pulse, check ARCHITECTURE.yaml is current"
+      
+      consequence: "Code changes without architecture documentation will be rejected"
+
+# =============================================================================
+# AI-FIRST CODE STANDARDS
+# =============================================================================
+
+aiFirstCodeStandards:
+  name: "AI-First Code Architecture"
+  purpose: "Code optimized for AI comprehension, maintainability, and impact analysis"
+  
+  philosophy:
+    principle: "Code is written for future AI to fully understand, not just for human reading"
+    benefits:
+      - "AI can perform accurate impact analysis of changes"
+      - "AI can understand dependencies without parsing entire codebase"
+      - "AI can identify affected components before making changes"
+      - "Reduces AI confusion and errors during modifications"
+  
+  fileHeaders:
+    name: "Required File Header Block"
+    required: true
+    enforcement: "Every .js file must start with this header"
+    
+    template: |
+      /**
+       * @file [filename]
+       * @purpose [single sentence describing what this file does]
+       * @layer [core|feature|ui] - which architectural layer
+       * @dependencies [array of files this imports from]
+       * @dependents [array of files that import from this]
+       * @locked [true|false] - can this be modified by demo creation?
+       * @modifyImpact [array of components/behaviors affected by changes]
+       */
+    
+    example: |
+      /**
+       * @file state.js
+       * @purpose StateManager - single source of truth for application state
+       * @layer core
+       * @dependencies []
+       * @dependents [app.js, dashboard-service.js, chat-panel-ui.js]
+       * @locked true
+       * @modifyImpact [all UI components that subscribe to state]
+       */
+  
+  functionAnnotations:
+    name: "Required Function Annotations"
+    required: true
+    enforcement: "Every exported function must have these annotations"
+    
+    template: |
+      /**
+       * @function [functionName]
+       * @purpose [what this function does and why]
+       * @param {type} paramName - description
+       * @returns {type} description
+       * @impacts [what changes when this runs]
+       * @sideEffects [external state changes, if any]
+       */
+    
+    example: |
+      /**
+       * @function updateState
+       * @purpose Merge new state into current state and notify all subscribers
+       * @param {Object} newState - partial state to merge
+       * @returns {void}
+       * @impacts [all subscribed UI components will re-render]
+       * @sideEffects [triggers subscriber callback functions]
+       */
+  
+  moduleContracts:
+    name: "Explicit Module Contracts"
+    required: true
+    enforcement: "Every module must declare what it provides and requires"
+    
+    structure:
+      provides: "Array of function/constant names this module exports"
+      requires: "Array of modules this depends on"
+    
+    example: |
+      // Module contract - declared at top of file after header
+      export const MODULE_CONTRACT = {
+        provides: ['getState', 'updateState', 'subscribe', 'unsubscribe'],
+        requires: []
+      };
+  
+  atomicPrinciples:
+    name: "Atomic Code Principles"
+    rules:
+      - name: "Single Responsibility"
+        rule: "Each function does ONE thing"
+        bad: "function processAndRenderAndSave()"
+        good: "function process(), function render(), function save()"
+      
+      - name: "Explicit Dependencies"
+        rule: "Never rely on implicit globals"
+        bad: "Uses window.appState directly"
+        good: "Import getState from state.js"
+      
+      - name: "Predictable Naming"
+        rule: "Names describe exactly what the code does"
+        pattern: "[verb][Noun][Modifier]"
+        examples:
+          - "getActiveTasksCount()"
+          - "renderChatMessage()"
+          - "handleButtonClick()"
+      
+      - name: "No Magic Values"
+        rule: "All constants are named and documented"
+        bad: "if (status === 3)"
+        good: "if (status === STATUS_COMPLETE)"
+  
+  impactAnalysisSupport:
+    name: "Impact Analysis Enablement"
+    purpose: "Structure code so AI can predict change effects"
+    
+    requirements:
+      - name: "Dependency Graph in Headers"
+        description: "@dependencies and @dependents must be kept current"
+        updateWhen: "Any import/export change"
+      
+      - name: "Side Effect Documentation"
+        description: "@sideEffects must list all external state changes"
+        examples:
+          - "Writes to localStorage"
+          - "Updates DOM outside component"
+          - "Triggers event listeners"
+      
+      - name: "Locked Component Markers"
+        description: "@locked true means demo AI cannot modify this file"
+        enforcement: "Validation stage checks for unauthorized locked file changes"
+
+# =============================================================================
+# LOCKED FILE EXTENSION POINTS (Phase 20 - LEAP-034)
+# =============================================================================
+
+lockedFileExtensions:
+  name: "Locked File Extension Points"
+  purpose: "Document how Factory can extend locked files without modification"
+  addedDate: "2026-01-20"
+  source: "Phase 20 - ScaffoldFoundation"
+  
+  files:
+    stateJs:
+      file: "core/state.js"
+      extensionMechanism: "registerStateSlice()"
+      usage: |
+        Features register their state via:
+        const { getMyFeature, setItems } = registerStateSlice('myFeature', 
+          { items: [], loading: false },
+          { setItems: (s, v) => ({...s, items: v}) }
+        );
+      accessVia: "getState('myFeature') or getState('myFeature.items')"
+    
+    firebaseJs:
+      file: "core/firebase.js"
+      extensionMechanism: "None needed"
+      usage: "Import auth, db directly: import { auth, db } from '../../core/firebase.js'"
+    
+    constantsJs:
+      file: "core/constants.js"
+      extensionMechanism: "None needed"
+      usage: "Define feature constants in features/{name}/constants.js"
+    
+    loggerJs:
+      file: "core/logger.js"
+      extensionMechanism: "None needed"
+      usage: "Import functions directly: import { debug, info, warn } from '../../core/logger.js'"
+    
+    cssFiles:
+      files: ["variables.css", "base.css", "buttons.css", "inputs.css"]
+      extensionMechanism: "CSS Cascade"
+      usage: |
+        Add new variables or override in component CSS files.
+        Later stylesheets override earlier ones.
+        Feature-specific styles go in ui/components/{name}/{name}.css
+
+# =============================================================================
+# DATA PATTERNS (Phase 20 - LEAP-004, LEAP-012, LEAP-017)
+# =============================================================================
+
+dataPatterns:
+  name: "Data Structure Conventions"
+  purpose: "Ensure consistent data handling across Factory runs"
+  addedDate: "2026-01-20"
+  source: "Phase 20 - ScaffoldFoundation"
+  
+  mockDataStrategy:
+    backlogItem: "LEAP-004"
+    pattern: "Feature-specific data files"
+    location: "features/{name}/{name}-data.js"
+    
+    decisionTree:
+      createNewFile:
+        - "Data is specific to one feature"
+        - "Data has complex structure (nested objects, arrays)"
+        - "Data might be replaced with API calls later"
+      
+      useConstants:
+        - "Data is simple enum or status list"
+        - "Data is shared across multiple features"
+        - "Data is configuration, not mock content"
+    
+    example: |
+      // features/incident/incident-data.js
+      export const MOCK_INCIDENTS = [
+        { id: 'INC001', title: 'Server Outage', status: 'active' },
+        // ...
+      ];
+  
+  stateShapes:
+    backlogItem: "LEAP-012"
+    pattern: "Nested via slices"
+    
+    recommended:
+      structure: "Slice as namespace"
+      example: |
+        registerStateSlice('incidents', {
+          items: [],
+          selected: null,
+          loading: false,
+          filters: { status: 'all' }
+        });
+      access: "getState('incidents.items')"
+    
+    avoid:
+      structure: "Flat sibling keys"
+      example: "incidentItems, incidentSelected, incidentLoading"
+      reason: "No clear ownership, naming collision risk"
+  
+  statusEnumValues:
+    backlogItem: "LEAP-017"
+    pattern: "lowercase strings"
+    
+    examples:
+      correct: ["active", "resolved", "critical", "pending", "closed"]
+      incorrect: ["Active", "RESOLVED", "Critical"]
+    
+    rationale:
+      - "Simpler string comparisons (no case sensitivity)"
+      - "Matches HTML data attributes"
+      - "JavaScript convention"
+
+# =============================================================================
+# CODE PATTERNS (Phase 20 - LEAP-016, LEAP-027, LEAP-031)
+# =============================================================================
+
+codePatterns:
+  name: "Code Structure Conventions"
+  purpose: "Ensure consistent coding patterns across Factory runs"
+  addedDate: "2026-01-20"
+  source: "Phase 20 - ScaffoldFoundation"
+  
+  serviceFunctionPatterns:
+    backlogItem: "LEAP-016"
+    purpose: "Extend existing naming conventions with action prefixes"
+    
+    additionalPrefixes:
+      - prefix: "load{Entity}..."
+        use: "Async data fetching"
+        examples: ["loadIncidents()", "loadUserProfile()", "loadMessages()"]
+      
+      - prefix: "open{Thing}..."
+        use: "Show UI elements"
+        examples: ["openDialog()", "openPanel()", "openModal()"]
+      
+      - prefix: "close{Thing}..."
+        use: "Hide UI elements"
+        examples: ["closeDialog()", "closePanel()", "closeModal()"]
+      
+      - prefix: "send{Action}..."
+        use: "Dispatch actions/requests"
+        examples: ["sendMessage()", "sendNotification()", "sendRequest()"]
+      
+      - prefix: "init{Component}..."
+        use: "Initialize component"
+        examples: ["initHeader()", "initSidebar()", "initIncidentCards()"]
+  
+  aiServicePattern:
+    backlogItem: "LEAP-027"
+    purpose: "When to use dedicated AI service vs inline AI logic"
+    
+    useDedicatedService:
+      when:
+        - "Multiple features use AI"
+        - "AI logic is complex (conversation, context)"
+        - "AI results need caching"
+        - "AI has specific error handling"
+      location: "features/ai/ai-service.js or features/{name}/{name}-ai-service.js"
+      pattern: |
+        // features/ai/ai-service.js
+        export async function generateSuggestion(context) {
+          // AI API call with error handling, caching, etc.
+        }
+    
+    useInlineApproach:
+      when:
+        - "Single feature uses AI once"
+        - "Simple prompt/response pattern"
+        - "Prototype or demo only"
+      pattern: |
+        // Inline in feature service
+        async function getAISuggestion(input) {
+          return await fetch('/api/ai', { body: input });
+        }
+  
+  componentInitPattern:
+    backlogItem: "LEAP-031"
+    purpose: "When to use lazy init vs explicit init"
+    
+    useExplicitInit:
+      when:
+        - "Component always visible on page load"
+        - "Component is part of shell (header, sidebar, canvas)"
+        - "Component needs state subscription at startup"
+      pattern: |
+        // app.js
+        import { initHeader } from './ui/components/header/header-ui.js';
+        initHeader(user, onLogout, onThemeToggle);
+    
+    useLazyInit:
+      when:
+        - "Component is modal/dialog (created when opened)"
+        - "Component is dynamic list item"
+        - "Component is conditionally shown"
+      pattern: |
+        // Create on first open
+        function openIncidentDialog(incident) {
+          let dialog = document.getElementById('incident-dialog');
+          if (!dialog) {
+            dialog = createIncidentDialog(); // Creates DOM
+            document.body.appendChild(dialog);
+          }
+          populateDialog(dialog, incident);
+          dialog.showModal();
+        }
+
+# =============================================================================
+# COMPONENT CREATION POLICY (Phase 21 - LEAP-019)
+# =============================================================================
+
+componentCreationPolicy:
+  name: "Create vs Modify Decision Tree"
+  purpose: "When to create new components vs modify existing flexible ones"
+  addedDate: "2026-01-20"
+  source: "Phase 21 - StandardsAndTemplates"
+  
+  decisionTree:
+    createNew:
+      when:
+        - "Feature has unique visual design not matching existing components"
+        - "Feature has distinct interaction patterns"
+        - "Feature would require >50% rewrite of existing component"
+        - "Feature serves different domain (e.g., incidents vs tasks)"
+      location: "ui/components/{new-name}/"
+      naming: "{name}-ui.js + {name}.css"
+    
+    modifyExisting:
+      when:
+        - "Feature is variation of existing component (e.g., different card type)"
+        - "Feature extends existing behavior with <50% changes"
+        - "Feature uses same visual patterns with different data"
+      flexibleComponents:
+        - "ui/components/chat-panel/* - Chat interface"
+        - "ui/components/data-cards/* - Data display"
+        - "ui/components/action-buttons/* - Quick actions"
+      reference: "demo-rules.yaml scaffoldRules.flexible"
+  
+  examples:
+    createNew:
+      - scenario: "Incident management with cards, dialogs, status badges"
+        reason: "Unique domain with specific data model and interactions"
+        result: "Create features/incident/, ui/components/incident-cards/"
+    
+    modifyExisting:
+      - scenario: "New card type for tasks"
+        reason: "Same visual pattern as data-cards, different data"
+        result: "Modify ui/components/data-cards/ with new render function"
+
+# =============================================================================
+# ACCESSIBILITY REQUIREMENTS (Phase 21 - LEAP-030)
+# =============================================================================
+
+accessibilityRequirements:
+  name: "Accessibility Standards"
+  purpose: "Ensure all components support keyboard navigation and assistive technology"
+  addedDate: "2026-01-20"
+  source: "Phase 21 - StandardsAndTemplates"
+  
+  keyboardNavigation:
+    required: true
+    rule: "All interactive elements must be keyboard accessible"
+    
+    requirements:
+      - element: "Clickable elements (cards, buttons, links)"
+        requirement: "Must support Enter and Space key activation"
+        implementation: |
+          element.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleClick(e);
+            }
+          });
+      
+      - element: "Focus indicators"
+        requirement: "Visible focus state for all interactive elements"
+        implementation: "Use CSS :focus-visible for focus styling"
+      
+      - element: "Tab order"
+        requirement: "Logical tab order matching visual layout"
+        implementation: "Use natural DOM order, avoid positive tabindex"
+  
+  ariaLabels:
+    required: "For non-text interactive elements"
+    examples:
+      - element: "Icon buttons"
+        label: "aria-label=\"Close dialog\""
+      - element: "Status badges"
+        label: "aria-label=\"Status: Active\""
+  
+  colorContrast:
+    requirement: "WCAG 2.1 AA minimum (4.5:1 for text, 3:1 for UI)"
+    note: "Base theme variables already meet this requirement"
+
+# =============================================================================
+# DATA SERVICE PATTERN (Phase 30 - LEAP-038)
+# =============================================================================
+
+dataServicePattern:
+  name: "Ring-Fenced Data Service Pattern"
+  purpose: "Consistent Firestore data access with user-scoped isolation"
+  addedDate: "2026-01-22"
+  source: "Phase 30 - DataConventions (SPEC-004)"
+  documentation: "docs/DATA_CONVENTIONS.md"
+  
+  coreConvention:
+    name: "Ring-Fenced User Data"
+    pattern: "All user data scoped under /users/{uid}/"
+    rationale:
+      - "Privacy: No cross-user data access"
+      - "Scalability: Data spreads naturally across document paths"
+      - "Security: Simple Firestore rules based on UID matching"
+    
+    structure:
+      userProfile: "/users/{uid} → Profile + preferences"
+      userCards: "/users/{uid}/cards/{cardId} → User's cards"
+      userConversations: "/users/{uid}/conversations/{id} → AI chat history"
+      sharedConfig: "/config/app → App-wide config (read-only)"
+  
+  referenceImplementation:
+    file: "core/user-service.js"
+    provides:
+      - "createUserProfile(uid, data) → Create user doc on signup"
+      - "loadUserPreferences(uid) → Load prefs on login"
+      - "savePreference(key, value) → Save single preference"
+      - "updateLastLogin(uid) → Update lastLoginAt timestamp"
+  
+  serviceCreationSteps:
+    - step: 1
+      action: "Copy user-service.js as template"
+    - step: 2
+      action: "Replace 'users' with feature collection path"
+    - step: 3
+      action: "Add getUserCollection() helper for ring-fencing"
+    - step: 4
+      action: "Implement CRUD operations following pattern"
+    - step: 5
+      action: "Add MODULE_CONTRACT at file top"
+  
+  preferences:
+    pattern: "Firestore + localStorage fallback"
+    flow:
+      onChange: "Save to localStorage AND Firestore (async)"
+      onLogin: "Load from Firestore → apply → skip Firestore sync"
+      offline: "localStorage serves as fallback"
+    implementation: |
+      export function setTheme(theme, skipFirestoreSync = false) {
+        applyTheme(theme);
+        localStorage.setItem(STORAGE_KEY, theme);
+        if (!skipFirestoreSync) savePreference('theme', theme);
+      }
+

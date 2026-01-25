@@ -1,0 +1,67 @@
+metadata:
+  type: "stage-artifact"
+  stage: 3
+  name: "Analysis"
+  phase: 34
+  project: "GovernanceShield"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+analysis:
+  decisionMatrix:
+    prototypeTemplate: "Option B (Salvage Masonry)"
+    reasoning: "Aligned with 'Salvage' goal. Ensures future prototypes start with a working layout engine."
+
+  implementationSpecs:
+    
+    file: "1_LEAP/1_Governance/2_protocols/bump-protocol.yaml"
+    action: "INSERT_AFTER 'whenInvoked'"
+    content: |
+      salvageProtocol:
+        trigger: "Before ANY deletion of a phase folder"
+        steps:
+          - "Scan folder for working components/prototypes"
+          - "Copy valid files to `_Salvage/snippets/`"
+          - "Log salvage in `_Salvage/inventory.md`"
+          - "ONLY THEN delete the folder"
+
+    file: "1_LEAP/2_Build_GoldSource/Methodology/goldsource-increment.yaml"
+    action: "INSERT_INTO 'stage: 1' > 'firstSteps'"
+    content: |
+      - step: "Read LESSONS_LEARNED.md"
+        action: "Absorb past failures to prevent regression"
+    
+    action2: "INSERT_INTO 'stage: 8' > 'factoryGovernanceCheck'"
+    content2: |
+        - file: "3_R&D_GoldSource/.../Templates/prototype_template.html"
+          updateWhen: "If design tokens or layout engine changed"
+
+    file: "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/spec-discovery-protocol.yaml"
+    action: "INSERT_INTO 'phases'"
+    content: |
+      "-0.5":
+        title: "Deconstruction Audit"
+        stage: "Technical Handoff"
+        methodology: "Code Extraction"
+        outcome: "deconstruction_audit.md"
+        gold_source_check: "REQUIRED: Compare prototype plan against ARCHITECTURE.yaml"
+
+    file: "1_LEAP/1_Governance/3_resources/LESSONS_LEARNED.md"
+    action: "CREATE"
+    content: |
+      # LEAP Master Lessons Registry
+      ## Phase 31: Masonry vs Grid
+      - **Lesson:** CSS Grid (lines) is inferior to CSS Columns (masonry) for the Canvas layout.
+      - **Evidence:** Phase 31 `SPEC-004-prototype-masonry.html` worked; Phase 32 Grid failed.
+      - **Action:** Use `column-count: 3` and `break-inside: avoid` for card layouts.
+
+    file: "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/Templates/prototype_template.html"
+    action: "CREATE"
+    content: "Full HTML5 boilerplate including the extracted CSS variables and Masonry layout classes from Phase 31."
+
+riskAssessment:
+  breakingChanges: "None (Governance only)"
+  complexity: "Low (Text insertions)"
+
+nextStep: "Stage 4: Design (Review the full Template text before creating)"

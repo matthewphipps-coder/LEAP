@@ -1,0 +1,633 @@
+---
+spec_id: SPEC-004
+title: Card & Canvas UI
+version: 1.0.0
+status: draft
+created: 2026-01-24
+extends: SPEC-003
+dependencies:
+  - SPEC-003-app-shell.yaml
+  - SPEC-002-design-system.yaml
+related_discoveries:
+  - DISCO-004_Card_And_Canvas_UI
+  - DISCO-001_NEXUS_Workbench
+  - DISCO-002_Integration_Layer
+
+# IMPORTANT: This spec defines WHAT to build. See VISUAL-GUIDE.md for HOW to build it.
+visual_guide: VISUAL-GUIDE.md
+design_reference: SPEC-004-prototype.html
+
+# =============================================================================
+# VISION
+# =============================================================================
+
+vision: >
+  The canvas is the human-centric view of work. Cards are persistent,
+  context-enriched representations of activities that adapt dynamically
+  to help users focus on what matters most.
+
+# =============================================================================
+# CORE REQUIREMENTS
+# =============================================================================
+
+requirements:
+  R1:
+    title: Show why something matters
+    description: Cards display context (e.g., "47 users affected, SLA at risk") not just raw data
+
+  R2:
+    title: Surface urgency/importance intelligently
+    description: AI-driven prioritization based on time-sensitivity, impact, and user role
+
+  R3:
+    title: Reveal patterns and relationships
+    description: Visually group related cards and surface insights
+
+  R4:
+    title: Adapt dynamically
+    description: Cards resize, reposition, and update as urgency changes
+
+  R5:
+    title: Work finds the human
+    description: Important items surface to the top proactively
+
+  R6:
+    title: Simple to browse, powerful to filter
+    description: Finder-like ease with advanced filtering capabilities
+
+  R7:
+    title: Show time/SLA context
+    description: Display due dates, breach risk, and time-based urgency
+
+  R8:
+    title: Distinguish work flow directions
+    description: Differentiate "to me" vs "from me" vs "with me" work
+
+  R9:
+    title: Card presentation is dynamic based on importance
+    description: Card size, color, and animation adapt to multiple factors (priority, SLA, role, recency)
+
+  R10:
+    title: Importance factors are source-agnostic
+    description: Works with any data source through field mapping or AI inference
+
+  R11:
+    title: Card prominence is relative to other cards
+    description: Visual weight is allocated across the canvas (not all cards can be large/urgent)
+
+# =============================================================================
+# COMPONENTS
+# =============================================================================
+
+components:
+  
+  # ---------------------------------------------------------------------------
+  # 1. CARD COMPONENT
+  # ---------------------------------------------------------------------------
+  
+  nexus_card:
+    description: Visual unit representing a single activity/task
+    
+    data_model:
+      fields:
+        - activityId: string        # Source record ID
+        - activityType: string      # incident, change, task, etc.
+        - title: string             # Primary display text
+        - summary: string?          # Secondary context
+        - priority: string?         # P1, P2, P3, etc.
+        - lastUpdated: timestamp
+        - horizon: enum[inbox, now, next, later, done]
+        - state: enum[active, tombstone, done]
+    
+    visual_states:
+      compact:
+        - Title only
+        - Priority badge
+        - Min width: 320px
+        - Height: ~200px
+      
+      medium:
+        - Title
+        - Activity type
+        - Priority badge
+        - Time indicator
+        - Width: 400px
+        - Height: ~240px
+      
+      large:
+        - Title
+        - Summary text
+        - Priority badge
+        - SLA indicator
+        - Assignee
+        - Width: 480px
+        - Height: ~280px
+      
+      viewport_constraint:
+        - Target: 7-8 cards visible per screen
+        - Grid: 2-3 columns on desktop
+        - Ensures cards are prominent and readable
+    
+    ai_presentation_attributes:
+      position: integer           # Sort order (1 = highest priority)
+      size: enum[compact, medium, large]
+      accent: enum[none, amber, red]
+      animate: boolean            # Pulse/glow for SLA breach
+      reason: string?             # AI explanation for presentation
+    
+    styling:
+      base:
+        - Glassmorphism (matches workbench)
+        - Rounded corners (--radius-md)
+        - Subtle shadow (--glass-shadow)
+        - Hover lift effect
+        - Dark theme: 80% opaque background (rgba with 0.8 alpha)
+        - Light theme: Inherits from GoldSource
+      
+      priority_colors:
+        - none: --glass-bg
+        - amber: rgba(251, 191, 36, 0.2)
+        - red: rgba(239, 68, 68, 0.2)
+      
+      animations:
+        urgentPulse:
+          - Subtle border glow
+          - 2s ease-in-out infinite
+          - Only for SLA breach/escalation
+    
+    interactions:
+      click: Opens workbench (DISCO-001 integration)
+      drag_start: Enables drag to horizon filters
+      drag_end: Moves card to new horizon
+      hover: Lift effect (from GoldSource .hover-lift class)
+  
+  # ---------------------------------------------------------------------------
+  # 2. CANVAS CONTAINER
+  # ---------------------------------------------------------------------------
+  
+  nexus_canvas:
+    description: Master orchestration layer for card layout
+    
+    layout_modes:
+      grid_mode:
+        - Default view
+        - CSS Grid with dynamic columns
+        - Cards auto-flow with varying sizes
+        - Responsive: 1-4 columns based on viewport
+        - Vertical scrolling when cards exceed viewport height
+        - Sidebar and header remain fixed during scroll
+        - Drag-and-drop to reorder cards within current horizon (Insertion Logic)
+        - Visual feedback: Insertion line between cards (not card highlight)
+      
+      list_mode:
+        - Activated by "All" filter
+        - Horizontal rows (compact card styling)
+        - Grouped by state: Inbox > Now > Next > Later
+        - Visual group separators between states
+        - Drag within same group: reorders cards (Insertion Logic)
+        - Drag to different group: changes card state and moves to new group
+        - Visual feedback: Insertion line between cards, or group highlight for empty groups
+      
+      done_mode:
+        - Activated by "Done" filter
+        - Vertical list layout (same visual density as list_mode)
+        - Flat list: No grouping headers (cards sorted by completion/score)
+        - Read-only: No drag-and-drop reordering allowed
+        - No insertion indicators or drop zones
+
+      freeform_mode:
+        - Activated by "Move" icon toggle in header
+        - Canvas removes grid constraints (display: block)
+        - Cards use absolute positioning (x, y coordinates)
+        - Spatial Persistence: User-defined positions are saved and restored
+        - Z-Index: dragged/hovered cards pop to front (z-index: 100/1000)
+        - Interaction: Drag anywhere to reposition. No "snap to grid".
+    
+    ai_sorting:
+      trigger: User-initiated "Re-sort" button
+      behavior: >
+        AI analyzes all active cards and assigns presentation attributes
+        (position, size, accent, animate) based on importance factors
+      
+      constraints:
+        - Max 2 "large" cards per view
+        - Max 3 "red" accents across all user cards where state != 'done'
+        - Only 1-2 animated cards at a time
+        - Relative allocation (R11): distribute visual weight
+    
+    stability:
+      no_bounce_rule: >
+        Cards DO NOT automatically reposition when receiving updates.
+        Updates appear in Inbox; user manually re-sorts when ready.
+      
+      spatial_anchoring: >
+        Cards remain in their spatial location unless user explicitly
+        moves them or triggers AI re-sort.
+  
+  # ---------------------------------------------------------------------------
+  # 3. HEADER MODIFICATIONS
+  # ---------------------------------------------------------------------------
+  
+  header_changes:
+    description: Minimal modifications to existing GoldSource SPEC-003 header
+    
+    header_toggles:
+      description: Layout control icons in the sub-header (Horizon Header)
+      controls: 
+        - Grid Icon: Switches to standard Masonry Sorting
+        - Move Icon: Switches to Free Form spatial mode
+      behavior:
+        - Toggling Free Form preserves current visual positions initially
+        - Toggling Grid restores sorted order
+    
+    my_work_page:
+      page_title: My Work
+      immutable: true
+      default_page: true
+      description: >
+        System-provided, immutable canvas. First page shown when app opens.
+        Users cannot delete or rename this page. All other pages remain
+        extensible per GoldSource standards.
+    
+    page_tab_badges:
+      behavior: Color-coded based on highest priority card in that page
+      logic: >
+        Find highest importance_score of all cards in page.
+        Badge color: Red if > 0.8, Amber if > 0.5, else Neutral.
+      
+      updates_on:
+        - Card added to page
+        - Card removed from page
+        - Card priority changed
+    
+    notification_badge:
+      behavior: Color-coded based on highest priority across ALL cards
+      count: Number of cards where inbox = true
+      logic: >
+        Find highest importance_score across all cards (any page).
+        Badge color: Red if > 0.8, Amber if > 0.5, else Neutral.
+  
+  # ---------------------------------------------------------------------------
+  # 4. NAVIGATION SURFACE (SIDEBAR)
+  # ---------------------------------------------------------------------------
+  
+  nexus_nav:
+    description: Context switcher and drop-target for horizons
+    
+    layout:
+      - Group A: Inbox, Now, Next, Later, All, Done
+      - Divider: Centered
+      - Group B: Optimise (AI Resort)
+    
+    filters:
+      inbox:
+        label: Inbox
+        icon: inbox
+        description: New items + unread updates
+        badge: count of unread items
+      
+      now:
+        label: Now
+        icon: zap
+        description: Active focus items
+        badge: count of active items
+      
+      next:
+        label: Next
+        icon: clock
+        description: Staged for after current work
+        badge: count of next items
+      
+      later:
+        label: Later
+        icon: calendar
+        description: Long-term backlog
+        badge:
+          count: Number of cards in Later horizon
+          color: Based on highest priority card (red > 0.8, amber > 0.5, neutral)
+      
+      all:
+        label: All
+        icon: list
+        description: Holistic list management
+        behavior: Switches to LIST_MODE
+      
+      done:
+        label: Done
+        icon: check-circle
+        icon: check-circle
+        description: Archived/resolved items
+        behavior: Switches to DONE_MODE (Flat list, read-only)
+        badge: count of done items
+    
+    interactions:
+      click_filter: Switch canvas to show only cards in that horizon
+      
+      drop_card:
+        behavior: Move card to new horizon
+        state_changes:
+          inbox_button: >
+            Set card.inbox = true, card.state unchanged.
+            Card appears in Inbox view but stays in current horizon.
+          now_button: >
+            Set card.state = 'now', card.inbox = false.
+            Card moves to Now horizon.
+          next_button: >
+            Set card.state = 'next', card.inbox = false.
+            Card moves to Next horizon.
+          later_button: >
+            Set card.state = 'later', card.inbox = false.
+            Card moves to Later horizon.
+          done_button: >
+            Set card.state = 'done', card.inbox = false.
+            Card archived, removed from active horizons.
+        
+        badge_updates:
+          description: After ANY card move, recalculate ALL badge counts AND colors
+          count_logic: >
+            For each horizon, count cards where state matches (inbox: where inbox=true).
+            Hide badge if count = 0.
+          color_logic: >
+            Find highest importance_score among cards in that horizon.
+            Red if > 0.8, Amber if > 0.5, else Neutral.
+      
+      badge_click: Quick preview of items in that horizon
+  
+  # ---------------------------------------------------------------------------
+  # 4. TOMBSTONE COMPONENT
+  # ---------------------------------------------------------------------------
+  
+  tombstone_card:
+    description: Visual state for cards whose source record is inaccessible
+    
+    appearance:
+      - Grayscale/semi-transparent styling
+      - Strike-through on title
+      - "Unavailable" badge
+    
+    interaction:
+      click: >
+        Opens workbench with AI explanation:
+        "This work is no longer in your view. The source record was [deleted/archived/permission revoked]."
+      
+      resolution: User manually marks as Done to clear
+
+# =============================================================================
+# VISUAL DESIGN
+# =============================================================================
+
+visual_design:
+  
+  aesthetic:
+    - Matches DISCO-001 workbench glassmorphism
+    - Dark mode primary, light mode secondary
+    - Plasma background (from SPEC-003)
+  
+  card_grid:
+    - CSS Grid with auto-flow
+    - Dynamic column count: 1-4 based on viewport
+    - Gap: var(--space-md)
+    - Cards have varying widths (compact/medium/large)
+  
+  priority_visualization:
+    methods:
+      - Size: compact (200px) | medium (300px) | large (400px)
+      - Color: none | amber | red accents
+      - Position: Higher = more urgent
+      - Animation: Pulse for SLA breach only
+    
+    allocation_principle: >
+      Visual weight is distributed relative to other cards (R11).
+      If 10 P1s exist, only top 1-2 are large; rest are medium.
+  
+  responsive_behavior:
+    desktop:
+      - 3-4 columns
+      - Full card details visible
+    
+    tablet:
+      - 2-3 columns
+      - Medium cards become dominant
+    
+    mobile:
+      - 1 column
+      - Compact cards by default
+      - Tap to expand
+
+# =============================================================================
+# GOLDSOURCE DESIGN SYSTEM ADDITIONS
+# =============================================================================
+
+design_system_additions:
+  description: New components and tokens required for DISCO-004
+  
+  new_components:
+    nexus_card:
+      description: New card component with dynamic sizing
+      css_class: .nexus-card
+      size_variants:
+        - compact: data-size="compact" (200px min)
+        - medium: data-size="medium" (300px)
+        - large: data-size="large" (400px max)
+      extends: GoldSource .glass and .hover-lift classes
+    
+    card_priority_badge:
+      description: Priority indicator badge
+      css_class: .card-priority-badge
+      variants:
+        - p1: Red (#ef4444) - Urgent
+        - p2: Amber (#f59e0b) - Important  
+        - p3: Neutral (--text-secondary) - Normal
+  
+  new_css_variables:
+    card_background:
+      description: Card background with theme-specific opacity
+      variables:
+        - "--card-bg: rgba(20, 20, 25, 0.8) for dark theme"
+        - "Light theme uses var(--glass-bg) override"
+      usage: Applied to .nexus-card for 80% opacity in dark mode
+    
+    badge_colors:
+      description: Color states for count badges (sidebar, header)
+      variables:
+        - "--badge-urgent: #ef4444 (red)"
+        - "--badge-warning: #f59e0b (amber)"
+        - "--badge-neutral: rgba(255, 255, 255, 0.15) (gray)"
+      usage: Applied to .count-badge based on highest priority card
+    
+    card_sizes:
+      description: Card size variants (target: 7-8 cards per viewport)
+      variables:
+        - "--card-medium: 400px width, ~240px height"
+        - "--card-large: 480px width, ~280px height"
+    
+    updates_badge:
+      description: Notification badge overlay for cards
+      style:
+        - Structure: Number centered inside Icon (Overlay)
+        - Icon size: 18px (accommodates text)
+        - Text size: 9px (high contrast)
+        - Background: Transparent (No pill/trim)
+        - Position: Inline in footer
+      usage: Indicates unread chat/comments on a card
+  
+  existing_goldsource_tokens:
+    description: DISCO-004 reuses these existing GoldSource tokens
+    tokens:
+      - "--glass-bg: Card backgrounds"
+      - "--glass-blur: Backdrop filter"
+      - "--glass-shadow: Card shadows"
+      - "--brand-primary: Active states, P1 color"
+      - "--text-secondary: P3 neutral color"
+      - "--space-md: Grid gap (16px)"
+      - "--radius-md: Card border radius"
+      - ".hover-lift: Card hover animation"
+
+# =============================================================================
+# INTERACTIONS
+# =============================================================================
+
+interactions:
+  
+  card_click:
+    behavior: Opens nexus-workbench (DISCO-001)
+    transition: Smooth bloom/expand animation
+  
+  drag_and_drop:
+    source: Any card on canvas
+    targets:
+      - Insertion point between cards (Reorder/Insert sorting)
+      - Nav filter items (Move to new horizon)
+      - List Mode Group Headers (Move to new horizon)
+    
+    visual_feedback:
+      - Ghost image while dragging
+      - Insertion Line (border) indicates drop position
+      - No "swapping" during drag; explicit insertion on drop
+  
+  ai_resort:
+    trigger: User clicks "Re-sort" button
+    behavior: >
+      1. AI analyzes all active cards
+      2. Assigns presentation attributes (position, size, accent, animate)
+      3. Cards smoothly animate to new positions
+      4. User sees AI explanation for top 3 cards
+  
+  filter_switching:
+    trigger: Click nav filter item
+    behavior: >
+      - Canvas fades out
+      - New filtered set fades in
+      - Grid reflows smoothly
+      - Preserve scroll position if returning to same filter
+
+# =============================================================================
+# PROTOTYPE REQUIREMENTS
+# =============================================================================
+
+prototype:
+  file: SPEC-004-prototype.html
+  extends: SPEC-003-prototype.html
+  
+  must_demonstrate:
+    - 10-15 demo cards with varying priorities
+    - All 3 card sizes (compact, medium, large)
+    - All 3 accent colors (none, amber, red)
+    - At least 1 animated card (SLA breach)
+    - All 6 nav filters functional
+    - Grid mode and list mode toggle
+    - Drag and drop between horizons
+    - Card click opens placeholder workbench
+    - AI re-sort button (simulated AI response)
+    - At least 1 tombstone card
+  
+  demo_data:
+    - Include P1, P2, P3 priorities
+    - Include different activity types (incident, change, task)
+    - Include cards in all horizons (inbox, now, next, later, done)
+    - Include at least 1 card with SLA at risk
+    - Include at least 1 tombstone (deleted source record)
+  
+  visual_contract:
+    - Must match SPEC-003 app shell exactly
+    - Must use SPEC-002 design tokens
+    - Must demonstrate R9 (dynamic sizing) and R11 (relative prominence)
+    - Must be self-contained (single HTML file)
+
+# =============================================================================
+# IMPLEMENTATION NOTES
+# =============================================================================
+
+implementation_notes:
+  
+  ai_integration:
+    - Presentation logic is AI-driven, not hardcoded formulas
+    - AI outputs semantic tokens (size, accent, animate)
+    - Design system interprets tokens into CSS
+    - AI prompt includes Eisenhower principles and user context
+  
+  data_sync:
+    - Cards are user's personal bookmarks, not SoR copies
+    - Cards have local state (horizon, read/unread)
+    - SoR updates trigger notifications, not automatic re-layout
+    - User controls when to re-sort
+  
+  extensibility:
+    - Architecture supports future canvas renderers (CMDB, Gantt, etc.)
+    - Architecture supports user-created canvases
+    - Architecture supports custom filters
+    - Build for current scope, design for future expansion
+  
+  accessibility:
+    - Keyboard navigation for all interactions
+    - ARIA labels for all interactive elements
+    - Focus indicators for drag-and-drop
+    - Color is not the only priority indicator (size + position)
+  
+  performance:
+    - Virtualize cards if >100 visible
+    - Debounce drag events
+    - Use CSS transforms for animations (GPU acceleration)
+    - Lazy load card details on hover
+
+# =============================================================================
+# ACCEPTANCE CRITERIA
+# =============================================================================
+
+acceptance_criteria:
+  
+  prototype:
+    - Demonstrates all 11 requirements (R1-R11)
+    - Visual design matches DISCO-001 workbench aesthetic
+    - All interactions feel smooth and responsive
+    - Works in Chrome, Safari, Firefox (latest versions)
+    - Responsive on desktop, tablet, mobile
+    - Accessible via keyboard navigation
+  
+  code_quality:
+    - Self-contained single HTML file
+    - Clean, commented CSS
+    - Vanilla JavaScript (no frameworks)
+    - Uses SPEC-002 design tokens
+    - Follows LEAP coding standards
+  
+  user_validation:
+    - User can quickly identify most urgent work
+    - User can easily filter and organize cards
+    - User understands why certain cards are prominent
+    - Drag-and-drop feels natural and intuitive
+    - Overall experience feels "intelligent" and "adaptive"
+
+# =============================================================================
+# OUT OF SCOPE
+# =============================================================================
+
+out_of_scope:
+  - User-created canvases (future phase)
+  - Custom filters (future phase)
+  - Other canvas renderers (CMDB, Gantt, Calendar)
+  - Real AI integration (prototype uses simulated AI)
+  - Real data sync (prototype uses static demo data)
+  - Advanced animations beyond pulse/glow
+  - Multi-user collaboration features
+  - Mobile app (web-only for now)

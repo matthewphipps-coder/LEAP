@@ -1,0 +1,61 @@
+metadata:
+  type: "governance"
+  name: "RRMD+ Protocol"
+  purpose: "Risk, Research, Mitigate, Document, Verify - Before significant changes"
+  version: "1.0.0"
+  created: "2026-01-19"
+  status: "binding"
+  extractedFrom: "constitution.yaml Rule 9"
+
+whenToUse:
+  objective:
+    - trigger: "Modifying >3 files"
+    - trigger: "Changing core files (app.js, index.html, vite.config.js, firebase.js, state-manager.js)"
+    - trigger: "Modifying data schema"
+    - trigger: "Changing build/deploy process"
+    - trigger: "After 2+ failed attempts at same task"
+    - trigger: "Modifying CSS architecture"
+  
+  subjective:
+    rule: "If uncertain about approach or outcome, use RRMD+ or ask user"
+  
+  exemptions:
+    - "Pure documentation updates"
+    - "Test file additions only"
+    - "Metadata updates (dates, versions)"
+
+steps:
+  
+  riskAssessment:
+    name: "R - Risk Assessment"
+    actions:
+      - "Identify all risks (technical, UX, architectural)"
+      - "Rate probability and impact"
+  
+  research:
+    name: "R - Research"
+    actions:
+      - "Find all affected files and dependencies"
+      - "Understand delivery mechanism"
+      - "Check why current design exists"
+  
+  mitigation:
+    name: "M - Mitigation"
+    actions:
+      - "Strategy for each identified risk"
+      - "Backup plan"
+      - "Rollback plan"
+  
+  documentation:
+    name: "D - Documentation"
+    actions:
+      - "Create specification file"
+      - "Get explicit !Proceed before coding"
+  
+  verification:
+    name: "V - Verification"
+    actions:
+      - "Check delivery mechanism works"
+      - "Test in isolation if possible"
+
+enforcement: "Constitutional - Rule 9"

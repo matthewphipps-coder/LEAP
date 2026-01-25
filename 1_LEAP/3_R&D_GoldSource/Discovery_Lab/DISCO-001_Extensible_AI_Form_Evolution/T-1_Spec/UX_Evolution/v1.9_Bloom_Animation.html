@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Workbench | GoldSource v1.9</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #050608;
+            --bg-surface: #0a0c10;
+            --bg-glass: rgba(13, 17, 23, 0.82);
+            --bg-pill: rgba(255, 255, 255, 0.04);
+
+            --emerald: #62d84e;
+            --emerald-vibrant: #4ade80;
+            --emerald-glow: rgba(98, 216, 78, 0.15);
+
+            --text-high: #ffffff;
+            --text-med: #94a3b8;
+            --text-low: #4b5563;
+
+            --border-glass: rgba(255, 255, 255, 0.07);
+            --radius-lg: 28px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+
+            --blur-std: 30px;
+            --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --spring: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-high);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(98, 216, 78, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+        }
+
+        /* ==================== CANVAS OVERLAY (Click to Open) ==================== */
+        .canvas-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .canvas-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .demo-object {
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(98, 216, 78, 0.2), rgba(59, 130, 246, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s var(--spring), box-shadow 0.3s ease;
+            font-size: 0.7rem;
+            color: var(--text-med);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .demo-object:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(98, 216, 78, 0.3);
+        }
+
+        .demo-object:active {
+            transform: scale(0.95);
+        }
+
+        .canvas-hint {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ==================== WORKBENCH CONTAINER ==================== */
+        .canvas-16-9 {
+            width: 100vw;
+            height: 56.25vw;
+            max-height: 100vh;
+            max-width: 177.78vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            pointer-events: none;
+        }
+
+        .workbench {
+            width: 90%;
+            height: 90%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(var(--blur-std));
+            -webkit-backdrop-filter: blur(var(--blur-std));
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            pointer-events: auto;
+
+            /* Animation Origin - set dynamically via JS */
+            transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
+            opacity: 0;
+            transform: scale(0.3);
+            filter: blur(10px);
+            transition: opacity 0.5s var(--spring), transform 0.6s var(--spring), filter 0.5s ease;
+        }
+
+        .workbench.open {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        .workbench.closing {
+            opacity: 0;
+            transform: scale(0.2);
+            filter: blur(15px);
+            transition: opacity 0.4s ease-out, transform 0.5s ease-in, filter 0.4s ease-out;
+        }
+
+        .window-ctrl {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        .btn-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* ==================== UNIFIED TOP BAR ==================== */
+        .top-bar {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .top-row-1 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .id-num {
+            font-size: 0.7rem;
+            color: var(--text-low);
+            font-weight: 600;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .short-desc {
+            font-size: 0.95rem;
+            color: var(--text-high);
+            font-weight: 500;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-row-2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pill-group {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .status-pill {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text-med);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 4px 10px;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            border-radius: 4px;
+        }
+
+        .pill-dull {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text-low);
+            text-transform: uppercase;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .pill-dull.highlight {
+            border-color: var(--emerald);
+            color: var(--emerald-vibrant);
+            background: var(--emerald-glow);
+        }
+
+        .chain-sep {
+            color: var(--text-low);
+            font-size: 0.8rem;
+            opacity: 0.5;
+            margin: 0 4px;
+        }
+
+        .connect-pill {
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+            border-radius: 10px;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .pane-left {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-stream {
+            flex: 1;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: msgIn 0.3s ease-out backwards;
+            border: 1px solid transparent;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+        }
+
+        .msg-ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-bottom-left-radius: 4px;
+            color: var(--text-med);
+        }
+
+        .msg-human {
+            align-self: flex-end;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--emerald);
+            color: var(--text-high);
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 15px rgba(98, 216, 78, 0.05);
+        }
+
+        .input-area {
+            padding: 20px 32px;
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-light {
+            font-family: 'Outfit';
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-med);
+            flex-shrink: 0;
+        }
+
+        .brand-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--emerald);
+        }
+
+        .input-capsule {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 8px 12px 8px 16px;
+            gap: 12px;
+        }
+
+        .input-capsule span {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-low);
+        }
+
+        .input-btns {
+            display: flex;
+            gap: 10px;
+            color: var(--text-low);
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .tool-icon {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+
+        .tool-icon:hover {
+            opacity: 1;
+            color: var(--text-high);
+        }
+
+        .btn-send-subtle {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-low);
+        }
+
+        .btn-send-subtle:hover {
+            background: var(--emerald-glow);
+            border-color: var(--emerald);
+            color: var(--emerald);
+            transform: scale(1.05);
+        }
+
+        .pane-right {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .pane-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px 120px 32px;
+        }
+
+        .section-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .section-label:not(:first-child) {
+            margin-top: 24px;
+        }
+
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .field-pill {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-med);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 90px;
+            flex: 1 1 auto;
+            animation: pillIn 0.3s ease-out backwards;
+        }
+
+        @keyframes pillIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+        }
+
+        .field-pill.half {
+            flex: 1 1 calc(50% - 4px);
+            max-width: calc(50% - 4px);
+        }
+
+        .field-pill.third {
+            flex: 1 1 calc(33% - 6px);
+            max-width: calc(33% - 6px);
+        }
+
+        .field-pill.quarter {
+            flex: 1 1 calc(25% - 6px);
+            max-width: calc(25% - 6px);
+        }
+
+        .field-pill.full {
+            flex: 1 1 100%;
+        }
+
+        .pill-lbl {
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: var(--text-low);
+            text-transform: uppercase;
+        }
+
+        .pill-val {
+            color: var(--text-med);
+        }
+
+        .pill-val.large {
+            min-height: 50px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        .field-pill.ghost {
+            background: var(--emerald-glow);
+            border-color: var(--emerald);
+        }
+
+        .field-pill.ghost .pill-val {
+            color: var(--emerald-vibrant);
+        }
+
+        .action-tray-float {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            animation: traySlide 0.4s var(--spring);
+        }
+
+        @keyframes traySlide {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+
+        .btn-nexus {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .btn-nexus.primary {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-vibrant));
+            color: var(--bg-deep);
+            box-shadow: 0 8px 16px var(--emerald-glow);
+        }
+
+        .btn-nexus.secondary {
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+        }
+
+        .btn-nexus:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .demo-nav {
+            position: absolute;
+            bottom: 32px;
+            right: 32px;
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+            z-index: 1000;
+        }
+
+        .nav-pt {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-low);
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .nav-pt.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-high);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================== CLICK-TO-OPEN OVERLAY ==================== -->
+    <div class="canvas-overlay" id="overlay">
+        <div class="demo-object" id="trigger-object">
+            INC Record
+        </div>
+        <div class="canvas-hint">Click to open workbench</div>
+    </div>
+
+    <!-- ==================== WORKBENCH ==================== -->
+    <div class="canvas-16-9">
+        <div class="workbench" id="workbench">
+            <div class="window-ctrl">
+                <div class="btn-close" id="btn-close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="top-bar">
+                <div class="top-row-1">
+                    <span class="id-num">INC0012345</span>
+                    <span class="short-desc">Slow performance on London VPN Cluster affecting Glennham and Stockport
+                        branches</span>
+                </div>
+                <div class="top-row-2">
+                    <div class="pill-group">
+                        <div class="status-pill">In Prog</div>
+                        <div class="pill-dull" id="h-priority">P3</div>
+                        <div class="pill-dull" id="h-impact">Imp 3</div>
+                        <div class="pill-dull" id="h-urgency">Urg 3</div>
+                    </div>
+                    <span class="chain-sep">|</span>
+                    <div class="connect-pill" id="h-group">Network Eng</div>
+                    <span class="chain-sep">›</span>
+                    <div class="connect-pill" id="h-assignee">---</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <section class="pane-left">
+                    <div class="chat-stream" id="stream"></div>
+                    <div class="input-area">
+                        <div class="brand-light">
+                            <div class="brand-dot"></div>Now Assist
+                        </div>
+                        <div class="input-capsule">
+                            <span>How can I help?</span>
+                            <div class="input-btns">
+                                <i class="tool-icon" title="Attach">📂</i>
+                                <i class="tool-icon" title="Record">🎤</i>
+                                <div class="btn-send-subtle">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="pane-right">
+                    <div class="pane-scroll" id="dynamic-pane">
+                        <div class="section-label">Context</div>
+                        <div class="pill-grid" id="grid-context"></div>
+                        <div class="section-label hidden" id="lbl-location">Location</div>
+                        <div class="pill-grid hidden" id="grid-location"></div>
+                        <div class="section-label hidden" id="lbl-detail">Detail</div>
+                        <div class="pill-grid hidden" id="grid-detail"></div>
+                        <div class="section-label hidden" id="lbl-evolution">Proposal</div>
+                        <div class="pill-grid hidden" id="grid-evolution"></div>
+                    </div>
+
+                    <div class="action-tray-float hidden" id="tray">
+                        <button class="btn-nexus secondary" onclick="go(0)">Cancel</button>
+                        <button class="btn-nexus primary" onclick="alert('Committed')">Approve Update</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-nav" style="display: none;" id="demo-nav">
+        <button class="nav-pt active" onclick="go(0)">Initial</button>
+        <button class="nav-pt" onclick="go(1)">Reveal</button>
+        <button class="nav-pt" onclick="go(2)">Proposal</button>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const workbench = document.getElementById('workbench');
+        const triggerObject = document.getElementById('trigger-object');
+        const btnClose = document.getElementById('btn-close');
+        const demoNav = document.getElementById('demo-nav');
+
+        const stream = document.getElementById('stream');
+        const tray = document.getElementById('tray');
+        const hPriority = document.getElementById('h-priority');
+        const gridContext = document.getElementById('grid-context');
+        const gridLocation = document.getElementById('grid-location');
+        const gridDetail = document.getElementById('grid-detail');
+        const gridEvolution = document.getElementById('grid-evolution');
+        const lblLocation = document.getElementById('lbl-location');
+        const lblDetail = document.getElementById('lbl-detail');
+        const lblEvolution = document.getElementById('lbl-evolution');
+
+        // ==================== OPEN/CLOSE ANIMATION ====================
+        function openWorkbench(e) {
+            // Get click position relative to viewport
+            const rect = workbench.getBoundingClientRect();
+            const clickX = e.clientX;
+            const clickY = e.clientY;
+
+            // Calculate origin as percentage of workbench position
+            const originX = ((clickX - rect.left) / rect.width) * 100;
+            const originY = ((clickY - rect.top) / rect.height) * 100;
+
+            workbench.style.setProperty('--origin-x', `${originX}%`);
+            workbench.style.setProperty('--origin-y', `${originY}%`);
+
+            // Trigger animation
+            overlay.classList.add('hidden');
+            workbench.classList.remove('closing');
+            requestAnimationFrame(() => workbench.classList.add('open'));
+
+            // Show demo nav after open
+            setTimeout(() => {
+                demoNav.style.display = 'flex';
+                go(0); // Initialize first scene
+            }, 600);
+        }
+
+        function closeWorkbench() {
+            workbench.classList.remove('open');
+            workbench.classList.add('closing');
+            demoNav.style.display = 'none';
+
+            setTimeout(() => {
+                workbench.classList.remove('closing');
+                overlay.classList.remove('hidden');
+                stream.innerHTML = '';
+                resetGrids();
+            }, 500);
+        }
+
+        function resetGrids() {
+            gridContext.innerHTML = '';
+            gridLocation.innerHTML = ''; lblLocation.classList.add('hidden'); gridLocation.classList.add('hidden');
+            gridDetail.innerHTML = ''; lblDetail.classList.add('hidden'); gridDetail.classList.add('hidden');
+            gridEvolution.innerHTML = ''; lblEvolution.classList.add('hidden'); gridEvolution.classList.add('hidden');
+            tray.classList.add('hidden');
+            hPriority.classList.remove('highlight');
+            hPriority.textContent = 'P3';
+        }
+
+        triggerObject.addEventListener('click', openWorkbench);
+        btnClose.addEventListener('click', closeWorkbench);
+
+        // ==================== DEMO SCENES ====================
+        const scenes = [
+            {
+                chat: [{ w: 'ai', t: "Hello! I'm ready to assist with this incident. What would you like to know?" }],
+                context: [], location: [], detail: [], evolution: [],
+                highlights: [], action: false
+            },
+            {
+                chat: [{ w: 'human', t: "What are the full details?" }, { w: 'ai', t: "Expanding context now. The caller is Greg Roy from Glennham. The CI is LON-VPN-01." }],
+                context: [
+                    { lbl: 'Description', val: 'User reports intermittent connectivity drops affecting the London edge cluster. Initial trace suggests a potential routing loop.', size: 'full', large: true },
+                    { lbl: 'Caller', val: 'Greg Roy', size: 'half' },
+                    { lbl: 'Caller Location', val: 'Glennham Office', size: 'half' }
+                ],
+                location: [
+                    { lbl: 'Region', val: 'EU-WEST', size: 'quarter' },
+                    { lbl: 'Site', val: 'London DC', size: 'quarter' },
+                    { lbl: 'Rack', val: 'R12', size: 'quarter' },
+                    { lbl: 'CI', val: 'LON-VPN-01', size: 'quarter' }
+                ],
+                detail: [
+                    { lbl: 'Active', val: 'True', size: 'quarter' },
+                    { lbl: 'Parent', val: '---', size: 'quarter' },
+                    { lbl: 'Opened', val: 'Jan 22', size: 'quarter' },
+                    { lbl: 'Closed', val: '---', size: 'quarter' }
+                ],
+                evolution: [],
+                highlights: [], action: false
+            },
+            {
+                chat: [{ w: 'human', t: "Escalate it." }, { w: 'ai', t: "Scaling to Critical. Proposing assignment to the Backbone Team. Please approve." }],
+                context: [
+                    { lbl: 'Description', val: 'User reports intermittent connectivity drops affecting the London edge cluster. Initial trace suggests a potential routing loop.', size: 'full', large: true },
+                    { lbl: 'Caller', val: 'Greg Roy', size: 'half' },
+                    { lbl: 'Caller Location', val: 'Glennham Office', size: 'half' }
+                ],
+                location: [
+                    { lbl: 'Region', val: 'EU-WEST', size: 'quarter' },
+                    { lbl: 'Site', val: 'London DC', size: 'quarter' },
+                    { lbl: 'Rack', val: 'R12', size: 'quarter' },
+                    { lbl: 'CI', val: 'LON-VPN-01', size: 'quarter' }
+                ],
+                detail: [
+                    { lbl: 'Active', val: 'True', size: 'quarter' },
+                    { lbl: 'Parent', val: '---', size: 'quarter' },
+                    { lbl: 'Opened', val: 'Jan 22', size: 'quarter' },
+                    { lbl: 'Closed', val: '---', size: 'quarter' }
+                ],
+                evolution: [
+                    { lbl: 'Resolution Notes', val: 'Escalated due to routing loop. Assigning to Backbone Team.', size: 'full', ghost: true, large: true }
+                ],
+                highlights: ['h-priority'],
+                priorityVal: 'P1',
+                action: true
+            }
+        ];
+
+        function renderGrid(grid, items, labelEl) {
+            grid.innerHTML = '';
+            if (items.length > 0) {
+                items.forEach(f => {
+                    const block = document.createElement('div');
+                    block.className = `field-pill ${f.size} ${f.ghost ? 'ghost' : ''}`;
+                    block.innerHTML = `<span class="pill-lbl">${f.lbl}</span><span class="pill-val ${f.large ? 'large' : ''}">${f.val}</span>`;
+                    grid.appendChild(block);
+                });
+                grid.classList.remove('hidden');
+                if (labelEl) labelEl.classList.remove('hidden');
+            } else {
+                grid.classList.add('hidden');
+                if (labelEl) labelEl.classList.add('hidden');
+            }
+        }
+
+        function go(idx) {
+            const s = scenes[idx];
+            document.querySelectorAll('.nav-pt').forEach((p, i) => p.classList.toggle('active', i === idx));
+
+            if (idx === 0) stream.innerHTML = '';
+
+            s.chat.forEach(m => {
+                const d = document.createElement('div');
+                d.className = `msg msg-${m.w === 'ai' ? 'ai' : 'human'}`;
+                d.textContent = m.t; stream.appendChild(d);
+            });
+            stream.scrollTop = stream.scrollHeight;
+
+            hPriority.classList.remove('highlight');
+            hPriority.textContent = 'P3';
+            if (s.priorityVal) {
+                hPriority.textContent = s.priorityVal;
+                if (s.highlights.includes('h-priority')) hPriority.classList.add('highlight');
+            }
+
+            renderGrid(gridContext, s.context, null);
+            renderGrid(gridLocation, s.location, lblLocation);
+            renderGrid(gridDetail, s.detail, lblDetail);
+            renderGrid(gridEvolution, s.evolution, lblEvolution);
+
+            tray.classList.toggle('hidden', !s.action);
+        }
+    </script>
+</body>
+
+</html>

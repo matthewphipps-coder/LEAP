@@ -1,0 +1,35 @@
+stage: -6
+title: "The DreamBig Idea!"
+status: pending
+
+governance:
+  brake_type: "Standalone !Proceed"
+  socratic_check: "Did I ask 'Why?' or 'What if?' about the vision?"
+
+objectives:
+  - "Capture the user's raw 'DreamBig' vision"
+
+checklist:
+  ai_asked_for_vision: false
+  user_provided_intent: false
+  ai_confirmed_understanding: false
+  ai_asked_if_missing: false
+  proceed_received: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Carousel of inspirations"
+    - "Vision statement card"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "DISCOVERY_LOG.md initialized"
+  - "Stage -6 summary in DISCOVERY_LOG.md"
+
+outcomes: null
+# AI populates on stage lock with:
+# vision_summary: "..."
+# key_decisions: [...]
+# carry_forward: [...]

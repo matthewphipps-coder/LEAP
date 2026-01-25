@@ -2,7 +2,7 @@
  * @file sidebar-ui.js
  * @purpose Sidebar component - floating pill with contextual per-page actions
  * @layer ui
- * @dependencies [constants.js]
+ * @dependencies [constants.js, card-service.js]
  * @dependents [app.js, page-router.js]
  * @locked false
  * @modifyImpact [sidebar navigation]
@@ -10,6 +10,8 @@
  */
 
 import { PAGE_SIDEBAR_ACTIONS } from '../../../core/constants.js';
+import { moveCard } from '../../../features/card/card-service.js';
+import { info } from '../../../core/logger.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -17,7 +19,7 @@ import { PAGE_SIDEBAR_ACTIONS } from '../../../core/constants.js';
 
 export const MODULE_CONTRACT = {
   provides: ['initSidebar', 'updateSidebarForPage', 'handleSidebarAction'],
-  requires: ['constants.js']
+  requires: ['constants.js', 'card-service.js']
 };
 
 // =============================================================================
@@ -53,6 +55,11 @@ export function initSidebar() {
     }
   });
 
+  // Listen for badge updates
+  window.addEventListener('card-update', (e) => {
+    updateBadges(e.detail.stats);
+  });
+
   console.log('[Sidebar] Initialized');
 }
 
@@ -71,6 +78,8 @@ export function updateSidebarForPage(pageId) {
 
   currentPage = pageId;
   const actions = PAGE_SIDEBAR_ACTIONS[pageId] || [];
+
+  console.log('[Sidebar] updateSidebarForPage:', pageId, 'Actions:', actions.length);
 
   // Hide sidebar if no actions for this page
   if (actions.length === 0) {
@@ -92,16 +101,21 @@ export function updateSidebarForPage(pageId) {
           title="${action.label}"
         >
           <i data-lucide="${action.icon}"></i>
-          ${action.badge ? `<span class="count-badge">${action.badge}</span>` : ''}
+          <span class="count-badge" style="display: none">0</span> <!-- Dynamic badge -->
           <span class="nav-tooltip">${action.label}</span>
         </button>
       `).join('')}
     </nav>
   `;
 
-  // Initialize Lucide icons for new content
+  // Initialize Lucide icons
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
+  }
+
+  // Setup Drop Targets (for My Work page logic)
+  if (pageId === 'my-work') {
+    setupDropTargets(sidebarEl);
   }
 
   // Set first action as active
@@ -114,11 +128,6 @@ export function updateSidebarForPage(pageId) {
 // ACTION HANDLING
 // =============================================================================
 
-/**
- * @function handleSidebarAction
- * @purpose Handle sidebar action button click
- * @param {string} actionId - The ID of the clicked action
- */
 export function handleSidebarAction(actionId) {
   // Update active state
   document.querySelectorAll('.nav-item').forEach(btn => {
@@ -143,24 +152,65 @@ export function handleSidebarAction(actionId) {
 }
 
 // =============================================================================
-// GETTERS
+// DROP & BADGE LOGIC
 // =============================================================================
 
-/**
- * @function getCurrentAction
- * @purpose Get the currently active sidebar action
- * @returns {string|null} Current action ID
- */
-export function getCurrentAction() {
-  return currentActiveAction;
+function setupDropTargets(sidebarEl) {
+  const buttons = sidebarEl.querySelectorAll('.nav-item');
+
+  buttons.forEach(btn => {
+    const actionId = btn.dataset.action;
+    // Only horizons are drop targets
+    if (['inbox', 'now', 'next', 'later', 'done'].includes(actionId)) {
+
+      btn.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Allow drop
+        btn.classList.add('drag-over');
+      });
+
+      btn.addEventListener('dragleave', () => {
+        btn.classList.remove('drag-over');
+      });
+
+      btn.addEventListener('drop', (e) => {
+        e.preventDefault();
+        btn.classList.remove('drag-over');
+        const cardId = e.dataTransfer.getData('text/plain');
+        if (cardId) {
+          moveCard(cardId, actionId);
+        }
+      });
+    }
+  });
 }
 
-/**
- * @function getActionsForPage
- * @purpose Get sidebar actions for a specific page
- * @param {string} pageId - Page ID
- * @returns {Array} Array of action objects
- */
-export function getActionsForPage(pageId) {
-  return PAGE_SIDEBAR_ACTIONS[pageId] || [];
+function updateBadges(stats) {
+  if (currentPage !== 'my-work' || !stats) return;
+
+  const horizons = stats.horizons || {};
+
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    const action = btn.dataset.action;
+    const badgeEl = btn.querySelector('.count-badge');
+
+    if (badgeEl && horizons[action] && action !== 'done') {
+      const data = horizons[action];
+      badgeEl.textContent = data.count;
+      badgeEl.style.display = data.count > 0 ? 'flex' : 'none';
+
+      // Priority Color Logic (Highest priority wins)
+      badgeEl.style.backgroundColor = ''; // Reset
+      badgeEl.style.color = '';
+
+      if (data.p1 > 0) {
+        badgeEl.style.backgroundColor = 'var(--badge-urgent)'; // Red
+        badgeEl.style.color = 'white';
+      } else if (data.p2 > 0) {
+        badgeEl.style.backgroundColor = 'var(--badge-warning)'; // Amber
+        badgeEl.style.color = 'white'; // Contrast check needed? Usually black on amber, but using white for consistency with dark mode
+      } else {
+        badgeEl.style.backgroundColor = 'var(--badge-neutral)'; // Gray/Default
+      }
+    }
+  });
 }

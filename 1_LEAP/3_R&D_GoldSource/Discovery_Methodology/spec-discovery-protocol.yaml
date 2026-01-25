@@ -23,6 +23,7 @@ phases:
 ## 🚧 Draft Lifecycle (Subject to R&D)
 # These phases are NOT yet formally agreed and are included for R&D context.
 draft_phases:
+  "-0.5": { title: "Deconstruction Audit", stage: "Technical Handoff", methodology: "Code Extraction", outcome: "deconstruction_audit.md", gold_source_check: "REQUIRED: Compare prototype plan against ARCHITECTURE.yaml" }
   "-4": { title: "Convergence & Scoping", mode: "CONVERGENT", goal: "Condense -5 output into a manageable bold scope", anti_fatigue: "FORCED BREAKPOINT: Reset context/fatigue" }
   "-3": { title: "Analysis & Risk", methodology: "Deep Dive Research", goal: "Thoroughly research bold ideas from every aspect (Risk/Feasibility)" }
   "-2": { title: "Define & Document", methodology: "Flexible (User Stories / Design Thinking / Diagrams)", goal: "Utilize various methodologies to formalize the design" }

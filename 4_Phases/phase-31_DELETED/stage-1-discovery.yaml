@@ -1,0 +1,42 @@
+metadata:
+  type: "stage-artifact"
+  stage: 1
+  name: "Discovery"
+  phase: 31
+  project: "LEAP-061 Card System"
+  date: "2026-01-24"
+
+improvement:
+  description: "Implement standardized Card System and Canvas Layout (LEAP-061)"
+  source: "LEAP-061 (Backlog), SPEC-004 (Discovery Lab)"
+  gap: |
+    Current GoldSource lacks a standardized card component and dynamic canvas layout.
+    SPEC-004 defines a rigorous card system with priority states, sizing, and AI-driven sorting.
+
+scaffoldReview:
+  impactedAreas:
+    - "src/ui/components/" (New components: nexus-card, nexus-canvas, nexus-nav)
+    - "src/ui/styles/" (New variables for card sizes, priority colors)
+    - "src/core/" (Potentially state management for cards)
+  existingCapabilities:
+    - "Design system tokens (glassmorphism) exist"
+    - "App Shell exists to host the canvas"
+    - "Base utility classes exist"
+
+workflow:
+  type: "full"
+  reason: "Major UI feature with complex interactions."
+  
+  # CRITICAL: Design Authority
+  designAuthority:
+    functional: "SPEC-004-card-canvas.yaml"
+    visual: "VISUAL-GUIDE.md"
+    constraint: "DO NOT use HTML prototype as design reference."
+
+outputs:
+  spec: "1_LEAP/2_Build_GoldSource/Functional_Specs/SPEC-004-card-canvas.yaml"
+  visualGuide: "1_LEAP/2_Build_GoldSource/Functional_Specs/VISUAL-GUIDE.md"
+  phaseFolder: "4_Phases/phase-31/"
+  taskChecklist: "4_Phases/phase-31/task.md"
+
+nextStep: "Stage 2: Research (in new conversation)"

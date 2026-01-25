@@ -1,0 +1,40 @@
+stage: -4
+title: "Convergence & Scoping"
+status: pending
+
+governance:
+  mode: "CONVERGENT"
+  forced_breakpoint: "REQUIRED: Recommend starting a NEW conversation after this stage"
+  socratic_check: "Is this scope truly 'manageable' while remaining 'bold'?"
+
+objectives:
+  - "Condense Stage -5 research into a manageable scope"
+  - "Define the 'Bold Outcome' boundaries"
+
+checklist:
+  filtered_research_to_core: false
+  defined_in_out_scope: false
+  documented_bold_outcome: false
+  ai_asked_if_missing: false
+  proceed_received: false
+  recommended_new_conversation: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "IN/OUT scope carousel"
+    - "Architecture sketch"
+    - "Success criteria table"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "Scope definition in DISCOVERY_LOG.md"
+
+outcomes: null
+# AI populates on stage lock with:
+# bold_outcome: "..."
+# in_scope: [...]
+# out_of_scope: [...]
+# phase_2_deferred: [...]
+# success_criteria: [...]

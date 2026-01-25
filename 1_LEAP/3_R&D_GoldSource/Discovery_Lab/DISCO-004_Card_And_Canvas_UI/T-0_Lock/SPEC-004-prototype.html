@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEC-004: Masonry Variant V2</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =============================================================================
+           DESIGN TOKENS
+           ============================================================================= */
+        :root {
+            --bg-primary: #0a0a0c;
+            --accent-primary: #62d84e;
+            --accent-glow: rgba(98, 216, 78, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --brand-primary: #62d84e;
+            --brand-secondary: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 20px;
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-full: 9999px;
+            --transition-fast: 150ms ease-out;
+            --transition-normal: 300ms ease-out;
+            --header-height: 64px;
+            --sidebar-width: 68px;
+            --sidebar-gap: 20px;
+            --z-sidebar: 100;
+            --z-header: 200;
+            --card-bg: rgba(20, 20, 25, 0.8);
+            --badge-urgent: #ef4444;
+            --badge-warning: #f59e0b;
+            --badge-neutral: rgba(255, 255, 255, 0.15);
+        }
+
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --card-bg: var(--glass-bg);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .plasma-background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .plasma-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            mix-blend-mode: screen;
+            opacity: 0.5;
+        }
+
+        .plasma-bubble.b1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation: float 45s infinite;
+        }
+
+        .plasma-bubble.b2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation: float 55s infinite reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .app-layout {
+            display: grid;
+            grid-template-areas: "header header" "sidebar canvas";
+            grid-template-columns: calc(var(--sidebar-width) + var(--sidebar-gap)*2) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            height: 100vh;
+            /* Fixed height to force internal scrolling */
+            overflow: hidden;
+        }
+
+        .header {
+            grid-area: header;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-header);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            height: var(--header-height);
+        }
+
+        .header-brand {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 600;
+            margin-right: var(--space-xl);
+        }
+
+        .page-tabs {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .page-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition-fast);
+            position: relative;
+        }
+
+        .page-tab:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .page-tab.active {
+            background: rgba(98, 216, 78, 0.15);
+            color: var(--brand-primary);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: calc(var(--header-height) + var(--sidebar-gap) + 40px);
+            left: var(--sidebar-gap);
+            width: var(--sidebar-width);
+            z-index: var(--z-sidebar);
+            padding: var(--space-md) var(--space-sm);
+            display: flex;
+            flex-direction: column;
+            border-radius: calc(var(--sidebar-width)/2);
+            /* Transition for show/hide (from GoldSource) */
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .nav-item.active {
+            color: var(--brand-primary);
+            background: rgba(98, 216, 78, 0.15);
+        }
+
+        .nav-separator {
+            width: 32px;
+            height: 1px;
+            background: var(--glass-border);
+            margin: var(--space-sm) 0;
+        }
+
+        .count-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: var(--badge-neutral);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .count-badge.warning {
+            background: var(--badge-warning);
+        }
+
+        .count-badge.urgent {
+            background: var(--badge-urgent);
+        }
+
+        .nav-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            transform: translateY(-50%) translateX(16px);
+        }
+
+        /* HEADER ACTIONS CSS (From GoldSource) */
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .btn-icon:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle::after {
+            content: '🌙';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            transition: all var(--transition-normal);
+        }
+
+        .light-theme .theme-toggle::after {
+            content: '☀️';
+            left: calc(100% - 22px);
+        }
+
+        .canvas-container {
+            grid-area: canvas;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* Container doesn't scroll, inner area does */
+            height: 100%;
+        }
+
+        .horizon-header {
+            flex-shrink: 0;
+            padding: var(--space-lg) var(--space-xl) var(--space-md);
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: capitalize;
+        }
+
+        .nexus-scroll-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 var(--space-xl) var(--space-xl);
+        }
+
+        .nexus-canvas.grid-mode {
+            /* MASONRY LAYOUT: 3 columns, variable heights */
+            display: block;
+            column-count: 3;
+            column-gap: var(--space-xl);
+            align-content: start;
+            padding-bottom: 100px;
+        }
+
+        /* Responsiveness for Masonry */
+        @media (max-width: 1200px) {
+            .nexus-canvas.grid-mode {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .nexus-canvas.grid-mode {
+                column-count: 1;
+            }
+        }
+
+        /* List Mode & Done Mode share styles */
+        .nexus-canvas.list-mode {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xl);
+            padding-bottom: 100px;
+        }
+
+        /* Done Mode specific: Less gap, no groups to separate */
+        .nexus-canvas.done-mode {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            padding-bottom: 100px;
+        }
+
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            min-height: 50px;
+        }
+
+        .list-group-header {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .list-group.drag-group-active {
+            background: rgba(98, 216, 78, 0.02);
+            border-radius: var(--radius-md);
+        }
+
+        /* List/Done Mode Card styling */
+        .nexus-canvas.list-mode .nexus-card,
+        .nexus-canvas.done-mode .nexus-card {
+            width: 100%;
+            /* Force full width in list */
+            display: flex;
+            /* Restore flex layout for list items */
+            break-inside: auto;
+            margin-bottom: 0;
+            padding: var(--space-md);
+            flex-direction: row;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .nexus-canvas.list-mode .card-header,
+        .nexus-canvas.done-mode .card-header {
+            margin: 0;
+            min-width: 120px;
+        }
+
+        .nexus-canvas.list-mode .card-title,
+        .nexus-canvas.done-mode .card-title {
+            margin: 0;
+            flex: 1;
+            font-size: var(--text-base);
+        }
+
+        .nexus-canvas.list-mode .card-summary,
+        .nexus-canvas.done-mode .card-summary {
+            display: none;
+        }
+
+        .nexus-canvas.list-mode .card-footer,
+        .nexus-canvas.done-mode .card-footer {
+            margin: 0;
+            min-width: 100px;
+            justify-content: flex-end;
+        }
+
+        .nexus-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            border-radius: var(--radius-md);
+            /* MORE PADDING: "More detail on cards" */
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            /* MASONRY CRITICAL: Prevent split across columns */
+            break-inside: avoid;
+            margin-bottom: var(--space-xl);
+            /* Bottom margin creates vertical gap in columns */
+        }
+
+        .nexus-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        /* HEIGHT VARIANCE: Driven by content */
+        .nexus-card[data-size="compact"] {
+            min-height: auto;
+            /* Let content drive height */
+        }
+
+        .nexus-card[data-size="medium"] {
+            min-height: auto;
+        }
+
+        .nexus-card[data-size="large"] {
+            min-height: auto;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-md);
+            /* More whitespace */
+        }
+
+        .card-meta {
+            font-size: var(--text-sm);
+            /* Legible */
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            /* Larger, more readable */
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .card-summary {
+            font-size: var(--text-base);
+            /* Larger body text */
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-lg);
+            flex-grow: 1;
+            /* Show full text to create height variance */
+            display: block;
+        }
+
+        .nexus-card[data-size="compact"] .card-summary {
+            /* Show limited text for compact to make them shorter */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: var(--space-sm);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-top: auto;
+            align-items: center;
+        }
+
+        .card-priority-badge {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .card-priority-badge.p1 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .card-priority-badge.p2 {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .card-priority-badge.p3 {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-color: var(--glass-border);
+        }
+
+        .nexus-card.dragging {
+            opacity: 0.5;
+            border: 2px dashed var(--brand-primary);
+        }
+
+        /* INSERTION MARKERS */
+        .nexus-canvas.grid-mode .nexus-card.drop-before {
+            border-top: 4px solid var(--brand-primary);
+            margin-top: -4px;
+            transition: none;
+        }
+
+        .nexus-canvas.list-mode .nexus-card.drop-before {
+            border-top: 2px solid var(--brand-primary);
+            margin-top: -2px;
+            transition: none;
+        }
+
+        .list-group.drag-over-empty {
+            outline: 2px dashed var(--brand-primary);
+            background: rgba(98, 216, 78, 0.05);
+        }
+
+        /* Updates Badge (Neutral count overlay) */
+        .card-updates-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: transparent;
+            /* No trim */
+            border: none;
+            position: relative;
+            /* For absolute positioning of count */
+            width: 20px;
+            height: 20px;
+            margin-left: auto;
+            color: var(--text-secondary);
+        }
+
+        .card-updates-badge svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2px;
+            margin: 0;
+        }
+
+        /* The number inside */
+        .badge-count {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+            /* Center visual alignment */
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--text-primary);
+            /* Contrast against transparency */
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        @keyframes pulse-border {
+            0% {
+                border-color: var(--badge-urgent);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                border-color: var(--badge-urgent);
+            }
+        }
+
+        .nexus-card[data-animate="true"] {
+            animation: pulse-border 2s infinite;
+            border-color: var(--badge-urgent);
+        }
+
+        /* LAYOUT TOGGLES */
+        .layout-toggles {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 2px;
+            margin-left: auto;
+            /* Push to right of sub-header */
+        }
+
+        .layout-toggle-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .layout-toggle-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .layout-toggle-btn.active {
+            background: var(--glass-bg);
+            color: var(--brand-primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* FREE FORM MODE STYLES */
+        .nexus-canvas.freeform-mode {
+            display: block;
+            /* No grid/flex */
+            position: relative;
+            min-height: 800px;
+            /* Ensure space for dragging */
+            /* Remove column properties */
+            column-count: auto;
+            column-gap: 0;
+        }
+
+        .nexus-canvas.freeform-mode .nexus-card {
+            position: absolute;
+            width: 300px;
+            /* Fixed width */
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal), top 0.3s ease, left 0.3s ease;
+            margin: 0;
+            z-index: 1;
+        }
+
+        /* Hover Z-Index for Free Form */
+        .nexus-canvas.freeform-mode .nexus-card:hover {
+            z-index: 50;
+            /* No !important */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="plasma-background">
+        <div class="plasma-bubble b1"></div>
+        <div class="plasma-bubble b2"></div>
+    </div>
+
+    <div class="app-layout">
+        <header class="header">
+            <div class="header-brand">NEXUS</div>
+            <nav class="page-tabs">
+                <button class="page-tab active" data-page="my-work">
+                    <i data-lucide="layout-dashboard" style="width:20px;"></i>
+                    <span class="count-badge urgent" id="tab-badge-my-work">3</span>
+                    <span class="nav-tooltip">My Work</span>
+                </button>
+                <button class="page-tab" data-page="incidents">
+                    <i data-lucide="alert-triangle" style="width:20px;"></i>
+                    <span class="nav-tooltip">Incidents</span>
+                </button>
+            </nav>
+            <div style="margin-left:auto; display:flex; gap:12px; align-items: center;">
+                <div class="has-badge" style="position:relative;">
+                    <button class="btn-icon" id="notifications-btn" title="Notifications">
+                        <i data-lucide="bell"></i>
+                    </button>
+                    <span class="count-badge warning" id="notification-badge" style="top:-2px; right:-2px;">5</span>
+                </div>
+
+                <button class="btn-icon" id="settings-btn" title="Settings">
+                    <i data-lucide="settings"></i>
+                </button>
+
+                <div class="theme-toggle" id="theme-toggle" title="Toggle theme" onclick="toggleTheme()"></div>
+
+                <div
+                    style="width:32px; height:32px; background:linear-gradient(135deg, #62d84e, #8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; cursor: pointer;">
+                    MP</div>
+            </div>
+        </header>
+
+        <aside class="sidebar glass" id="sidebar-droppable">
+            <nav class="sidebar-nav">
+                <button class="nav-item" data-horizon="inbox" onclick="filterHorizon('inbox')">
+                    <i data-lucide="inbox"></i>
+                    <span class="count-badge" id="badge-inbox">3</span>
+                    <span class="nav-tooltip">Inbox</span>
+                </button>
+                <button class="nav-item active" data-horizon="now" onclick="filterHorizon('now')">
+                    <i data-lucide="zap"></i>
+                    <span class="count-badge urgent" id="badge-now">2</span>
+                    <span class="nav-tooltip">Now</span>
+                </button>
+                <button class="nav-item" data-horizon="next" onclick="filterHorizon('next')">
+                    <i data-lucide="clock"></i>
+                    <span class="count-badge warning" id="badge-next">5</span>
+                    <span class="nav-tooltip">Next</span>
+                </button>
+                <button class="nav-item" data-horizon="later" onclick="filterHorizon('later')">
+                    <i data-lucide="calendar"></i>
+                    <span class="count-badge" id="badge-later">8</span>
+                    <span class="nav-tooltip">Later</span>
+                </button>
+                <button class="nav-item" data-horizon="all" onclick="filterHorizon('all')">
+                    <i data-lucide="list"></i>
+                    <span class="count-badge" id="badge-all"></span>
+                    <span class="nav-tooltip">All</span>
+                </button>
+                <button class="nav-item" data-horizon="done" onclick="filterHorizon('done')">
+                    <i data-lucide="check-circle"></i>
+                    <span class="count-badge" id="badge-done"></span>
+                    <span class="nav-tooltip">Done</span>
+                </button>
+
+                <div class="nav-separator"></div>
+
+                <button class="nav-item" id="ai-resort-btn" onclick="triggerAIResort()">
+                    <i data-lucide="sparkles"></i>
+                    <span class="nav-tooltip">Optimise</span>
+                </button>
+            </nav>
+        </aside>
+
+        <main class="canvas-container" id="main-canvas">
+            <div class="horizon-header" style="display:flex; align-items:center;">
+                <span id="horizon-title">Now</span>
+                <!-- Layout Toggles -->
+                <div class="layout-toggles" id="layout-controls">
+                    <button class="layout-toggle-btn active" id="btn-layout-masonry" onclick="toggleLayout('masonry')"
+                        title="Masonry View">
+                        <i data-lucide="layout-grid"></i>
+                    </button>
+                    <button class="layout-toggle-btn" id="btn-layout-freeform" onclick="toggleLayout('freeform')"
+                        title="Free Form Canvas">
+                        <i data-lucide="move"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="nexus-scroll-area">
+                <div class="nexus-canvas grid-mode" id="card-canvas"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let cards = [
+            { id: 'c1', title: 'Server Outage (INC-102)', summary: 'Production DB cluster failure affecting 400 users. The primary shard is unresponsive and failover automation stalled due to a timeout configuration error.', priority: 'P1', score: 0.95, horizon: 'now', size: 'large', type: 'incident', time: '10m ago', updates: 12 },
+            { id: 'c2', title: 'Deploy Hotfix', summary: 'Security patch for API gateway.', priority: 'P1', score: 0.85, horizon: 'now', size: 'medium', type: 'change', time: '1h ago', animate: true, updates: 3 },
+            { id: 'c3', title: 'Review Q3 Goals', summary: 'Quarterly planning document draft. We need to align on the 3 core pillars: Velocity, Quality, and User Joy. Please review the attached slide deck and provide comments on the financial projections section specifically.', priority: 'P2', score: 0.6, horizon: 'next', size: 'medium', type: 'task', time: '2h ago', updates: 0 },
+            { id: 'c4', title: 'Update Docs', summary: 'Fix typo in README.', priority: 'P3', score: 0.3, horizon: 'next', size: 'compact', type: 'task', time: '1d ago', updates: 1 },
+            { id: 'c5', title: 'Onboard New Hire', summary: 'Setup laptop, create AWS IAM user, invite to Slack, and schedule intro meetings with the frontend and backend leads. Don\'t forget to order the welcome swag kit.', priority: 'P2', score: 0.55, horizon: 'next', size: 'medium', type: 'task', time: '3h ago', updates: 5 },
+            { id: 'c6', title: 'Legacy Migration', summary: 'Move user data to new schema. This involves a dual-write period, backfilling 5M records, and then switching reads. We are currently at 45% backfill completion.', priority: 'P3', score: 0.2, horizon: 'later', size: 'compact', type: 'project', time: '1w ago', updates: 0 },
+            { id: 'c7', title: 'New Feature Spec', summary: 'Draft specification for Search v2. Key requirements include fuzzy matching, geo-ranking, and <50ms latency p99. Needs sign-off from Product and Eng.', priority: 'P2', score: 0.55, horizon: 'inbox', size: 'medium', type: 'doc', time: 'Just now', inbox: true, updates: 8 },
+            { id: 'c9', title: 'Team Sync', summary: 'Weekly standup notes.', priority: 'P3', score: 0.4, horizon: 'inbox', size: 'compact', type: 'meeting', time: 'Yesterday', inbox: true, updates: 2 },
+            { id: 'c10', title: 'Extra Now Item', summary: 'Investigate the root cause of the latency spike in the payment gateway. Initial logs suggest a deadlock in the transaction table, but we need to rule out the new redis caching layer.', priority: 'P1', score: 0.95, horizon: 'now', size: 'medium', type: 'task', time: '5m ago', updates: 24 },
+            { id: 'c13', title: 'Client Feedback', summary: 'Meeting notes from the session with Acme Corp. They loved the new dashboard but found the reporting export too slow (took >40s). They also requested a dark mode for the mobile app.', priority: 'P2', score: 0.45, horizon: 'later', size: 'medium', type: 'meeting', time: '2d ago', updates: 4 },
+            { id: 'c14', title: 'Design System Audit', summary: 'Audit all buttons.', priority: 'P3', score: 0.1, horizon: 'later', size: 'compact', type: 'task', time: '3d ago', updates: 0 },
+            { id: 'c15', title: 'Performance Optimization', summary: 'The user profile load time has regressed by 200ms. Profiling shows excessive re-renders in the React tree. We need to memoize the Avatar component and virtualize the activity list.', priority: 'P2', score: 0.65, horizon: 'now', size: 'medium', type: 'task', time: '30m ago', updates: 1 },
+            { id: 'c16', title: 'Q4 Budget', summary: 'Spreadsheet.', priority: 'P3', score: 0.25, horizon: 'next', size: 'compact', type: 'doc', time: '4h ago', updates: 0 },
+            { id: 'c17', title: 'Architecture Review', summary: 'Proposal to switch from REST to GraphQL for the new mobile API. This would reduce over-fetching but requires significant backend changes. We need to evaluate the cost-benefit analysis before proceeding.', priority: 'P2', score: 0.7, horizon: 'later', size: 'large', type: 'doc', time: '1d ago', updates: 15 },
+            // Done items
+            { id: 'c11', title: 'Previous Incident', summary: 'Resolved last week.', priority: 'P1', score: 0.1, horizon: 'done', size: 'compact', type: 'incident', time: '3d ago', doneAt: '2025-01-21T10:00:00', updates: 0 },
+            { id: 'c12', title: 'Old Task', summary: 'Completed.', priority: 'P3', score: 0.05, horizon: 'done', size: 'compact', type: 'task', time: '5d ago', doneAt: '2025-01-19T14:30:00', updates: 0 }
+        ];
+
+        let currentHorizon = 'now';
+        let layoutMode = 'masonry'; // 'masonry' or 'freeform'
+        let draggedId = null;
+
+        // Free form drag state
+        let isFreeDragging = false;
+        let freeDragOffset = { x: 0, y: 0 };
+        let freeDragEl = null;
+
+        function init() {
+            renderCards();
+            updateBadges();
+            initDragAndDrop(); // Basic drag and drop (Horizon moving)
+        }
+
+        function toggleLayout(mode) {
+            if (layoutMode === mode) return;
+
+            // 1. If switching TO freeform, capture current positions from the Grid layout first
+            if (mode === 'freeform' && layoutMode === 'masonry') {
+                const container = document.getElementById('card-canvas');
+                const cardEls = Array.from(container.children);
+                const containerRect = container.getBoundingClientRect();
+
+                cardEls.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const cardData = cards.find(c => c.id === el.dataset.id);
+
+                    // Store relative position ONLY if not already saved (preserve manual free-form positions)
+                    if (cardData && (cardData.x === undefined || cardData.y === undefined)) {
+                        cardData.x = rect.left - containerRect.left + container.scrollLeft;
+                        cardData.y = rect.top - containerRect.top + container.scrollTop;
+                    }
+                });
+            }
+
+            // 2. Update State
+            layoutMode = mode;
+
+            // 3. Update UI Buttons
+            document.querySelectorAll('.layout-toggle-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-layout-${mode}`).classList.add('active');
+
+            // 4. Update Header Buttons Visibility
+            if (mode === 'freeform') {
+                // In freeform we might want to disable sorting or other grid-specific controls if they existed
+            }
+
+            // 5. Full Re-render
+            // This ensures cards get re-created with correct attributes (draggable=false)
+            // and correct event listeners (custom mousedown vs native dragstart)
+            renderCards();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('card-canvas');
+            // If we are re-rendering in freeform mode (e.g. changing horizon filtered list), 
+            // we should clear container but we need to respect mode
+            container.innerHTML = '';
+
+            // Re-apply correct classes based on state
+            container.className = 'nexus-canvas';
+            if (currentHorizon === 'all') {
+                container.classList.add('list-mode');
+                // Hide toggles in list mode?
+                document.getElementById('layout-controls').style.opacity = '0';
+                document.getElementById('layout-controls').style.pointerEvents = 'none';
+                renderListMode(container);
+            } else if (currentHorizon === 'done') {
+                container.classList.add('done-mode');
+                document.getElementById('layout-controls').style.opacity = '0';
+                document.getElementById('layout-controls').style.pointerEvents = 'none';
+                renderDoneMode(container);
+            } else {
+                // Active Horizon -> Show Toggles
+                document.getElementById('layout-controls').style.opacity = '1';
+                document.getElementById('layout-controls').style.pointerEvents = 'auto';
+
+                if (layoutMode === 'freeform') {
+                    container.classList.add('freeform-mode');
+                    renderFreeForm(container);
+                } else {
+                    container.classList.add('grid-mode');
+                    renderGridMode(container);
+                }
+            }
+            lucide.createIcons();
+        }
+
+        function renderGridMode(container) {
+            const filtered = cards.filter(c => {
+                if (currentHorizon === 'inbox') return c.inbox === true;
+                return c.horizon === currentHorizon && !c.inbox;
+            });
+            filtered.sort((a, b) => b.score - a.score);
+            filtered.forEach(c => {
+                const cardEl = createCardElement(c);
+                // Grid Drag Targets
+                configureDragListeners(cardEl);
+                container.appendChild(cardEl);
+            });
+            if (filtered.length === 0) container.innerHTML = emptyState();
+        }
+
+        function renderFreeForm(container) {
+            const filtered = cards.filter(c => {
+                if (currentHorizon === 'inbox') return c.inbox === true;
+                return c.horizon === currentHorizon && !c.inbox;
+            });
+            // No sort needed visually as we use absolute pos, but loop order matters for z-index layering baseline
+            filtered.forEach(c => {
+                const cardEl = createCardElement(c);
+                // Apply stored position
+                if (c.x !== undefined) {
+                    cardEl.style.left = c.x + 'px';
+                    cardEl.style.top = c.y + 'px';
+                } else {
+                    // Fallback if rendering fresh in free form without history (random scatter?)
+                    cardEl.style.left = '50px';
+                    cardEl.style.top = '50px';
+                }
+
+                // Free Form Specific Drag Logic
+                cardEl.addEventListener('mousedown', handleFreeFormMouseDown);
+
+                container.appendChild(cardEl);
+            });
+            if (filtered.length === 0) container.innerHTML = emptyState();
+        }
+
+        function renderListMode(container) {
+            const groups = ['Inbox', 'Now', 'Next', 'Later'];
+            groups.forEach(groupName => {
+                const grpLower = groupName.toLowerCase();
+                let subset = [];
+                if (grpLower === 'inbox') subset = cards.filter(c => c.inbox);
+                else subset = cards.filter(c => c.horizon === grpLower && !c.inbox);
+
+                const groupTitle = document.createElement('div');
+                groupTitle.className = 'list-group-header';
+                groupTitle.textContent = groupName;
+                container.appendChild(groupTitle);
+
+                const groupContainer = document.createElement('div');
+                groupContainer.className = 'list-group';
+                groupContainer.dataset.horizon = grpLower;
+
+                // Group Drag Listeners
+                groupContainer.addEventListener('dragover', handleGroupContainerDragOver);
+                groupContainer.addEventListener('dragleave', handleGroupContainerDragLeave);
+                groupContainer.addEventListener('drop', handleGroupContainerDrop);
+
+                subset.sort((a, b) => b.score - a.score);
+                subset.forEach(c => {
+                    const cardEl = createCardElement(c);
+                    configureDragListeners(cardEl);
+                    groupContainer.appendChild(cardEl);
+                });
+                if (subset.length === 0) {
+                    groupContainer.innerHTML = '<div style="color:var(--text-secondary); font-size:12px; font-style:italic; padding:8px;">Empty</div>';
+                }
+                container.appendChild(groupContainer);
+            });
+        }
+
+        function renderDoneMode(container) {
+            // Flat list, sorted by doneAt (descending)
+            const filtered = cards.filter(c => c.horizon === 'done' && !c.inbox);
+
+            // Sort by doneAt if available, else fallback
+            filtered.sort((a, b) => {
+                const tA = new Date(a.doneAt || 0);
+                const tB = new Date(b.doneAt || 0);
+                return tB - tA;
+            });
+
+            filtered.forEach(c => {
+                // Enabled dragging (true) to allow moving back to horizons
+                // But DO NOT add dragover/drop listeners to the card el itself (prevent reordering)
+                const cardEl = createCardElement(c, true);
+                container.appendChild(cardEl);
+            });
+            if (filtered.length === 0) container.innerHTML = emptyState();
+        }
+
+        function emptyState() {
+            return `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-secondary);">No cards in this horizon.</div>`;
+        }
+
+        function createCardElement(c, draggable = true) {
+            const card = document.createElement('div');
+            card.className = `nexus-card`;
+            if (draggable && layoutMode !== 'freeform') {
+                card.draggable = true;
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            } else {
+                card.draggable = false;
+                if (!draggable) {
+                    card.style.cursor = 'default';
+                    card.style.opacity = '0.8';
+                }
+            }
+
+            card.dataset.id = c.id;
+            card.dataset.size = c.size; // in list modes css overrides this
+            if (c.stale) card.dataset.stale = "true";
+
+            const pClass = c.priority === 'P1' ? 'p1' : (c.priority === 'P2' ? 'p2' : 'p3');
+
+            // Show time: if done, show done time? keeping simplistic for prototype
+            let timeDisplay = c.time;
+            if (c.horizon === 'done' && c.doneAt) {
+                timeDisplay = 'Done ' + new Date(c.doneAt).toLocaleDateString();
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-meta">${c.type.toUpperCase()}</span>
+                    <span class="card-priority-badge ${pClass}">${c.priority}</span>
+                </div>
+                <div class="card-title">${c.title}</div>
+                <div class="card-summary">${c.summary}</div>
+                <div class="card-footer">
+                    <span><i data-lucide="clock" style="width:12px;display:inline;"></i> ${timeDisplay}</span>
+                    ${c.updates > 0 ? `<span class="card-updates-badge"><i data-lucide="message-square"></i><span class="badge-count">${c.updates}</span></span>` : ''}
+                </div>
+            `;
+
+            if (c.animate) {
+                card.dataset.animate = "true";
+            } else {
+                delete card.dataset.animate;
+            }
+
+            // Click handler
+            card.addEventListener('click', () => {
+                // Placeholder for logic
+                console.log("Card clicked", c.id);
+            });
+
+            return card;
+        }
+
+        function filterHorizon(horizon) {
+            currentHorizon = horizon;
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`[data-horizon="${horizon}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Update Fixed Sub-Header Text
+            const titleEl = document.getElementById('horizon-title');
+            if (headerMap[horizon]) titleEl.textContent = headerMap[horizon];
+            else titleEl.textContent = horizon.charAt(0).toUpperCase() + horizon.slice(1);
+
+            renderCards();
+        }
+
+        // Helper to attach listeners primarily for Grid/List mode
+        function configureDragListeners(cardEl) {
+            cardEl.addEventListener('dragover', handleCardDragOver);
+            cardEl.addEventListener('dragleave', handleCardDragLeave);
+            cardEl.addEventListener('drop', handleCardDrop);
+        }
+
+        const headerMap = {
+            'inbox': 'Inbox',
+            'now': 'Now',
+            'next': 'Next',
+            'later': 'Later',
+            'all': 'All Items',
+            'done': 'Done'
+        };
+
+        function updateBadges() {
+            // Horizons to show badges for: Inbox, Now, Next, Later, All
+            // DONE should NOT have a badge per user request.
+            const horizons = ['inbox', 'now', 'next', 'later', 'all'];
+
+            horizons.forEach(h => {
+                let subset = [];
+                if (h === 'inbox') subset = cards.filter(c => c.inbox);
+                else if (h === 'all') subset = cards.filter(c => c.horizon !== 'done'); // All Active
+                else subset = cards.filter(c => c.horizon === h && !c.inbox);
+
+                const count = subset.length;
+                const badge = document.getElementById(`badge-${h}`);
+
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count === 0 ? 'none' : 'flex';
+
+                    const maxScore = Math.max(...subset.map(c => c.score), 0);
+
+                    // Reset class
+                    badge.className = 'count-badge';
+
+                    // Apply color
+                    if (maxScore >= 0.8) badge.classList.add('urgent');
+                    else if (maxScore >= 0.5) badge.classList.add('warning');
+                }
+            });
+
+            // Explicitly hide Done badge if it exists
+            const doneBadge = document.getElementById('badge-done');
+            if (doneBadge) doneBadge.style.display = 'none';
+
+            // "My Work" Tab Badge Logic (All Active Work)
+            const myWorkCards = cards.filter(c => c.horizon !== 'done');
+            const tabBadge = document.getElementById('tab-badge-my-work');
+
+            if (tabBadge) {
+                const count = myWorkCards.length;
+                tabBadge.textContent = count;
+                tabBadge.className = 'count-badge'; // Reset
+
+                if (count > 0) {
+                    const maxScore = Math.max(...myWorkCards.map(c => c.score), 0);
+                    if (maxScore >= 0.8) tabBadge.classList.add('urgent');
+                    else if (maxScore >= 0.5) tabBadge.classList.add('warning');
+                } else {
+                    tabBadge.style.display = 'none';
+                }
+                // Ensure if count > 0 it shows
+                tabBadge.style.display = count === 0 ? 'none' : 'flex';
+            }
+        }
+
+        /* DRAG EVENTS */
+        function handleDragStart(e) {
+            draggedId = this.dataset.id;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.drop-before').forEach(el => el.classList.remove('drop-before'));
+            document.querySelectorAll('.drag-group-active').forEach(el => el.classList.remove('drag-group-active'));
+            draggedId = null;
+        }
+
+        function initDragAndDrop() {
+            const targets = document.querySelectorAll('.nav-item[data-horizon]');
+            targets.forEach(target => {
+                target.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    target.style.transform = 'scale(1.2)';
+                });
+                target.addEventListener('dragleave', (e) => {
+                    target.style.transform = '';
+                });
+                target.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    target.style.transform = '';
+                    const horizon = target.dataset.horizon;
+                    moveCardToHorizon(draggedId, horizon);
+                });
+            });
+        }
+
+        function handleCardDragOver(e) {
+            // Prevent drag interactions in Done view (cards there dont have these listeners, but check anyway)
+            if (currentHorizon === 'done') return;
+            if (draggedId === this.dataset.id) return;
+            e.preventDefault();
+            this.classList.add('drop-before');
+        }
+        function handleCardDragLeave(e) {
+            this.classList.remove('drop-before');
+        }
+        function handleCardDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('drop-before');
+            insertCardBefore(draggedId, this.dataset.id);
+        }
+
+        function handleGroupContainerDragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-group-active');
+        }
+        function handleGroupContainerDragLeave(e) {
+            this.classList.remove('drag-group-active');
+        }
+        function handleGroupContainerDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-group-active');
+            moveCardToHorizon(draggedId, this.dataset.horizon);
+        }
+
+        function insertCardBefore(activeId, targetId) {
+            const activeCard = cards.find(c => c.id === activeId);
+            const targetCard = cards.find(c => c.id === targetId);
+            if (!activeCard || !targetCard) return;
+
+            // If moving FROM done, remove doneAt
+            if (activeCard.horizon === 'done') delete activeCard.doneAt;
+
+            activeCard.horizon = targetCard.horizon;
+            activeCard.inbox = targetCard.inbox;
+            activeCard.score = targetCard.score + 0.001;
+            cards.sort((a, b) => b.score - a.score);
+            renderCards();
+            updateBadges();
+        }
+
+        function moveCardToHorizon(id, newHorizon) {
+            const card = cards.find(c => c.id === id);
+            if (!card) return;
+
+            if (newHorizon === 'inbox') {
+                card.inbox = true;
+                delete card.doneAt;
+            } else if (newHorizon === 'all') {
+                filterHorizon('all');
+                return;
+            } else if (newHorizon === 'done') {
+                card.horizon = 'done';
+                card.inbox = false;
+                card.doneAt = new Date().toISOString(); // Set Done Timestamp
+            } else {
+                card.horizon = newHorizon;
+                card.inbox = false;
+                delete card.doneAt; // Clear if re-opening
+            }
+            updateBadges();
+            renderCards();
+        }
+
+        /* FREE FORM DRAGGING LOGIC */
+        function handleFreeFormMouseDown(e) {
+            if (e.button !== 0) return; // Only left click
+
+            isFreeDragging = true;
+            freeDragEl = this;
+            const rect = this.getBoundingClientRect();
+            // Get offset from top-left of card
+            freeDragOffset.x = e.clientX - rect.left;
+            freeDragOffset.y = e.clientY - rect.top;
+
+            this.style.zIndex = 1000; // Popped to top
+            this.style.transition = 'none'; // Disable transition for direct follow
+
+            document.addEventListener('mousemove', handleFreeFormMouseMove);
+            document.addEventListener('mouseup', handleFreeFormMouseUp);
+        }
+
+        function handleFreeFormMouseMove(e) {
+            if (!isFreeDragging || !freeDragEl) return;
+            e.preventDefault();
+
+            const container = document.getElementById('card-canvas');
+            const containerRect = container.getBoundingClientRect();
+
+            // Calculate new relative position
+            let newX = e.clientX - containerRect.left - freeDragOffset.x + container.scrollLeft;
+            let newY = e.clientY - containerRect.top - freeDragOffset.y + container.scrollTop;
+
+            freeDragEl.style.left = newX + 'px';
+            freeDragEl.style.top = newY + 'px';
+        }
+
+        function handleFreeFormMouseUp(e) {
+            if (!isFreeDragging) return;
+            isFreeDragging = false;
+
+            document.removeEventListener('mousemove', handleFreeFormMouseMove);
+            document.removeEventListener('mouseup', handleFreeFormMouseUp);
+
+            if (freeDragEl) {
+                // Save new coordinates to data model
+                const id = freeDragEl.dataset.id;
+                const card = cards.find(c => c.id === id);
+                if (card) {
+                    card.x = parseFloat(freeDragEl.style.left);
+                    card.y = parseFloat(freeDragEl.style.top);
+                }
+
+                freeDragEl.style.zIndex = ''; // Reset explicit z-index (hover will still apply)
+                freeDragEl.style.transition = ''; // Restore transition
+                freeDragEl = null;
+            }
+        }
+
+        window.triggerAIResort = function () {
+            // Simulate AI Re-sort
+            // Just slightly shuffle scores and re-render
+            const btn = document.getElementById('ai-resort-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="spin"></i>`;
+
+            // Add spin animation style if not exists
+            if (!document.getElementById('spin-style')) {
+                const style = document.createElement('style');
+                style.id = 'spin-style';
+                style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } .spin { animation: spin 1s linear infinite; }`;
+                document.head.appendChild(style);
+            }
+
+            setTimeout(() => {
+                cards.forEach(c => {
+                    if (c.horizon !== 'done') {
+                        // Random adjust score slightly
+                        c.score = Math.random();
+                    }
+                });
+                renderCards();
+                updateBadges();
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
+            }, 800);
+        };
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+
+        window.filterHorizon = filterHorizon;
+        window.toggleLayout = toggleLayout;
+        window.toggleTheme = toggleTheme;
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

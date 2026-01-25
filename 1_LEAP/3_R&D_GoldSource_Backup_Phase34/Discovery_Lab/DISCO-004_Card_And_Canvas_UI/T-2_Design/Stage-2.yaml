@@ -1,0 +1,43 @@
+stage: -2
+title: "Define & Document"
+status: locked
+
+governance:
+  mode: "Flexible Methodology"
+  socratic_check: "Does this documentation describe the HOW without writing the code?"
+
+objectives:
+  - "Formalize the logic and design"
+  - "Select and apply the best methodology (User Stories, Diagrams, etc.)"
+
+checklist:
+  methodology_selected: true
+  core_logic_documented: true
+  diagrams_created: true
+  ai_asked_if_missing: true
+  proceed_received: true
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "HTML prototype"
+    - "Carousel of UI states"
+    - "Component diagrams"
+    - "User story cards"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "Logic breakdown in DISCOVERY_LOG.md"
+  - "Mermaid diagram code"
+
+outcomes:
+  design_methodology: "Glassmorphic HSL Tokenized Design System"
+  components:
+    - "nexus-canvas (CSS Grid Orchestrator)"
+    - "nexus-card (Multi-zone Adaptive Component)"
+    - "nexus-nav (Integrated Filter & Badge System)"
+  user_flows:
+    - "New -> Allocation -> Active Focus -> Resolve"
+    - "Ritual Re-sort (AI-driven spatial layout)"
+  prototype_path: "/Users/matthew.phipps/Documents/LEAP/1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-004_Card_And_Canvas_UI/T-2_Design/reference_nexus_v4.html"

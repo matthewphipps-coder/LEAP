@@ -1,0 +1,166 @@
+---
+spec_id: SPEC-004
+title: Card & Canvas UI (Recovery V2)
+version: 2.0.0
+status: draft
+created: 2026-01-25
+extends: SPEC-003
+dependencies:
+  - SPEC-003-app-shell.yaml
+  - SPEC-002-design-system.yaml
+related_discoveries:
+  - DISCO-004_Card_And_Canvas_UI
+  - DISCO-001_NEXUS_Workbench
+
+# =============================================================================
+# RECOVERY NOTE (V2)
+# =============================================================================
+# This spec was reverse-engineered from valid prototype HTML to resolve 
+# implementation discrepancies. It REPLACES v1.
+# Key Delta: Mandates CSS Multi-column (Masnory) instead of Grid.
+
+visual_guide: VISUAL-GUIDE-v2.md
+design_reference: SPEC-004-prototype.html
+
+# =============================================================================
+# CORE LAYOUT REQUIREMENTS
+# =============================================================================
+
+layout:
+  engine: "CSS Multi-column Layout" # CRITICAL: Not CSS Grid
+  behavior: "Masonry"
+  
+  columns:
+    desktop: 3
+    laptop: 3  # User mandated 3 columns for laptop too
+    mobile: "Not Supported (Desktop/Tablet only)"
+  
+    logic: >
+      Cards flow vertically into 3 columns. Variable height is preserved.
+      Cards must NOT be forced into row bands.
+
+  scope:
+    masonry_views: [Inbox, Now, Next, Later]
+    list_views: [All, Done]
+
+  canvas_modes:
+    grid_mode:
+      - Default view
+      - Uses `column-count`
+      - Gap: 32px (var(--space-xl))
+    
+    list_mode:
+      - Activated by 'All' horizon
+      - Vertical flex column
+      - Grouped by Horizon Header
+    
+  canvas_modes:
+    grid_mode:
+      - Default view
+      - Uses `column-count`
+      - Gap: 32px (var(--space-xl))
+    
+    list_mode:
+      - Activated by 'All' horizon
+      - Structure: Vertical groups (Inbox, Now, Next, Later)
+      - Drag Logic: Moving between groups updates horizon.
+
+    
+    freeform_mode:
+      - Activated by user toggle
+      - Layout: Absolute positioning (x,y)
+      - Constraint: No grid snapping
+      - Persistence: System must remember (x,y) coordinates when toggling away and back.
+      - Z-Index: 
+          - Drag: Pop to front (z-index 1000).
+          - Hover: Pop to front (z-index 50) to allow selecting overlapped cards.
+
+  structure:
+    fixed_header: "Horizon Title and Toggles stay fixed at top."
+    scroll_area: "Cards scroll independently below the header."
+
+
+# =============================================================================
+# COMPONENT SPECIFICATIONS
+# =============================================================================
+
+components:
+  
+  nexus_card:
+    visuals:
+    visuals:
+      background: "rgba(20, 20, 25, 0.7)" # Updated per user request (was 0.8)
+      blur: "20px"
+      border: "1px solid rgba(255, 255, 255, 0.1)"
+      shadow: "0 8px 32px rgba(0, 0, 0, 0.4)"
+      
+    animations:
+      hover: "TranslateY -4px, Scale 1.02"
+      sla_pulse: 
+        name: "pulse-border"
+        trigger: "SLA Breach / Urgent"
+        style: "Red border glow animation (2s infinite)"
+
+    sizes:
+      compact: "Min-height auto (content driven)"
+      medium: "Min-height auto"
+      large: "Min-height auto"
+      
+    masonry_rule:
+      css: "break-inside: avoid" # Critical for column layout
+
+  drag_and_drop:
+    system: "HTML5 Native DnD"
+    
+    visual_feedback:
+      drop_before: 
+        - Apply class `.drop-before`
+        - Visual: Highlight the *space/gap* between cards (e.g. using pseudo-element or margin). 
+        - Requirement: Do NOT border the card itself. Highlight the insertion zone.
+        - Color: Primary Theme Color.
+        - Advanced: Support dropping *before* the first item (Top) and *after* the last item (Bottom) of a column/list.
+
+      
+      dragging:
+        - Apply class `.dragging`
+        - Style: `opacity: 0.5`
+
+  layout_controls:
+    location: "Fixed Horizon Header (Top Right)"
+    toggles:
+      - Masonry Icon: Swaps to `column-count` layout.
+      - Freeform Icon: Swaps to absolute positioning.
+    
+    behavior:
+      - "Toggle Freeform -> Masonry": Snap back to sorted column flow.
+      - "Toggle Masonry -> Freeform": Restore last known (x,y) positions.
+
+# =============================================================================
+# INTERACTION LOGIC
+# =============================================================================
+
+interactions:
+  
+  card_insertion:
+    logic: "Insert Before"
+    trigger: "Drop on Card"
+    behavior: "Active card takes position of Target card; Target shifts down."
+    
+  horizon_move:
+    trigger: "Drop on Sidebar Nav Item"
+    behavior: >
+      - Card.horizon update
+      - Card.inbox update (if target=Inbox)
+      - Badge Recalculation (All Horizons)
+
+# =============================================================================
+# TOKENS (V2 VALIDATED)
+# =============================================================================
+
+tokens:
+  --sidebar-width: "68px"
+  --header-height: "64px"
+  --glass-bg: "rgba(255, 255, 255, 0.05)"
+  --brand-primary: "#62d84e"
+  --badge-urgent: "#ef4444" 
+  --badge-warning: "#f59e0b"

@@ -294,3 +294,28 @@ glassVariations:
   intensityScale: |
     .glass-subtle < .glass < .glass-heavy
     (light)        (standard) (heavy)
+
+# =============================================================================
+# PHASE 32: CARD & CANVAS SYSTEM (DISCO-004)
+# =============================================================================
+
+cardSystem:
+  description: "Tokens for Nexus Cards and Horizon Badges"
+  file: "ui/styles/variables.css"
+  
+  cardBackground:
+    variable: "--card-bg"
+    dark: "rgba(20, 20, 25, 0.8)"
+    light: "var(--glass-bg)"
+    purpose: "Maintains 80% opacity without full glass blur for readability"
+  
+  cardSizes:
+    compact: "min-height: 120px"
+    medium: "width: 400px, min-height: 180px"
+    large: "width: 480px, min-height: 240px"
+  
+  badges:
+    urgent: "#ef4444 (Red)"
+    warning: "#f59e0b (Amber)"
+    neutral: "rgba(255, 255, 255, 0.15) (Gray)"
+    logic: "Color depends on max(importance_score) in context"

@@ -1,0 +1,46 @@
+metadata:
+  type: "stage-artifact"
+  stage: 1
+  name: "Discovery"
+  phase: 34
+  project: "GovernanceShield"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+discovery:
+  problemStatement: |
+    LEAP suffers from "Systemic Gaps" that allow visible failures (race conditions, wrong architectures) to persist.
+    1. Systemic Amnesia: Lessons (e.g., Phase 31 Masonry) are deleted with the phase.
+    2. Implicit Design: R&D prototypes are treated as visual suggestions, ignoring technical intent.
+    3. Trust-Based Compliance: We assume AI follows architecture; it often doesn't.
+  
+  scope:
+    included:
+      - "1_LEAP/1_Governance/2_protocols/bump-protocol.yaml" (Add Salvage Protocol)
+      - "1_LEAP/1_Governance/3_resources/LESSONS_LEARNED.md" (Create Registry)
+      - "1_LEAP/2_Build_GoldSource/Methodology/goldsource-increment.yaml" (Mandate checks)
+      - "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/spec-discovery-protocol.yaml" (Audit newspec logic)
+      - ".agent/workflows/newspec.md" (Add Deconstruction Audit)
+    
+    userSourcedScope:
+      - "Audit newspec: Does it read GoldSource architecture?"
+      - "Gap Identified: Missing `prototype_template.html` for rapid prototyping."
+    excluded:
+      - "2_GoldSource/scaffold/**" (NO CODE CHANGES in this phase)
+  
+  constraints:
+    protocol: "Pulse Protocol (Strict)"
+    folderNaming: "phase-xx-pulse-[description]"
+    tracking: "No task.md allowed; use Stage Artifacts only"
+  
+  successCriteria:
+    - "Master Lessons Registry exists and is readable"
+    - "Salvage Protocol is documented and mandatory"
+    - "Deconstruction Audit is part of the Spec workflow"
+
+  questionsForUser:
+    - "Do you have any specific 'Lessons Learned' from pre-Phase 31 that should be seeded into the registry?"
+    - "Are there any other governance files you want us to audit while we are in this mode?"
+
+nextStep: "Stage 2: Research (Deep dive into the target governance files)"

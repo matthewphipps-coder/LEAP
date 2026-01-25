@@ -1,0 +1,278 @@
+# =============================================================================
+# ARCHITECTURE - GoldSource Scaffold v2.0
+# =============================================================================
+# AI-First Code: System architecture reference for AI comprehension
+# =============================================================================
+
+metadata:
+  type: "architecture"
+  name: "GoldSource Architecture"
+  version: "2.0.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "complete"
+  phase: "18 - NexusReturns"
+
+# =============================================================================
+# SYSTEM OVERVIEW
+# =============================================================================
+
+systemOverview:
+  name: "GoldSource v2.0.0"
+  purpose: "Gold Source scaffold for DemoFactory - AI-First enterprise dashboard"
+  archetype: "Agentic Dashboard"
+  
+  stack:
+    structure: "HTML5"
+    logic: "Vanilla JS (ES Modules)"
+    styling: "CSS custom properties"
+    auth: "Firebase Authentication"
+    database: "Firestore"
+    build: "None (static files, requires local server for ES modules)"
+  
+  entryPoints:
+    - file: "login.html"
+      purpose: "Authentication entry point"
+    - file: "index.html"
+      purpose: "Main dashboard"
+    - file: "core/app.js"
+      purpose: "Application bootstrap"
+
+# =============================================================================
+# FOLDER STRUCTURE
+# =============================================================================
+
+folderStructure:
+  scaffold:
+    core:
+      location: "scaffold/core/"
+      purpose: "Core infrastructure - locked foundation"
+      files:
+        - "app.js - Application bootstrap"
+        - "state.js - State manager (LOCKED)"
+        - "firebase.js - Firebase init (LOCKED)"
+        - "auth-service.js - Authentication"
+        - "theme-manager.js - Theme toggle"
+        - "constants.js - App constants (LOCKED)"
+        - "logger.js - Logging (LOCKED)"
+    
+    features:
+      location: "scaffold/features/"
+      purpose: "Feature modules - extensible"
+      files:
+        - "ai/ai-service.js - AI provider interface"
+    
+    ui:
+      location: "scaffold/ui/"
+      purpose: "UI components and styles"
+      subfolders:
+        styles:
+          locked: true
+          files: ["variables.css", "base.css", "buttons.css", "inputs.css"]
+        components:
+          locked: false
+          folders:
+            - "header/ - Top navigation (LOCKED)"
+            - "sidebar/ - Left navigation"
+            - "canvas/ - Main content area"
+  
+  meta:
+    location: "meta/"
+    purpose: "Documentation and standards"
+    files:
+      - "ARCHITECTURE.yaml (this file)"
+      - "architectural-standards.yaml"
+      - "functionality.yaml"
+      - "design-system.yaml"
+
+# =============================================================================
+# MODULE DEPENDENCY MAP
+# =============================================================================
+
+dependencyMap:
+  
+  coreModules:
+    "logger.js":
+      imports: []
+      exportedTo: ["state.js", "auth-service.js", "theme-manager.js", "app.js", "all UI components"]
+    
+    "constants.js":
+      imports: []
+      exportedTo: ["app.js"]
+    
+    "state.js":
+      imports: ["logger.js"]
+      exportedTo: ["app.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js"]
+    
+    "firebase.js":
+      imports: ["config.js (external)"]
+      exportedTo: ["auth-service.js"]
+    
+    "auth-service.js":
+      imports: ["firebase.js", "state.js", "logger.js"]
+      exportedTo: ["app.js", "login.js", "header-ui.js"]
+    
+    "theme-manager.js":
+      imports: ["state.js", "logger.js", "user-service.js"]
+      exportedTo: ["app.js", "header-ui.js", "auth-service.js"]
+    
+    "user-service.js":
+      imports: ["firebase.js", "logger.js"]
+      exportedTo: ["auth-service.js", "theme-manager.js"]
+    
+    "app.js":
+      imports: ["logger.js", "state.js", "auth-service.js", "theme-manager.js", "header-ui.js", "sidebar-ui.js", "canvas-ui.js"]
+      exportedTo: ["index.html"]
+  
+  featureModules:
+    "ai-service.js":
+      imports: ["logger.js"]
+      exportedTo: ["future chat components"]
+  
+  uiModules:
+    "header-ui.js":
+      imports: ["state.js", "auth-service.js"]
+    "sidebar-ui.js":
+      imports: ["state.js"]
+    "canvas-ui.js":
+      imports: []
+
+# =============================================================================
+# DATA FLOW
+# =============================================================================
+
+dataFlow:
+  pattern: "Unidirectional"
+  
+  flow:
+    - step: 1
+      from: "User Action"
+      to: "UI Event Handler"
+    - step: 2
+      from: "UI Event Handler"
+      to: "Service Layer (if needed)"
+    - step: 3
+      from: "Service Layer"
+      to: "StateManager"
+    - step: 4
+      from: "StateManager"
+      to: "Subscribers (UI Components)"
+    - step: 5
+      from: "UI Components"
+      to: "DOM Update"
+  
+  authFlow:
+    - "login.js → auth-service.js → Firebase Auth"
+    - "auth-service.js → state.js (setUser)"
+    - "app.js watches auth state → init UI or redirect"
+  
+  firestoreConventions:
+    pattern: "Ring-Fenced User Data"
+    documentation: "docs/DATA_CONVENTIONS.md"
+    structure:
+      - "/users/{uid} → User profile + preferences"
+      - "/users/{uid}/cards/{cardId} → User's cards (future)"
+      - "/users/{uid}/conversations/{id} → AI chat history (future)"
+    services:
+      - "user-service.js → Profile and preference CRUD (reference implementation)"
+
+# =============================================================================
+# CSS ARCHITECTURE
+# =============================================================================
+
+cssArchitecture:
+  loadingOrder:
+    - "variables.css - CSS custom properties"
+    - "base.css - Reset and global styles"
+    - "buttons.css - Button patterns"
+    - "inputs.css - Input patterns"
+    - "component CSS files - Per-component styles"
+  
+  variableNaming:
+    colors: "--bg-*, --accent-*, --text-*, --glass-*"
+    spacing: "--space-*"
+    typography: "--font-*, --text-*"
+    layout: "--header-height, --sidebar-width"
+  
+  theming:
+    default: "Dark theme"
+    override: ".light-theme class on body"
+    persistence: "localStorage"
+
+# =============================================================================
+# EXTENSION POINTS
+# =============================================================================
+
+extensionPoints:
+  
+  addingNewComponent:
+    steps:
+      - "Create ui/components/{name}/ folder"
+      - "Create {name}-ui.js with MODULE_CONTRACT"
+      - "Create {name}.css for styles"
+      - "Import and call init{Name}() in app.js"
+      - "Add CSS link to index.html"
+      - "Update this ARCHITECTURE.yaml"
+  
+  addingNewFeature:
+    steps:
+      - "Create features/{name}/ folder"
+      - "Create {name}-service.js with MODULE_CONTRACT"
+      - "Import service in relevant UI components"
+      - "Update functionality.yaml"
+  
+  addingNewNavItem:
+    location: "sidebar-ui.js"
+    pattern: "Add to nav-list in initSidebar()"
+
+# =============================================================================
+# LOCKED FILES (DO NOT MODIFY)
+# =============================================================================
+
+lockedFiles:
+  core:
+    - "state.js"
+    - "firebase.js"
+    - "constants.js"
+    - "logger.js"
+  styles:
+    - "variables.css"
+    - "base.css"
+    - "buttons.css"
+    - "inputs.css"
+  
+  reason: "These form the stable foundation. Factory should extend, not modify."
+
+# =============================================================================
+# PATH DEPTHS (for correct relative imports)
+# =============================================================================
+
+pathDepths:
+  purpose: "Document relative path depths to prevent import 404 errors"
+  reference: "Count '../' needed to reach scaffold/ root"
+  
+  locations:
+    - path: "scaffold/core/"
+      depth: 1
+      toCore: "./"
+      example: "import { x } from './logger.js'"
+    
+    - path: "scaffold/features/{name}/"
+      depth: 2
+      toCore: "../../core/"
+      example: "import { x } from '../../core/state.js'"
+    
+    - path: "scaffold/ui/components/{name}/"
+      depth: 3
+      toCore: "../../../core/"
+      example: "import { x } from '../../../core/state.js'"
+    
+    - path: "scaffold/ui/styles/"
+      depth: 2
+      note: "CSS files - no JS imports"
+  
+  factoryGuidance: |
+    When creating new feature or component files:
+    1. Identify folder depth from table above
+    2. Use corresponding toCore prefix for state.js, logger.js imports
+    3. UI components at depth 3 need '../../../core/' prefix

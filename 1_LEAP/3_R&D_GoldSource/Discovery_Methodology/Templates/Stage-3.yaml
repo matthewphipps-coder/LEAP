@@ -1,0 +1,37 @@
+stage: -3
+title: "Analysis & Risk"
+status: pending
+
+governance:
+  rigor: "Deep Dive Research"
+  socratic_check: "What is the one thing that could make this fail?"
+
+objectives:
+  - "Perform technical deep dive into chosen scope"
+  - "Identify risks, performance impacts, and security concerns"
+
+checklist:
+  technical_research_performed: false
+  risk_registry_created: false
+  feasibility_assessed: false
+  ai_asked_if_missing: false
+  proceed_received: false
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Risk matrix table"
+    - "Sequence diagrams"
+    - "Flow diagrams"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "Risk assessment notes in DISCOVERY_LOG.md"
+
+outcomes: null
+# AI populates on stage lock with:
+# risks: [...]
+# mitigations: [...]
+# technical_decisions: [...]
+# dependencies: [...]

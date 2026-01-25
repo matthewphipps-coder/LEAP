@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║  NEXUS WORKBENCH - GoldSource Standard Template v2.0                     ║
+  ║  ─────────────────────────────────────────────────────────────────────── ║
+  ║  Purpose: AI-Native Form Evolution UI Reference                          ║
+  ║  Spec:    DISCO-001 (Extensible AI Form Evolution)                       ║
+  ║  Theme:   Light/Dark (auto-detected via prefers-color-scheme)            ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Workbench | GoldSource v2.0</title>
+
+    <!-- GoldSource Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════
+           THEME: Design Tokens (Dark Mode Default)
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --bg-deep: #050608;
+            --bg-surface: #0a0c10;
+            --bg-glass: rgba(13, 17, 23, 0.82);
+            --bg-pill: rgba(255, 255, 255, 0.04);
+
+            --emerald: #62d84e;
+            --emerald-vibrant: #4ade80;
+            --emerald-glow: rgba(98, 216, 78, 0.15);
+
+            --text-high: #ffffff;
+            --text-med: #94a3b8;
+            --text-low: #4b5563;
+
+            --border-glass: rgba(255, 255, 255, 0.07);
+            --shadow-deep: rgba(0, 0, 0, 0.7);
+
+            --radius-lg: 28px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+
+            --blur-std: 30px;
+            --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --spring: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Light Theme Override */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-deep: #f8fafc;
+                --bg-surface: #ffffff;
+                --bg-glass: rgba(255, 255, 255, 0.85);
+                --bg-pill: rgba(0, 0, 0, 0.03);
+
+                --emerald: #22c55e;
+                --emerald-vibrant: #16a34a;
+                --emerald-glow: rgba(34, 197, 94, 0.12);
+
+                --text-high: #0f172a;
+                --text-med: #475569;
+                --text-low: #94a3b8;
+
+                --border-glass: rgba(0, 0, 0, 0.08);
+                --shadow-deep: rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-high);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(circle at 10% 20%, var(--emerald-glow) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           UTILITY CLASSES
+           ═══════════════════════════════════════════════════════════════════ */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           CANVAS & WORKBENCH CONTAINER
+           ═══════════════════════════════════════════════════════════════════ */
+        .canvas {
+            width: 100vw;
+            height: 56.25vw;
+            max-height: 100vh;
+            max-width: 177.78vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .workbench {
+            width: 90%;
+            height: 90%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(var(--blur-std));
+            -webkit-backdrop-filter: blur(var(--blur-std));
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 100px -20px var(--shadow-deep);
+            overflow: hidden;
+
+            /* Animation: Bloom from origin */
+            transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
+            opacity: 0;
+            transform: scale(0.3);
+            filter: blur(10px);
+            transition:
+                opacity 0.5s var(--spring),
+                transform 0.6s var(--spring),
+                filter 0.5s ease;
+        }
+
+        .workbench.open {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        .workbench.closing {
+            opacity: 0;
+            transform: scale(0.2);
+            filter: blur(15px);
+            transition:
+                opacity 0.4s ease-out,
+                transform 0.5s ease-in,
+                filter 0.4s ease-out;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           WINDOW CONTROL: CLOSE BUTTON (GoldSource Standard)
+           ═══════════════════════════════════════════════════════════════════ */
+        .window-ctrl {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+
+        .btn-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.15s var(--spring);
+        }
+
+        .btn-close:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: scale(1.08);
+        }
+
+        .btn-close:active {
+            transform: scale(0.92);
+        }
+
+        .btn-close svg {
+            transition: transform 0.2s var(--spring);
+        }
+
+        .btn-close:hover svg {
+            transform: rotate(90deg);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           TOP BAR: Header (Unified across both panes)
+           ═══════════════════════════════════════════════════════════════════ */
+        .top-bar {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Row 1: Record ID + Short Description */
+        .top-row-1 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .record-id {
+            font-size: 0.7rem;
+            color: var(--text-low);
+            font-weight: 600;
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .short-desc {
+            font-size: 0.95rem;
+            color: var(--text-high);
+            font-weight: 500;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Row 2: Status/Priority Pills + Assignment Chain */
+        .top-row-2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pill-group {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .pill {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .pill--status {
+            color: var(--text-med);
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+        }
+
+        .pill--metric {
+            color: var(--text-low);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 4px 8px;
+        }
+
+        .pill--metric.highlight {
+            border-color: var(--emerald);
+            color: var(--emerald-vibrant);
+            background: var(--emerald-glow);
+        }
+
+        .chain-sep {
+            color: var(--text-low);
+            font-size: 0.8rem;
+            opacity: 0.5;
+            margin: 0 4px;
+        }
+
+        .pill--assignment {
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+            border-radius: 10px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           MAIN CONTENT: Two-Column Layout
+           ═══════════════════════════════════════════════════════════════════ */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────
+           LEFT PANE: AI Chat (Now Assist)
+           ───────────────────────────────────────────────────────────────── */
+        .pane-left {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-stream {
+            flex: 1;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: msg-in 0.3s ease-out backwards;
+            border: 1px solid transparent;
+        }
+
+        @keyframes msg-in {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .msg--ai {
+            align-self: flex-start;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            border-bottom-left-radius: 4px;
+            color: var(--text-med);
+        }
+
+        .msg--human {
+            align-self: flex-end;
+            background: var(--bg-pill);
+            border: 1px solid var(--emerald);
+            color: var(--text-high);
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 15px var(--emerald-glow);
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px 32px;
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-light {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-med);
+            flex-shrink: 0;
+        }
+
+        .brand-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .input-capsule {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 8px 12px 8px 16px;
+            gap: 12px;
+        }
+
+        .input-capsule input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.85rem;
+            color: var(--text-high);
+        }
+
+        .input-capsule input::placeholder {
+            color: var(--text-low);
+        }
+
+        .input-btns {
+            display: flex;
+            gap: 10px;
+            color: var(--text-low);
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .tool-icon {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .tool-icon:hover {
+            opacity: 1;
+            color: var(--text-high);
+        }
+
+        .btn-send {
+            width: 28px;
+            height: 28px;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-low);
+        }
+
+        .btn-send:hover {
+            background: var(--emerald-glow);
+            border-color: var(--emerald);
+            color: var(--emerald);
+            transform: scale(1.05);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────
+           RIGHT PANE: Dynamic Fields (Visual Companion)
+           ───────────────────────────────────────────────────────────────── */
+        .pane-right {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .pane-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px 120px 32px;
+        }
+
+        /* Section Labels */
+        .section-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-glass);
+        }
+
+        .section-label:not(:first-child) {
+            margin-top: 24px;
+        }
+
+        /* Field Pills Grid */
+        .pill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .field-pill {
+            padding: 6px 12px;
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-med);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 90px;
+            flex: 1 1 auto;
+            animation: pill-in 0.3s ease-out backwards;
+        }
+
+        @keyframes pill-in {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .field-pill--half {
+            flex: 1 1 calc(50% - 4px);
+            max-width: calc(50% - 4px);
+        }
+
+        .field-pill--third {
+            flex: 1 1 calc(33% - 6px);
+            max-width: calc(33% - 6px);
+        }
+
+        .field-pill--quarter {
+            flex: 1 1 calc(25% - 6px);
+            max-width: calc(25% - 6px);
+        }
+
+        .field-pill--full {
+            flex: 1 1 100%;
+        }
+
+        .field-pill__label {
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: var(--text-low);
+            text-transform: uppercase;
+        }
+
+        .field-pill__value {
+            color: var(--text-med);
+        }
+
+        .field-pill__value--large {
+            min-height: 50px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        /* Ghost State (AI Proposal) */
+        .field-pill--ghost {
+            background: var(--emerald-glow);
+            border-color: var(--emerald);
+        }
+
+        .field-pill--ghost .field-pill__value {
+            color: var(--emerald-vibrant);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────
+           ACTION TRAY (Floating)
+           ───────────────────────────────────────────────────────────────── */
+        .action-tray {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            animation: tray-slide 0.4s var(--spring);
+        }
+
+        @keyframes tray-slide {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.3s, filter 0.3s;
+            border: none;
+        }
+
+        .btn-action--primary {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-vibrant));
+            color: var(--bg-deep);
+            box-shadow: 0 8px 16px var(--emerald-glow);
+        }
+
+        .btn-action--secondary {
+            background: var(--bg-pill);
+            border: 1px solid var(--border-glass);
+            color: var(--text-med);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="canvas">
+        <div class="workbench open" id="workbench">
+            <!-- Close Button -->
+            <div class="window-ctrl">
+                <button class="btn-close" id="btn-close" aria-label="Close workbench">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="top-row-1">
+                    <span class="record-id" data-field="number"></span>
+                    <span class="short-desc" data-field="short_description"></span>
+                </div>
+                <div class="top-row-2">
+                    <div class="pill-group">
+                        <span class="pill pill--status" data-field="state"></span>
+                        <span class="pill pill--metric" data-field="priority"></span>
+                        <span class="pill pill--metric" data-field="impact"></span>
+                        <span class="pill pill--metric" data-field="urgency"></span>
+                    </div>
+                    <span class="chain-sep">|</span>
+                    <span class="pill pill--assignment" data-field="assignment_group"></span>
+                    <span class="chain-sep">›</span>
+                    <span class="pill pill--assignment" data-field="assigned_to"></span>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Left Pane: AI Chat -->
+                <section class="pane-left">
+                    <div class="chat-stream" id="chat-stream">
+                        <!-- Messages injected via [[DIRECTIVE]] -->
+                    </div>
+                    <div class="input-area">
+                        <div class="brand-light">
+                            <div class="brand-dot"></div>
+                            Now Assist
+                        </div>
+                        <div class="input-capsule">
+                            <input type="text" placeholder="How can I help?" aria-label="Chat input">
+                            <div class="input-btns">
+                                <span class="tool-icon" title="Attach file">📂</span>
+                                <span class="tool-icon" title="Voice input">🎤</span>
+                                <button class="btn-send" aria-label="Send message">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Pane: Dynamic Fields -->
+                <section class="pane-right">
+                    <div class="pane-scroll" id="dynamic-pane">
+                        <!-- Sections rendered via [[DIRECTIVE]] -->
+                        <div class="section-label" data-section="context">Context</div>
+                        <div class="pill-grid" data-grid="context"></div>
+
+                        <div class="section-label hidden" data-section="location">Location</div>
+                        <div class="pill-grid hidden" data-grid="location"></div>
+
+                        <div class="section-label hidden" data-section="detail">Detail</div>
+                        <div class="pill-grid hidden" data-grid="detail"></div>
+
+                        <div class="section-label hidden" data-section="proposal">Proposal</div>
+                        <div class="pill-grid hidden" data-grid="proposal"></div>
+                    </div>
+
+                    <!-- Action Tray -->
+                    <div class="action-tray hidden" id="action-tray">
+                        <button class="btn-action btn-action--secondary">Cancel</button>
+                        <button class="btn-action btn-action--primary">Approve Update</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * NEXUS Workbench Controller
+         * ─────────────────────────────────────────────────────────────────
+         * This script handles:
+         * 1. Open/Close animations (bloom from click origin)
+         * 2. Field population via data-field attributes
+         * 3. Dynamic section rendering via [[DIRECTIVE]]
+         */
+
+        const workbench = document.getElementById('workbench');
+        const btnClose = document.getElementById('btn-close');
+
+        // ─────────────────────────────────────────────────────────────────
+        // ANIMATION: Open from origin
+        // ─────────────────────────────────────────────────────────────────
+        function openWorkbench(originX = 50, originY = 50) {
+            workbench.style.setProperty('--origin-x', `${originX}%`);
+            workbench.style.setProperty('--origin-y', `${originY}%`);
+            workbench.classList.remove('closing');
+            requestAnimationFrame(() => workbench.classList.add('open'));
+        }
+
+        function closeWorkbench() {
+            workbench.classList.remove('open');
+            workbench.classList.add('closing');
+            setTimeout(() => workbench.classList.remove('closing'), 500);
+        }
+
+        btnClose.addEventListener('click', closeWorkbench);
+
+        // ─────────────────────────────────────────────────────────────────
+        // API: Populate fields
+        // ─────────────────────────────────────────────────────────────────
+        function setField(fieldName, value) {
+            const el = document.querySelector(`[data-field="${fieldName}"]`);
+            if (el) el.textContent = value;
+        }
+
+        function highlightField(fieldName, highlight = true) {
+            const el = document.querySelector(`[data-field="${fieldName}"]`);
+            if (el) el.classList.toggle('highlight', highlight);
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // API: Render dynamic sections
+        // ─────────────────────────────────────────────────────────────────
+        function renderSection(sectionName, fields) {
+            const label = document.querySelector(`[data-section="${sectionName}"]`);
+            const grid = document.querySelector(`[data-grid="${sectionName}"]`);
+            if (!label || !grid) return;
+
+            grid.innerHTML = '';
+            if (fields.length > 0) {
+                fields.forEach(f => {
+                    const pill = document.createElement('div');
+                    pill.className = `field-pill field-pill--${f.size || 'auto'} ${f.ghost ? 'field-pill--ghost' : ''}`;
+                    pill.innerHTML = `
+                        <span class="field-pill__label">${f.label}</span>
+                        <span class="field-pill__value ${f.large ? 'field-pill__value--large' : ''}">${f.value}</span>
+                    `;
+                    grid.appendChild(pill);
+                });
+                label.classList.remove('hidden');
+                grid.classList.remove('hidden');
+            } else {
+                label.classList.add('hidden');
+                grid.classList.add('hidden');
+            }
+        }
+
+        function showActionTray(show = true) {
+            document.getElementById('action-tray').classList.toggle('hidden', !show);
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // API: Add chat message
+        // ─────────────────────────────────────────────────────────────────
+        function addMessage(role, text) {
+            const stream = document.getElementById('chat-stream');
+            const msg = document.createElement('div');
+            msg.className = `msg msg--${role}`;
+            msg.textContent = text;
+            stream.appendChild(msg);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        // Expose API for external use
+        window.NEXUS = { openWorkbench, closeWorkbench, setField, highlightField, renderSection, showActionTray, addMessage };
+    </script>
+</body>
+
+</html>

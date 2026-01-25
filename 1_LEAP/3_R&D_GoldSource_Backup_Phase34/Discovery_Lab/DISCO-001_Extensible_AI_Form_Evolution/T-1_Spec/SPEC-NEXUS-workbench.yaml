@@ -1,0 +1,334 @@
+# =============================================================================
+# FUNCTIONAL SPEC: NEXUS AI Workbench
+# =============================================================================
+# Source: DISCO-001 Discovery Lab (Form Evolution Pattern)
+# Purpose: AI-Native workbench for conversational record editing
+# =============================================================================
+
+metadata:
+  specId: "NEXUS-WORKBENCH"
+  name: "NEXUS AI Workbench"
+  version: "2.0.0"
+  created: "2026-01-23"
+  status: "locked"
+  lockedAt: "2026-01-23T01:48:00Z"
+  discoveryRef: "DISCO-001_Extensible_AI_Form_Evolution"
+
+# =============================================================================
+# REFERENCE IMPLEMENTATION
+# =============================================================================
+
+referenceImplementation:
+  prototype: "T-1_Spec/reference_workbench.html"
+  prototypeVersion: "v2.0"
+  
+  prototypeRole: |
+    This is a VISUAL CONTRACT only. The HTML demonstrates exact layout,
+    styling, and animations. Implementation must use GoldSource patterns.
+    
+    IS:  Visual/behavioral reference - "match this exactly"
+    IS:  Source of truth for colors, spacing, layouts, animations
+    IS:  JavaScript API contract (window.NEXUS methods)
+    
+    IS NOT: Copy-paste code source
+    IS NOT: Architecture reference (prototype is monolithic)
+
+  devAgentGuidance:
+    - "Match prototype visuals exactly using GoldSource patterns"
+    - "Use CSS variables from design tokens, not raw values"
+    - "Implement as modular components (*-ui.js + *.css)"
+    - "Add AI-First headers to all new files"
+    - "Window.NEXUS API must be preserved for directive integration"
+
+# =============================================================================
+# LAYOUT STRUCTURE
+# =============================================================================
+
+layout:
+  container: "16:9 canvas, 90% viewport, centered"
+  structure:
+    - segment: "TOP_BAR"
+      span: "full-width"
+      rows:
+        - row: 1
+          content: "[Record ID] [Short Description]"
+        - row: 2
+          content: "[Status][P][I][U] | [Group] › [Assignee]"
+    
+    - segment: "MAIN_CONTENT"
+      split: "50:50"
+      left: "AI_CHAT_PANE"
+      right: "DYNAMIC_FIELDS_PANE"
+
+  panes:
+    AI_CHAT_PANE:
+      sections:
+        - "Chat stream (scrollable)"
+        - "Input area (fixed bottom): [•Brand] [Input] [📂][🎤][→]"
+    
+    DYNAMIC_FIELDS_PANE:
+      sections:
+        - "Section: Context (default visible)"
+        - "Section: Location (hidden, AI-revealed)"
+        - "Section: Detail (hidden, AI-revealed)"
+        - "Section: Proposal (hidden, AI-revealed)"
+        - "Action Tray (floating bottom, hidden until proposal)"
+
+# =============================================================================
+# THEME SYSTEM
+# =============================================================================
+
+themeSystem:
+  detection: "prefers-color-scheme (auto)"
+  
+  tokens:
+    dark:
+      --bg-deep: "#050608"
+      --bg-glass: "rgba(13,17,23,0.82)"
+      --emerald: "#62d84e"
+      --text-high: "#ffffff"
+      --text-med: "#94a3b8"
+      --text-low: "#4b5563"
+      --border-glass: "rgba(255,255,255,0.07)"
+    
+    light:
+      --bg-deep: "#f8fafc"
+      --bg-glass: "rgba(255,255,255,0.85)"
+      --emerald: "#22c55e"
+      --text-high: "#0f172a"
+      --text-med: "#475569"
+      --text-low: "#94a3b8"
+      --border-glass: "rgba(0,0,0,0.08)"
+
+  typography:
+    headings: "Outfit, sans-serif"
+    body: "Inter, sans-serif"
+
+# =============================================================================
+# COMPONENT SPECIFICATIONS
+# =============================================================================
+
+components:
+
+  # --- Close Button ---
+  closeButton:
+    selector: ".btn-close"
+    behavior:
+      default: "Transparent with glass border"
+      hover:
+        - "Background: rgba(239,68,68,0.15)"
+        - "Color: #ef4444"
+        - "Icon rotates 90°"
+        - "Scale: 1.08"
+      active: "Scale: 0.92"
+    transition: "0.2s ease"
+
+  # --- Pills ---
+  pills:
+    status:
+      class: ".pill--status"
+      style: "Solid background, rounded rectangle"
+    metric:
+      class: ".pill--metric"
+      style: "Dull/low-contrast by default"
+      highlight: "Emerald glow when changed by AI"
+    assignment:
+      class: ".pill--assignment"
+      style: "Rounded pill, connected with chain-sep"
+
+  # --- Chat Messages ---
+  chatMessages:
+    ai:
+      class: ".msg--ai"
+      style: "Left-aligned, glass border, muted text"
+    human:
+      class: ".msg--human"
+      style: "Right-aligned, emerald border, white text"
+    animation: "Slide-in from left (300ms)"
+
+  # --- Field Pills (Dynamic Area) ---
+  fieldPills:
+    class: ".field-pill"
+    sizes:
+      quarter: "25% width (4 per row)"
+      third: "33% width (3 per row)"
+      half: "50% width (2 per row)"
+      full: "100% width (1 per row)"
+    ghost:
+      class: ".field-pill--ghost"
+      style: "Emerald glow, emerald text (AI proposal)"
+    animation: "Fade-in from bottom (300ms)"
+
+  # --- Action Tray ---
+  actionTray:
+    position: "Absolute, bottom 20px, centered"
+    buttons:
+      primary: "Emerald gradient, dark text, shadow"
+      secondary: "Glass background, muted text"
+    visibility: "Hidden until showActionTray(true)"
+
+# =============================================================================
+# ANIMATIONS
+# =============================================================================
+
+animations:
+  bloomOpen:
+    trigger: "openWorkbench(originX, originY)"
+    duration: "600ms"
+    easing: "spring (0.19, 1, 0.22, 1)"
+    properties:
+      - "opacity: 0 → 1"
+      - "scale: 0.3 → 1"
+      - "filter: blur(10px) → blur(0)"
+    transformOrigin: "Dynamic (from click position %)"
+
+  bloomClose:
+    trigger: "closeWorkbench() or btn-close click"
+    duration: "500ms"
+    easing: "ease-out"
+    properties:
+      - "opacity: 1 → 0"
+      - "scale: 1 → 0.2"
+      - "filter: blur(0) → blur(15px)"
+
+  messageIn:
+    trigger: "addMessage()"
+    duration: "300ms"
+    easing: "ease-out"
+    properties: "translateX(-5px) → 0, opacity: 0 → 1"
+
+  pillIn:
+    trigger: "renderSection()"
+    duration: "300ms"
+    easing: "ease-out"
+    properties: "translateY(5px) → 0, opacity: 0 → 1"
+
+# =============================================================================
+# JAVASCRIPT API (window.NEXUS)
+# =============================================================================
+
+jsApi:
+  namespace: "window.NEXUS"
+  
+  methods:
+    - name: "openWorkbench"
+      signature: "openWorkbench(originX: number, originY: number)"
+      description: "Opens workbench with bloom animation from origin %"
+    
+    - name: "closeWorkbench"
+      signature: "closeWorkbench()"
+      description: "Closes workbench with reverse bloom animation"
+    
+    - name: "setField"
+      signature: "setField(name: string, value: string)"
+      description: "Populates element with data-field='name'"
+    
+    - name: "highlightField"
+      signature: "highlightField(name: string, highlight: boolean)"
+      description: "Toggles .highlight class on metric pill"
+    
+    - name: "renderSection"
+      signature: "renderSection(name: string, fields: Field[])"
+      description: "Renders dynamic pill grid for named section"
+      fieldSchema: |
+        Field {
+          label: string
+          value: string
+          size: 'quarter' | 'third' | 'half' | 'full'
+          ghost?: boolean
+          large?: boolean
+        }
+    
+    - name: "showActionTray"
+      signature: "showActionTray(show: boolean)"
+      description: "Shows/hides floating approval buttons"
+    
+    - name: "addMessage"
+      signature: "addMessage(role: 'ai' | 'human', text: string)"
+      description: "Appends chat message with animation"
+
+# =============================================================================
+# DATA BINDING
+# =============================================================================
+
+dataBinding:
+  topBar:
+    - field: "number"
+      element: "[data-field='number']"
+    - field: "short_description"
+      element: "[data-field='short_description']"
+    - field: "state"
+      element: "[data-field='state']"
+    - field: "priority"
+      element: "[data-field='priority']"
+      highlightable: true
+    - field: "impact"
+      element: "[data-field='impact']"
+      highlightable: true
+    - field: "urgency"
+      element: "[data-field='urgency']"
+      highlightable: true
+    - field: "assignment_group"
+      element: "[data-field='assignment_group']"
+    - field: "assigned_to"
+      element: "[data-field='assigned_to']"
+
+  dynamicSections:
+    - name: "context"
+      display: "Context"
+      defaultVisible: true
+    - name: "location"
+      display: "Location"
+      defaultVisible: false
+    - name: "detail"
+      display: "Detail"
+      defaultVisible: false
+    - name: "proposal"
+      display: "Proposal"
+      defaultVisible: false
+
+# =============================================================================
+# ACCESSIBILITY
+# =============================================================================
+
+accessibility:
+  requirements:
+    - "All interactive elements have aria-labels"
+    - "Focus trap within workbench when open"
+    - "ESC key closes workbench"
+    - "Tab navigation through chat and fields"
+    - "Screen reader announces new messages"
+
+# =============================================================================
+# IMPLEMENTATION CHECKLIST
+# =============================================================================
+
+implementationChecklist:
+  - task: "Create component folder structure"
+    files:
+      - "ui/components/workbench/workbench-ui.js"
+      - "ui/components/workbench/workbench.css"
+  
+  - task: "Implement layout shell"
+    acceptance: "Matches prototype 16:9 canvas with 50:50 split"
+  
+  - task: "Implement theme tokens"
+    acceptance: "Light/dark auto-detection works"
+  
+  - task: "Implement close button"
+    acceptance: "Hover rotates icon, active scales down"
+  
+  - task: "Implement bloom animations"
+    acceptance: "Open/close animate from/to origin point"
+  
+  - task: "Implement chat pane"
+    acceptance: "Messages append with animation, input styled"
+  
+  - task: "Implement dynamic fields pane"
+    acceptance: "Sections hide/show, pills wrap, ghost styling works"
+  
+  - task: "Expose NEXUS API"
+    acceptance: "All window.NEXUS methods functional"
+  
+  - task: "Accessibility audit"
+    acceptance: "Keyboard nav, aria-labels, focus trap"

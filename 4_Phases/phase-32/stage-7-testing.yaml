@@ -1,0 +1,69 @@
+metadata:
+  phase: "32"
+  stage: "7"
+  name: "Testing"
+  status: "in-progress"
+  date: "2026-01-24"
+
+environment:
+  local_server: "http://localhost:8081"
+  browser: "Chrome/Safari"
+  resolution: "1920x1080"
+
+test_plan:
+  visual_testing:
+    - id: "V01"
+      description: "Verify 'My Work' page layout"
+      steps:
+        - "Navigate to My Work tab"
+        - "Check sidebar actions (Inbox, Now, Next, Later, Done)"
+        - "Verify Canvas grid layout"
+      expected: "Horizon actions visible in sidebar (with counts). Canvas area empty or showing cards if initialized."
+      
+    - id: "V02"
+      description: "Verify Card Appearance"
+      steps:
+        - "Wait for mock cards to load (500ms delay)"
+        - "Inspect card elements"
+      expected: "Cards display formatted title, 'From' label, timestamp, and priority badge (Red=P1, Amber=P2, Grey=P3)."
+
+    - id: "V03"
+      description: "Verify Sidebar Badges"
+      steps:
+        - "Check Inbox/Now buttons"
+      expected: "Badges show correct count and color-coded based on highest priority card."
+
+  functional_testing:
+    - id: "F01"
+      description: "Horizon Switching"
+      steps:
+        - "Click 'Inbox'"
+        - "Click 'Now'"
+        - "Click 'Next'"
+      expected: "Canvas updates to show filters cards for that horizon. Header tab badge updates if 'Now' selected?"
+
+    - id: "F02"
+      description: "Drag and Drop"
+      steps:
+        - "Drag a card from Canvas"
+        - "Drop onto 'Next' sidebar button"
+      expected: "Card disappears from current view (if not Next). Badge count on 'Next' increments."
+
+    - id: "F03"
+      description: "AI Optimise Action"
+      steps:
+        - "Click 'Optimise' sidebar button"
+      expected: "Toast notification 'AI Resorting...' appears. Cards might reorder."
+
+  regression_testing:
+    - id: "R01"
+      description: "Navigation to other pages"
+      steps:
+        - "Click 'Knowledge' or 'Chat' tabs"
+      expected: "Page content switches correctly. No console errors."
+
+execution_log:
+  - date: "2026-01-24"
+    tester: "AI Agent"
+    status: "Pending User Confirmation"
+    note: "Waiting for user to start server and confirm visual checks."

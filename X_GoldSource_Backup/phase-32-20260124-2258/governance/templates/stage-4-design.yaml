@@ -1,0 +1,206 @@
+# =============================================================================
+# STAGE 4: DESIGN TEMPLATE
+# =============================================================================
+# This document IS the implementation plan. No separate plan needed.
+# =============================================================================
+metadata:
+  demo: "[DEMO_NAME]"
+  stage: 4
+  stageName: "design"
+  created: "[TIMESTAMP]"
+  status: "in-progress"
+  gateApproval: "[REQUIRED] Stage 3 approved with !Proceed at [timestamp]"
+  previousStage: "stage-3-analysis.yaml"
+
+# =============================================================================
+# MANDATORY FIELDS - AI must complete these before !Proceed
+# =============================================================================
+mandatory:
+  metadata:
+    - "demo: Demo name"
+    - "stage: 4"
+    - "stageName: design"
+    - "created: ISO timestamp"
+    - "status: complete (before gate)"
+    - "gateApproval: Previous stage approval"
+    - "previousStage: stage-3-analysis.yaml"
+  
+  content:
+    - "wireframes: Required for UI changes (see wireframes.required)"
+    - "filesToModify: List of files to change"
+    - "implementationSteps: Ordered steps"
+    - "traceabilityReview: Confirmation that all requirements addressed"
+
+designObjective: "Implementation plan and file structure"
+
+# =============================================================================
+# WIREFRAMES (Required for UI changes)
+# =============================================================================
+wireframes:
+  required: true
+  when: "Any UI changes (new screens, components, layouts)"
+  notRequired: "Backend-only changes, data/config updates"
+  requirement: "Generate wireframe images for any new UI elements"
+  tool: "AI image generation"
+  saveLocation: "Factory workspace (not demo output)"
+  
+  images:
+    - name: "[feature-name]-wireframe.png"
+      description: "[What it shows]"
+
+# =============================================================================
+# VISUAL DESIGN (Optional - for UI changes)
+# =============================================================================
+visualDesign:
+  required: false
+  when: "UI changes that involve custom styling"
+  reference: "meta/theme-extension-guide.yaml"
+  
+  styling:
+    colorsUsed: "[List CSS variables, e.g. --brand-primary, --accent-primary]"
+    glassEffects: "[Where .glass class is applied]"
+    animations: "[Which utilities used: .animate-in, .hover-lift]"
+  
+  lightThemeConsidered: "[true|false - verified demo works in light theme?]"
+
+# =============================================================================
+# SCAFFOLD PATTERN DECISIONS (Required)
+# =============================================================================
+# Reference: archetypes/agentic-dashboard/archetype.yaml for pattern guidance
+# =============================================================================
+scaffoldPatternDecisions:
+  description: "Factory must explicitly decide on each pattern before proceeding"
+  
+  patterns:
+    pageTabs:
+      question: "Will this feature need a dedicated page?"
+      decision: "[yes/no]"
+      ifYes: "Add entry to PAGE_TABS in constants.js"
+    
+    sidebarActions:
+      question: "Will this page need contextual actions?"
+      decision: "[yes/no]"
+      ifYes: "Add to PAGE_SIDEBAR_ACTIONS[pageId] in constants.js"
+    
+    featureState:
+      question: "Will this feature need its own state?"
+      decision: "[yes/no]"
+      ifYes: "Use registerStateSlice() from state.js"
+    
+    settingsSections:
+      question: "Will this feature need settings?"
+      decision: "[yes/no]"
+      ifYes: "Add to SETTINGS_MENU and SETTINGS_SECTIONS in constants.js"
+    
+    modalDialog:
+      question: "Will this feature need a detail dialog?"
+      decision: "[yes/no]"
+      ifYes: "Use lazy modal creation pattern (create DOM on first open)"
+  
+  antiPatternConfirmations:
+    - confirmation: "I will NOT create custom navigation bars"
+      verified: "[true/false]"
+    - confirmation: "Feature content will render on its correct page"
+      verified: "[true/false]"
+    - confirmation: "I will NOT leave placeholder text"
+      verified: "[true/false]"
+
+# =============================================================================
+# DEPENDENCY GRAPH (LEAP-007)
+# =============================================================================
+dependencyGraph:
+  description: "Show component/file relationships for this feature"
+  format: "Parent → Child pattern showing data flow"
+  
+  graph:
+    - from: "[source component/file]"
+      to: "[dependent component/file]"
+      type: "[imports|calls|updates|renders]"
+  
+  example: |
+    incident-service.js → incident-cards-ui.js (calls)
+    incident-data.js → incident-service.js (imports)
+    state.js → incident-service.js (subscribes)
+
+# =============================================================================
+# COMPLEXITY ESTIMATES (LEAP-008)
+# =============================================================================
+complexityEstimates:
+  description: "Effort estimate for implementation"
+  
+  overall: "[small|medium|large]"
+  
+  breakdown:
+    - component: "[component name]"
+      effort: "[small|medium|large]"
+      reason: "[why this effort level]"
+  
+  definitions:
+    small: "< 1 hour, straightforward changes"
+    medium: "1-3 hours, some complexity or multiple files"
+    large: "> 3 hours, significant changes or new patterns"
+
+# =============================================================================
+# FILES TO MODIFY/CREATE
+# =============================================================================
+filesToModify:
+  - file: "[path/to/file]"
+    changes: "[What changes to make]"
+
+filesToCreate:
+  - file: "[path/to/new/file]"
+    purpose: "[What it does]"
+
+# =============================================================================
+# IMPLEMENTATION STEPS
+# =============================================================================
+implementationSteps:
+  1: "[Step 1]"
+  2: "[Step 2]"
+
+# =============================================================================
+# SCOPE CHANGES (Track what changed from Discovery)
+# =============================================================================
+scopeChanges:
+  description: "Compare this design to stage-1-discovery.yaml requirements"
+  
+  intentionallyDeferred:
+    description: "Features explicitly moved to future phase"
+    items:
+      - feature: "[Feature name]"
+        reason: "[Why deferred]"
+        futurePhase: "[When to address]"
+  
+  notImplemented:
+    description: "Features from Discovery NOT in this design (explain why)"
+    items:
+      - feature: "[Feature from Discovery]"
+        status: "[dropped|simplified|merged]"
+        explanation: "[Why not implemented as originally scoped]"
+
+# =============================================================================
+# TRACEABILITY REVIEW (Required before !Proceed)
+# =============================================================================
+traceabilityReview:
+  description: "Before requesting !Proceed, verify design addresses all requirements"
+  
+  checkAgainstStages:
+    stage1Discovery:
+      file: "stage-1-discovery.yaml"
+      verify: "All features from Discovery are in this design OR in scopeChanges"
+    
+    stage2Research:
+      file: "stage-2-research.yaml"
+      verify: "All research findings are addressed in design"
+    
+    stage3Analysis:
+      file: "stage-3-analysis.yaml"
+      verify: "Recommended approach from analysis is reflected here"
+  
+  confirmation:
+    allFeaturesAddressed: "[true|false]"
+    gapsExplained: "[true|false - if false, scopeChanges must explain why]"
+
+nextStage:
+  name: "implementation"
+  requires: "!Proceed"

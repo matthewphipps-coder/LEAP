@@ -1,0 +1,3241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPEC-003: Extensible App Shell Prototype</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons - using @latest until stable version identified -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* =============================================================================
+           DESIGN TOKENS (from SPEC-002 / variables.css)
+           ============================================================================= */
+        :root {
+            /* Brand Colors */
+            --bg-primary: #0a0a0c;
+            --accent-primary: #62d84e;
+            --accent-glow: rgba(98, 216, 78, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+
+            /* Brand Colors - Configurable */
+            --brand-primary: #62d84e;
+            --brand-secondary: #8b5cf6;
+            --brand-accent: #38bdf8;
+
+            /* Plasma Colors */
+            --plasma-1: var(--brand-primary);
+            --plasma-2: var(--brand-secondary);
+            --plasma-3: var(--brand-accent);
+
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 20px;
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+            /* Typography */
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Font Sizes */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease-out;
+            --transition-normal: 300ms ease-out;
+
+            /* Layout */
+            --header-height: 64px;
+            --sidebar-button-size: 44px;
+            --sidebar-width: 68px;
+            --sidebar-gap: 20px;
+
+            /* Z-Index */
+            --z-sidebar: 100;
+            --z-header: 200;
+            --z-tooltip: 250;
+            --z-modal: 400;
+            --z-settings: 350;
+        }
+
+        /* Light Theme Override */
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        /* =============================================================================
+           CSS RESET & BASE
+           ============================================================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* =============================================================================
+           PLASMA BACKGROUND (FR-001 from SPEC-002)
+           ============================================================================= */
+        .plasma-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .plasma-bubble {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            mix-blend-mode: screen;
+            opacity: 0.5;
+        }
+
+        .plasma-bubble.b1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation: bubbleFloat1 45s ease-in-out infinite;
+        }
+
+        .plasma-bubble.b2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation: bubbleFloat2 55s ease-in-out infinite;
+        }
+
+        .plasma-bubble.b3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(98, 216, 78, 0.3), transparent 60%);
+            top: 50%;
+            left: 40%;
+            animation: bubbleFloat3 60s ease-in-out infinite;
+        }
+
+        @keyframes bubbleFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(100px, 50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-50px, 100px) scale(0.95);
+            }
+        }
+
+        @keyframes bubbleFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(-80px, -60px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(60px, -80px) scale(0.9);
+            }
+        }
+
+        @keyframes bubbleFloat3 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(-100px, 80px) scale(1.15);
+            }
+        }
+
+        /* Light theme plasma */
+        .light-theme .plasma-bubble {
+            opacity: 0.25;
+            mix-blend-mode: multiply;
+        }
+
+        /* =============================================================================
+           GLASS UTILITY
+           ============================================================================= */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* =============================================================================
+           ANIMATION UTILITIES
+           ============================================================================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+
+        .hover-lift {
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* =============================================================================
+           APP LAYOUT
+           ============================================================================= */
+        .app-layout {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "sidebar canvas";
+            grid-template-columns: calc(var(--sidebar-width) + var(--sidebar-gap) * 2) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            min-height: 100vh;
+        }
+
+        /* =============================================================================
+           HEADER - Floating (no background), Smart Overflow
+           ============================================================================= */
+        .header {
+            grid-area: header;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-header);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: 0 var(--space-lg);
+            height: var(--header-height);
+            /* No background - floats over plasma */
+        }
+
+        /* Left zone - logo, brand, tabs (flexes but can shrink) */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        /* Customer logo slot */
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-logo-img {
+            height: 28px;
+            width: auto;
+            max-width: 160px;
+            object-fit: contain;
+        }
+
+        /* Theme-swappable logo images */
+        .header-logo-img.logo-dark {
+            display: flex;
+        }
+
+        .header-logo-img.logo-light {
+            display: none;
+        }
+
+        .light-theme .header-logo-img.logo-dark {
+            display: none;
+        }
+
+        .light-theme .header-logo-img.logo-light {
+            display: flex;
+        }
+
+        /* NEXUS brand text */
+        .header-brand-text {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Page tabs container - SMART OVERFLOW */
+        .page-tabs-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-left: var(--space-md);
+            flex-shrink: 1;
+            min-width: 0;
+            /* overflow: hidden;  <-- REMOVED to allow dropdown to show */
+        }
+
+        .page-tabs {
+            display: flex;
+            gap: var(--space-sm);
+            /* overflow: hidden; */
+            /* REMOVED: was clipping tab tooltips positioned below tabs */
+        }
+
+        .page-tab {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+        }
+
+        .page-tab:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .page-tab.active {
+            color: var(--brand-primary);
+            background: rgba(98, 216, 78, 0.15);
+        }
+
+        .page-tab i {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Page tab tooltip - like sidebar */
+        .page-tab .tab-tooltip {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--glass-shadow);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-fast);
+            z-index: var(--z-tooltip);
+            pointer-events: none;
+        }
+
+        .page-tab .tab-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid var(--glass-border);
+        }
+
+        .page-tab:hover .tab-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Tabs overflow button */
+        .tabs-overflow-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .tabs-overflow-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .tabs-overflow-btn.visible {
+            display: flex;
+        }
+
+        .tabs-overflow-btn i {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Overflow dropdown menu */
+        .tabs-overflow-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 180px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--glass-shadow);
+            padding: var(--space-sm);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-fast);
+            z-index: var(--z-tooltip);
+        }
+
+        .tabs-overflow-menu.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tabs-overflow-menu button {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            text-align: left;
+        }
+
+        .tabs-overflow-menu button:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .tabs-overflow-menu button i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-left: auto;
+            /* Push to far right */
+        }
+
+        /* AI Search - truly centered in viewport */
+        .ai-search-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            padding: 0 var(--space-lg);
+        }
+
+        .ai-search-box {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            border-radius: var(--radius-full);
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .ai-search-box::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .ai-search-box:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        /* Light theme: make search box more visible */
+        .light-theme .ai-search-box {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* =============================================================================
+           UNIFIED COUNT BADGE - Reusable across sidebar, tabs, header icons
+           Usage: Add .has-badge to parent, add <span class="count-badge">N</span>
+           ============================================================================= */
+        .has-badge {
+            position: relative;
+        }
+
+        .count-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: rgba(255, 255, 255, 0.15);
+            /* Neutral default */
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .count-badge:empty {
+            display: none;
+        }
+
+
+        /* Badge color variants based on card priority - increased specificity */
+        .nav-item .count-badge.warning,
+        .count-badge.warning {
+            background: #f59e0b !important;
+            /* Amber */
+        }
+
+        .nav-item .count-badge.urgent,
+        .count-badge.urgent {
+            background: #ef4444 !important;
+            /* Red */
+        }
+
+        /* Neutral badge (default/no urgent or amber cards) */
+        .nav-item .count-badge:not(.warning):not(.urgent),
+        .count-badge:not(.warning):not(.urgent) {
+            background: rgba(255, 255, 255, 0.15);
+            /* Subtle glass effect */
+            backdrop-filter: blur(10px);
+        }
+
+        /* Positioning variants for different contexts */
+        .nav-item .count-badge {
+            top: 2px;
+            right: 2px;
+        }
+
+        .page-tab .count-badge {
+            top: 2px;
+            right: 2px;
+        }
+
+        .btn-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .btn-icon:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .btn-icon i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle::after {
+            content: '🌙';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            transition: all var(--transition-normal);
+        }
+
+        .light-theme .theme-toggle::after {
+            content: '☀️';
+            left: calc(100% - 22px);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: transform var(--transition-fast);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* =============================================================================
+           SIDEBAR - FLOATING PILL with CIRCULAR BUTTONS & TOOLTIPS
+           ============================================================================= */
+        .sidebar {
+            position: fixed;
+            top: calc(var(--header-height) + var(--sidebar-gap) + 40px);
+            /* Lower on screen */
+            left: var(--sidebar-gap);
+            width: var(--sidebar-width);
+            z-index: var(--z-sidebar);
+            padding: var(--space-md) var(--space-sm);
+            display: flex;
+            flex-direction: column;
+            border-radius: calc(var(--sidebar-width) / 2);
+            /* Pill shape based on width */
+            overflow: visible;
+            /* Transition for show/hide */
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        /* Hidden state - sidebar disappears when page has no actions */
+        .sidebar.hidden {
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        /* Section separator line */
+        .nav-separator {
+            width: 32px;
+            height: 1px;
+            background: var(--glass-border);
+            margin: var(--space-xs) 0;
+        }
+
+        /* Nav item - CIRCULAR highlight */
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--sidebar-button-size);
+            height: var(--sidebar-button-size);
+            border: none;
+            /* Default subtle background so circles are visible even without icons */
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 50%;
+            /* CIRCULAR */
+            transition: all var(--transition-fast);
+        }
+
+        .nav-item i {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .nav-item.active {
+            color: var(--brand-primary);
+            background: rgba(98, 216, 78, 0.15);
+        }
+
+        /* Badge on sidebar nav - uses unified count-badge */
+        /* (positioning variant defined in count-badge section) */
+
+        /* Tooltip - appears on hover */
+        .nav-item .nav-tooltip {
+            position: absolute;
+            left: calc(100% + 16px);
+            top: 50%;
+            transform: translateY(-50%);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--glass-shadow);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-fast);
+            z-index: var(--z-tooltip);
+            pointer-events: none;
+        }
+
+        .nav-item .nav-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 6px solid var(--glass-border);
+        }
+
+        .nav-item:hover .nav-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* =============================================================================
+           CANVAS / PAGE SYSTEM
+           ============================================================================= */
+        .canvas {
+            grid-area: canvas;
+            padding: var(--space-xl);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-lg);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .card {
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+        }
+
+        .card h3 {
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-sm);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+        }
+
+        /* =============================================================================
+           SETTINGS DIALOG - Full-screen modal with left menu navigation
+           ============================================================================= */
+        .settings-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: var(--z-settings);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xl);
+        }
+
+        .settings-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main dialog container */
+        .settings-dialog {
+            width: 100%;
+            max-width: 900px;
+            height: 80vh;
+            max-height: 700px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+
+        .settings-overlay.visible .settings-dialog {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Left sidebar menu */
+        .settings-menu {
+            background: var(--bg-primary);
+            border-right: 1px solid var(--glass-border);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-menu-header {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .settings-menu-header h2 {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            margin: 0;
+        }
+
+        .settings-menu-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md) var(--space-sm);
+        }
+
+        .settings-menu-section {
+            margin-bottom: var(--space-md);
+        }
+
+        .settings-menu-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: var(--space-sm) var(--space-md);
+            margin-bottom: var(--space-xs);
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            text-align: left;
+        }
+
+        .settings-menu-item:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .settings-menu-item.active {
+            background: rgba(98, 216, 78, 0.15);
+            color: var(--brand-primary);
+        }
+
+        .settings-menu-item i {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        .settings-menu-item.active i {
+            opacity: 1;
+        }
+
+        /* Right content area */
+        .settings-content {
+            background: var(--glass-bg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .settings-content-header {
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--bg-primary);
+        }
+
+        .settings-content-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-lg);
+            margin: 0;
+        }
+
+        .settings-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .settings-close:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .settings-content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-xl);
+        }
+
+        /* Settings sections and form elements */
+        .settings-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-section-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: var(--space-md) 0;
+            gap: var(--space-lg);
+        }
+
+        .setting-row:not(:last-child) {
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: var(--text-base);
+            font-weight: 500;
+            margin-bottom: var(--space-xs);
+        }
+
+        .setting-description {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .setting-control {
+            flex-shrink: 0;
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            width: 48px;
+            height: 26px;
+            background: var(--glass-border);
+            border-radius: var(--radius-full);
+            position: relative;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .toggle-switch.active {
+            background: var(--brand-primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        /* Select dropdown */
+        .setting-select {
+            padding: var(--space-sm) var(--space-xl) var(--space-sm) var(--space-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            min-width: 160px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+        }
+
+        /* Input field */
+        .setting-input {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            min-width: 200px;
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+        }
+
+        /* Danger zone */
+        .settings-danger-zone {
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: var(--radius-md);
+        }
+
+        .settings-danger-zone .settings-section-title {
+            color: #ef4444;
+            border-bottom-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Footer with save button */
+        .settings-footer {
+            padding: var(--space-md) var(--space-xl);
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-sm);
+        }
+
+        .btn-primary {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--brand-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            padding: var(--space-sm) var(--space-lg);
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+
+
+
+
+        /* =============================================================================
+           DISCO-004: CARD & CANVAS UI
+           ============================================================================= */
+
+        /* Horizon Navigation Filters */
+        .horizon-nav {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+        }
+
+        .horizon-filter {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: var(--text-sm);
+            text-align: left;
+        }
+
+        .horizon-filter:hover {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        .horizon-filter.active {
+            background: rgba(98, 216, 78, 0.15);
+            color: var(--brand-primary);
+        }
+
+        .horizon-filter svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .horizon-filter .count-badge {
+            position: static;
+            margin-left: auto;
+            min-width: 20px;
+            height: 20px;
+        }
+
+        .horizon-filter .count-badge.urgent {
+            background: #ef4444;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Card Canvas Grid */
+        .card-canvas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .card-canvas.list-mode {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        /* Nexus Card Component */
+        .nexus-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--glass-shadow);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 120px;
+        }
+
+        /* Card sizing variants */
+        .nexus-card.compact {
+            width: 100%;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .nexus-card.medium {
+            width: 100%;
+            min-width: 280px;
+            max-width: 320px;
+        }
+
+        .nexus-card.large {
+            width: 100%;
+            min-width: 350px;
+            max-width: 400px;
+            grid-column: span 2;
+        }
+
+        /* Card accent colors */
+        .nexus-card.accent-none {
+            border-color: var(--glass-border);
+        }
+
+        .nexus-card.accent-amber {
+            background: linear-gradient(135deg, var(--glass-bg), rgba(251, 191, 36, 0.08));
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .nexus-card.accent-red {
+            background: linear-gradient(135deg, var(--glass-bg), rgba(239, 68, 68, 0.08));
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Card animations */
+        .nexus-card.animated {
+            animation: urgentPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes urgentPulse {
+
+            0%,
+            100% {
+                border-color: rgba(239, 68, 68, 0.4);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+
+            50% {
+                border-color: rgba(239, 68, 68, 0.8);
+                box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+            }
+        }
+
+        /* Card hover */
+        .nexus-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border-color: var(--brand-primary);
+        }
+
+        /* Tombstone state */
+        .nexus-card.tombstone {
+            opacity: 0.5;
+            filter: grayscale(100%);
+            cursor: not-allowed;
+        }
+
+        .nexus-card.tombstone .card-title {
+            text-decoration: line-through;
+        }
+
+        /* Card dragging */
+        .nexus-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .nexus-card.drag-over {
+            border-color: var(--brand-primary);
+            background: rgba(98, 216, 78, 0.1);
+        }
+
+        /* Card header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .card-type {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .card-priority-badge {
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .card-priority-badge.p1 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .card-priority-badge.p2 {
+            background: rgba(251, 191, 36, 0.2);
+            color: #f59e0b;
+        }
+
+        .card-priority-badge.p3 {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        /* Card title */
+        .card-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: var(--space-xs) 0;
+            line-height: 1.4;
+        }
+
+        .nexus-card.compact .card-title {
+            font-size: var(--text-base);
+        }
+
+        .nexus-card.large .card-title {
+            font-size: var(--text-xl);
+        }
+
+        /* Card summary */
+        .card-summary {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: none;
+        }
+
+        .nexus-card.large .card-summary,
+        .nexus-card:hover .card-summary {
+            display: block;
+        }
+
+        /* Card footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: var(--space-sm);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        .card-meta svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .card-sla-indicator {
+            font-size: var(--text-xs);
+            font-weight: 600;
+        }
+
+        .card-sla-indicator.at-risk {
+            color: #ef4444;
+        }
+
+        .card-sla-indicator.warning {
+            color: #f59e0b;
+        }
+
+        /* List mode styling */
+        .card-canvas.list-mode .nexus-card {
+            max-width: none;
+            min-height: 80px;
+            flex-direction: row;
+            align-items: center;
+            padding: var(--space-md) var(--space-lg);
+        }
+
+        .card-canvas.list-mode .nexus-card.large {
+            grid-column: auto;
+        }
+
+        .card-canvas.list-mode .card-header {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-canvas.list-mode .card-title {
+            font-size: var(--text-base);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-canvas.list-mode .card-summary {
+            display: none;
+        }
+
+        .card-canvas.list-mode .card-footer {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+            margin-left: auto;
+        }
+
+        /* Horizon groups (for list mode) */
+        .horizon-group {
+            margin-bottom: var(--space-xl);
+        }
+
+        .horizon-group-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* AI Resort Button */
+        .ai-resort-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--space-lg);
+        }
+
+        .ai-resort-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(98, 216, 78, 0.3);
+        }
+
+        .ai-resort-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Empty state */
+        .canvas-empty-state {
+            text-align: center;
+            padding: var(--space-xl) 0;
+            color: var(--text-secondary);
+        }
+
+        .canvas-empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--space-md);
+            opacity: 0.3;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .card-canvas {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .nexus-card.large {
+                grid-column: span 1;
+                max-width: 320px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-canvas {
+                grid-template-columns: 1fr;
+            }
+
+            .nexus-card.large,
+            .nexus-card.medium {
+                max-width: none;
+            }
+        }
+
+
+        /* Demo Indicator */
+        .demo-indicator {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            color: var(--text-secondary);
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Plasma Background -->
+    <div class="plasma-background">
+        <div class="plasma-bubble b1"></div>
+        <div class="plasma-bubble b2"></div>
+        <div class="plasma-bubble b3"></div>
+    </div>
+
+    <div class="app-layout">
+        <!-- HEADER (floating, no background) -->
+        <header class="header">
+            <!-- Customer Logo (swappable) - STRESS TEST: Max width logo -->
+            <!-- Header Left Zone: Logo + Brand + Tabs -->
+            <div class="header-left">
+                <!-- Customer Logo (swappable) - STRESS TEST: Max width logo -->
+                <!-- Customer Logo (swappable) - STRESS TEST: Max width logo -->
+                <div class="header-logo">
+                    <!-- Max-width logo for stress testing (160px) -->
+                    <!-- Dark Mode Logo (White Text) -->
+                    <img src="./acme_logo_max.png" class="header-logo-img logo-dark" alt="ACME CORP"
+                        style="height: 28px; width: auto; max-width: 160px; object-fit: contain;">
+
+                    <!-- Light Mode Logo (Dark Text - Reusing same image for now or opacity shift) -->
+                    <!-- For simplicity using same logo but maybe with filter if needed, 
+                         or assuming logo works on light bg if text is dark. 
+                         But the generated logo was white text. 
+                         Let's use a filter to invert it for light mode test? 
+                         filter: invert(1) -->
+                    <img src="./acme_logo_max.png" class="header-logo-img logo-light" alt="ACME CORP"
+                        style="height: 28px; width: auto; max-width: 160px; object-fit: contain; filter: invert(1);">
+                </div>
+                <!-- NEXUS Brand -->
+                <span class="header-brand-text">NEXUS</span>
+
+                <!-- Page Tabs Container (with smart overflow) -->
+                <div class="page-tabs-container" id="page-tabs-container">
+                    <nav class="page-tabs" id="page-tabs">
+                        <!-- Rendered by JS for extensibility -->
+                    </nav>
+                    <!-- Overflow button (hidden until needed) -->
+                    <button class="tabs-overflow-btn" id="tabs-overflow-btn" title="More pages">
+                        <i data-lucide="more-horizontal"></i>
+                    </button>
+                    <!-- Overflow dropdown -->
+                    <div class="tabs-overflow-menu" id="tabs-overflow-menu">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Search (absolutely centered) -->
+            <div class="ai-search-container">
+                <input type="text" class="ai-search-box" placeholder="Ask anything..." id="ai-search" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="header-actions">
+                <div class="has-badge">
+                    <button class="btn-icon" id="notifications-btn" title="Notifications">
+                        <i data-lucide="bell"></i>
+                    </button>
+                    <span class="count-badge" id="notification-count">5</span>
+                </div>
+
+                <button class="btn-icon" id="settings-btn" title="Settings">
+                    <i data-lucide="settings"></i>
+                </button>
+
+                <div class="theme-toggle" id="theme-toggle" title="Toggle theme"></div>
+
+                <div class="user-avatar">MP</div>
+            </div>
+        </header>
+
+        <!-- SIDEBAR - Floating Pill with Circular Buttons -->
+        <aside class="sidebar glass">
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <!-- Nav items rendered by JS for extensibility -->
+            </nav>
+        </aside>
+
+        <!-- CANVAS / PAGE SYSTEM -->
+        <main class="canvas">
+            <div class="page active" id="page-dashboard" data-page="dashboard">
+                <h1 class="page-title animate-in">My Work</h1>
+
+                <!-- Card Canvas -->
+                <div class="card-canvas" id="card-canvas">
+                    <!-- Large P1 Card (Animated, SLA Breach) -->
+                    <div class="nexus-card large accent-red animated" data-card-id="1" data-horizon="now"
+                        draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p1">P1</span>
+                        </div>
+                        <h3 class="card-title">VPN Service Outage</h3>
+                        <p class="card-summary">47 users unable to connect. Database cluster primary node failure.
+                            Engineering team investigating. Last update 5 min ago.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 2h ago</span>
+                                <span><i data-lucide="user"></i> Assigned to you</span>
+                            </div>
+                            <span class="card-sla-indicator at-risk">SLA BREACH</span>
+                        </div>
+                    </div>
+
+                    <!-- Medium P1 Card (Amber accent) -->
+                    <div class="nexus-card medium accent-amber" data-card-id="2" data-horizon="now" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Change</span>
+                            <span class="card-priority-badge p1">P1</span>
+                        </div>
+                        <h3 class="card-title">Security Patch Deployment</h3>
+                        <p class="card-summary">Critical security update for production servers. Deployment window:
+                            Tonight 10PM-2AM.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 5h ago</span>
+                            </div>
+                            <span class="card-sla-indicator warning">Due today</span>
+                        </div>
+                    </div>
+
+                    <!-- Medium P2 Card -->
+                    <div class="nexus-card medium accent-none" data-card-id="3" data-horizon="now" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p2">P2</span>
+                        </div>
+                        <h3 class="card-title">Email Delivery Delays</h3>
+                        <p class="card-summary">Some users experiencing 10-15 minute delays in email delivery. SMTP
+                            queue backlog identified.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 1 day ago</span>
+                                <span><i data-lucide="users"></i> With team</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compact P2 Card -->
+                    <div class="nexus-card compact accent-none" data-card-id="4" data-horizon="next" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Task</span>
+                            <span class="card-priority-badge p2">P2</span>
+                        </div>
+                        <h3 class="card-title">Review Q1 Metrics</h3>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medium P3 Card -->
+                    <div class="nexus-card medium accent-none" data-card-id="5" data-horizon="next" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p3">P3</span>
+                        </div>
+                        <h3 class="card-title">Dashboard Widget Error</h3>
+                        <p class="card-summary">Analytics widget showing cached data instead of live. Affects 3 users.
+                        </p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compact P3 Card -->
+                    <div class="nexus-card compact accent-none" data-card-id="6" data-horizon="next" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Task</span>
+                            <span class="card-priority-badge p3">P3</span>
+                        </div>
+                        <h3 class="card-title">Update Documentation</h3>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 1 week ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compact Card (Later horizon) -->
+                    <div class="nexus-card compact accent-none" data-card-id="7" data-horizon="later" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Task</span>
+                            <span class="card-priority-badge p3">P3</span>
+                        </div>
+                        <h3 class="card-title">Cleanup Old Logs</h3>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 2 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medium Card (Inbox) -->
+                    <div class="nexus-card medium accent-amber" data-card-id="8" data-horizon="inbox" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p2">P2</span>
+                        </div>
+                        <h3 class="card-title">Mobile App Login Issues</h3>
+                        <p class="card-summary">Users reporting intermittent login failures on iOS app. Authentication
+                            service logs show increased latency.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 30 min ago</span>
+                                <span style="color: var(--brand-primary); font-weight: 600;">NEW</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombstone Card -->
+                    <div class="nexus-card compact accent-none tombstone" data-card-id="9" data-horizon="now"
+                        draggable="false">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p3">P3</span>
+                        </div>
+                        <h3 class="card-title">Print Server Offline</h3>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span>Record deleted</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medium Card (From me - delegated) -->
+                    <div class="nexus-card medium accent-none" data-card-id="10" data-horizon="next" draggable="true"
+                        style="opacity: 0.7;">
+                        <div class="card-header">
+                            <span class="card-type">Change</span>
+                            <span class="card-priority-badge p2">P2</span>
+                        </div>
+                        <h3 class="card-title">Firewall Rule Update</h3>
+                        <p class="card-summary">Waiting for network team approval. Delegated to John.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="arrow-right"></i> From you</span>
+                                <span><i data-lucide="clock"></i> 1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Large P2 Card -->
+                    <div class="nexus-card large accent-amber" data-card-id="11" data-horizon="now" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Incident</span>
+                            <span class="card-priority-badge p2">P2</span>
+                        </div>
+                        <h3 class="card-title">API Rate Limit Exceeded</h3>
+                        <p class="card-summary">Third-party integration hitting rate limits during peak hours. 12
+                            customers affected. Investigating usage patterns and considering quota increase.</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 6h ago</span>
+                                <span><i data-lucide="trending-up"></i> 12 users affected</span>
+                            </div>
+                            <span class="card-sla-indicator warning">Due in 4h</span>
+                        </div>
+                    </div>
+
+                    <!-- Compact Card -->
+                    <div class="nexus-card compact accent-none" data-card-id="12" data-horizon="later" draggable="true">
+                        <div class="card-header">
+                            <span class="card-type">Task</span>
+                            <span class="card-priority-badge p3">P3</span>
+                        </div>
+                        <h3 class="card-title">Archive Old Tickets</h3>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i data-lucide="clock"></i> 3 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="page-incidents" data-page="incidents">
+                <h1 class="page-title">Incidents</h1>
+                <div class="card-grid">
+                    <div class="card glass hover-lift">
+                        <h3>INC001 - Server Outage</h3>
+                        <p>Critical priority • Database cluster failure</p>
+                    </div>
+                    <div class="card glass hover-lift">
+                        <h3>INC002 - Network Latency</h3>
+                        <p>High priority • Performance degradation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page" id="page-reports" data-page="reports">
+                <h1 class="page-title">Reports</h1>
+                <p style="color: var(--text-secondary);">Report generation and analytics will appear here.</p>
+            </div>
+
+            <div class="page" id="page-calendar" data-page="calendar">
+                <h1 class="page-title">Calendar</h1>
+                <p style="color: var(--text-secondary);">Calendar and scheduling view will appear here.</p>
+            </div>
+
+            <div class="page" id="page-tasks" data-page="tasks">
+                <h1 class="page-title">Tasks</h1>
+                <p style="color: var(--text-secondary);">Task management view will appear here.</p>
+            </div>
+
+            <div class="page" id="page-analytics" data-page="analytics">
+                <h1 class="page-title">Analytics</h1>
+                <p style="color: var(--text-secondary);">Analytics dashboards will appear here.</p>
+            </div>
+
+            <div class="page" id="page-knowledge" data-page="knowledge">
+                <h1 class="page-title">Knowledge</h1>
+                <p style="color: var(--text-secondary);">Knowledge base articles will appear here.</p>
+            </div>
+
+            <div class="page" id="page-chat" data-page="chat">
+                <h1 class="page-title">Chat</h1>
+                <p style="color: var(--text-secondary);">Team communication will appear here.</p>
+            </div>
+
+            <div class="page" id="page-files" data-page="files">
+                <h1 class="page-title">Files</h1>
+                <p style="color: var(--text-secondary);">File browser will appear here.</p>
+            </div>
+
+            <div class="page" id="page-audit" data-page="audit">
+                <h1 class="page-title">Audit Log</h1>
+                <p style="color: var(--text-secondary);">System audit logs will appear here.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- SETTINGS DIALOG -->
+    <div class="settings-overlay" id="settings-overlay">
+        <div class="settings-dialog glass">
+            <!-- Left Menu -->
+            <nav class="settings-menu">
+                <div class="settings-menu-header">
+                    <h2>Settings</h2>
+                </div>
+                <div class="settings-menu-nav">
+                    <!-- MVP Settings: Appearance + Branding only -->
+                    <!-- NOTE: Config-driven for Factory extensibility -->
+                    <div class="settings-menu-section">
+                        <div class="settings-menu-section-label">Display</div>
+                        <button class="settings-menu-item active" data-section="appearance">
+                            <i data-lucide="palette"></i>
+                            Appearance
+                        </button>
+                        <button class="settings-menu-item" data-section="branding">
+                            <i data-lucide="image"></i>
+                            Branding
+                        </button>
+                    </div>
+                    <!-- Factory can add more sections via SETTINGS_MENU config -->
+                </div>
+            </nav>
+
+            <!-- Right Content Area -->
+            <div class="settings-content">
+                <div class="settings-content-header">
+                    <h3 class="settings-content-title" id="settings-section-title">Appearance</h3>
+                    <button class="settings-close" id="settings-close">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+
+                <div class="settings-content-body" id="settings-content-body">
+                    <!-- GENERAL SECTION (hidden - not in MVP menu) -->
+                    <div class="settings-panel-section" id="section-general" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Workspace</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Default Page</div>
+                                    <div class="setting-description">Choose which page to show when you open the app
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="dashboard" selected>Dashboard</option>
+                                        <option value="incidents">Incidents</option>
+                                        <option value="tasks">Tasks</option>
+                                        <option value="reports">Reports</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Auto-refresh</div>
+                                    <div class="setting-description">Automatically refresh data in the background</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-autorefresh"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Refresh Interval</div>
+                                    <div class="setting-description">How often to refresh data when auto-refresh is
+                                        enabled</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="30">30 seconds</option>
+                                        <option value="60" selected>1 minute</option>
+                                        <option value="300">5 minutes</option>
+                                        <option value="600">10 minutes</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-section-title">Language & Region</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Language</div>
+                                    <div class="setting-description">Interface language</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="en" selected>English (US)</option>
+                                        <option value="en-gb">English (UK)</option>
+                                        <option value="de">Deutsch</option>
+                                        <option value="fr">Français</option>
+                                        <option value="ja">日本語</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Timezone</div>
+                                    <div class="setting-description">Used for displaying dates and times</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="auto" selected>Auto-detect</option>
+                                        <option value="utc">UTC</option>
+                                        <option value="pst">Pacific Time</option>
+                                        <option value="est">Eastern Time</option>
+                                        <option value="gmt">GMT</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dummy section for scroll testing -->
+                        <div class="settings-section">
+                            <div class="settings-section-title">Data & Privacy</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Usage Analytics</div>
+                                    <div class="setting-description">Share anonymous usage data to help improve the app
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Crash Reports</div>
+                                    <div class="setting-description">Automatically send crash reports</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Data Retention</div>
+                                    <div class="setting-description">How long to keep your activity history</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="30">30 days</option>
+                                        <option value="90" selected>90 days</option>
+                                        <option value="365">1 year</option>
+                                        <option value="forever">Forever</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-section-title">Experimental Features</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Beta Features</div>
+                                    <div class="setting-description">Enable experimental features before they're
+                                        released</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Developer Mode</div>
+                                    <div class="setting-description">Show additional debugging options</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Performance Mode</div>
+                                    <div class="setting-description">Optimize for speed over visual effects</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APPEARANCE SECTION (default) -->
+                    <div class="settings-panel-section" id="section-appearance">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Theme</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Color Mode</div>
+                                    <div class="setting-description">Choose between dark and light theme</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select" id="theme-select">
+                                        <option value="dark" selected>Dark</option>
+                                        <option value="light">Light</option>
+                                        <option value="system">System</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Accent Color</div>
+                                    <div class="setting-description">Primary color used throughout the interface</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="green" selected>Green (Default)</option>
+                                        <option value="blue">Blue</option>
+                                        <option value="purple">Purple</option>
+                                        <option value="orange">Orange</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BRANDING SECTION -->
+                    <div class="settings-panel-section" id="section-branding" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Workspace Logos</div>
+
+                            <!-- Dark Mode Logo -->
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Dark Mode Logo</div>
+                                    <div class="setting-description">Displayed on dark backgrounds (White text
+                                        recommended). Max height 28px.</div>
+                                </div>
+                                <div class="setting-control"
+                                    style="flex-direction: column; align-items: flex-end; gap: 8px;">
+                                    <input type="file" id="logo-upload-dark"
+                                        accept="image/png, image/jpeg, image/svg+xml"
+                                        style="width: 200px; font-size: 12px;">
+                                    <button class="btn-secondary btn-sm" id="reset-logo-dark"
+                                        style="font-size: 11px;">Reset to Default</button>
+                                </div>
+                            </div>
+
+                            <!-- Light Mode Logo -->
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Light Mode Logo</div>
+                                    <div class="setting-description">Displayed on light backgrounds (Dark text
+                                        recommended).</div>
+                                </div>
+                                <div class="setting-control"
+                                    style="flex-direction: column; align-items: flex-end; gap: 8px;">
+                                    <input type="file" id="logo-upload-light"
+                                        accept="image/png, image/jpeg, image/svg+xml"
+                                        style="width: 200px; font-size: 12px;">
+                                    <button class="btn-secondary btn-sm" id="reset-logo-light"
+                                        style="font-size: 11px;">Reset to Default</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-section-title">Display Options</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Logo Fit</div>
+                                    <div class="setting-description">How the image scales within the container
+                                        (160x28px)</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select" id="logo-fit-select">
+                                        <option value="contain" selected>Contain (Preserve Aspect)</option>
+                                        <option value="cover">Cover (Fill Area)</option>
+                                        <option value="fill">Fill (Stretch)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NOTIFICATIONS SECTION -->
+                    <div class="settings-panel-section" id="section-notifications" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Push Notifications</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Enable Notifications</div>
+                                    <div class="setting-description">Receive browser notifications for important events
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-notifications"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Critical Incidents</div>
+                                    <div class="setting-description">Notify immediately for P1/P2 incidents</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-critical"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Task Assignments</div>
+                                    <div class="setting-description">Notify when tasks are assigned to you</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-tasks"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-section-title">Email Digest</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Daily Summary</div>
+                                    <div class="setting-description">Receive a daily email with activity summary</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch" id="toggle-daily-email"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI SETTINGS SECTION -->
+                    <div class="settings-panel-section" id="section-ai" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">AI Assistant</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Enable AI Assistant</div>
+                                    <div class="setting-description">Use AI-powered features throughout the app</div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-ai"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">AI Model</div>
+                                    <div class="setting-description">Select which AI model to use for suggestions</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="standard">Standard (Faster)</option>
+                                        <option value="advanced" selected>Advanced (Recommended)</option>
+                                        <option value="premium">Premium (Most Capable)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Auto-suggest Actions</div>
+                                    <div class="setting-description">Automatically suggest next actions on incidents
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch active" id="toggle-suggest"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECURITY SECTION -->
+                    <div class="settings-panel-section" id="section-security" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Account Security</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Two-Factor Authentication</div>
+                                    <div class="setting-description">Add an extra layer of security to your account
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="toggle-switch" id="toggle-2fa"></div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Session Timeout</div>
+                                    <div class="setting-description">Automatically log out after inactivity</div>
+                                </div>
+                                <div class="setting-control">
+                                    <select class="setting-select">
+                                        <option value="15">15 minutes</option>
+                                        <option value="30" selected>30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                        <option value="never">Never</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-danger-zone">
+                            <div class="settings-section-title">Danger Zone</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Delete Account</div>
+                                    <div class="setting-description">Permanently delete your account and all data. This
+                                        cannot be undone.</div>
+                                </div>
+                                <div class="setting-control">
+                                    <button class="btn-secondary"
+                                        style="color: #ef4444; border-color: rgba(239,68,68,0.5);">Delete
+                                        Account</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ABOUT SECTION -->
+                    <div class="settings-panel-section" id="section-about" style="display: none;">
+                        <div class="settings-section">
+                            <div class="settings-section-title">Application</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Version</div>
+                                    <div class="setting-description">NEXUS v2.1.0</div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Build</div>
+                                    <div class="setting-description">2026.01.21.001</div>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Environment</div>
+                                    <div class="setting-description">Production</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <div class="settings-section-title">Support</div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Documentation</div>
+                                    <div class="setting-description">View user guides and API documentation</div>
+                                </div>
+                                <div class="setting-control">
+                                    <button class="btn-secondary">Open Docs</button>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-info">
+                                    <div class="setting-label">Report an Issue</div>
+                                    <div class="setting-description">Submit a bug report or feature request</div>
+                                </div>
+                                <div class="setting-control">
+                                    <button class="btn-secondary">Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <button class="btn-secondary" id="settings-cancel">Cancel</button>
+                    <button class="btn-primary" id="settings-save">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Demo Indicator -->
+    <div class="demo-indicator glass">
+        SPEC-003 Prototype v9
+    </div>
+
+    <script>
+        // =============================================================================
+        // EXTENSIBLE PAGE TABS CONFIG - Add new page tabs here
+        // =============================================================================
+        const PAGE_TABS = [
+            { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+            { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: '2' },
+            { id: 'tasks', icon: 'check-square', label: 'Tasks' },
+            { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
+            { id: 'calendar', icon: 'calendar', label: 'Calendar' },
+            // STRESS TEST: 10 tabs to test overflow
+            { id: 'analytics', icon: 'trending-up', label: 'Analytics' },
+            { id: 'knowledge', icon: 'book-open', label: 'Knowledge' },
+            { id: 'chat', icon: 'message-circle', label: 'Chat', badge: '5' },
+            { id: 'files', icon: 'folder', label: 'Files' },
+            { id: 'audit', icon: 'shield-check', label: 'Audit Log' },
+        ];
+
+        // Render page tabs from config with overflow detection
+        let visibleTabs = PAGE_TABS.length;
+        let hiddenTabs = [];
+
+        function renderPageTabs() {
+            const nav = document.getElementById('page-tabs');
+            nav.innerHTML = PAGE_TABS.map((tab, index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                const hasBadge = tab.badge ? 'has-badge' : '';
+                const badge = tab.badge ? `<span class="count-badge">${tab.badge}</span>` : '';
+                return `
+                    <button class="page-tab ${activeClass} ${hasBadge}" data-page="${tab.id}" data-index="${index}">
+                        <i data-lucide="${tab.icon}"></i>
+                        ${badge}
+                        <span class="tab-tooltip">${tab.label}</span>
+                    </button>
+                `;
+            }).join('');
+            lucide.createIcons();
+
+            // Add click listeners to visible tabs
+            nav.querySelectorAll('.page-tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectTab(btn.dataset.page);
+                });
+            });
+
+            // Check overflow after layout
+            setTimeout(() => checkTabOverflow(), 0);
+        }
+
+        function checkTabOverflow() {
+            const container = document.getElementById('page-tabs-container');
+            const nav = document.getElementById('page-tabs');
+            const overflowBtn = document.getElementById('tabs-overflow-btn');
+            const searchContainer = document.querySelector('.ai-search-container');
+            const tabs = nav.querySelectorAll('.page-tab');
+
+            if (!container || !nav || tabs.length === 0) return;
+
+            // Reset all to visible first to get true widths
+            tabs.forEach(tab => tab.style.display = 'flex');
+
+            // Calculate available width based on collision with search bar
+            let availableWidth;
+
+            if (searchContainer) {
+                const containerRect = container.getBoundingClientRect();
+                const searchRect = searchContainer.getBoundingClientRect();
+
+                // Space between tabs start and search bar start
+                // Subtract 50px for the overflow button and some breathing room
+                availableWidth = searchRect.left - containerRect.left - 50;
+            } else {
+                // Fallback
+                availableWidth = container.offsetWidth - 50;
+            }
+
+            let currentWidth = 0;
+            hiddenTabs = [];
+
+            tabs.forEach((tab, index) => {
+                const tabWidth = tab.offsetWidth + 8; // width + gap
+                currentWidth += tabWidth;
+
+                if (currentWidth > availableWidth) {
+                    tab.style.display = 'none';
+                    hiddenTabs.push(PAGE_TABS[index]);
+                }
+            });
+
+            // Show/hide overflow button based on results
+            if (hiddenTabs.length > 0) {
+                overflowBtn.classList.add('visible');
+
+                // Calculate aggregated badge count
+                let totalBadgeCount = 0;
+                hiddenTabs.forEach(tab => {
+                    if (tab.badge) {
+                        // Parse as integer to handle potential string '0' or similar
+                        const count = parseInt(tab.badge, 10);
+                        if (!isNaN(count)) {
+                            totalBadgeCount += count;
+                        }
+                    }
+                });
+
+                // Update overflow button content with aggregated badge
+                if (totalBadgeCount > 0) {
+                    // Check if badge already exists
+                    let badgeEl = overflowBtn.querySelector('.count-badge');
+                    if (!badgeEl) {
+                        badgeEl = document.createElement('span');
+                        badgeEl.className = 'count-badge';
+                        // Position it absolutely on the button
+                        badgeEl.style.position = 'absolute';
+                        badgeEl.style.top = '0';
+                        badgeEl.style.right = '0';
+                        overflowBtn.appendChild(badgeEl);
+                    }
+                    badgeEl.innerText = totalBadgeCount > 99 ? '99+' : totalBadgeCount;
+                } else {
+                    // Remove badge if 0
+                    const badgeEl = overflowBtn.querySelector('.count-badge');
+                    if (badgeEl) badgeEl.remove();
+                }
+
+                renderOverflowMenu();
+            } else {
+                overflowBtn.classList.remove('visible');
+            }
+        }
+
+        function renderOverflowMenu() {
+            const menu = document.getElementById('tabs-overflow-menu');
+            menu.innerHTML = hiddenTabs.map(tab => `
+                <button data-page="${tab.id}" class="overflow-menu-item">
+                    <i data-lucide="${tab.icon}"></i>
+                    ${tab.label}
+                    ${tab.badge ? `<span class="count-badge" style="position:static;margin-left:auto;">${tab.badge}</span>` : ''}
+                </button>
+            `).join('');
+            lucide.createIcons();
+
+            // Add click listeners to new menu items
+            menu.querySelectorAll('.overflow-menu-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const pageId = btn.dataset.page;
+                    selectTab(pageId);
+                    // Close menu
+                    menu.classList.remove('visible');
+                });
+            });
+        }
+
+        // Helper to select a tab properly
+        function selectTab(pageId) {
+            // Update UI state
+            document.querySelectorAll('.page-tab').forEach(t => {
+                if (t.dataset.page === pageId) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+
+            // Switch Page Content
+            const pages = document.querySelectorAll('.page');
+            let found = false;
+            pages.forEach(p => {
+                if (p.dataset.page === pageId) {
+                    p.classList.add('active');
+                    found = true;
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+
+            // Update sidebar for new page (contextual actions)
+            if (typeof updateSidebarForPage === 'function') {
+                updateSidebarForPage(pageId);
+            }
+
+            if (!found) console.log('Page content not found:', pageId);
+        }
+
+        // Overflow button toggle
+        document.getElementById('tabs-overflow-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('tabs-overflow-menu').classList.toggle('visible');
+        });
+
+        // Close overflow menu on outside click
+        document.addEventListener('click', () => {
+            document.getElementById('tabs-overflow-menu').classList.remove('visible');
+        });
+
+        // Initialize ResizeObserver for robust detection
+        const resizeObserver = new ResizeObserver(() => checkTabOverflow());
+        const tabsContainer = document.getElementById('page-tabs-container');
+        if (tabsContainer) {
+            resizeObserver.observe(tabsContainer);
+        }
+
+        // IMPORTANT: Also listen to window resize because Search Bar moves
+        window.addEventListener('resize', () => checkTabOverflow());
+
+        // Initialize page tabs
+        renderPageTabs();
+
+        // =============================================================================
+        // BRANDING / LOGO MANAGEMENT (New)
+        // =============================================================================
+        const LOGO_CONFIG = {
+            dark: localStorage.getItem('nexus_logo_dark') || './acme_logo_max.png',
+            light: localStorage.getItem('nexus_logo_light') || './acme_logo_max.png', // Default to same for now
+            fit: localStorage.getItem('nexus_logo_fit') || 'contain'
+        };
+
+        const domLogos = {
+            dark: document.querySelector('.header-logo-img.logo-dark'),
+            light: document.querySelector('.header-logo-img.logo-light')
+        };
+
+        function updateLogoDisplay() {
+            // Update Dark Logo
+            if (domLogos.dark) {
+                domLogos.dark.src = LOGO_CONFIG.dark;
+                domLogos.dark.style.objectFit = LOGO_CONFIG.fit;
+            }
+            // Update Light Logo
+            if (domLogos.light) {
+                domLogos.light.src = LOGO_CONFIG.light;
+                domLogos.light.style.objectFit = LOGO_CONFIG.fit;
+
+                // If using default acme logo in light mode, invert it. 
+                // If using custom uploaded logo, remove invert (unless user wants it? assume custom is correct)
+                // Heuristic: if blob/data url, remove filter. If default path, keep invert.
+                if (LOGO_CONFIG.light.includes('acme_logo_max.png')) {
+                    domLogos.light.style.filter = 'invert(1)';
+                } else {
+                    domLogos.light.style.filter = 'none';
+                }
+            }
+
+            // Sync UI inputs if settings is open
+            const fitSelect = document.getElementById('logo-fit-select');
+            if (fitSelect) fitSelect.value = LOGO_CONFIG.fit;
+        }
+
+        // Initialize Display
+        updateLogoDisplay();
+
+        // Handle File Uploads
+        function handleLogoUpload(e, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const dataUrl = event.target.result;
+                LOGO_CONFIG[type] = dataUrl;
+                localStorage.setItem(`nexus_logo_${type}`, dataUrl);
+                updateLogoDisplay();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById('logo-upload-dark')?.addEventListener('change', (e) => handleLogoUpload(e, 'dark'));
+        document.getElementById('logo-upload-light')?.addEventListener('change', (e) => handleLogoUpload(e, 'light'));
+
+        // Handle Fit Change
+        document.getElementById('logo-fit-select')?.addEventListener('change', (e) => {
+            LOGO_CONFIG.fit = e.target.value;
+            localStorage.setItem('nexus_logo_fit', LOGO_CONFIG.fit);
+            updateLogoDisplay();
+        });
+
+        // Handle Resets
+        const DEFAULT_LOGO = './acme_logo_max.png';
+        document.getElementById('reset-logo-dark')?.addEventListener('click', () => {
+            LOGO_CONFIG.dark = DEFAULT_LOGO;
+            localStorage.removeItem('nexus_logo_dark');
+            updateLogoDisplay();
+        });
+        document.getElementById('reset-logo-light')?.addEventListener('click', () => {
+            LOGO_CONFIG.light = DEFAULT_LOGO;
+            localStorage.removeItem('nexus_logo_light');
+            updateLogoDisplay();
+        });
+
+        // =============================================================================
+        // CONTEXTUAL SIDEBAR ACTIONS - Each page defines its own sidebar buttons
+        // =============================================================================
+        // NOTE: Sidebar is NOT page navigation (that's header tabs).
+        // Sidebar shows ACTION BUTTONS relevant to the current page.
+        // If a page has no actions, the sidebar disappears.
+
+        const PAGE_SIDEBAR_ACTIONS = {
+            // Dashboard page - has 1 action button (Gold Source MVP)
+            'dashboard': [
+                { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data', action: () => console.log('Refresh clicked') },
+            ],
+            // Incidents page - example with multiple actions
+            'incidents': [
+                { id: 'new-incident', icon: 'plus', label: 'New Incident' },
+                { id: 'filter', icon: 'filter', label: 'Filter' },
+            ],
+            // Tasks page - example
+            'tasks': [
+                { id: 'new-task', icon: 'plus', label: 'New Task' },
+            ],
+            // Reports page - no sidebar actions
+            'reports': [],
+            // Other pages - no sidebar actions (sidebar will hide)
+            'calendar': [],
+            'analytics': [],
+            'knowledge': [],
+            'chat': [],
+            'files': [],
+            'audit': [],
+        };
+
+        // Render sidebar for current page
+        function updateSidebarForPage(pageId) {
+            const sidebar = document.querySelector('.sidebar');
+            const nav = document.getElementById('sidebar-nav');
+            const actions = PAGE_SIDEBAR_ACTIONS[pageId] || [];
+
+            if (actions.length === 0) {
+                // No actions for this page - hide sidebar
+                sidebar.classList.add('hidden');
+            } else {
+                // Has actions - show sidebar with buttons
+                sidebar.classList.remove('hidden');
+
+                nav.innerHTML = actions.map((action, index) => `
+                    <button class="nav-item sidebar-action${index === 0 ? ' active' : ''}" data-action="${action.id}" title="${action.label}">
+                        <i data-lucide="${action.icon}"></i>
+                        <span class="nav-tooltip">${action.label}</span>
+                    </button>
+                `).join('');
+
+                // Re-initialize Lucide icons
+                lucide.createIcons();
+
+                // Add click handlers for action buttons
+                nav.querySelectorAll('.sidebar-action').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const actionId = btn.dataset.action;
+                        console.log(`Sidebar action clicked: ${actionId}`);
+                        // In real implementation, would call the action handler
+                    });
+                });
+            }
+        }
+
+        // Initialize sidebar for default page (dashboard)
+        updateSidebarForPage('dashboard');
+
+        // Page switching - updates tabs, pages, AND sidebar
+        document.querySelectorAll('[data-page]').forEach(el => {
+            el.addEventListener('click', () => {
+                const pageId = el.dataset.page;
+
+                // Update header tabs
+                document.querySelectorAll('.page-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.page === pageId);
+                });
+
+                // Update page visibility
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.toggle('active', page.dataset.page === pageId);
+                });
+
+                // Update sidebar for new page (contextual actions)
+                updateSidebarForPage(pageId);
+            });
+        });
+
+        // Theme toggle
+        document.querySelectorAll('.theme-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+            });
+        });
+
+        // Settings dialog
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const settingsClose = document.getElementById('settings-close');
+        const settingsCancel = document.getElementById('settings-cancel');
+        const settingsSave = document.getElementById('settings-save');
+        const settingsSectionTitle = document.getElementById('settings-section-title');
+
+        // Section names for title (MVP: Appearance + Branding only)
+        const sectionTitles = {
+            'appearance': 'Appearance',
+            'branding': 'Branding'
+            // Factory can extend via SETTINGS_SECTIONS config
+        };
+
+        function openSettings() {
+            settingsOverlay.classList.add('visible');
+            lucide.createIcons();
+        }
+
+        function closeSettings() {
+            settingsOverlay.classList.remove('visible');
+        }
+
+        // Settings menu navigation
+        document.querySelectorAll('.settings-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+
+                // Update active menu item
+                document.querySelectorAll('.settings-menu-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Update section title
+                settingsSectionTitle.textContent = sectionTitles[section] || 'Settings';
+
+                // Show/hide sections
+                document.querySelectorAll('.settings-panel-section').forEach(s => s.style.display = 'none');
+                const targetSection = document.getElementById(`section-${section}`);
+                if (targetSection) targetSection.style.display = 'block';
+            });
+        });
+
+        // Toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+            });
+        });
+
+        settingsBtn.addEventListener('click', openSettings);
+        settingsClose.addEventListener('click', closeSettings);
+        settingsCancel.addEventListener('click', closeSettings);
+        settingsSave.addEventListener('click', () => {
+            // In real app, save settings here
+            closeSettings();
+        });
+
+        // Click on overlay (but not dialog) closes
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) {
+                closeSettings();
+            }
+        });
+
+        // AI Search - SLOT ONLY per Q-002
+        // Search interactions deferred to LEAP-042
+        // No popup/expanded view for MVP
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeSettings();
+            }
+        });
+
+
+
+
+
+        // =============================================================================
+        // DISCO-004: CARD & CANVAS UI - JAVASCRIPT
+        // =============================================================================
+
+        // Horizon filter state
+        let currentHorizon = 'now'; // Default filter
+        let allCards = [];
+
+        // Calculate badge color based on card priorities in a horizon
+        function getBadgeClass(horizonId) {
+            let selector = '.nexus-card';
+            if (horizonId !== 'all') {
+                selector = `.nexus-card[data-horizon="${horizonId}"]`;
+            }
+            const cards = document.querySelectorAll(selector);
+            let hasRed = false;
+            let hasAmber = false;
+
+            cards.forEach(card => {
+                if (card.classList.contains('accent-red') || card.classList.contains('animated')) {
+                    hasRed = true;
+                } else if (card.classList.contains('accent-amber')) {
+                    hasAmber = true;
+                }
+            });
+
+            if (hasRed) return 'urgent';
+            if (hasAmber) return 'warning';
+            return '';
+        }
+
+        // Get count of cards in a horizon
+        function getHorizonCount(horizonId) {
+            if (horizonId === 'all') {
+                return document.querySelectorAll('.nexus-card:not(.tombstone)').length;
+            }
+            return document.querySelectorAll(`.nexus-card[data-horizon="${horizonId}"]:not(.tombstone)`).length;
+        }
+
+        // Refresh badge counts and colors
+        function refreshBadges() {
+            const horizons = ['inbox', 'now', 'next', 'later', 'all', 'done'];
+
+            horizons.forEach(horizonId => {
+                const btn = document.querySelector(`.nav-item[data-horizon="${horizonId}"]`);
+                if (!btn) return;
+
+                const count = getHorizonCount(horizonId);
+                const badgeClass = getBadgeClass(horizonId);
+
+                // Update or remove badge
+                let badge = btn.querySelector('.count-badge');
+
+                if (count > 0) {
+                    if (!badge) {
+                        // Create badge
+                        badge = document.createElement('span');
+                        badge.className = `count-badge ${badgeClass}`;
+                        badge.textContent = count;
+                        btn.insertBefore(badge, btn.querySelector('.nav-tooltip'));
+                        btn.classList.add('has-badge');
+                    } else {
+                        // Update existing badge
+                        badge.textContent = count;
+                        badge.className = `count-badge ${badgeClass}`;
+                    }
+                } else {
+                    // Remove badge if count is 0
+                    if (badge) {
+                        badge.remove();
+                        btn.classList.remove('has-badge');
+                    }
+                }
+            });
+        }
+
+        // Initialize horizon filters in sidebar
+        function initHorizonFilters() {
+            const sidebarNav = document.getElementById('sidebar-nav');
+
+            const horizons = [
+                { id: 'inbox', icon: 'inbox', label: 'Inbox' },
+                { id: 'now', icon: 'zap', label: 'Now' },
+                { id: 'next', icon: 'clock', label: 'Next' },
+                { id: 'later', icon: 'calendar', label: 'Later' },
+                { id: 'all', icon: 'list', label: 'All' },
+                { id: 'done', icon: 'check-circle', label: 'Done' }
+            ];
+
+            const horizonNavHTML = horizons.map((horizon, index) => {
+                const activeClass = horizon.id === currentHorizon ? 'active' : '';
+                const count = getHorizonCount(horizon.id);
+                const hasBadge = count > 0 ? 'has-badge' : '';
+                const badgeClass = getBadgeClass(horizon.id);
+                const badge = count > 0 ? `<span class="count-badge ${badgeClass}">${count}</span>` : '';
+
+                return `
+                    <button class="nav-item ${activeClass} ${hasBadge}" data-horizon="${horizon.id}">
+                        <i data-lucide="${horizon.icon}"></i>
+                        ${badge}
+                        <span class="nav-tooltip">${horizon.label}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Add separator and AI resort button at bottom
+            const aiResortButton = `
+                <div class="nav-separator"></div>
+                <button class="nav-item" id="ai-resort-btn">
+                    <i data-lucide="sparkles"></i>
+                    <span class="nav-tooltip">Optimise</span>
+                </button>
+            `;
+
+            sidebarNav.innerHTML = horizonNavHTML + aiResortButton;
+            lucide.createIcons();
+
+            // Add click listeners to horizon filters
+            document.querySelectorAll('.nav-item[data-horizon]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const horizon = btn.dataset.horizon;
+                    switchHorizon(horizon);
+                });
+            });
+        }
+
+        // Switch horizon filter
+        function switchHorizon(horizon) {
+            currentHorizon = horizon;
+
+            // Update active state
+            document.querySelectorAll('.nav-item[data-horizon]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.horizon === horizon);
+            });
+
+            // Filter cards
+            const cardCanvas = document.getElementById('card-canvas');
+            const cards = document.querySelectorAll('.nexus-card');
+
+            if (horizon === 'all') {
+                // List mode - show all cards
+                cardCanvas.classList.add('list-mode');
+                cards.forEach(card => card.style.display = 'flex');
+            } else {
+                // Grid mode - filter by horizon
+                cardCanvas.classList.remove('list-mode');
+                cards.forEach(card => {
+                    const cardHorizon = card.dataset.horizon;
+                    card.style.display = cardHorizon === horizon ? 'flex' : 'none';
+                });
+            }
+        }
+
+        // AI Re-sort functionality (simulated)
+        function initAIResort() {
+            const resortBtn = document.getElementById('ai-resort-btn');
+
+            resortBtn.addEventListener('click', () => {
+                // Simple shuffle without loading animation
+                const cardCanvas = document.getElementById('card-canvas');
+                const cards = Array.from(cardCanvas.querySelectorAll('.nexus-card'));
+
+                // Fisher-Yates shuffle
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    cardCanvas.appendChild(cards[j]);
+                }
+
+                console.log('Cards optimised');
+
+            });
+        }
+
+        // Drag and drop functionality
+        let draggedCard = null;
+
+        function initDragAndDrop() {
+            const cards = document.querySelectorAll('.nexus-card[draggable="true"]');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', handleDrop);
+            });
+
+            // Make horizon filters drop targets
+            const horizonFilters = document.querySelectorAll('.nav-item[data-horizon]');
+            horizonFilters.forEach(filter => {
+                filter.addEventListener('dragover', handleHorizonDragOver);
+                filter.addEventListener('dragleave', handleHorizonDragLeave);
+                filter.addEventListener('drop', handleHorizonDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            // Remove drag-over class from all cards
+            document.querySelectorAll('.nexus-card').forEach(card => {
+                card.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+
+            if (this !== draggedCard) {
+                this.classList.add('drag-over');
+            }
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (draggedCard !== this) {
+                // Reorder cards
+                const cardCanvas = document.getElementById('card-canvas');
+                const allCards = Array.from(cardCanvas.children);
+                const draggedIndex = allCards.indexOf(draggedCard);
+                const targetIndex = allCards.indexOf(this);
+
+                if (draggedIndex < targetIndex) {
+                    this.parentNode.insertBefore(draggedCard, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedCard, this);
+                }
+            }
+
+            this.classList.remove('drag-over');
+            return false;
+        }
+
+        function handleHorizonDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            this.style.background = 'rgba(98, 216, 78, 0.2)';
+            return false;
+        }
+
+        function handleHorizonDragLeave(e) {
+            this.style.background = '';
+        }
+
+        function handleHorizonDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            const newHorizon = this.dataset.horizon;
+
+            // Don't move to 'all' or 'done' horizons
+            if (newHorizon !== 'all' && newHorizon !== 'done' && draggedCard) {
+                const oldHorizon = draggedCard.dataset.horizon;
+                draggedCard.dataset.horizon = newHorizon;
+                console.log(`Card moved from ${oldHorizon} to ${newHorizon}`);
+
+                // Refresh all badges to update counts and colors
+                refreshBadges();
+
+                // If not viewing current horizon, hide the card
+                if (currentHorizon !== 'all' && currentHorizon !== newHorizon) {
+                    draggedCard.style.display = 'none';
+                }
+            }
+
+            this.style.background = '';
+            return false;
+        }
+
+        // Card click handler (placeholder for workbench integration)
+        function initCardClicks() {
+            const cards = document.querySelectorAll('.nexus-card:not(.tombstone)');
+
+            cards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Don't trigger if dragging
+                    if (!card.classList.contains('dragging')) {
+                        const cardId = card.dataset.cardId;
+                        console.log(`Card clicked: ${cardId}`);
+                        // TODO: Open workbench with card data
+                        alert(`Card ${cardId} clicked - would open workbench here`);
+                    }
+                });
+            });
+
+            // Tombstone cards show explanation
+            const tombstoneCards = document.querySelectorAll('.nexus-card.tombstone');
+            tombstoneCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    alert('This work is no longer in your view. The source record was deleted.');
+                });
+            });
+        }
+
+        // Initialize all DISCO-004 features
+        function initDISCO004() {
+            initHorizonFilters();
+            initAIResort();
+            initDragAndDrop();
+            initCardClicks();
+
+            // Set initial filter
+            switchHorizon(currentHorizon);
+        }
+
+        // Run DISCO-004 initialization after DOM load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDISCO004);
+        } else {
+            initDISCO004();
+        }
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,147 @@
+metadata:
+  type: "governance"
+  name: "LEAP Pairing Constitution"
+  purpose: "Master contract - mandatory engagement rules for AI-human collaboration"
+  version: "3.1.0"
+  created: "2026-01-15"
+  lastUpdated: "2026-01-19"
+  status: "active"
+
+preamble:
+  purpose: "Define mandatory engagement rules for collaboration"
+  goals: ["Ensure safety", "Maintain alignment", "Absolute user control"]
+
+documentHierarchy:
+  masterContract: "constitution.yaml (this file - always wins)"
+  
+  standingProtocols:  # Always in effect
+    - "pulse-protocol.yaml - Development methodology"
+    - "safety-protocol.yaml - Backup and deployment"
+    - "agent-persona.yaml - Peer review personas"
+    
+  triggeredWorkflows:  # Activated by command or condition
+    - "rrmd-protocol.yaml - Risk assessment (>3 files, core files, failures)"
+    - "bump-protocol.yaml - Agent recovery (!bump)"
+    - "3_FactoryTesting/initiate-factory.yaml - New factory (/newfactory)"
+    - "3_FactoryTesting/review-factory.yaml - Compare runs (after 2+ factory runs)"
+    
+  reference:
+    - "CURRENT_STATE.yaml - Current state tracker"
+    - "INDEX.yaml - Governance entry point"
+  conflictResolution: "Most specific document wins. If unclear, ask user."
+
+governanceManagement:
+  rule: "Maximum 25 governance files"
+  enforcement: "Merge new rules into existing files, don't create new ones"
+  
+  # GOVERNANCE IS CODE
+  leapPrinciple: "In LEAP, governance YAML IS the code"
+  implication: "Changes to LEAP_Governance require FULL lifecycle stages"
+  noSkipping: "Never skip research/analysis - YAML changes have ripple effects"
+  scope: "LEAP_Governance only - does NOT apply to GoldSource factory"
+
+governanceTemplates:
+  rule: "Use templates when creating new governance documents"
+  template: "1_LEAP/1_Governance/5_templates/governance.yaml"
+  purpose: "Ensures consistent structure across all governance files"
+
+# =============================================================================
+# RULES - 15 Mandatory Engagement Rules
+# =============================================================================
+
+rules:
+
+  - id: 1
+    name: "Recursive Summary (Narrative Check)"
+    description: "Before implementing, restate user's requirements"
+    enforcement: "No implementation without narrative check"
+
+  - id: 2
+    name: "Proposed Impact (Vetting Protocol)"
+    description: "List all files to modify/create BEFORE code is written"
+    enforcement: "User can veto any file or approach"
+
+  - id: 3
+    name: "Proceed Air-Gap (Zero Exception)"
+    description: "No code committed without standalone 'Proceed' from user"
+    enforcement: "Absolute - no exceptions"
+    checklist: "1_LEAP/1_Governance/3_checklists/before-file-op.yaml"
+    criticalNote: "'Yes' is NOT 'Proceed'. Wait for explicit !Proceed"
+
+  - id: 4
+    name: "Visual Witness (UI Validation)"
+    description: "After every UI change, wait for user's visual confirmation"
+    enforcement: "No stacking features on unverified states"
+
+  - id: 5
+    name: "No-Assumption Shield (Infrastructure Safety)"
+    description: "Never assume external infrastructure exists"
+    enforcement: "Inquire about APIs, credentials, services before use"
+
+  - id: 6
+    name: "Human-Centric UX (Persona Audit)"
+    description: "Every feature must be audited from target user perspective"
+    enforcement: "Prioritize utility over generic effects"
+
+  - id: 7
+    name: "Hard Stop Enforcement"
+    description: "User may invoke Hard Stop for any rule violation"
+    enforcement: "Agent must immediately cease and rectify"
+
+  - id: 8
+    name: "!pulse Protocol (Reset Mechanism)"
+    description: "User may invoke !pulse for mandatory pause and reset"
+    trigger: "!pulse"
+    selfInvokeCriteria:
+      - "Modifying >3 files"
+      - "Previous attempts failed"
+      - "Feeling uncertain"
+    workflow: "1_LEAP/1_Governance/1_rules/pulse-protocol.yaml"
+
+  - id: 9
+    name: "RRMD+ Protocol"
+    description: "Risk, Research, Mitigate, Document, Verify - before significant changes"
+    protocol: "1_LEAP/1_Governance/2_protocols/rrmd-protocol.yaml"
+    triggers: [">3 files", "core files", "data schema", "build/deploy", "2+ failures"]
+
+  - id: 10
+    name: "Agent Testing Guidelines"
+    description: "Check login state before testing, handle auth gracefully"
+    requirements:
+      - "Check if logged in before attempting login"
+      - "Handle auth errors gracefully"
+      - "Report auth status in test results"
+
+  - id: 11
+    name: "10-Second Status Update"
+    description: "Provide status updates during operations longer than 10 seconds"
+    enforcement: "User needs visibility that work is continuing"
+
+  - id: 12
+    name: "!bump Protocol (Agent Recovery)"
+    description: "Recovery when agent appears to have stopped"
+    trigger: "!bump"
+    protocol: "1_LEAP/1_Governance/2_protocols/bump-protocol.yaml"
+
+  - id: 13
+    name: "Before Starting Code Phase"
+    description: "Complete technical onboarding before Discovery stage of code phases"
+    checklist: "1_LEAP/1_Governance/3_checklists/before-phase.yaml"
+    requirement: "Read affected files before coding"
+
+  - id: 14
+    name: "Mutual Improvement Partnership"
+    description: "Both parties are here to make each other better"
+    coreCommitment: "Neither party can succeed alone. Neither should try."
+    principle: "This is about correctness, not speed. Both parties slow down."
+
+  - id: 15
+    name: "Gate Record Immutability"
+    description: "Audit records at gates cannot be modified after creation"
+    principle: "Gate records are truth. Truth cannot be edited."
+    enforcement: "Amendments reference original, do not replace"
+
+signoff:
+  signed: "Jan 15, 2026"
+  updated: "Phase 9 (Constitution Trim)"
+  status: "Active and Enforced"

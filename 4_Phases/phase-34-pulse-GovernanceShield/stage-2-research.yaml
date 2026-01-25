@@ -1,0 +1,43 @@
+metadata:
+  type: "stage-artifact"
+  stage: 2
+  name: "Research"
+  phase: 34
+  project: "GovernanceShield"
+  workflow: "pulse"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+research:
+  findings:
+    - file: "1_LEAP/1_Governance/2_protocols/bump-protocol.yaml"
+      status: "Ready for update"
+      gap: "No mention of scanning for salvageable code before stopping/wiping."
+      impact: "Update 'remediation' section to include 'Salvage Scan'."
+    
+    - file: "1_LEAP/2_Build_GoldSource/Methodology/goldsource-increment.yaml"
+      status: "Ready for update"
+      gap: "No mandatory step to read LESSONS_LEARNED.md."
+      impact: "Update Stage 1 (Research) activities list."
+    
+    - file: "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/spec-discovery-protocol.yaml"
+      status: "Critical Gap Confirmed"
+      gap: "Lifecycle does not mention reading ARCHITECTURE.yaml or scaffolding."
+      impact: "R&D generates specs in a vacuum, ignoring GoldSource capabilities."
+      
+    - file: "1_LEAP/3_R&D_GoldSource/Discovery_Methodology/Templates/"
+      status: "Missing Template"
+      gap: "No `prototype.html` template exists."
+      impact: "Prototypes are built from scratch, missing standard variables/CSS."
+
+  proposedChanges:
+    - "INSERT 'Salvage Scan' into bump-protocol.yaml"
+    - "INSERT 'Read Lessons' into goldsource-increment.yaml"
+    - "INSERT 'Stage -0.5: Deconstruction Audit' into spec-discovery-protocol.yaml"
+    - "CREATE 'prototype_template.html' in Templates/"
+    - "CREATE 'LESSONS_LEARNED.md' in 3_resources/"
+
+  questionsForUser:
+    - "Do you have a preferred HTML boilerplate for the prototype template, or should I extract one from the Phase 31 Masonry prototype (the successful one)?"
+
+nextStep: "Stage 3: Analysis (Defining the exact text changes)"

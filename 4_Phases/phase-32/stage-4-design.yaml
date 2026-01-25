@@ -1,0 +1,68 @@
+metadata:
+  phase: "32"
+  stage: "4"
+  name: "Design"
+  status: "complete"
+  workflow: "direct"
+  date: "2026-01-24"
+
+implementation_plan:
+  
+  step_1_design_system:
+    description: "Extend design tokens for Cards and Badges."
+    files:
+      - "2_GoldSource/scaffold/ui/styles/variables.css"
+    changes:
+      - "Add --card-bg, --card-medium, --card-large tokens."
+      - "Add --badge-urgent, --badge-warning, --badge-neutral tokens."
+  
+  step_2_configuration:
+    description: "Update app configuration for 'My Work' page and sidebar."
+    files:
+      - "2_GoldSource/scaffold/core/constants.js"
+    changes:
+      - "Rename PAGE_TABS[0] id 'dashboard' -> 'my-work', label 'My Work'."
+      - "Update PAGE_SIDEBAR_ACTIONS to match 'my-work'."
+      - "Populate 'my-work' actions: Inbox, Now, Next, Later, Done, Optimise."
+  
+  step_3_service_layer:
+    description: "Implement Card business logic and state."
+    files:
+      - "2_GoldSource/scaffold/core/app.js"
+      - "2_GoldSource/scaffold/features/card/card-service.js" (NEW)
+    pattern: "State Slice with event emission for badge updates."
+    logic:
+      - "Mock data generation (Cards)."
+      - "moveCard(cardId, horizon) logic."
+      - "getBadgeCounts() and getBadgeColors() logic."
+  
+  step_4_ui_components:
+    description: "Implement Card and Canvas UI."
+    files:
+      - "2_GoldSource/scaffold/ui/components/card/nexus-card-ui.js" (NEW)
+      - "2_GoldSource/scaffold/ui/components/card/card.css" (NEW)
+      - "2_GoldSource/scaffold/ui/components/canvas/canvas-ui.js"
+      - "2_GoldSource/scaffold/ui/components/canvas/canvas.css" (UPDATE)
+    details:
+      nexus_card: "Pure rendering component. Takes card data, returns DOM."
+      canvas: "Subscribes to card service. Manages grid layout. Handles Drag & Drop."
+  
+  step_5_integration:
+    description: "Connect Header and Sidebar to Card Service."
+    files:
+      - "2_GoldSource/scaffold/ui/components/header/header-ui.js"
+      - "2_GoldSource/scaffold/ui/components/sidebar/sidebar-ui.js"
+    logic:
+      - "Subscribe to 'card-update' events."
+      - "Update badges dynamically."
+      - "Sidebar handles 'drop' events (Canvas -> Sidebar)."
+
+pattern_decisions:
+  - "Use CustomEvent 'sidebar-action' for Horizon switching (clean decoupling)."
+  - "Use CustomEvent 'card-update' for Badge updates (clean decoupling)."
+  - "Canvas Controller manages the Drag & Drop state (HTML5 DnD API)."
+  - "AI Re-sort is simulated with a timeout and randomizer for now (per prototype)."
+
+approval:
+  required: true
+  status: "pending_human_review"

@@ -1,0 +1,505 @@
+# =============================================================================
+# SPEC-NEXUS-INTEGRATION
+# NEXUS Integration Layer - Functional Specification
+# =============================================================================
+# This is the BUILD-READY specification for the NEXUS Integration Layer.
+# Use this document to implement the 8-stage GoldSource Increment.
+# =============================================================================
+
+metadata:
+  specId: "NEXUS-INTEGRATION"
+  name: "NEXUS Integration Layer"
+  version: "1.0.0"
+  created: "2026-01-23"
+  status: "locked"
+  lockedAt: "2026-01-23T12:01:00Z"
+  discoveryRef: "DISCO-002_NEXUS_Integration_Layer"
+  
+  dependencies:
+    - specId: "NEXUS-WORKBENCH"
+      version: "2.0.0"
+      relationship: "NEXUS-INTEGRATION orchestrates NEXUS-WORKBENCH UI"
+
+# =============================================================================
+# SCOPE
+# =============================================================================
+
+scope:
+  summary: |
+    Integration layer connecting NEXUS UI (browser) to AI and SoR backends
+    via a hosted orchestrator. Enables conversational record editing.
+
+  inScope:
+    - "Scenario 1: User → AI → SoR (user initiates activity)"
+    - "Scenario 2: User clicks card → Resume conversation"
+    - "Hosted architecture (Firebase + Cloud Run)"
+    - "ServiceNow adapter (primary)"
+    - "SoR-agnostic event contract"
+
+  outOfScope:
+    - "Scenario 3: SoR → Human push (DISCO-003)"
+    - "Scenario 4: SoR update notifications (DISCO-003)"
+    - "Salesforce/other adapters (future)"
+    - "Offline mode"
+
+# =============================================================================
+# ARCHITECTURE
+# =============================================================================
+
+architecture:
+  overview: |
+    NEXUS runs in browser. Orchestrator + AI + MCP run in cloud.
+    Browser connects via HTTPS/SSE to hosted services.
+
+  diagram: |
+    ┌─────────────┐         ┌───────────────────────────────┐         ┌─────────┐
+    │   NEXUS     │  HTTPS  │      Cloud Services           │  HTTPS  │   SoR   │
+    │  (Browser)  │────────▶│  ┌─────────────────────────┐  │────────▶│ (cloud) │
+    └─────────────┘         │  │ Orchestrator            │  │         └─────────┘
+                            │  │  • Auth context         │  │
+                            │  │  • Session management   │  │
+                            │  │  • Event routing        │  │
+                            │  └───────────┬─────────────┘  │
+                            │              │                │
+                            │  ┌───────────▼─────────────┐  │
+                            │  │ AI Service              │  │
+                            │  │  • Claude API           │  │
+                            │  │  • Tool orchestration   │  │
+                            │  └───────────┬─────────────┘  │
+                            │              │                │
+                            │  ┌───────────▼─────────────┐  │
+                            │  │ MCP Server (SSE mode)   │  │
+                            │  │  • ServiceNow adapter   │  │
+                            │  └─────────────────────────┘  │
+                            └───────────────────────────────┘
+
+  components:
+    browser:
+      nexusUI:
+        description: "Canvas + Workbench rendering"
+        tech: "Vanilla JS (GoldSource patterns)"
+        apiRef: "window.NEXUS (from NEXUS-WORKBENCH spec)"
+      
+      firebaseClient:
+        description: "Card persistence, real-time sync"
+        tech: "Firebase SDK"
+        collections:
+          - "users/{userId}/cards/{cardId}"
+          - "users/{userId}/cards/{cardId}/messages/{messageId}"
+
+    cloud:
+      orchestrator:
+        description: "Routes browser requests to AI, manages sessions"
+        tech: "Firebase Functions (Node.js)"
+        endpoints:
+          - method: "POST"
+            path: "/api/intent"
+            purpose: "Submit user message for AI processing"
+          - method: "GET"
+            path: "/api/activity/{activityId}"
+            purpose: "Get activity context for resumed conversation"
+        
+      aiService:
+        description: "Intent understanding, tool selection"
+        tech: "Claude API (Anthropic)"
+        model: "claude-3-5-sonnet"
+        systemPrompt: |
+          You are a ServiceNow assistant helping users manage incidents.
+          Use the provided tools to fetch and update records.
+          When proposing field changes, explain your reasoning.
+        
+      mcpServer:
+        description: "SoR communication"
+        tech: "Python (echelon-ai-labs/servicenow-mcp)"
+        mode: "SSE"
+        deployment: "Cloud Run"
+
+# =============================================================================
+# EVENT CONTRACT
+# =============================================================================
+
+eventContract:
+  description: |
+    Standard events for communication between NEXUS and backend services.
+    All events use JSON format.
+
+  events:
+    intentSubmit:
+      type: "intent.submit"
+      direction: "Browser → Orchestrator"
+      purpose: "User sends a chat message"
+      payload:
+        activityId: "string (SoR record ID)"
+        message: "string (user's message)"
+        context:
+          currentFields: "ActivityField[] (optional)"
+      example: |
+        {
+          "type": "intent.submit",
+          "activityId": "INC0010001",
+          "message": "What's the priority on this?",
+          "context": {
+            "currentFields": [
+              {"field": "short_description", "displayLabel": "Short Description", "value": "VPN not working"}
+            ]
+          }
+        }
+
+    messageAI:
+      type: "message.ai"
+      direction: "Orchestrator → Browser"
+      purpose: "AI sends a chat message"
+      payload:
+        activityId: "string"
+        text: "string (AI's response)"
+        timestamp: "ISO8601"
+      example: |
+        {
+          "type": "message.ai",
+          "activityId": "INC0010001",
+          "text": "This incident is currently Priority 3 - Moderate. Based on the VPN outage affecting multiple users, I recommend escalating to Priority 2.",
+          "timestamp": "2026-01-23T11:30:00Z"
+        }
+
+    fieldPropose:
+      type: "field.propose"
+      direction: "Orchestrator → Browser"
+      purpose: "AI suggests field changes (batch)"
+      payload:
+        activityId: "string"
+        proposals: "FieldProposal[]"
+      example: |
+        {
+          "type": "field.propose",
+          "activityId": "INC0010001",
+          "proposals": [
+            {
+              "field": "priority",
+              "displayLabel": "Priority",
+              "currentValue": "3",
+              "proposedValue": "2",
+              "proposedDisplayValue": "2 - High",
+              "reason": "VPN outage affecting multiple users"
+            }
+          ]
+        }
+
+    fieldCommit:
+      type: "field.commit"
+      direction: "Browser → Orchestrator"
+      purpose: "User approves proposed changes"
+      payload:
+        activityId: "string"
+        commits: "FieldCommit[]"
+      example: |
+        {
+          "type": "field.commit",
+          "activityId": "INC0010001",
+          "commits": [
+            {"field": "priority", "value": "2"}
+          ]
+        }
+
+    fieldCommitResult:
+      type: "field.commit.result"
+      direction: "Orchestrator → Browser"
+      purpose: "Result of commit attempt (per-field)"
+      payload:
+        activityId: "string"
+        results: "FieldCommitResult[]"
+      example: |
+        {
+          "type": "field.commit.result",
+          "activityId": "INC0010001",
+          "results": [
+            {"field": "priority", "success": true},
+            {"field": "assignment_group", "success": false, "error": "Group not found"}
+          ]
+        }
+
+    activityOpen:
+      type: "activity.open"
+      direction: "Browser → Orchestrator"
+      purpose: "User clicks a card to resume conversation"
+      payload:
+        activityId: "string"
+      example: |
+        {
+          "type": "activity.open",
+          "activityId": "INC0010001"
+        }
+
+    activityContext:
+      type: "activity.context"
+      direction: "Orchestrator → Browser"
+      purpose: "Provide context for resumed conversation"
+      payload:
+        activityId: "string"
+        activityType: "string"
+        title: "string"
+        fields: "ActivityField[]"
+        summary: "string (AI-generated summary of last state)"
+      example: |
+        {
+          "type": "activity.context",
+          "activityId": "INC0010001",
+          "activityType": "incident",
+          "title": "VPN not working",
+          "fields": [
+            {"field": "priority", "displayLabel": "Priority", "value": "2", "displayValue": "2 - High"},
+            {"field": "state", "displayLabel": "State", "value": "2", "displayValue": "In Progress"}
+          ],
+          "summary": "Last session: You escalated priority to High. Assigned to Network Team."
+        }
+
+# =============================================================================
+# DATA CONTRACTS
+# =============================================================================
+
+dataContracts:
+  ActivityField:
+    description: "A single field on an activity record"
+    properties:
+      field:
+        type: "string"
+        description: "SoR native field name (for write-back)"
+        example: "priority"
+      displayLabel:
+        type: "string"
+        description: "Human-readable label (for UI)"
+        example: "Priority"
+      value:
+        type: "string"
+        description: "Raw value"
+        example: "2"
+      displayValue:
+        type: "string?"
+        description: "Formatted value (optional)"
+        example: "2 - High"
+
+  FieldProposal:
+    description: "AI-proposed change to a field"
+    properties:
+      field: "string"
+      displayLabel: "string"
+      currentValue: "string?"
+      proposedValue: "string"
+      proposedDisplayValue: "string?"
+      reason: "string? (AI's rationale)"
+
+  FieldCommit:
+    description: "User-approved change to commit"
+    properties:
+      field: "string"
+      value: "string"
+
+  FieldCommitResult:
+    description: "Result of commit attempt"
+    properties:
+      field: "string"
+      success: "boolean"
+      error: "string? (if failed)"
+
+  Card:
+    description: "Persisted activity card in Firebase"
+    collection: "users/{userId}/cards/{cardId}"
+    properties:
+      activityId: "string (SoR record ID)"
+      activityType: "string (incident, change, etc.)"
+      title: "string"
+      summary: "string?"
+      priority: "string? (for sorting/coloring)"
+      lastUpdated: "timestamp"
+      archived: "boolean (default: false)"
+      fields: "ActivityField[]"
+
+  Message:
+    description: "Chat message in conversation history"
+    collection: "users/{userId}/cards/{cardId}/messages/{messageId}"
+    properties:
+      sender: "string (human | ai)"
+      text: "string"
+      timestamp: "timestamp"
+      proposals: "FieldProposal[]? (if AI proposed changes)"
+
+# =============================================================================
+# API ENDPOINTS
+# =============================================================================
+
+apiEndpoints:
+  orchestrator:
+    baseUrl: "https://{project-id}.cloudfunctions.net"
+    
+    submitIntent:
+      method: "POST"
+      path: "/api/intent"
+      request:
+        body: "IntentSubmitEvent"
+      response:
+        stream: true
+        format: "SSE"
+        events:
+          - "message.ai"
+          - "field.propose"
+      auth: "Firebase ID token"
+      
+    openActivity:
+      method: "GET"
+      path: "/api/activity/{activityId}"
+      response:
+        body: "ActivityContextEvent"
+      auth: "Firebase ID token"
+      
+    commitFields:
+      method: "POST"
+      path: "/api/commit"
+      request:
+        body: "FieldCommitEvent"
+      response:
+        body: "FieldCommitResultEvent"
+      auth: "Firebase ID token"
+
+# =============================================================================
+# FIREBASE SCHEMA
+# =============================================================================
+
+firebaseSchema:
+  collections:
+    users:
+      path: "/users/{userId}"
+      fields:
+        email: "string"
+        displayName: "string"
+        preferences: "object"
+      
+    cards:
+      path: "/users/{userId}/cards/{cardId}"
+      fields:
+        activityId: "string"
+        activityType: "string"
+        title: "string"
+        summary: "string?"
+        priority: "string?"
+        lastUpdated: "timestamp"
+        archived: "boolean"
+        fields: "ActivityField[]"
+      indexes:
+        - fields: ["archived", "lastUpdated"]
+          order: "desc"
+      
+    messages:
+      path: "/users/{userId}/cards/{cardId}/messages/{messageId}"
+      fields:
+        sender: "string"
+        text: "string"
+        timestamp: "timestamp"
+        proposals: "FieldProposal[]?"
+      indexes:
+        - fields: ["timestamp"]
+          order: "asc"
+
+# =============================================================================
+# MCP TOOLS (ServiceNow Adapter)
+# =============================================================================
+
+mcpTools:
+  source: "echelon-ai-labs/servicenow-mcp"
+  
+  usedTools:
+    - name: "list_incidents"
+      purpose: "Search for incidents"
+      whenToUse: "User asks about incidents without specific number"
+      
+    - name: "get_record"
+      purpose: "Fetch specific record by sys_id"
+      whenToUse: "Opening activity card, need current field values"
+      
+    - name: "update_incident"
+      purpose: "Update incident fields"
+      whenToUse: "User approves proposed changes (field.commit)"
+      
+    - name: "add_comment"
+      purpose: "Add customer-visible comment"
+      whenToUse: "User asks to add comment or note"
+      
+    - name: "add_work_notes"
+      purpose: "Add internal work notes"
+      whenToUse: "User asks to add internal note"
+
+  configuration:
+    authType: "basic"
+    envVars:
+      - "SERVICENOW_INSTANCE_URL"
+      - "SERVICENOW_USERNAME"
+      - "SERVICENOW_PASSWORD"
+
+# =============================================================================
+# IMPLEMENTATION CHECKLIST
+# =============================================================================
+
+implementationChecklist:
+  stage1_discovery:
+    - task: "Review this spec"
+    - task: "Validate against NEXUS-WORKBENCH spec"
+    - task: "Confirm Firebase project exists"
+    
+  stage2_research:
+    - task: "Test echelon MCP server locally"
+    - task: "Confirm Claude API access"
+    - task: "Review Cloud Run deployment docs"
+    
+  stage3_analysis:
+    - task: "Define error handling strategy"
+    - task: "Define rate limiting approach"
+    - task: "Security review (auth, secrets)"
+    
+  stage4_design:
+    - task: "Create sequence diagrams for Scenario 1 & 2"
+    - task: "Design SSE streaming from orchestrator"
+    
+  stage5_implementation:
+    - task: "Create Firebase Functions project"
+      path: "functions/"
+    - task: "Implement /api/intent endpoint"
+      path: "functions/src/intent.ts"
+    - task: "Implement /api/activity endpoint"
+      path: "functions/src/activity.ts"
+    - task: "Implement /api/commit endpoint"
+      path: "functions/src/commit.ts"
+    - task: "Deploy MCP server to Cloud Run"
+    - task: "Integrate with NEXUS-WORKBENCH UI"
+      path: "ui/services/integration-service.js"
+    
+  stage6_validation:
+    - task: "Test Scenario 1: User asks question"
+    - task: "Test Scenario 2: Resume conversation"
+    - task: "Test field proposal → approval → commit"
+    
+  stage7_testing:
+    - task: "End-to-end test with real ServiceNow instance"
+    - task: "Error handling tests"
+    - task: "Auth flow tests"
+    
+  stage8_closure:
+    - task: "Documentation"
+    - task: "Demo recording"
+
+# =============================================================================
+# ACCEPTANCE CRITERIA
+# =============================================================================
+
+acceptanceCriteria:
+  functional:
+    - "User can type a question, receive AI response with context"
+    - "AI can propose field changes with reasons"
+    - "User can approve/reject proposals in batch"
+    - "Approved changes are committed to ServiceNow"
+    - "Failed commits show per-field error messages"
+    - "Card persistence works across sessions"
+    - "Conversation history is preserved and resumable"
+    
+  nonFunctional:
+    - "Response time < 3s for AI response"
+    - "SSE streaming for real-time feel"
+    - "Auth via Firebase Authentication"
+    - "Secrets stored in Secret Manager (not env vars in prod)"

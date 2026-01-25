@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--
+    @file index.html
+    @purpose Main dashboard - header, sidebar, canvas layout
+    @layer core
+    @dependencies [variables.css, base.css, buttons.css, component CSS]
+    @dependents []
+    @locked false
+    @modifyImpact [dashboard layout and structure]
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NEXUS - AI-First Enterprise Dashboard">
+
+  <title>NEXUS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="ui/styles/variables.css">
+  <link rel="stylesheet" href="ui/styles/base.css">
+  <link rel="stylesheet" href="ui/styles/buttons.css">
+  <link rel="stylesheet" href="ui/styles/inputs.css">
+  <link rel="stylesheet" href="ui/styles/plasma.css">
+  <link rel="stylesheet" href="ui/styles/animations.css">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="ui/components/header/header.css">
+  <link rel="stylesheet" href="ui/components/sidebar/sidebar.css">
+  <link rel="stylesheet" href="ui/components/canvas/canvas.css">
+  <link rel="stylesheet" href="ui/components/settings/settings.css">
+
+  <!-- Lucide Icons (SPEC-003) -->
+  <script src="https://unpkg.com/lucide@0.562.0"></script>
+</head>
+
+<body>
+  <!-- Plasma Background (FR-001) -->
+  <div class="plasma-background">
+    <div class="plasma-bubble b1"></div>
+    <div class="plasma-bubble b2"></div>
+    <div class="plasma-bubble b3"></div>
+    <div class="plasma-bubble b4"></div>
+  </div>
+
+  <!-- Dashboard Shell -->
+  <div class="dashboard-shell" id="dashboard-shell">
+
+    <!-- Header (SPEC-003) -->
+    <header class="header" id="header">
+      <!-- Rendered by header-ui.js -->
+    </header>
+
+    <!-- Floating Sidebar (SPEC-003) -->
+    <aside class="sidebar glass" id="sidebar">
+      <!-- Rendered by sidebar-ui.js -->
+    </aside>
+
+    <!-- Canvas with Multi-Page System (SPEC-003) -->
+    <main class="canvas" id="canvas">
+
+      <!-- Dashboard Page -->
+      <section class="page page--active" data-page="dashboard" id="page-dashboard" aria-hidden="false">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Dashboard</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+      <!-- Incidents Page -->
+      <section class="page" data-page="incidents" id="page-incidents" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Incidents</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+      <!-- Reports Page -->
+      <section class="page" data-page="reports" id="page-reports" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Reports</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+      <!-- Calendar Page -->
+      <section class="page" data-page="calendar" id="page-calendar" aria-hidden="true">
+        <div class="page-content">
+          <h1 class="page-title animate-in">Calendar</h1>
+          <!-- Content rendered by features -->
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Application JavaScript -->
+  <script type="module" src="core/app.js"></script>
+</body>
+
+</html>
