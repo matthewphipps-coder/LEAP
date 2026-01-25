@@ -13,41 +13,9 @@
    ========================================================================== */
 
 .app-shell {
-    display: grid;
-    grid-template-rows: var(--header-height) 1fr;
-    grid-template-columns: var(--sidebar-pill-width) 1fr;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    background-color: var(--bg-primary);
-    /* Ensure background is solid */
-}
-
-/* Header spans full width */
-.app-header {
-    grid-row: 1;
-    grid-column: 1 / -1;
-    position: sticky;
-    top: 0;
-    z-index: var(--z-header);
-    height: var(--header-height);
-    background-color: var(--bg-primary);
-    /* Solid background to prevent see-through */
-}
-
-/* Sidebar in left column, below header */
-.app-nav,
-#sidebar {
-    grid-row: 2;
-    grid-column: 1;
-    z-index: var(--z-sidebar);
-}
-
-/* Main content takes remaining space */
-.app-body,
-#main-content {
-    grid-row: 2;
-    grid-column: 2;
-    width: 100%;
-    overflow-x: hidden;
 }
 
 /* ==========================================================================

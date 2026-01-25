@@ -12,15 +12,14 @@
 import { PAGE_SIDEBAR_ACTIONS } from '../../../core/constants.js';
 import { moveCard } from '../../../features/card/card-service.js';
 import { info } from '../../../core/logger.js';
-import { getState, subscribe } from '../../../core/state.js';
 
 // =============================================================================
 // MODULE CONTRACT
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-  provides: ['initSidebar', 'handleSidebarAction'],
-  requires: ['constants.js', 'card-service.js', 'state.js']
+  provides: ['initSidebar', 'updateSidebarForPage', 'handleSidebarAction'],
+  requires: ['constants.js', 'card-service.js']
 };
 
 // =============================================================================
@@ -61,17 +60,6 @@ export function initSidebar() {
     updateBadges(e.detail.stats);
   });
 
-  // LEAP-067: Subscribe to state changes (Unidirectional Flow)
-  subscribe((state, source) => {
-    if (source === 'setCurrentPage' || source === 'reset') {
-      updateSidebarForPage(state.currentPage);
-    }
-  });
-
-  // Initial render
-  const initialState = getState();
-  updateSidebarForPage(initialState.currentPage);
-
   console.log('[Sidebar] Initialized');
 }
 
@@ -84,7 +72,7 @@ export function initSidebar() {
  * @purpose Update sidebar content based on current page
  * @param {string} pageId - The ID of the current page
  */
-function updateSidebarForPage(pageId) {
+export function updateSidebarForPage(pageId) {
   const sidebarEl = document.getElementById('sidebar');
   if (!sidebarEl) return;
 

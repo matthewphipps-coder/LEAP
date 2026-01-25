@@ -1,0 +1,239 @@
+/**
+ * @file card.css
+ * @purpose Styling for Nexus Card component (V2 Refactor)
+ * @layer ui
+ */
+
+/* Base Card */
+.nexus-card {
+    background: var(--card-bg, rgba(20, 20, 25, 0.7));
+    /* Opacity 0.7 per V2 Spec */
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: var(--radius-md);
+
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+
+    /* MASONRY CRITICAL */
+    break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* For pseudo-elements */
+}
+
+.light-theme .nexus-card {
+    background: var(--glass-bg);
+}
+
+/* Hover Effect */
+.nexus-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+/* Dynamic Sizes - Content Driven */
+.nexus-card[data-size="compact"],
+.nexus-card[data-size="medium"],
+.nexus-card[data-size="large"] {
+    min-height: auto;
+}
+
+/* Card Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-md);
+}
+
+.card-meta {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* Priority Badges */
+.card-priority-badge {
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+}
+
+.card-priority-badge.p1 {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.card-priority-badge.p2 {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.card-priority-badge.p3 {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    border-color: var(--glass-border);
+}
+
+/* Typography */
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.card-summary {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+    flex-grow: 1;
+}
+
+.nexus-card[data-size="compact"] .card-summary {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Footer */
+.card-footer {
+    display: flex;
+    gap: var(--space-sm);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    margin-top: auto;
+    align-items: center;
+}
+
+/* Updates Badge */
+.card-updates-badge {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--text-secondary);
+}
+
+/* Drag State */
+.nexus-card.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+    box-shadow: none;
+}
+
+/* INSERTION MARKERS (Gap Highlight) */
+/* V2 Spec Requirement: Highlight Gap, Not Card */
+.nexus-card.drop-before::before {
+    content: '';
+    position: absolute;
+    top: -24px;
+    /* In the gap */
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--brand-primary);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--brand-primary);
+    animation: fade-in 0.2s;
+    pointer-events: none;
+}
+
+.nexus-card.drop-after::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    /* In the gap */
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--brand-primary);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--brand-primary);
+    animation: fade-in 0.2s;
+    pointer-events: none;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Pulse Animation for P1 */
+@keyframes pulse-border {
+    0% {
+        border-color: var(--badge-urgent);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        border-color: var(--badge-urgent);
+    }
+}
+
+.nexus-card[data-animate="true"] {
+    animation: pulse-border 2s infinite;
+    border-color: var(--badge-urgent);
+}
+
+/* List View Overrides */
+.nexus-canvas.list-mode .nexus-card {
+    min-height: auto;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: 0;
+    break-inside: auto;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-md);
+}
+
+.nexus-canvas.list-mode .nexus-card .card-header {
+    margin-bottom: 0;
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.nexus-canvas.list-mode .nexus-card .card-title {
+    margin-bottom: 0;
+    grid-column: 2;
+    font-size: var(--text-base);
+    /* adjust font size for list */
+}
+
+.nexus-canvas.list-mode .nexus-card .card-footer {
+    grid-column: 3;
+    margin-top: 0;
+}
+
+.nexus-canvas.list-mode .nexus-card .card-summary {
+    display: none;
+}

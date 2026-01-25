@@ -9,7 +9,6 @@
  */
 
 import { PAGE_TABS } from './constants.js';
-import { setCurrentPage } from './state.js';
 
 // =============================================================================
 // MODULE CONTRACT
@@ -17,7 +16,7 @@ import { setCurrentPage } from './state.js';
 
 export const MODULE_CONTRACT = {
     provides: ['initPageRouter', 'switchPage', 'getCurrentPage'],
-    requires: ['constants.js', 'state.js']
+    requires: ['constants.js']
 };
 
 // =============================================================================
@@ -25,6 +24,7 @@ export const MODULE_CONTRACT = {
 // =============================================================================
 
 let currentPage = null;
+let sidebarUpdateCallback = null;
 
 // =============================================================================
 // INITIALIZATION
@@ -33,13 +33,18 @@ let currentPage = null;
 /**
  * @function initPageRouter
  * @purpose Initialize page router and set default page
+ * @param {Function} onPageChange - Callback when page changes (for sidebar update)
  */
-export function initPageRouter() {
+export function initPageRouter(onPageChange) {
+    sidebarUpdateCallback = onPageChange;
+
     // Set initial page to first tab
     const defaultPage = PAGE_TABS[0]?.id || 'dashboard';
 
-    // Set initial page immediately (State handles synchronization)
-    switchPage(defaultPage);
+    // Defer initial page switch to ensure all components are ready (Fix for Sidebar Persistence)
+    setTimeout(() => {
+        switchPage(defaultPage, true);
+    }, 50);
 
     // Listen for tab clicks (delegated)
     document.addEventListener('click', (e) => {
@@ -61,8 +66,9 @@ export function initPageRouter() {
  * @function switchPage
  * @purpose Switch to a different page
  * @param {string} pageId - ID of page to switch to
+ * @param {boolean} triggerCallback - Whether to trigger sidebar update
  */
-export function switchPage(pageId) {
+export function switchPage(pageId, triggerCallback = true) {
     if (!pageId || pageId === currentPage) return;
 
     const prevPage = currentPage;
@@ -82,8 +88,10 @@ export function switchPage(pageId) {
         page.setAttribute('aria-hidden', !isActive);
     });
 
-    // LEAP-067: Update State (Source of Truth)
-    setCurrentPage(pageId);
+    // Notify sidebar to update
+    if (triggerCallback && sidebarUpdateCallback) {
+        sidebarUpdateCallback(pageId);
+    }
 
     console.log('[PageRouter] Switched from', prevPage, 'to', pageId);
 }

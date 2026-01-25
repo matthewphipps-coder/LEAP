@@ -18,29 +18,30 @@ projectContext:
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "35"
-  name: "SafetyNet (Automated Verification)"
+  number: "36"
+  name: "ArchitecturalRestoration"
   status: "in-progress"
   stage: 1
   stageName: "Planning"
-  startedDate: "2026-01-25T13:05:00Z"
+  startedDate: "2026-01-25T13:15:00Z"
   
-  goal: "Implement `gov-check.sh` to automate governance compliance (Stop Trusting, Start Verifying)"
+  goal: "Refactor core architecture to fix Reactive State (Race Conditions) and Global Layout (Overlap)"
   
-  spec: "N/A (Tooling Phase)"
+  spec: "N/A (Direct Fix)"
   prototype: "N/A"
-  workflow: "pulse"
+  workflow: "goldsource-increment"
   
   summary: |
-    Phase 35: Building the 'Safety Net'.
-    Focus: Creating the `gov-check.sh` script to enforce architecture rules via git hooks or manual checks.
+    Phase 36: Fixing the Code.
+    Focus: Implementing LEAP-067 (State Subscription) and LEAP-069 (CSS Variables).
+    This creates the stable foundation for all future Factory runs.
   
   previousPhase:
-    number: "34"
-    name: "GovernanceShield"
+    number: "35"
+    name: "SafetyNet"
     status: "complete"
-    completedDate: "2026-01-25T13:00:00Z"
-    closure: "4_Phases/phase-34-pulse-GovernanceShield/stage-8-closure.yaml"
+    completedDate: "2026-01-25T13:10:00Z"
+    closure: "4_Phases/phase-35-pulse-SafetyNet/stage-8-closure.yaml"
 
 currentActivity:
   status: "active"

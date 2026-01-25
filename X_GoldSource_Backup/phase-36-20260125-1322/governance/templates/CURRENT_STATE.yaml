@@ -1,0 +1,45 @@
+# =============================================================================
+# CURRENT STATE TEMPLATE
+# =============================================================================
+# Copy this to your demo folder as CURRENT_STATE.yaml
+# This tracks the demo's progress through the factory stages.
+# =============================================================================
+
+metadata:
+  demo: "[DEMO_NAME]"
+  created: "[TIMESTAMP]"
+  archetype: "[ARCHETYPE_NAME]"
+  outputLocation: "[DEMO_PATH]"
+  goldSourceVersion: "1.0.0"
+
+# =============================================================================
+# CURRENT PROGRESS
+# =============================================================================
+
+currentStage:
+  number: 1
+  name: "Discovery"
+  status: "in-progress"
+  startedDate: "[TIMESTAMP]"
+
+# =============================================================================
+# STAGE HISTORY
+# =============================================================================
+
+stageHistory:
+  - stage: 0
+    name: "Initialization"
+    status: "complete"
+    completedDate: "[TIMESTAMP]"
+    artifact: "N/A - scaffold copied"
+
+# (Stages are added here as they complete)
+
+# =============================================================================
+# DEMO INFO
+# =============================================================================
+
+demoInfo:
+  name: "[NEXUS vx.x.x-feature]"
+  scenario: "[Brief scenario description]"
+  targetArchetype: "[agentic-dashboard]"

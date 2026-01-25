@@ -1,0 +1,235 @@
+# =============================================================================
+# FUNCTIONALITY - GoldSource Scaffold v2.0
+# =============================================================================
+# Purpose: Document what the scaffold can do (for AI reference)
+# =============================================================================
+
+metadata:
+  type: "reference"
+  name: "GoldSource Scaffold Functionality"
+  version: "2.0.0"
+  created: "2026-01-19"
+  lastUpdated: "2026-01-19"
+  status: "active"
+  phase: "18 - NexusReturns"
+
+# =============================================================================
+# SUMMARY
+# =============================================================================
+
+summary:
+  totalFeatures: 7
+  locked: 3
+  extensible: 4
+
+# =============================================================================
+# AUTHENTICATION
+# =============================================================================
+
+features:
+
+  - id: "AUTH-001"
+    name: "Email/Password Authentication"
+    status: "implemented"
+    description: "Firebase authentication with login and signup"
+    files:
+      - "core/firebase.js"
+      - "core/auth-service.js"
+      - "login.html"
+      - "login.js"
+    capabilities:
+      - "Login with email/password"
+      - "Signup with email/password"
+      - "Logout"
+      - "Auth state persistence"
+      - "Redirect to login if not authenticated"
+    extensionPoint: false
+
+# =============================================================================
+# USER DATA & PREFERENCES
+# =============================================================================
+
+  - id: "DATA-001"
+    name: "User Profile & Preferences"
+    status: "implemented"
+    description: "Ring-fenced Firestore data patterns for user profiles and preferences"
+    spec: "SPEC-004"
+    phase: "30 - DataConventions"
+    files:
+      - "core/user-service.js"
+      - "docs/DATA_CONVENTIONS.md"
+    capabilities:
+      - "User profile CRUD (createUserProfile, updateLastLogin)"
+      - "User preferences (loadUserPreferences, savePreference)"
+      - "Ring-fenced data pattern (/users/{uid}/*)"
+      - "Data service template for future services"
+    extensionPoint: true
+    extensionNotes: |
+      Factory uses user-service.js as reference implementation:
+      - Follow MODULE_CONTRACT pattern
+      - Use ring-fenced collection helpers
+      - Apply serverTimestamp() for timestamps
+
+# =============================================================================
+# WORK MANAGEMENT
+# =============================================================================
+
+  - id: "CARD-001"
+    name: "Card & Canvas UI"
+    status: "implemented"
+    description: "Visual work management with dynamic cards and horizon planning"
+    spec: "SPEC-004"
+    phase: "32 - CardCanvasImplementation"
+    files:
+      - "features/card/card-service.js"
+      - "ui/components/card/*"
+      - "ui/components/canvas/*"
+    capabilities:
+      - "Dynamic Nexus Cards (P1/P2/P3)"
+      - "Canvas Grid & Layout Controller"
+      - "Horizon Filtering (Inbox, Now, Next, Later, Done)"
+      - "Drag-and-Drop Organization"
+      - "AI Optimization Simulation"
+    extensionPoint: true
+    extensionNotes: "Service uses 'cards' state slice. UI uses event-driven updates."
+
+# =============================================================================
+# DASHBOARD SHELL
+# =============================================================================
+
+  - id: "SHELL-001"
+    name: "Extensible App Shell"
+    status: "implemented"
+    description: "Floating header + floating pill sidebar + multi-page canvas"
+    spec: "SPEC-003"
+    phase: "23 - ExtensibleAppShell"
+    files:
+      - "index.html"
+      - "core/app.js"
+      - "core/constants.js"
+      - "core/page-router.js"
+      - "ui/components/header/*"
+      - "ui/components/sidebar/*"
+    capabilities:
+      - "Floating header with logo, brand text, page tabs, AI search slot, notifications, settings, theme toggle, user avatar"
+      - "Floating pill-shaped sidebar with contextual per-page actions"
+      - "Multi-page canvas system with page containers"
+      - "Config-driven page tabs via PAGE_TABS array"
+      - "Config-driven sidebar actions via PAGE_SIDEBAR_ACTIONS object"
+      - "Tab overflow handling with 'More' menu"
+    extensionPoint: true
+    extensionNotes: |
+      Factory extends by:
+      1. Adding to PAGE_TABS in constants.js
+      2. Adding page actions to PAGE_SIDEBAR_ACTIONS
+      3. Creating page container in index.html
+    breakingChange:
+      phase: 23
+      description: "Replaced push/pull collapsible sidebar with floating pill design"
+
+  - id: "SHELL-002"
+    name: "Settings Dialog"
+    status: "implemented"
+    description: "Modal settings dialog with appearance and branding sections"
+    spec: "SPEC-003"
+    phase: "23 - ExtensibleAppShell"
+    files:
+      - "ui/components/settings/settings-ui.js"
+      - "ui/components/settings/settings.css"
+      - "core/constants.js"
+    capabilities:
+      - "Modal dialog with glass styling"
+      - "Left sidebar menu navigation"
+      - "Appearance section: theme selection, accent colors"
+      - "Branding section: workspace logo upload, workspace name"
+      - "Config-driven menu via SETTINGS_MENU"
+      - "Config-driven sections via SETTINGS_SECTIONS"
+    extensionPoint: true
+    extensionNotes: |
+      Factory extends by:
+      1. Adding menu items to SETTINGS_MENU in constants.js
+      2. Adding section configs to SETTINGS_SECTIONS
+      3. Adding render functions in settings-ui.js
+
+# =============================================================================
+# THEME SYSTEM
+# =============================================================================
+
+  - id: "THEME-001"
+    name: "Dark/Light Theme Toggle"
+    status: "implemented"
+    description: "Simple theme switching with persistence"
+    files:
+      - "core/theme-manager.js"
+      - "ui/styles/variables.css"
+    capabilities:
+      - "Dark theme (default)"
+      - "Light theme via toggle"
+      - "Persists to localStorage"
+      - "Respects system preference on first load"
+    designDecision: "Intentionally simple - no brand themes, no color mixing"
+    extensionPoint: false
+
+# =============================================================================
+# STATE MANAGEMENT
+# =============================================================================
+
+  - id: "STATE-001"
+    name: "Minimal State Manager"
+    status: "implemented"
+    description: "Centralized state for shell (user, theme, sidebar)"
+    files:
+      - "core/state.js"
+    capabilities:
+      - "User state (uid, email, displayName, photoURL)"
+      - "Theme state (dark/light)"
+      - "Sidebar collapsed state"
+      - "Subscribe/unsubscribe pattern"
+    extensionPoint: true
+    extensionNotes: "Factory can add feature-specific state slices"
+
+# =============================================================================
+# AI SERVICE
+# =============================================================================
+
+  - id: "AI-001"
+    name: "AI Provider Interface"
+    status: "implemented"
+    description: "Unified Gemini/Claude API interface"
+    files:
+      - "features/ai/ai-service.js"
+    capabilities:
+      - "askAI(prompt, provider) - unified interface"
+      - "askGemini(prompt) - Google Gemini"
+      - "askClaude(prompt) - Anthropic Claude"
+      - "API key management (localStorage)"
+    note: "Service only - not wired to UI yet"
+    extensionPoint: true
+    extensionNotes: "Factory can add chat UI that uses this service"
+
+# =============================================================================
+# DESIGN SYSTEM
+# =============================================================================
+
+  - id: "DESIGN-001"
+    name: "Design Token System"
+    status: "implemented"
+    description: "CSS custom properties for consistent styling"
+    files:
+      - "ui/styles/variables.css"
+      - "ui/styles/base.css"
+      - "ui/styles/buttons.css"
+      - "ui/styles/inputs.css"
+      - "meta/design-system.yaml"
+    capabilities:
+      - "Colors (brand, semantic, glass)"
+      - "Typography (Outfit headings, Inter body)"
+      - "Spacing scale"
+      - "Border radius"
+      - "Shadows"
+      - "Transitions"
+      - "Glassmorphism utilities"
+      - "Button variants (primary, secondary, ghost, danger)"
+      - "Input patterns (text, textarea, select)"
+    extensionPoint: false
+    locked: true

@@ -1,0 +1,67 @@
+metadata:
+  type: "stage-artifact"
+  stage: 4
+  name: "Design"
+  phase: 36
+  project: "ArchitecturalRestoration"
+  workflow: "goldsource-increment"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+design:
+  implementationPlan:
+    
+    # -------------------------------------------------------------------------
+    # PART 1: LEAP-069 GLOBAL LAYOUT
+    # -------------------------------------------------------------------------
+    - step: 1
+      file: "2_GoldSource/scaffold/ui/styles/variables.css"
+      action: "Modify"
+      changes:
+        - "Verify --header-height: 64px is present"
+        - "Verify --sidebar-width: 280px is present"
+    
+    - step: 2
+      file: "2_GoldSource/scaffold/ui/styles/shell.css"
+      action: "Modify"
+      changes:
+        - "Set #main-content margin-top: var(--header-height)"
+        - "Set #main-content margin-left: var(--sidebar-pill-width)"
+    
+    # -------------------------------------------------------------------------
+    # PART 2: LEAP-067 REACTIVE STATE
+    # -------------------------------------------------------------------------
+    - step: 3
+      file: "2_GoldSource/scaffold/core/state.js"
+      action: "Modify"
+      changes:
+        - "Add `currentPage: 'inbox'` to INITIAL_STATE"
+        - "Export `setCurrentPage(pageId)`"
+    
+    - step: 4
+      file: "2_GoldSource/scaffold/ui/components/sidebar/sidebar-ui.js"
+      action: "Modify"
+      changes:
+        - "Remove `export function updateSidebarForPage`"
+        - "In `initSidebar`, call `subscribe((state) => updateSidebarForPage(state.currentPage))`"
+        - "Change `updateSidebarForPage` to internal function"
+    
+    - step: 5
+      file: "2_GoldSource/scaffold/core/page-router.js"
+      action: "Modify"
+      changes:
+        - "Remove `onRoute` callback support"
+        - "Call `setCurrentPage(pageId)` on navigation"
+    
+    - step: 6
+      file: "2_GoldSource/scaffold/core/app.js"
+      action: "Modify"
+      changes:
+        - "Remove `initPageRouter(updateSidebarForPage)` dependency injection"
+        - "Call `initPageRouter()` cleanly"
+
+validation:
+  - "Run `gov-check.sh`."
+  - "Browse app to ensure Sidebar still updates on nav change."
+
+nextStep: "Stage 5: Implementation (Applying changes)"

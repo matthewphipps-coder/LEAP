@@ -1,0 +1,30 @@
+metadata:
+  type: "stage-artifact"
+  stage: 5
+  name: "Implementation"
+  phase: 36
+  project: "ArchitecturalRestoration"
+  workflow: "goldsource-increment"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+implementation:
+  backup:
+    status: "Created"
+    location: "X_GoldSource_Backup/phase-36-*"
+  
+  changes:
+    css:
+      - "variables.css: Canonicalized layout variables."
+      - "shell.css: Switched to CSS Grid (Header/content separation)."
+    
+    js:
+      - "state.js: Added `currentPage` + `setCurrentPage`."
+      - "sidebar-ui.js: Subscribed to state. Removed export."
+      - "page-router.js: Dispatches state change. Removed callbacks."
+      - "app.js: Decoupled router/sidebar."
+
+  documentation:
+    - "ARCHITECTURE.yaml updated with new authFlow."
+
+nextStep: "Stage 6: Validation (Gov Check)"

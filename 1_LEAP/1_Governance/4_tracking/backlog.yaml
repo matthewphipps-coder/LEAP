@@ -361,7 +361,7 @@ priorities:
       name: "Automated Governance Checks"
       category: "governance"
       priority: "immediate"
-      status: "proposed"
+      status: "complete"
       description: |
         Create a simple "Linting Script" for Stage 6 (Validation).
         Script should grep for banned patterns (e.g., `updateSidebarForPage` export, 

@@ -1,0 +1,32 @@
+metadata:
+  type: "stage-artifact"
+  stage: 1
+  name: "Discovery"
+  phase: 36
+  project: "ArchitecturalRestoration"
+  workflow: "goldsource-increment"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+discovery:
+  items:
+    - id: "LEAP-067"
+      name: "Reactive State Compliance"
+      issue: "Race conditions in app initialization (Phase 33 analysis). Sidebar tries to render before data is ready."
+      solution: "Unidirectional Data Flow. Sidebar MUST subscribe to State. Router MUST NOT call sidebar.update()."
+      
+    - id: "LEAP-069"
+      name: "Global Layout Contract"
+      issue: "Scaffold Blindness (Phase 33 analysis). UI components guess their position, overlapping the header."
+      solution: "Define `--header-height` and `--sidebar-width` in `variables.css`. All components use these vars."
+
+  successCriteria:
+    - "No `setTimeout` in `app.js` boot sequence."
+    - "No `sidebar.update()` calls found in codebase (verified by gov-check.sh)."
+    - "Canvas content respects `--header-height` (no overlap)."
+    - "Governance Check (gov-check.sh) PASSES."
+  
+  workflow: "direct" # No prototype needed for architecture fixes
+  folder: "4_Phases/phase-36-code-ArchitecturalRestoration/"
+
+nextStep: "Stage 2: Research (Audit current app.js and css)"

@@ -1,0 +1,52 @@
+metadata:
+  type: "stage-artifact"
+  stage: 2
+  name: "Research"
+  phase: 36
+  project: "ArchitecturalRestoration"
+  workflow: "goldsource-increment"
+  date: "2026-01-25"
+  proceedReceivedAt: "PENDING"
+
+research:
+  impactAssessment:
+    LEAP-067:
+      target: "Reactive State Compliance"
+      files:
+        - "2_GoldSource/scaffold/core/state.js" [MODIFY]
+        - "2_GoldSource/scaffold/core/page-router.js" [MODIFY]
+        - "2_GoldSource/scaffold/core/app.js" [MODIFY]
+        - "2_GoldSource/scaffold/ui/components/sidebar/sidebar-ui.js" [MODIFY]
+      risk: "High (Core logic change). If subscription fails, sidebar won't update."
+      mitigation: "Manual verification of nav switching."
+    
+    LEAP-069:
+      target: "Global Layout Contract"
+      files:
+        - "2_GoldSource/scaffold/ui/styles/variables.css" [MODIFY]
+        - "2_GoldSource/scaffold/ui/styles/shell.css" [MODIFY]
+        - "2_GoldSource/scaffold/ui/components/header/header.css" [CHECK]
+      risk: "Low (CSS only)."
+
+  refactorPlan:
+    state_js:
+      - "Add `currentPage` to INITIAL_STATE"
+      - "Export `setPage(pageId)` setter"
+    
+    page_router_js:
+      - "Remove `onRoute` callback param from initPageRouter"
+      - "Call `setPage(pageId)` instead of callback"
+    
+    sidebar_ui_js:
+      - "Remove `updateSidebarForPage` export"
+      - "Subscribe to state changes"
+      - "If `state.currentPage` changes, re-render"
+      
+    app_js:
+      - "Remove `updateSidebarForPage` import"
+      - "Simplify `initPageRouter()` call"
+  
+  govCheckImpact:
+    - "After this refactor, `gov-check.sh` should PASS (no more sidebar.update)."
+
+nextStep: "Stage 3: Analysis (Confirming no breaking changes to demos)"

@@ -166,8 +166,7 @@ dataFlow:
   authFlow:
     - "login.js → auth-service.js → Firebase Auth"
     - "auth-service.js → state.js (setUser)"
-    - "app.js watches auth state → init UI (initPageRouter)"
-    - "initPageRouter → state.js (setCurrentPage) → sidebar-ui.js (subscribe)"
+    - "app.js watches auth state → init UI or redirect"
   
   firestoreConventions:
     pattern: "Ring-Fenced User Data"

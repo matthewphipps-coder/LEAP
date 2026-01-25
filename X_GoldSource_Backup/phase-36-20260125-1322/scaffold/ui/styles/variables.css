@@ -85,15 +85,10 @@
   --transition-normal: 300ms ease-out;
   --transition-slow: 500ms ease-out;
 
-  /* Layout - Canonical Dimensions */
+  /* Layout */
   --header-height: 64px;
   --sidebar-width: 280px;
   --sidebar-collapsed: 64px;
-
-  /* Layout - Mapping legacy vars to canonical */
-  --layout-header-height: var(--header-height);
-  --layout-sidebar-width: var(--sidebar-width);
-  --layout-sidebar-collapsed: var(--sidebar-collapsed);
 
   /* Layout - SPEC-003 Floating Pill Sidebar */
   --sidebar-pill-width: 68px;

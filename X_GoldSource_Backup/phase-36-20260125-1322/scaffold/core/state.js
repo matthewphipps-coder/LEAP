@@ -15,7 +15,7 @@ import { debug, info, warn } from './logger.js';
 // =============================================================================
 
 export const MODULE_CONTRACT = {
-    provides: ['getState', 'setUser', 'setTheme', 'setCurrentPage', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
+    provides: ['getState', 'setUser', 'setTheme', 'setSidebarCollapsed', 'subscribe', 'unsubscribe', 'reset', 'registerStateSlice'],
     requires: ['logger.js']
 };
 
@@ -32,8 +32,7 @@ const slices = {};
 const INITIAL_STATE = {
     user: null,                 // Set on auth: { uid, email, displayName, photoURL }
     theme: 'dark',              // 'dark' or 'light'
-    sidebarCollapsed: false,    // Sidebar expand/collapse state
-    currentPage: 'inbox'        // Current active page ID (Source of Truth)
+    sidebarCollapsed: false     // Sidebar expand/collapse state
 };
 
 // Private state
@@ -62,18 +61,18 @@ export function registerStateSlice(name, initialState, setterDefs = {}) {
         warn(`State slice '${name}' already registered, returning existing`);
         return slices[name].api;
     }
-
+    
     // Initialize slice state
     slices[name] = {
         state: { ...initialState },
         api: {}
     };
-
+    
     // Create getter
     const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
     const getterName = `get${capitalize(name)}`;
     slices[name].api[getterName] = () => ({ ...slices[name].state });
-
+    
     // Create wrapped setters that notify subscribers
     Object.entries(setterDefs).forEach(([setterName, setterFn]) => {
         slices[name].api[setterName] = (payload) => {
@@ -82,7 +81,7 @@ export function registerStateSlice(name, initialState, setterDefs = {}) {
             notifySubscribers(`${name}.${setterName}`);
         };
     });
-
+    
     debug(`State slice registered: ${name}`, { keys: Object.keys(slices[name].state) });
     return slices[name].api;
 }
@@ -106,12 +105,12 @@ export function getState(key = null) {
         });
         return allState;
     }
-
+    
     // Check if key is a slice name
     if (slices[key]) {
         return { ...slices[key].state };
     }
-
+    
     // Check if key is slice.property (e.g., 'incidents.items')
     if (key.includes('.')) {
         const [sliceName, ...propPath] = key.split('.');
@@ -123,7 +122,7 @@ export function getState(key = null) {
             return value;
         }
     }
-
+    
     // Fall back to core state
     return state[key];
 }
@@ -167,18 +166,6 @@ export function setSidebarCollapsed(collapsed) {
     debug('State: setSidebarCollapsed', { collapsed });
     state.sidebarCollapsed = Boolean(collapsed);
     notifySubscribers('setSidebarCollapsed');
-}
-
-/**
- * @function setCurrentPage
- * @purpose Set current active page
- * @param {string} pageId - Page ID (e.g. 'inbox', 'my-work')
- */
-export function setCurrentPage(pageId) {
-    if (state.currentPage === pageId) return;
-    debug('State: setCurrentPage', { pageId });
-    state.currentPage = pageId;
-    notifySubscribers('setCurrentPage');
 }
 
 // =============================================================================

@@ -14,7 +14,7 @@ import { getState } from './state.js';
 import { setupAuthListener, logout } from './auth-service.js';
 import { initTheme, setTheme, getTheme } from './theme-manager.js';
 import { initHeader } from '../ui/components/header/header-ui.js';
-import { initSidebar } from '../ui/components/sidebar/sidebar-ui.js';
+import { initSidebar, updateSidebarForPage } from '../ui/components/sidebar/sidebar-ui.js';
 import { initCanvas } from '../ui/components/canvas/canvas-ui.js';
 import { initPageRouter } from './page-router.js';
 import { initSettings, openSettings } from '../ui/components/settings/settings-ui.js';
@@ -96,7 +96,7 @@ function initializeUI(user) {
     initSettings();
 
     info('App: initPageRouter');
-    initPageRouter();  // Connect page changes to sidebar (via State)
+    initPageRouter(updateSidebarForPage);  // Connect page changes to sidebar
 
     info('App: initCanvas');
     initCanvas();
