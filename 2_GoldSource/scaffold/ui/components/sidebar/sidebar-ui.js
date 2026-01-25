@@ -100,16 +100,20 @@ function updateSidebarForPage(pageId) {
         <button 
           class="nav-item ${index === 0 ? 'active' : ''} ${action.badge ? 'has-badge' : ''}"
           data-action="${action.id}"
+          data-droppable="${action.droppable || false}"
           aria-label="${action.label}"
           title="${action.label}"
         >
           <i data-lucide="${action.icon}"></i>
-          ${action.badge ? `<span class="count-badge">${action.badge}</span>` : ''}
+          ${action.badge ? `<span class="count-badge ${action.badgeColor || ''}">${action.badge}</span>` : ''}
           <span class="nav-tooltip">${action.label}</span>
         </button>
       `).join('')}
     </nav>
   `;
+
+  // Initialize Drag & Drop Zones
+  initDropZones(sidebarEl);
 
   // Initialize Lucide icons for new content
   if (typeof lucide !== 'undefined') {
@@ -120,6 +124,59 @@ function updateSidebarForPage(pageId) {
   currentActiveAction = actions[0]?.id || null;
 
   console.log('[Sidebar] Rendered', actions.length, 'actions for', pageId);
+}
+
+/**
+ * @function initDropZones
+ * @purpose Attach drag events to droppable items
+ */
+function initDropZones(container) {
+  const droppables = container.querySelectorAll('[data-droppable="true"]');
+
+  droppables.forEach(el => {
+    el.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Allow drop
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('drag-over');
+    });
+
+    el.addEventListener('dragleave', () => {
+      el.classList.remove('drag-over');
+    });
+
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      el.classList.remove('drag-over');
+
+      const cardId = e.dataTransfer.getData('text/plain');
+      const actionId = el.dataset.action;
+
+      if (cardId) {
+        handleSidebarDrop(cardId, actionId);
+      }
+    });
+  });
+}
+
+/**
+ * @function handleSidebarDrop
+ * @purpose Dispatch drop event
+ */
+function handleSidebarDrop(cardId, actionId) {
+  const event = new CustomEvent('sidebar-drop', {
+    detail: { cardId, actionId, pageId: currentPage },
+    bubbles: true
+  });
+  document.dispatchEvent(event);
+  console.log('[Sidebar] Drop detected:', cardId, '->', actionId);
+
+  // Optimistic UI update (simulate badge increment)
+  // In real app, this waits for state update
+  const btn = document.querySelector(`[data-action="${actionId}"]`);
+  if (btn) {
+    btn.classList.add('pulse'); // CSS animation
+    setTimeout(() => btn.classList.remove('pulse'), 500);
+  }
 }
 
 // =============================================================================
