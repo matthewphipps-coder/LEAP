@@ -62,8 +62,8 @@ export const CHECKPOINT_PREFIX = '[NEXUS]';
  * @extensible Factory can add pages by appending to this array
  */
 export const PAGE_TABS = [
-  { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
-  { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2 },
+  { id: 'dashboard', icon: 'layout-dashboard', label: 'My Work', badge: 3, badgeColor: 'urgent' },
+  { id: 'incidents', icon: 'alert-triangle', label: 'Incidents', badge: 2, badgeColor: 'warning' },
   { id: 'reports', icon: 'bar-chart-3', label: 'Reports' },
   { id: 'calendar', icon: 'calendar', label: 'Calendar' },
 ];
@@ -79,7 +79,13 @@ export const PAGE_TABS = [
  */
 export const PAGE_SIDEBAR_ACTIONS = {
   dashboard: [
-    { id: 'refresh', icon: 'refresh-cw', label: 'Refresh Data' },
+    { id: 'inbox', icon: 'inbox', label: 'Inbox', badge: 3, droppable: true, actionType: 'filter' },
+    { id: 'now', icon: 'zap', label: 'Now', badge: 2, badgeColor: 'urgent', droppable: true, actionType: 'filter' },
+    { id: 'next', icon: 'clock', label: 'Next', badge: 5, badgeColor: 'warning', droppable: true, actionType: 'filter' },
+    { id: 'later', icon: 'calendar', label: 'Later', badge: 8, droppable: true, actionType: 'filter' },
+    { id: 'all', icon: 'layers', label: 'All Cards', droppable: false, actionType: 'filter' },
+    { id: 'separator-1', type: 'separator' },
+    { id: 'done', icon: 'check-circle', label: 'Mark Done', droppable: true, actionType: 'function' }
   ],
   incidents: [
     { id: 'new-incident', icon: 'plus', label: 'New Incident' },

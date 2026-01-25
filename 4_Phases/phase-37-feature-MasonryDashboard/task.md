@@ -16,13 +16,13 @@
 - [x] **Checkpoint**: `git commit -m 'WIP Phase 37: Visual Layer CSS Port'`
 
 ## Stage 3: Data Layer (Schema)
-- [/] **Card Service**: Update `features/card/card-service.js` to match `SPEC-006-schema.yaml` (fields: `horizon`, `priority`, `size`).
-- [ ] **Sidebar Config**: Update `core/constants.js` -> `PAGE_SIDEBAR_ACTIONS` with new schema (`droppable`, `badgeColor`).
-- [ ] **Header Config**: Update `PAGE_TABS` with `badgeColor`.
-- [ ] **Checkpoint**: `git commit -m 'WIP Phase 37: Data & Config Schema'`
+- [x] **Card Service**: Update `features/card/card-service.js` to match `SPEC-006-schema.yaml` (fields: `horizon`, `priority`, `size`).
+- [x] **Sidebar Config**: Update `core/constants.js` -> `PAGE_SIDEBAR_ACTIONS` with new schema (`droppable`, `badgeColor`).
+- [x] **Header Config**: Update `PAGE_TABS` with `badgeColor`.
+- [x] **Checkpoint**: `git commit -m 'WIP Phase 37: Data & Config Schema'`
 
 ## Stage 4: Logical Layer (Architecture)
-- [ ] **Canvas Render Loop**: Implement `canvas-ui.js` to render cards based on `currentHorizon` and `layoutMode`.
+- [/] **Canvas Render Loop**: Implement `canvas-ui.js` to render cards based on `currentHorizon` and `layoutMode`.
 - [ ] **Render Logic**: Implement "Masonry Filter" (Group by Horizon) logic.
 - [ ] **Sidebar Event Bus**: Update `sidebar-ui.js` to emit `sidebar-action` events (Decoupled).
 - [ ] **Drag & Drop**: Implement Native D&D handlers in `sidebar-ui.js` (Drop Zone) and `canvas-ui.js` (Draggable).
