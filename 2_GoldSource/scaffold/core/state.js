@@ -44,19 +44,23 @@ const INITIAL_STATE = {
     }
 };
 
+// LOAD FROM STORAGE
+const STORAGE_KEY = 'NEXUS_STATE_V1';
+const savedState = localStorage.getItem(STORAGE_KEY);
+let loadedState = savedState ? JSON.parse(savedState) : {};
+
+// Merge saved state with initial structure (careful not to overwrite defaults with undefined)
+// We mostly want to persist theme and viewPreferences.
+const MERGED_STATE = {
+    ...INITIAL_STATE,
+    ...loadedState,
+    currentPage: 'inbox', // Always reset page on load
+    user: null // Always reset user on load (auth handled separately)
+};
+
 // ... (existing code)
 
-/**
- * @function setCurrentPage
- * @purpose Set current active page
- * @param {string} pageId - Page ID (e.g. 'inbox', 'my-work')
- */
-export function setCurrentPage(pageId) {
-    if (state.currentPage === pageId) return;
-    debug('State: setCurrentPage', { pageId });
-    state.currentPage = pageId;
-    notifySubscribers('setCurrentPage');
-}
+
 
 /**
  * @function setViewPreference
@@ -76,7 +80,7 @@ export function setViewPreference(horizon, mode) {
 }
 
 // Private state
-let state = { ...INITIAL_STATE };
+let state = { ...MERGED_STATE };
 
 // Subscribers: Map<id, callback>
 const subscribers = new Map();
@@ -262,6 +266,17 @@ export function unsubscribe(id) {
  */
 function notifySubscribers(source) {
     const currentState = getState();
+    // Persist changes
+    if (source === 'setTheme' || source === 'setViewPreference' || source === 'setSidebarCollapsed') {
+        const stateToSave = {
+            theme: currentState.theme,
+            sidebarCollapsed: currentState.sidebarCollapsed,
+            viewPreferences: currentState.viewPreferences
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+        debug('State persisted to Storage');
+    }
+
     subscribers.forEach((callback, id) => {
         try {
             callback(currentState, source);

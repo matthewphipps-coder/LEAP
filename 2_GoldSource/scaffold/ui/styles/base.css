@@ -175,3 +175,34 @@ li {
     outline: 2px solid var(--accent-primary);
     outline-offset: 2px;
 }
+
+/* =============================================================================
+   PAGE VISIBILITY (SPA)
+   ============================================================================= */
+
+/* =============================================================================
+   PAGE VISIBILITY (SPA)
+   ============================================================================= */
+
+/* Debug visual to confirm selector match - remove later */
+section.page {
+    display: none !important;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    border: 5px solid red !important;
+    /* DEBUG */
+}
+
+section.page.page--active {
+    display: block !important;
+    opacity: 1;
+    border: none !important;
+}
+
+/* Fallback / Force Hard Override */
+#page-dashboard:not(.page--active),
+#page-incidents:not(.page--active),
+#page-reports:not(.page--active),
+#page-calendar:not(.page--active) {
+    display: none !important;
+}

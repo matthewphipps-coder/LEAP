@@ -7,6 +7,20 @@
  * @locked false
  */
 
+/* =============================================================================
+   APP SHELL LAYOUT FIXES (Phase 37)
+   ============================================================================= */
+
+/* Ensure content respects fixed Header and Sidebar */
+.page-content {
+    padding-top: calc(var(--header-height) + var(--space-md));
+    padding-left: calc(var(--sidebar-gap) + var(--sidebar-pill-width) + var(--sidebar-gap));
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    height: 100vh;
+    box-sizing: border-box;
+}
+
 .canvas-container {
     display: flex;
     flex-direction: column;
@@ -22,6 +36,64 @@
     font-weight: 600;
     color: var(--text-primary);
     text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.horizon-group-title {
+    column-span: all;
+    /* Breaks masonry flow */
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--glass-border);
+    width: 100%;
+}
+
+.horizon-group-title:first-child {
+    margin-top: 0;
+}
+
+.layout-toggles {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.layout-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.layout-toggle-btn:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+}
+
+.layout-toggle-btn.active {
+    background: rgba(98, 216, 78, 0.15);
+    color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.layout-toggle-btn i,
+.layout-toggle-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .nexus-scroll-area {

@@ -138,6 +138,43 @@ glassmorphism:
     }
 
 # =============================================================================
+# PHASE 37: MASONRY DASHBOARD (SPEC-006)
+# =============================================================================
+
+masonryDashboard:
+  description: "Design tokens for the Masonry Dashboard layout and components"
+  files: 
+    - "ui/components/canvas/canvas.css"
+    - "ui/components/card/card.css"
+  
+  grouping:
+    header:
+      selector: ".horizon-group-title"
+      purpose: "Section separator in 'All' view"
+      font: "var(--font-heading)"
+      size: "var(--text-lg) (1.125rem)"
+      weight: "600"
+      color: "var(--text-secondary)"
+      spacing: "margin-top: var(--space-xl)"
+      border: "bottom 1px solid var(--glass-border)"
+  
+  badges:
+    updates:
+      selector: ".card-updates-badge"
+      purpose: "Comment count indicator on cards"
+      dimensions: "20px x 20px (fixed)"
+      display: "inline-flex"
+      icon: "18px stroke-width 2px"
+    
+    count:
+      selector: ".badge-count"
+      purpose: "Numeric overlay on update badge"
+      position: "Absolute centered"
+      size: "9px"
+      weight: "700"
+      color: "var(--text-primary)"
+
+# =============================================================================
 # PHASE 22: BRAND COLOR SYSTEM (FR-006)
 # =============================================================================
 

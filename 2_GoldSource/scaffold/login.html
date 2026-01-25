@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEXUS - Login</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
   <!-- Design System CSS -->
   <link rel="stylesheet" href="ui/styles/variables.css">
   <link rel="stylesheet" href="ui/styles/base.css">
   <link rel="stylesheet" href="ui/styles/buttons.css">
   <link rel="stylesheet" href="ui/styles/inputs.css">
-  
+
   <!-- Page-specific styles -->
   <style>
     /* Login Page Layout */
@@ -26,7 +29,7 @@
       justify-content: center;
       padding: var(--space-lg);
     }
-    
+
     /* Login Card */
     .login-card {
       width: 100%;
@@ -39,13 +42,13 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-card);
     }
-    
+
     /* Logo/Brand */
     .login-brand {
       text-align: center;
       margin-bottom: var(--space-xl);
     }
-    
+
     .login-brand h1 {
       font-family: var(--font-heading);
       font-size: var(--text-3xl);
@@ -55,26 +58,26 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    
+
     .login-brand p {
       margin-top: var(--space-sm);
       color: var(--text-secondary);
       font-size: var(--text-sm);
     }
-    
+
     /* Form */
     .login-form {
       display: flex;
       flex-direction: column;
       gap: var(--space-md);
     }
-    
+
     .login-form .btn {
       margin-top: var(--space-sm);
       width: 100%;
       padding: var(--space-md);
     }
-    
+
     /* Error Message */
     .login-error {
       padding: var(--space-sm) var(--space-md);
@@ -85,11 +88,11 @@
       font-size: var(--text-sm);
       display: none;
     }
-    
+
     .login-error.visible {
       display: block;
     }
-    
+
     /* Mode Toggle */
     .login-toggle {
       text-align: center;
@@ -97,17 +100,18 @@
       font-size: var(--text-sm);
       color: var(--text-secondary);
     }
-    
+
     .login-toggle a {
       color: var(--accent-primary);
       cursor: pointer;
     }
-    
+
     .login-toggle a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <div class="login-page">
     <div class="login-card">
@@ -116,50 +120,38 @@
         <h1>NEXUS</h1>
         <p id="login-subtitle">Sign in to continue</p>
       </div>
-      
+
       <!-- Error Display -->
       <div id="login-error" class="login-error"></div>
-      
+
       <!-- Login Form -->
       <form id="login-form" class="login-form">
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            class="input" 
-            placeholder="you@example.com"
-            required
-            autocomplete="email"
-          >
+          <input type="email" id="email" class="input" placeholder="you@example.com" required autocomplete="email">
         </div>
-        
+
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
-          <input 
-            type="password" 
-            id="password" 
-            class="input" 
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          >
+          <input type="password" id="password" class="input" placeholder="••••••••" required
+            autocomplete="current-password">
         </div>
-        
+
         <button type="submit" id="submit-btn" class="btn btn-primary">
           Sign In
         </button>
       </form>
-      
+
       <!-- Mode Toggle -->
       <div class="login-toggle">
         <span id="toggle-text">Don't have an account?</span>
-        <a id="toggle-link" onclick="toggleMode()">Sign up</a>
+        <a id="toggle-link">Sign up</a>
       </div>
     </div>
   </div>
-  
+
   <!-- Scripts -->
   <script type="module" src="login.js"></script>
 </body>
+
 </html>

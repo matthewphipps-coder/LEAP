@@ -55,15 +55,48 @@ export function initSidebar() {
   });
 
   // LEAP-067: Subscribe to state changes (Unidirectional Flow)
+  // LEAP-067: Subscribe to state changes (Unidirectional Flow)
   subscribe((state, source) => {
     if (source === 'setCurrentPage' || source === 'reset') {
       updateSidebarForPage(state.currentPage);
     }
   });
 
+  // REACTIVE BADGES (SPEC-006)
+  document.addEventListener('card-update', (e) => {
+    const { stats } = e.detail;
+    if (stats && currentPage === 'dashboard') {
+      updateSidebarBadges(stats);
+    }
+  });
+
   // Initial render
   const initialState = getState();
   updateSidebarForPage(initialState.currentPage);
+
+  // Initialize badges with real data immediately
+  // DYNAMIC IMPORT or Global - CardService is a feature module, maybe hard to import directly if strict layering?
+  // But we can dispatch a request or just import it if allowed. 
+  // Given app architecture, features depend on core, UI depends on core.
+  // SidebarUI -> CardService is UI -> Feature (Side-dependency). Ideally Avoid.
+  // Better: app.js listens for init and dispatches stats? 
+  // OR: Just allow it for now since we are in a tight loop.
+  // actually, let's use the event bus to request an update?
+  // Or simpler: Dispatch a 'card-update' from the Service when it loads?
+  // Let's modify CardService to dispatch initial state on load/init? 
+  // Or just import CardService here dynamically to avoid circular dep issues during module load.
+
+  import('../../../features/card/card-service.js').then(({ CardService }) => {
+    const stats = CardService.getCardStats();
+    if (currentPage === 'dashboard') {
+      updateSidebarBadges(stats);
+      // Also update header
+      document.dispatchEvent(new CustomEvent('card-update', {
+        detail: { stats },
+        bubbles: true
+      }));
+    }
+  });
 
   console.log('[Sidebar] Initialized');
 }
@@ -232,4 +265,46 @@ export function getCurrentAction() {
  */
 export function getActionsForPage(pageId) {
   return PAGE_SIDEBAR_ACTIONS[pageId] || [];
+}
+
+/**
+ * @function updateSidebarBadges
+ * @purpose Update badge counts based on live stats
+ * @param {Object} stats - { inbox: 5, now: 2 ... }
+ */
+function updateSidebarBadges(stats) {
+  const sidebarEl = document.getElementById('sidebar');
+  if (!sidebarEl) return;
+
+  Object.entries(stats).forEach(([key, data]) => {
+    // Check if data is object (new format) or number (legacy fallback)
+    const count = typeof data === 'object' ? data.count : data;
+    const hasP1 = typeof data === 'object' ? data.hasP1 : false;
+    const hasP2 = typeof data === 'object' ? data.hasP2 : false;
+
+    const btn = sidebarEl.querySelector(`[data-action="${key}"]`);
+    if (btn) {
+      // Find or create badge
+      let badge = btn.querySelector('.count-badge');
+      if (count > 0) {
+        if (!badge) {
+          const badgeEl = document.createElement('span');
+          badgeEl.className = 'count-badge';
+          btn.appendChild(badgeEl);
+          badge = badgeEl;
+        }
+        badge.textContent = count;
+
+        // COLOR LOGIC
+        badge.className = 'count-badge'; // Reset
+        if (hasP1) badge.classList.add('urgent');
+        else if (hasP2) badge.classList.add('warning');
+
+        btn.classList.add('has-badge');
+      } else {
+        if (badge) badge.remove();
+        btn.classList.remove('has-badge');
+      }
+    }
+  });
 }

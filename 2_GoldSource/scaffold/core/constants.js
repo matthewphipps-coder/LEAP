@@ -84,8 +84,7 @@ export const PAGE_SIDEBAR_ACTIONS = {
     { id: 'next', icon: 'clock', label: 'Next', badge: 5, badgeColor: 'warning', droppable: true, actionType: 'filter' },
     { id: 'later', icon: 'calendar', label: 'Later', badge: 8, droppable: true, actionType: 'filter' },
     { id: 'all', icon: 'layers', label: 'All Cards', droppable: false, actionType: 'filter' },
-    { id: 'separator-1', type: 'separator' },
-    { id: 'done', icon: 'check-circle', label: 'Mark Done', droppable: true, actionType: 'function' }
+    { id: 'done', icon: 'check-circle', label: 'Done', droppable: true, actionType: 'filter' }
   ],
   incidents: [
     { id: 'new-incident', icon: 'plus', label: 'New Incident' },

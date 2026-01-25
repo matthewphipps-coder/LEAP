@@ -29,22 +29,22 @@
 - [x] **Checkpoint**: `git commit -m 'WIP Phase 37: Logic & Event Bus'`
 
 ## Stage 5: State & Meta-Data (Gov Compliance)
-- [/] **State Update**: Add `viewPreferences` to `state.js`.
-- [ ] **Per-Horizon Logic**: Ensure switching horizons restores the correct Layout Mode.
-- [ ] **Meta-Docs Update**:
-    - [ ] `meta/functionality.yaml`: Add 'Masonry Dashboard' feature entry.
-    - [ ] `meta/architecture.yaml`: Update 'Module Map' with new dependencies.
-    - [ ] `meta/design-system.yaml`: Add 'Masonry' and 'Card' token references.
-- [ ] **Checkpoint**: `git commit -m 'WIP Phase 37: State & Meta-Docs'`
+- [x] **State Update**: Add `viewPreferences` to `state.js`.
+- [x] **Per-Horizon Logic**: Ensure switching horizons restores the correct Layout Mode.
+- [x] **Meta-Docs Update**:
+    - [x] `meta/functionality.yaml`: Add 'Masonry Dashboard' feature entry.
+    - [x] `meta/architecture.yaml`: Update 'Module Map' with new dependencies.
+    - [x] `meta/design-system.yaml`: Add 'Masonry' and 'Card' token references.
+- [x] **Checkpoint**: `git commit -m 'WIP Phase 37: State & Meta-Docs'`
 
 ## Stage 6: Validation (Gov Check)
-- [ ] **Visual Check**: Compare `localhost` vs `specs/SPEC-004-prototype.html`.
-- [ ] **Functional Check**: Drag card to "Done" sidebar item -> Log event.
-- [ ] **Regression Check**: Verify 'Incidents' and 'Reports' pages still load correctly (no CSS bleed).
-- [ ] **Governance Check**: Run `gov-check.sh` to ensure no direct DOM manipulation between modules.
+- [x] **Governance Check**: Run `gov-check.sh` to ensure no direct DOM manipulation between modules.
+- [x] **Visual Check**: Compare `localhost` vs `specs/SPEC-004-prototype.html`.
+- [x] **Functional Check**: Drag card to "Done" sidebar item -> Log event.
+- [x] **Regression Check**: Verify 'Incidents' and 'Reports' pages still load correctly (no CSS bleed).
 
 ## Stage 7: Testing (Evidence)
-- [ ] **Run Server**: `python3 -m http.server 8080` (or 8081).
+- [/] **Run Server**: `python3 -m http.server 8080` (or 8081).
 - [ ] **Capture Evidence**: Record screenshot of "My Work" page.
 - [ ] **Create Artifact**: `stage-7-testing.yaml` with results.
 

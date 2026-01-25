@@ -53,6 +53,12 @@ setupAuthListener((user) => {
 // Form submission
 form.addEventListener('submit', handleSubmit);
 
+// Toggle Mode (Fixed: Inline handler violation removed)
+// Toggle Mode (Fixed: Inline handler violation removed)
+if (toggleLink) {
+    toggleLink.addEventListener('click', toggleMode);
+}
+
 // =============================================================================
 // HANDLERS
 // =============================================================================
@@ -101,7 +107,7 @@ async function handleSubmit(e) {
  * @function toggleMode
  * @purpose Switch between login and signup modes
  */
-window.toggleMode = function toggleMode() {
+function toggleMode() {
     isSignupMode = !isSignupMode;
 
     if (isSignupMode) {
@@ -119,7 +125,7 @@ window.toggleMode = function toggleMode() {
     }
 
     hideError();
-};
+}
 
 // =============================================================================
 // ERROR HANDLING

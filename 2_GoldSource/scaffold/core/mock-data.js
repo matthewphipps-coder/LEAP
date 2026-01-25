@@ -13,13 +13,77 @@ import { debug } from './logger.js';
 // Module contract
 export const MODULE_CONTRACT = {
     provides: ['getMockTasks', 'getMockMetrics', 'getMockNotifications', 'simulateAgentResponse'],
+    // ... existing exports
     requires: ['logger.js']
 };
 
+// =============================================================================
+// TEST DATA GENERATOR
+// =============================================================================
+
+const TITLES = [
+    "Review Q4 Budget", "Update Security Policy", "Fix Login Bug", "Client Meeting Prep",
+    "Database Migration", "API Documentation", "User Research Interviews", "Design System Audit",
+    "Performance Optimization", "Accessibility Review", "Cloud Infrastructure Audit",
+    "Kubernetes Cluster Upgrade", "Mobile App Beta Testing", "Customer Support Ticket Analysis",
+    "Sales Pipeline Review", "Marketing Campaign Launch", "Quarterly Business Review Prep",
+    "Employee Onboarding Flow", "GDPR Compliance Check", "Legacy Code Refactoring",
+    "Feature Flag Cleanup", "CI/CD Pipeline Improvements", "Zero Trust Architecture Plan",
+    "Data Lake Storage Optimization", "Machine Learning Model Training", "End-to-End Testing Suite",
+    "Chaos Engineering Drill", "Incident Response Playbook Update", "Vendor Contract Renewal",
+    "Team Building Event Planning"
+];
+
+const SUMMARIES = [
+    "Needs urgent attention.",
+    "Blocked by external dependency.",
+    "Review comments from the team before merging.",
+    "Pending final approval from legal.",
+    "Customer reported critical issue in production. Needs immediate fix.",
+    "Draft initial scope and timeline.",
+    "",
+    "See attached document for details."
+];
+
+const TYPES = ['task', 'incident', 'report'];
+const HORIZONS = ['now', 'next', 'inbox', 'later'];
+const PRIORITIES = ['p1', 'p2', 'p3'];
+const SIZES = ['small', 'medium', 'large'];
+
+/**
+ * @function generateTestCards
+ * @purpose Generate randomized test cards
+ * @param {number} count - Number of cards to generate
+ * @returns {Array} Array of card objects
+ */
+export function generateTestCards(count = 30) {
+    const cards = [];
+
+    for (let i = 0; i < count; i++) {
+        const type = TYPES[Math.floor(Math.random() * TYPES.length)];
+        const priority = PRIORITIES[Math.floor(Math.random() * PRIORITIES.length)];
+
+        cards.push({
+            id: `TEST-${1000 + i}`,
+            title: TITLES[i % TITLES.length] + (i > TITLES.length ? ` ${i}` : ''),
+            type: type,
+            horizon: HORIZONS[Math.floor(Math.random() * HORIZONS.length)],
+            priority: priority,
+            size: SIZES[Math.floor(Math.random() * SIZES.length)],
+            updates: Math.random() > 0.7 ? Math.floor(Math.random() * 5) + 1 : 0,
+            animate: Math.random() > 0.8,
+            meta: `${type.toUpperCase()}-${Math.floor(Math.random() * 9000) + 1000}`,
+            summary: SUMMARIES[Math.floor(Math.random() * SUMMARIES.length)],
+            timestamp: `${Math.floor(Math.random() * 12) + 1}h ago`
+        });
+    }
+
+    return cards;
+}
+
 /**
  * @constant MOCK_TASKS
- * @purpose Sample task data for dashboard display
- */
+// ... existing MOCK_TASKS ...
 const MOCK_TASKS = [
     {
         id: 'TASK-001',

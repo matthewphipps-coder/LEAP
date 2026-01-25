@@ -113,6 +113,43 @@ export function initHeader(user, onLogout, onThemeToggle, onSettingsOpen) {
     }
   });
 
+  // REACTIVE BADGES (SPEC-006)
+  document.addEventListener('card-update', (e) => {
+    const { stats } = e.detail;
+    if (stats) {
+      // My Work (Dashboard) Badge = Inbox Count (or Sum of Urgent, depending on rule. SPEC says 'My Work' usually mirrors 'Inbox' or 'Total')
+      // Let's assume My Work Badge = Inbox + Now + Next (Active Work)
+
+      const getCount = (k) => {
+        const val = stats[k];
+        if (!val) return 0;
+        return typeof val === 'object' ? val.count : (parseInt(val) || 0);
+      };
+
+      const myWorkCount = getCount('inbox') + getCount('now');
+
+      // Update Tab
+      const tab = document.querySelector('.page-tab[data-page="dashboard"]');
+      if (tab) {
+        let badge = tab.querySelector('.count-badge');
+        if (myWorkCount > 0) {
+          if (!badge) {
+            // Create if missing
+            const badgeEl = document.createElement('span');
+            badgeEl.className = 'count-badge';
+            tab.appendChild(badgeEl);
+            badge = badgeEl;
+          }
+          badge.textContent = myWorkCount;
+
+          // Header Badge Urgency Logic ?? (Optional, keeping simple for now)
+        } else {
+          if (badge) badge.remove(); // Remove if 0
+        }
+      }
+    }
+  });
+
   // Set initial theme state
   updateThemeToggle();
 
