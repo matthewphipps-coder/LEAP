@@ -1,0 +1,41 @@
+stage: -4
+title: "Convergence & Scoping"
+status: pending
+
+governance:
+  mode: "CONVERGENT"
+  forced_breakpoint: "REQUIRED: Recommend starting a NEW conversation after this stage"
+  socratic_check: "Is this scope truly 'manageable' while remaining 'bold'?"
+
+objectives:
+  - "Condense Stage -5 research into a manageable scope"
+  - "Define the 'Bold Outcome' boundaries"
+
+checklist:
+  filtered_research_to_core: true
+  defined_in_out_scope: true
+  documented_bold_outcome: true
+  ai_asked_if_missing: true
+  proceed_received: true
+  recommended_new_conversation: true
+
+outputs:
+  - "Scope definition in DISCOVERY_LOG.md"
+
+outcomes:
+  bold_outcome: "'My Work' Dashboard becomes the IMMUTABLE Reference Implementation for all future Card/Masonry pages."
+  in_scope:
+    - "'My Work' Page (Masonry & Freeform Canvas)"
+    - "Sidebar Drop Zones (Drag Card -> Action)"
+    - "Extensible Configuration (constants.js schema update)"
+    - "Header Badge Colors (Amber/Red)"
+    - "Card Component (Visuals + Data Schema)"
+  out_of_scope:
+    - "Real AI Integration (Mocked UI Only)"
+    - "Notification System Backend"
+    - "Mobile Layout Optimization"
+    - "Incidents/Reports Pages (Placeholders Only)"
+  success_criteria:
+    - "Prototype Visuals matched 100%"
+    - "Sidebar Configurable via constants.js"
+    - "Drag & Drop works (Card -> Nav Item)"

@@ -1,101 +1,144 @@
 /**
  * @file canvas.css
- * @purpose Canvas component styles - main content area with multi-page system
+ * @purpose Styles for Masonry/Canvas layout containers
  * @layer ui
  * @dependencies [variables.css]
- * @dependents [index.html]
+ * @dependents [canvas-ui.js]
  * @locked false
- * @modifyImpact [main content area appearance]
- * @spec SPEC-003
  */
 
-/* =============================================================================
-   CANVAS CONTAINER (SPEC-003)
-   ============================================================================= */
-
-.canvas {
-    position: fixed;
-    top: var(--header-height);
-    /* Leave room for floating sidebar pill */
-    left: calc(var(--sidebar-pill-width) + var(--sidebar-gap) * 2);
-    right: 0;
-    bottom: 0;
-    overflow-y: auto;
-    padding: var(--space-xl);
+.canvas-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
 }
 
-/* =============================================================================
-   PAGE SYSTEM (SPEC-003)
-   ============================================================================= */
-
-.page {
-    display: none;
-    min-height: 100%;
-}
-
-.page--active {
-    display: block;
-}
-
-.page-content {
-    max-width: 1200px;
-}
-
-.page-title {
+.horizon-header {
+    flex-shrink: 0;
+    padding: var(--space-lg) var(--space-xl) var(--space-md);
     font-family: var(--font-heading);
     font-size: var(--text-2xl);
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--space-lg);
+    text-transform: capitalize;
 }
 
-.canvas-content {
-    min-height: 100%;
-    padding: var(--space-xl);
+.nexus-scroll-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 var(--space-xl) var(--space-xl);
 }
 
 /* =============================================================================
-   WELCOME MESSAGE
+   MODE 1: GRID (MASONRY)
+   Using CSS Columns for pure CSS masonry
    ============================================================================= */
 
-.canvas-welcome {
+.nexus-canvas.grid-mode {
+    display: block;
+    column-count: 3;
+    column-gap: var(--space-xl);
+    align-content: start;
+    padding-bottom: 100px;
+}
+
+@media (max-width: 1200px) {
+    .nexus-canvas.grid-mode {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 700px) {
+    .nexus-canvas.grid-mode {
+        column-count: 1;
+    }
+}
+
+.nexus-canvas.grid-mode .nexus-card.drop-before {
+    border-top: 4px solid var(--brand-primary);
+    margin-top: -4px;
+    transition: none;
+}
+
+/* =============================================================================
+   MODE 2: LIST / DONE
+   ============================================================================= */
+
+.nexus-canvas.list-mode {
     display: flex;
     flex-direction: column;
+    gap: var(--space-xl);
+    padding-bottom: 100px;
+}
+
+.nexus-canvas.done-mode {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding-bottom: 100px;
+}
+
+/* Horizontal card layout for list modes */
+.nexus-canvas.list-mode .nexus-card,
+.nexus-canvas.done-mode .nexus-card {
+    width: 100%;
+    display: flex;
+    break-inside: auto;
+    margin-bottom: 0;
+    padding: var(--space-md);
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
+    gap: var(--space-md);
 }
 
-.welcome-title {
-    font-family: var(--font-heading);
-    font-size: var(--text-3xl);
-    font-weight: var(--font-semibold);
-    background: linear-gradient(135deg, var(--accent-primary), #a3e635);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: var(--space-md);
+.nexus-canvas.list-mode .card-header,
+.nexus-canvas.done-mode .card-header {
+    margin: 0;
+    min-width: 120px;
 }
 
-.welcome-subtitle {
-    font-size: var(--text-lg);
-    color: var(--text-secondary);
-    margin-bottom: var(--space-sm);
+.nexus-canvas.list-mode .card-title,
+.nexus-canvas.done-mode .card-title {
+    margin: 0;
+    flex: 1;
+    font-size: var(--text-base);
 }
 
-.welcome-hint {
-    font-size: var(--text-sm);
-    color: var(--text-secondary);
-    opacity: 0.7;
+.nexus-canvas.list-mode .card-summary,
+.nexus-canvas.done-mode .card-summary {
+    display: none;
+}
+
+.nexus-canvas.list-mode .card-footer,
+.nexus-canvas.done-mode .card-footer {
+    margin: 0;
+    min-width: 100px;
+    justify-content: flex-end;
 }
 
 /* =============================================================================
-   GRID READY (for future cards)
+   MODE 3: FREEFORM
+   Absolute positioning
    ============================================================================= */
 
-.canvas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-lg);
+.nexus-canvas.freeform-mode {
+    display: block;
+    position: relative;
+    min-height: 800px;
+    /* Drag space */
+    column-count: auto;
+    column-gap: 0;
+}
+
+.nexus-canvas.freeform-mode .nexus-card {
+    position: absolute;
+    width: 300px;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal), top 0.3s ease, left 0.3s ease;
+    margin: 0;
+    z-index: 1;
+}
+
+.nexus-canvas.freeform-mode .nexus-card:hover {
+    z-index: 50;
 }

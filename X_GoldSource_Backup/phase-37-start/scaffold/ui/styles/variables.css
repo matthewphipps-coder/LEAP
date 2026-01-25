@@ -108,25 +108,6 @@
   --z-modal-backdrop: 300;
   --z-modal: 400;
   --z-notification: 500;
-
-  /* =============================================================================
-     MASONRY DASHBOARD TOKENS (SPEC-006)
-     ============================================================================= */
-
-  /* Card Styling */
-  --card-bg: rgba(20, 20, 25, 0.8);
-  --card-border: var(--glass-border);
-  --card-radius: var(--radius-md);
-
-  /* Badges */
-  --badge-urgent: #ef4444;
-  --badge-warning: #f59e0b;
-  --badge-neutral: rgba(255, 255, 255, 0.15);
-  --badge-text: #ffffff;
-
-  /* Layout Internals */
-  --masonry-gap: var(--space-xl);
-  --list-gap: var(--space-md);
 }
 
 /* =============================================================================

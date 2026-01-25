@@ -18,19 +18,17 @@ projectContext:
   vision: "AI Speed + Governance Rigor - see Tracking/VISION.yaml"
 
 currentPhase:
-  number: "36"
-  name: "ArchitecturalRestoration"
-  status: "complete"
-  stage: 8
-  stageName: "Closure"
-  completedDate: "2026-01-25T13:35:00Z"
-  closure: "4_Phases/phase-36-code-ArchitecturalRestoration/stage-8-closure.yaml"
-  startedDate: "2026-01-25T13:15:00Z"
+  number: "37"
+  name: "MasonryDashboard"
+  status: "in-progress"
+  stage: 1
+  stageName: "Build"
+  startedDate: "2026-01-25T15:15:00Z"
   
-  goal: "Refactor core architecture to fix Reactive State (Race Conditions) and Global Layout (Overlap)"
+  goal: "Execute SPEC-006 Flight Plan (Clean Build)"
   
-  spec: "N/A (Direct Fix)"
-  prototype: "N/A"
+  spec: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-1_Spec/SPEC-006.yaml"
+  prototype: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-0_Lock/SPEC-004-prototype.html"
   workflow: "goldsource-increment"
   
   summary: |

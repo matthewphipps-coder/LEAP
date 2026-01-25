@@ -1,0 +1,30 @@
+stage: -1
+title: "Functional Spec & Supporting Artifacts"
+status: pending
+
+governance:
+  standard: "Neither vague nor verbose"
+  socratic_check: "Does this provide everything needed for a Stage 5 Implementation?"
+
+objectives:
+  - "Author the definitive Functional Specification"
+  - "Create any necessary high-fidelity prototypes"
+
+checklist:
+  spec_drafted: true
+  prototype_created_if_needed: true
+  aligned_with_goldsource: true
+  ai_asked_if_missing: true
+  proceed_received: true
+
+outputs:
+  - "SPEC-006.yaml (final)"
+
+outcomes:
+  spec_id: "SPEC-006"
+  spec_path: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-1_Spec/SPEC-006.yaml"
+  prototype_path: "N/A (Used SPEC-004)"
+  functional_requirements:
+    - "My Work Dashboard (Immutable)"
+    - "Per-Horizon Layout Persistence"
+    - "Extensible Sidebar Actions"

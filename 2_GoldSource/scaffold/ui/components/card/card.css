@@ -1,0 +1,154 @@
+/**
+ * @file card.css
+ * @purpose Styles for Masonry Card component
+ * @layer ui
+ * @dependencies [variables.css]
+ * @dependents [canvas-ui.js]
+ * @locked false
+ */
+
+.nexus-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    cursor: pointer;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* MASONRY CRITICAL: Prevent split across columns */
+    break-inside: avoid;
+    margin-bottom: var(--space-xl);
+}
+
+.nexus-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+/* SIZE VARIANTS */
+.nexus-card[data-size="compact"] {
+    min-height: auto;
+}
+
+.nexus-card[data-size="medium"] {
+    min-height: auto;
+}
+
+.nexus-card[data-size="large"] {
+    min-height: auto;
+}
+
+/* LAYOUT ELEMENTS */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--space-md);
+}
+
+.card-meta {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.card-summary {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+    flex-grow: 1;
+    display: block;
+}
+
+.nexus-card[data-size="compact"] .card-summary {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-footer {
+    display: flex;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-top: auto;
+    align-items: center;
+}
+
+/* PRIORITY BADGES */
+.card-priority-badge {
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.card-priority-badge.p1 {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.card-priority-badge.p2 {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.card-priority-badge.p3 {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    border-color: var(--glass-border);
+}
+
+/* DRAG STATE */
+.nexus-card.dragging {
+    opacity: 0.5;
+    border: 2px dashed var(--brand-primary);
+}
+
+/* UPDATE PULSE ANIMATION */
+@keyframes pulse-border {
+    0% {
+        border-color: var(--badge-urgent);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        border-color: var(--badge-urgent);
+    }
+}
+
+.nexus-card[data-animate="true"] {
+    animation: pulse-border 2s infinite;
+    border-color: var(--badge-urgent);
+}
+
+/* LIGHT THEME OVERRIDES */
+.light-theme .nexus-card {
+    background: var(--glass-bg);
+}

@@ -1,0 +1,39 @@
+stage: -6
+title: "The DreamBig Idea!"
+status: locked
+
+governance:
+  brake_type: "Standalone !Proceed"
+  socratic_check: "Did I ask 'Why?' or 'What if?' about the vision?"
+
+objectives:
+  - "Capture the user's raw 'DreamBig' vision"
+
+checklist:
+  ai_asked_for_vision: true
+  user_provided_intent: true
+  ai_confirmed_understanding: true
+  ai_asked_if_missing: true
+  proceed_received: true
+
+creative_prompts:
+  always_consider:
+    - "Mermaid diagram (flowchart, sequence, architecture)"
+  stage_specific:
+    - "Carousel of inspirations"
+    - "Vision statement card"
+  guidance: "Use visual artifacts to aid understanding, not just text"
+
+outputs:
+  - "DISCOVERY_LOG.md initialized"
+  - "Stage -6 summary in DISCOVERY_LOG.md"
+
+outcomes:
+  vision_summary: "Dual Mandate: 1) Build 'My Work' as a LOCKED core feature implementing the Propotype exactly. 2) Extract its patterns (Masonry, Freeform, Sidebar Actions) as reusable standards for Factory pages."
+  key_decisions:
+    - "'My Work' page is IMMUTABLE/LOCKED core functionality."
+    - "Sidebar & Canvas patterns must be reusable for new Factory pages."
+    - "Header Badges must support Amber/Red states (Global Shell update)."
+  carry_forward:
+    - "Spec must distinguish between 'Core Page Logic' (Locked) and 'Reusable Component Logic' (Extensible)."
+    - "Header requires 'Badge Color' prop support."

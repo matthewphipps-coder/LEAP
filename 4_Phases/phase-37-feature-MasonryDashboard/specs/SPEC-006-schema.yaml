@@ -1,0 +1,60 @@
+# SPEC-006: Data & Configuration Schemas
+
+## 1. Card Data Model (card-service.js)
+# Source of Truth for "My Work" Dashboard Cards
+Card:
+  id: string              # Unique ID (e.g., "c-101")
+  title: string           # Display title
+  type: string            # "task" | "incident" | "report"
+  horizon: string         # "inbox" | "now" | "next" | "later" (Filter Key)
+  priority: string        # "p1" | "p2" | "p3" (Determines badge color)
+  size: string            # "small" | "medium" | "large" (Determines properties: min-height, etc)
+  updates: integer        # Number of unread updates (Badge count)
+  animate: boolean        # True = Pulse animation (Urgent)
+  meta: string            # Top label (e.g., "INCIDENT-2024")
+  summary: string         # Body text
+  timestamp: string       # Display time (e.g., "2m ago")
+
+## 2. Sidebar Configuration Schema (constants.js)
+# Extends PAGE_SIDEBAR_ACTIONS
+SidebarAction:
+  id: string              # Action ID (e.g., "mark-done", "filter-p1")
+  label: string           # Tooltip / Aria Label
+  icon: string            # Lucide Icon Name
+  badge: integer?         # Optional count
+  badgeColor: string?     # "urgent" (red) | "warning" (orange) | "neutral" (gray)
+  droppable: boolean      # If true, acts as a Drop Zone for Cards
+  actionType: string      # "filter" (client-side) | "function" (dispatch event) | "link"
+
+## 3. Header Tab Configuration Schema (constants.js)
+# Extends PAGE_TABS
+PageTab:
+  id: string
+  label: string
+  icon: string
+  badge: integer?
+  badgeColor: string?     # New property: "urgent" | "warning" | "neutral"
+
+## 4. Event Contracts (Event Bus)
+# Decoupled communication
+Events:
+  "sidebar-action":
+    payload:
+      actionId: string    # Which button was clicked/dropped on
+      pageId: string      # Current page context
+      dropData: object?   # If dropped: { cardId: string, sourceHorizon: string }
+  
+  "card-update":
+    payload:
+      stats: object       # { inbox: 3, now: 2, next: 5 ... } for badge updates
+
+## 5. View State Schema (state.js)
+# Persisted preferences
+ViewPreferences:
+  layoutMode:
+    inbox: string         # "grid" | "list"
+    now: string           # "freeform" | "grid" | "list"
+    next: string          # "grid" | "list"
+    later: string         # "grid" | "list"
+    all: string           # "grid" | "list"
+    done: string          # "done" (Locked to list/done view)

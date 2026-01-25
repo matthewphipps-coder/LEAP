@@ -1,0 +1,29 @@
+stage: 0.5
+title: "Implementation Flight Plan"
+status: active
+
+governance:
+  check: "Bridge Inspection"
+  question: "How do I ensure I use the Spec, not my imagination?"
+
+inputs:
+  spec: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-1_Spec/SPEC-006.yaml"
+  schema: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-2_Design/SPEC-006-schema.yaml"
+  visuals: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-0_Lock/SPEC-004-prototype.html"
+
+pre_flight_checklist:
+  - rule: "Architecture MUST follow Event Bus (SPEC-006)"
+  - rule: "Data MUST match Schema (SPEC-006-schema)"
+  - rule: "Layout MUST implement Per-Horizon Persistence"
+
+build_sequence:
+  1: "Scaffold Phase 37 & Apply 'Clean State' Fixes (Phase 36 Base)"
+  2: "Port CSS Tokens (from Visuals -> card.css)"
+  3: "Implement Card Data Service (from Schema -> card-service.js)"
+  4: "Implement Sidebar Config (from Schema -> constants.js)"
+  5: "Implement Canvas Render Loop (from Spec Logic -> canvas-ui.js)"
+  6: "Implement Drag & Drop Event Bus (Architecture -> sidebar-ui.js)"
+
+outputs:
+  - "Phase 37 Task List (task.md)"
+  - "Gov-Check Status (Green)"

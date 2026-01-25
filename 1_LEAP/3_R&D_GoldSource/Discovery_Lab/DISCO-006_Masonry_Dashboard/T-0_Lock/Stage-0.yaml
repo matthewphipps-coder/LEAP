@@ -1,0 +1,32 @@
+stage: 0
+title: "Validate"
+status: pending
+
+governance:
+  check: "Sanity Gate"
+  drift_management: "REQUIRED: Audit against GoldSource baseline"
+  socratic_check: "Am I making any assumptions about GoldSource that I haven't verified?"
+
+objectives:
+  - "Final verification of assumptions and safety"
+  - "Formal Spec-Lock and handoff to Build"
+
+checklist:
+  drift_check_verified: true
+  safety_check_confirmed: true
+  assumption_check_verified: true
+  ai_asked_if_missing: true
+  proceed_speclock_received: true
+
+outputs:
+  - "SPEC-006.yaml (Final/Locked)"
+  - "Stage-0.5.yaml (Flight Plan)"
+
+outcomes:
+  spec_locked: true
+  spec_id: "SPEC-006"
+  validation_results:
+    drift_check: "passed"
+    safety_check: "passed"
+    assumption_check: "passed"
+  handoff_ready: true

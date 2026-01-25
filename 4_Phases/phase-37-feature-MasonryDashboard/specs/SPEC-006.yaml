@@ -1,0 +1,53 @@
+metadata:
+  spec_id: "SPEC-006"
+  title: "Masonry Dashboard & Extensible UI Standards"
+  status: "draft"
+  version: "1.0"
+  author: "Matthew Phipps"
+  date: "2026-01-25"
+  source_of_truth: "DISCO-006_Masonry_Dashboard"
+
+vision:
+  summary: "Dual Mandate: 1) A locked 'My Work' dashboard with Masonry/Freeform layouts and Drag-to-Sidebar workflows. 2) A set of reusable GoldSource standards for Grid Layouts, Sidebar Actions, and Card UI."
+
+requirements:
+  core_features:
+    - name: "Immutable 'My Work' Page"
+      description: "A specialized dashboard showing cards across 5 horizons (Inbox, Now, Next, Later, All)."
+      constraints:
+        - "Must implement SPEC-004 Visuals exactly."
+        - "Must support Drag & Drop from Canvas to Sidebar."
+    
+    - name: "Per-Horizon Layout Persistence"
+      description: "User's layout choice (Grid/Freeform/List) is saved independently for EACH horizon."
+      example: "User can have 'Now' in Freeform mode and 'Next' in Grid mode simultaneously."
+
+    - name: "Extensible Sidebar Actions"
+      description: "Sidebar items are configuration-driven (constants.js) and support interaction types."
+      types:
+        - "Droppable (Accepts cards)"
+        - "Badged (Shows counts, supports 'urgent' color)"
+        - "Functional (Click triggers event)"
+
+  technical_standards:
+    - name: "Event Bus Architecture"
+      description: "Components communicate via `window.dispatchEvent` (custom events) to avoid direct coupling."
+    
+    - name: "State Subscription"
+      description: "UI components subscribe to `state.js` for changes (e.g., current page, layout mode)."
+
+schema_reference: "1_LEAP/3_R&D_GoldSource/Discovery_Lab/DISCO-006_Masonry_Dashboard/T-2_Design/SPEC-006-schema.yaml"
+
+implementation_plan:
+  phase: "37"
+  steps:
+    1: "Define Schemas in `constants.js` and `card-service.js`."
+    2: "Port CSS Tokens & Classes from SPEC-004-prototype.html."
+    3: "Implement `CanvasUI` render loop (handling Grid vs Freeform logic)."
+    4: "Implement `SidebarUI` with Event Bus listeners (DragEnter, Drop)."
+    5: "Wire up `ViewPreferences` in `state.js` to persist per-horizon modes."
+
+validation:
+  - "Verify 'Now' horizon stays Freeform while 'Next' stays Grid."
+  - "Verify Dragging a Red P1 Card to 'Next' updates the badge count."
+  - "Verify Header Badge shows Red for Urgent items."

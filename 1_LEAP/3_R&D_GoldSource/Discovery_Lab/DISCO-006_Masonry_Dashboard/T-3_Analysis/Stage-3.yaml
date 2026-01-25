@@ -1,0 +1,36 @@
+stage: -3
+title: "Analysis & Risk"
+status: pending
+
+governance:
+  rigor: "Deep Dive Research"
+  socratic_check: "What is the one thing that could make this fail?"
+
+objectives:
+  - "Perform technical deep dive into chosen scope"
+  - "Identify risks, performance impacts, and security concerns"
+
+checklist:
+  technical_research_performed: true
+  risk_registry_created: true
+  feasibility_assessed: true
+  ai_asked_if_missing: true
+  proceed_received: true
+
+outputs:
+  - "Risk assessment notes in DISCOVERY_LOG.md"
+
+outcomes:
+  risks:
+    - "Coupling: Sidebar needs to know about Card Drops. Risk of circular dependency."
+    - "Layout: Masonry 'column-count' causes DOM order mismatch (Top-Down vs Logical Left-Right)."
+  mitigations:
+    - "Coupling: Use Custom Events ('sidebar-action') or State Store (Source of Truth) to decouple."
+    - "Layout: Accept DOM order mismatch for Phase 1 (Visual fidelity first)."
+  technical_decisions:
+    - "Architecture: Use `Standard Event Bus` for Drag & Drop (Native API)."
+    - "CSS: Use `column-count` (CSS Columns) for Masonry, not JS Grid (Performance)."
+    - "Data: Card Schema must include `priority`, `updates` (int), `size` (small/med/large)."
+  dependencies:
+    - "Lucide Icons (Existing)"
+    - "State Management (Existing Phase 36)"
