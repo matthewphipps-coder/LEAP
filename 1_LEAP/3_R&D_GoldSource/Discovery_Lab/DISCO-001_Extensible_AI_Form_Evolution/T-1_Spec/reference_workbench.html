@@ -2,18 +2,19 @@
 <html lang="en">
 <!--
   ╔═══════════════════════════════════════════════════════════════════════════╗
-  ║  NEXUS WORKBENCH - GoldSource Standard Template v2.0                     ║
+  ║  NEXUS WORKBENCH - GoldSource Standard Template v3.0                     ║
   ║  ─────────────────────────────────────────────────────────────────────── ║
   ║  Purpose: AI-Native Form Evolution UI Reference                          ║
   ║  Spec:    DISCO-001 (Extensible AI Form Evolution)                       ║
-  ║  Theme:   Light/Dark (auto-detected via prefers-color-scheme)            ║
+  ║  Theme:   Light/Dark (via .light-theme class on body)                   ║
+  ║  Updated: 2026-01-25 - Aligned with GoldSource tokens                   ║
   ╚═══════════════════════════════════════════════════════════════════════════╝
 -->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS Workbench | GoldSource v2.0</title>
+    <title>NEXUS Workbench | GoldSource v3.0</title>
 
     <!-- GoldSource Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,53 +25,76 @@
 
     <style>
         /* ═══════════════════════════════════════════════════════════════════
-           THEME: Design Tokens (Dark Mode Default)
+           GOLDSOURCE DESIGN TOKENS (from variables.css)
            ═══════════════════════════════════════════════════════════════════ */
         :root {
-            --bg-deep: #050608;
-            --bg-surface: #0a0c10;
-            --bg-glass: rgba(13, 17, 23, 0.82);
-            --bg-pill: rgba(255, 255, 255, 0.04);
+            /* Colors - GoldSource Standard */
+            --bg-primary: #0a0a0c;
+            --accent-primary: #62d84e;
+            --accent-glow: rgba(98, 216, 78, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #4b5563;
 
-            --emerald: #62d84e;
-            --emerald-vibrant: #4ade80;
-            --emerald-glow: rgba(98, 216, 78, 0.15);
+            /* Semantic Colors */
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
 
-            --text-high: #ffffff;
-            --text-med: #94a3b8;
-            --text-low: #4b5563;
+            /* Glassmorphism - GoldSource Standard */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 20px;
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 
-            --border-glass: rgba(255, 255, 255, 0.07);
-            --shadow-deep: rgba(0, 0, 0, 0.7);
+            /* Typography - GoldSource Standard */
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-            --radius-lg: 28px;
-            --radius-md: 16px;
+            /* Spacing - GoldSource Standard */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+
+            /* Border Radius - GoldSource Standard */
             --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
 
-            --blur-std: 30px;
-            --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            /* Transitions - GoldSource Standard */
+            --transition-fast: 150ms ease-out;
+            --transition-normal: 300ms ease-out;
+            --transition-slow: 500ms ease-out;
+
+            /* Z-Index - GoldSource Standard */
+            --z-modal-backdrop: 300;
+            --z-modal: 400;
+
+            /* Workbench-specific (extend GoldSource) */
             --spring: cubic-bezier(0.19, 1, 0.22, 1);
+            --glass-bg-heavy: rgba(13, 17, 23, 0.92);
+            --pill-bg: rgba(255, 255, 255, 0.04);
         }
 
-        /* Light Theme Override */
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-deep: #f8fafc;
-                --bg-surface: #ffffff;
-                --bg-glass: rgba(255, 255, 255, 0.85);
-                --bg-pill: rgba(0, 0, 0, 0.03);
+        /* Light Theme Override - GoldSource Standard */
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
 
-                --emerald: #22c55e;
-                --emerald-vibrant: #16a34a;
-                --emerald-glow: rgba(34, 197, 94, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-bg-heavy: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 
-                --text-high: #0f172a;
-                --text-med: #475569;
-                --text-low: #94a3b8;
-
-                --border-glass: rgba(0, 0, 0, 0.08);
-                --shadow-deep: rgba(0, 0, 0, 0.15);
-            }
+            --accent-primary: #22c55e;
+            --accent-glow: rgba(34, 197, 94, 0.15);
+            --pill-bg: rgba(0, 0, 0, 0.03);
         }
 
         /* ═══════════════════════════════════════════════════════════════════
@@ -85,53 +109,63 @@
         }
 
         body {
-            background-color: var(--bg-deep);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text-high);
+            background-color: var(--bg-primary);
+            font-family: var(--font-body);
+            color: var(--text-primary);
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image:
-                radial-gradient(circle at 10% 20%, var(--emerald-glow) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
         }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           UTILITY CLASSES
-           ═══════════════════════════════════════════════════════════════════ */
         .hidden {
             display: none !important;
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           CANVAS & WORKBENCH CONTAINER
+           MODAL BACKDROP (Full Screen Overlay)
            ═══════════════════════════════════════════════════════════════════ */
-        .canvas {
+        .workbench-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
-            height: 56.25vw;
-            max-height: 100vh;
-            max-width: 177.78vh;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: var(--z-modal-backdrop);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-normal), visibility var(--transition-normal);
         }
 
+        .workbench-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           WORKBENCH CONTAINER
+           ═══════════════════════════════════════════════════════════════════ */
         .workbench {
-            width: 90%;
-            height: 90%;
-            background: var(--bg-glass);
-            backdrop-filter: blur(var(--blur-std));
-            -webkit-backdrop-filter: blur(var(--blur-std));
-            border: 1px solid var(--border-glass);
+            width: 90vw;
+            max-width: 1400px;
+            height: 85vh;
+            max-height: 900px;
+            background: var(--glass-bg-heavy);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 40px 100px -20px var(--shadow-deep);
+            box-shadow: var(--glass-shadow), 0 40px 100px -20px rgba(0, 0, 0, 0.5);
             overflow: hidden;
+            position: relative;
+            z-index: var(--z-modal);
 
             /* Animation: Bloom from origin */
             transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
@@ -144,13 +178,13 @@
                 filter 0.5s ease;
         }
 
-        .workbench.open {
+        .workbench-backdrop.open .workbench {
             opacity: 1;
             transform: scale(1);
             filter: blur(0);
         }
 
-        .workbench.closing {
+        .workbench-backdrop.closing .workbench {
             opacity: 0;
             transform: scale(0.2);
             filter: blur(15px);
@@ -161,35 +195,31 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           WINDOW CONTROL: CLOSE BUTTON (GoldSource Standard)
+           WINDOW CONTROL: CLOSE BUTTON
            ═══════════════════════════════════════════════════════════════════ */
         .window-ctrl {
             position: absolute;
-            top: 24px;
-            right: 24px;
+            top: var(--space-lg);
+            right: var(--space-lg);
             z-index: 1000;
         }
 
         .btn-close {
             width: 32px;
             height: 32px;
-            border-radius: 50%;
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
-            color: var(--text-med);
+            border-radius: var(--radius-full);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
             display: grid;
             place-items: center;
             cursor: pointer;
-            transition:
-                background 0.2s ease,
-                color 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.15s var(--spring);
+            transition: all var(--transition-fast);
         }
 
         .btn-close:hover {
             background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
+            color: var(--error);
             border-color: rgba(239, 68, 68, 0.3);
             transform: scale(1.08);
         }
@@ -207,35 +237,34 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           TOP BAR: Header (Unified across both panes)
+           TOP BAR: Header
            ═══════════════════════════════════════════════════════════════════ */
         .top-bar {
-            padding: 20px 40px;
-            border-bottom: 1px solid var(--border-glass);
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: var(--space-sm);
             flex-shrink: 0;
         }
 
-        /* Row 1: Record ID + Short Description */
         .top-row-1 {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-md);
         }
 
         .record-id {
-            font-size: 0.7rem;
-            color: var(--text-low);
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
             font-weight: 600;
             opacity: 0.6;
             flex-shrink: 0;
         }
 
         .short-desc {
-            font-size: 0.95rem;
-            color: var(--text-high);
+            font-size: var(--text-base);
+            color: var(--text-primary);
             font-weight: 500;
             flex-grow: 1;
             white-space: nowrap;
@@ -243,11 +272,10 @@
             text-overflow: ellipsis;
         }
 
-        /* Row 2: Status/Priority Pills + Assignment Chain */
         .top-row-2 {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-sm);
             flex-wrap: wrap;
         }
 
@@ -261,44 +289,44 @@
             font-size: 0.55rem;
             font-weight: 700;
             text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            padding: var(--space-xs) 10px;
+            border-radius: var(--space-xs);
+            transition: all var(--transition-normal);
         }
 
         .pill--status {
-            color: var(--text-med);
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
         }
 
         .pill--metric {
-            color: var(--text-low);
+            color: var(--text-tertiary);
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-glass);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 4px 8px;
+            padding: var(--space-xs) var(--space-sm);
         }
 
         .pill--metric.highlight {
-            border-color: var(--emerald);
-            color: var(--emerald-vibrant);
-            background: var(--emerald-glow);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: var(--accent-glow);
         }
 
         .chain-sep {
-            color: var(--text-low);
+            color: var(--text-tertiary);
             font-size: 0.8rem;
             opacity: 0.5;
-            margin: 0 4px;
+            margin: 0 var(--space-xs);
         }
 
         .pill--assignment {
             font-size: 0.65rem;
-            padding: 4px 10px;
+            padding: var(--space-xs) 10px;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-glass);
-            color: var(--text-med);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
             border-radius: 10px;
         }
 
@@ -312,19 +340,19 @@
         }
 
         /* ─────────────────────────────────────────────────────────────────
-           LEFT PANE: AI Chat (Now Assist)
+           LEFT PANE: AI Chat
            ───────────────────────────────────────────────────────────────── */
         .pane-left {
             flex: 0 0 50%;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid var(--border-glass);
+            border-right: 1px solid var(--glass-border);
             background: rgba(0, 0, 0, 0.05);
         }
 
         .chat-stream {
             flex: 1;
-            padding: 24px 32px;
+            padding: var(--space-lg) var(--space-xl);
             display: flex;
             flex-direction: column;
             gap: 14px;
@@ -333,11 +361,11 @@
 
         .msg {
             max-width: 85%;
-            padding: 12px 18px;
+            padding: var(--space-md) 18px;
             border-radius: 14px;
-            font-size: 0.9rem;
+            font-size: var(--text-sm);
             line-height: 1.5;
-            animation: msg-in 0.3s ease-out backwards;
+            animation: msg-in var(--transition-normal) backwards;
             border: 1px solid transparent;
         }
 
@@ -355,48 +383,48 @@
 
         .msg--ai {
             align-self: flex-start;
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
-            border-bottom-left-radius: 4px;
-            color: var(--text-med);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: var(--space-xs);
+            color: var(--text-secondary);
         }
 
         .msg--human {
             align-self: flex-end;
-            background: var(--bg-pill);
-            border: 1px solid var(--emerald);
-            color: var(--text-high);
+            background: var(--pill-bg);
+            border: 1px solid var(--accent-primary);
+            color: var(--text-primary);
             font-weight: 500;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 0 15px var(--emerald-glow);
+            border-bottom-right-radius: var(--space-xs);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
         /* Input Area */
         .input-area {
-            padding: 20px 32px;
-            border-top: 1px solid var(--border-glass);
+            padding: var(--space-lg) var(--space-xl);
+            border-top: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-md);
         }
 
         .brand-light {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
+            font-family: var(--font-heading);
+            font-size: var(--text-sm);
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--text-med);
+            gap: var(--space-sm);
+            color: var(--text-secondary);
             flex-shrink: 0;
         }
 
         .brand-dot {
             width: 7px;
             height: 7px;
-            background: var(--emerald);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--emerald);
+            background: var(--accent-primary);
+            border-radius: var(--radius-full);
+            box-shadow: 0 0 8px var(--accent-primary);
             animation: pulse 2s infinite;
         }
 
@@ -416,11 +444,11 @@
             display: flex;
             align-items: center;
             flex: 1;
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 8px 12px 8px 16px;
-            gap: 12px;
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+            gap: var(--space-md);
         }
 
         .input-capsule input {
@@ -428,55 +456,56 @@
             background: transparent;
             border: none;
             outline: none;
-            font-size: 0.85rem;
-            color: var(--text-high);
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            font-family: var(--font-body);
         }
 
         .input-capsule input::placeholder {
-            color: var(--text-low);
+            color: var(--text-tertiary);
         }
 
         .input-btns {
             display: flex;
             gap: 10px;
-            color: var(--text-low);
+            color: var(--text-tertiary);
             align-items: center;
-            font-size: 0.9rem;
+            font-size: var(--text-sm);
         }
 
         .tool-icon {
             cursor: pointer;
             opacity: 0.6;
-            transition: opacity 0.2s, color 0.2s;
+            transition: opacity var(--transition-fast), color var(--transition-fast);
         }
 
         .tool-icon:hover {
             opacity: 1;
-            color: var(--text-high);
+            color: var(--text-primary);
         }
 
         .btn-send {
             width: 28px;
             height: 28px;
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
             border-radius: 6px;
             display: grid;
             place-items: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-low);
+            transition: all var(--transition-fast);
+            color: var(--text-tertiary);
         }
 
         .btn-send:hover {
-            background: var(--emerald-glow);
-            border-color: var(--emerald);
-            color: var(--emerald);
+            background: var(--accent-glow);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
             transform: scale(1.05);
         }
 
         /* ─────────────────────────────────────────────────────────────────
-           RIGHT PANE: Dynamic Fields (Visual Companion)
+           RIGHT PANE: Dynamic Fields
            ───────────────────────────────────────────────────────────────── */
         .pane-right {
             flex: 0 0 50%;
@@ -488,53 +517,51 @@
         .pane-scroll {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 32px 120px 32px;
+            padding: var(--space-lg) var(--space-xl) 120px var(--space-xl);
         }
 
-        /* Section Labels */
         .section-label {
             font-size: 0.55rem;
             font-weight: 800;
-            color: var(--text-low);
+            color: var(--text-tertiary);
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            margin: 0 0 12px 0;
+            margin: 0 0 var(--space-md) 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-sm);
         }
 
         .section-label::after {
             content: '';
             flex: 1;
             height: 1px;
-            background: var(--border-glass);
+            background: var(--glass-border);
         }
 
         .section-label:not(:first-child) {
-            margin-top: 24px;
+            margin-top: var(--space-lg);
         }
 
-        /* Field Pills Grid */
         .pill-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: var(--space-sm);
         }
 
         .field-pill {
-            padding: 6px 12px;
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            color: var(--text-med);
+            padding: 6px var(--space-md);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
             display: flex;
             flex-direction: column;
             gap: 2px;
             min-width: 90px;
             flex: 1 1 auto;
-            animation: pill-in 0.3s ease-out backwards;
+            animation: pill-in var(--transition-normal) backwards;
         }
 
         @keyframes pill-in {
@@ -550,8 +577,8 @@
         }
 
         .field-pill--half {
-            flex: 1 1 calc(50% - 4px);
-            max-width: calc(50% - 4px);
+            flex: 1 1 calc(50% - var(--space-xs));
+            max-width: calc(50% - var(--space-xs));
         }
 
         .field-pill--third {
@@ -571,12 +598,12 @@
         .field-pill__label {
             font-size: 0.5rem;
             font-weight: 700;
-            color: var(--text-low);
+            color: var(--text-tertiary);
             text-transform: uppercase;
         }
 
         .field-pill__value {
-            color: var(--text-med);
+            color: var(--text-secondary);
         }
 
         .field-pill__value--large {
@@ -587,12 +614,12 @@
 
         /* Ghost State (AI Proposal) */
         .field-pill--ghost {
-            background: var(--emerald-glow);
-            border-color: var(--emerald);
+            background: var(--accent-glow);
+            border-color: var(--accent-primary);
         }
 
         .field-pill--ghost .field-pill__value {
-            color: var(--emerald-vibrant);
+            color: var(--accent-primary);
         }
 
         /* ─────────────────────────────────────────────────────────────────
@@ -600,11 +627,11 @@
            ───────────────────────────────────────────────────────────────── */
         .action-tray {
             position: absolute;
-            bottom: 20px;
+            bottom: var(--space-lg);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: var(--space-md);
             animation: tray-slide 0.4s var(--spring);
         }
 
@@ -621,38 +648,101 @@
         }
 
         .btn-action {
-            padding: 10px 20px;
+            padding: 10px var(--space-lg);
             border-radius: 10px;
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--font-heading);
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: var(--text-sm);
             cursor: pointer;
-            transition: transform 0.3s, filter 0.3s;
+            transition: transform var(--transition-normal), filter var(--transition-normal);
             border: none;
         }
 
         .btn-action--primary {
-            background: linear-gradient(135deg, var(--emerald), var(--emerald-vibrant));
-            color: var(--bg-deep);
-            box-shadow: 0 8px 16px var(--emerald-glow);
+            background: linear-gradient(135deg, var(--accent-primary), var(--success));
+            color: var(--bg-primary);
+            box-shadow: 0 8px 16px var(--accent-glow);
         }
 
         .btn-action--secondary {
-            background: var(--bg-pill);
-            border: 1px solid var(--border-glass);
-            color: var(--text-med);
+            background: var(--pill-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
         }
 
         .btn-action:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
         }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           DEMO: Fake Shell (for prototype testing only)
+           ═══════════════════════════════════════════════════════════════════ */
+        .demo-shell {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .demo-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .demo-sidebar {
+            position: absolute;
+            top: 84px;
+            left: var(--space-lg);
+            width: 68px;
+            height: calc(100vh - 100px);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+        }
+
+        .demo-trigger {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: var(--space-md) var(--space-xl);
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            cursor: pointer;
+            pointer-events: auto;
+        }
     </style>
 </head>
 
 <body>
-    <div class="canvas">
-        <div class="workbench open" id="workbench">
+    <!-- Demo Shell (simulates GoldSource header/sidebar) -->
+    <div class="demo-shell">
+        <div class="demo-header">NEXUS Demo Shell (Header)</div>
+        <div class="demo-sidebar"></div>
+        <button class="demo-trigger" id="demo-trigger">Click Card to Open Workbench</button>
+    </div>
+
+    <!-- Workbench Modal -->
+    <div class="workbench-backdrop" id="workbench-backdrop">
+        <div class="workbench" id="workbench">
             <!-- Close Button -->
             <div class="window-ctrl">
                 <button class="btn-close" id="btn-close" aria-label="Close workbench">
@@ -689,7 +779,7 @@
                 <!-- Left Pane: AI Chat -->
                 <section class="pane-left">
                     <div class="chat-stream" id="chat-stream">
-                        <!-- Messages injected via [[DIRECTIVE]] -->
+                        <!-- Messages injected via API -->
                     </div>
                     <div class="input-area">
                         <div class="brand-light">
@@ -716,7 +806,6 @@
                 <!-- Right Pane: Dynamic Fields -->
                 <section class="pane-right">
                     <div class="pane-scroll" id="dynamic-pane">
-                        <!-- Sections rendered via [[DIRECTIVE]] -->
                         <div class="section-label" data-section="context">Context</div>
                         <div class="pill-grid" data-grid="context"></div>
 
@@ -742,34 +831,44 @@
 
     <script>
         /**
-         * NEXUS Workbench Controller
+         * NEXUS Workbench Controller - GoldSource v3.0
          * ─────────────────────────────────────────────────────────────────
-         * This script handles:
-         * 1. Open/Close animations (bloom from click origin)
-         * 2. Field population via data-field attributes
-         * 3. Dynamic section rendering via [[DIRECTIVE]]
+         * Aligned with GoldSource patterns (variables.css, design-system.yaml)
+         * Trigger: Click on card in My Work dashboard
          */
 
+        const backdrop = document.getElementById('workbench-backdrop');
         const workbench = document.getElementById('workbench');
         const btnClose = document.getElementById('btn-close');
 
         // ─────────────────────────────────────────────────────────────────
-        // ANIMATION: Open from origin
+        // ANIMATION: Open from click origin
         // ─────────────────────────────────────────────────────────────────
         function openWorkbench(originX = 50, originY = 50) {
             workbench.style.setProperty('--origin-x', `${originX}%`);
             workbench.style.setProperty('--origin-y', `${originY}%`);
-            workbench.classList.remove('closing');
-            requestAnimationFrame(() => workbench.classList.add('open'));
+            backdrop.classList.remove('closing');
+            requestAnimationFrame(() => backdrop.classList.add('open'));
+            // Focus trap - move focus into workbench
+            setTimeout(() => btnClose.focus(), 100);
         }
 
         function closeWorkbench() {
-            workbench.classList.remove('open');
-            workbench.classList.add('closing');
-            setTimeout(() => workbench.classList.remove('closing'), 500);
+            backdrop.classList.remove('open');
+            backdrop.classList.add('closing');
+            setTimeout(() => backdrop.classList.remove('closing'), 500);
         }
 
+        // Event Listeners
         btnClose.addEventListener('click', closeWorkbench);
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) closeWorkbench();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && backdrop.classList.contains('open')) {
+                closeWorkbench();
+            }
+        });
 
         // ─────────────────────────────────────────────────────────────────
         // API: Populate fields
@@ -794,9 +893,10 @@
 
             grid.innerHTML = '';
             if (fields.length > 0) {
-                fields.forEach(f => {
+                fields.forEach((f, i) => {
                     const pill = document.createElement('div');
                     pill.className = `field-pill field-pill--${f.size || 'auto'} ${f.ghost ? 'field-pill--ghost' : ''}`;
+                    pill.style.animationDelay = `${i * 50}ms`;
                     pill.innerHTML = `
                         <span class="field-pill__label">${f.label}</span>
                         <span class="field-pill__value ${f.large ? 'field-pill__value--large' : ''}">${f.value}</span>
@@ -827,8 +927,57 @@
             stream.scrollTop = stream.scrollHeight;
         }
 
+        // ─────────────────────────────────────────────────────────────────
         // Expose API for external use
-        window.NEXUS = { openWorkbench, closeWorkbench, setField, highlightField, renderSection, showActionTray, addMessage };
+        // ─────────────────────────────────────────────────────────────────
+        window.NEXUS = {
+            openWorkbench,
+            closeWorkbench,
+            setField,
+            highlightField,
+            renderSection,
+            showActionTray,
+            addMessage
+        };
+
+        // ─────────────────────────────────────────────────────────────────
+        // DEMO: Click trigger to simulate card click
+        // ─────────────────────────────────────────────────────────────────
+        document.getElementById('demo-trigger').addEventListener('click', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const originX = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+            const originY = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+
+            openWorkbench(originX, originY);
+
+            // Demo: Populate with sample data
+            setField('number', 'INC0012345');
+            setField('short_description', 'Network connectivity issues in Building A');
+            setField('state', 'In Progress');
+            setField('priority', 'P2');
+            setField('impact', 'High');
+            setField('urgency', 'Medium');
+            setField('assignment_group', 'Network Operations');
+            setField('assigned_to', 'Jane Smith');
+
+            renderSection('context', [
+                { label: 'Category', value: 'Network', size: 'third' },
+                { label: 'Subcategory', value: 'Connectivity', size: 'third' },
+                { label: 'CI', value: 'RTR-BldgA-01', size: 'third' },
+                { label: 'Description', value: 'Users in Building A Floor 3 are experiencing intermittent network drops since 9:00 AM.', size: 'full', large: true }
+            ]);
+
+            addMessage('ai', 'I see this is a network connectivity issue in Building A. I\'ve analyzed similar incidents and have some suggestions.');
+            addMessage('human', 'What do you recommend?');
+            addMessage('ai', 'Based on the pattern, this could be related to the switch RTR-BldgA-01. I recommend checking the port status and recent config changes. Would you like me to update the work notes?');
+        });
+
+        // Theme toggle for testing
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 't' && !e.ctrlKey && !e.metaKey) {
+                document.body.classList.toggle('light-theme');
+            }
+        });
     </script>
 </body>
 

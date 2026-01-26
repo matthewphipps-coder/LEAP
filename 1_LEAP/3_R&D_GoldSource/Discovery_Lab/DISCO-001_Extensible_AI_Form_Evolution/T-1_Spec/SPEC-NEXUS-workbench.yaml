@@ -3,16 +3,19 @@
 # =============================================================================
 # Source: DISCO-001 Discovery Lab (Form Evolution Pattern)
 # Purpose: AI-Native workbench for conversational record editing
+# Updated: 2026-01-25 - Aligned with GoldSource standards
 # =============================================================================
 
 metadata:
   specId: "NEXUS-WORKBENCH"
   name: "NEXUS AI Workbench"
-  version: "2.0.0"
+  version: "3.0.0"
   created: "2026-01-23"
+  updated: "2026-01-25"
   status: "locked"
-  lockedAt: "2026-01-23T01:48:00Z"
+  lockedAt: "2026-01-25T23:55:00Z"
   discoveryRef: "DISCO-001_Extensible_AI_Form_Evolution"
+  goldSourceAlignment: "v2.0"
 
 # =============================================================================
 # REFERENCE IMPLEMENTATION
@@ -20,7 +23,7 @@ metadata:
 
 referenceImplementation:
   prototype: "T-1_Spec/reference_workbench.html"
-  prototypeVersion: "v2.0"
+  prototypeVersion: "v3.0"
   
   prototypeRole: |
     This is a VISUAL CONTRACT only. The HTML demonstrates exact layout,
@@ -29,23 +32,117 @@ referenceImplementation:
     IS:  Visual/behavioral reference - "match this exactly"
     IS:  Source of truth for colors, spacing, layouts, animations
     IS:  JavaScript API contract (window.NEXUS methods)
+    IS:  Uses GoldSource design tokens (variables.css aligned)
     
     IS NOT: Copy-paste code source
     IS NOT: Architecture reference (prototype is monolithic)
 
   devAgentGuidance:
     - "Match prototype visuals exactly using GoldSource patterns"
-    - "Use CSS variables from design tokens, not raw values"
+    - "Use CSS variables from variables.css - DO NOT redefine tokens"
     - "Implement as modular components (*-ui.js + *.css)"
     - "Add AI-First headers to all new files"
     - "Window.NEXUS API must be preserved for directive integration"
+    - "Modal must overlay header/sidebar (z-index: --z-modal)"
+
+# =============================================================================
+# GOLDSOURCE TOKEN MAPPING
+# =============================================================================
+
+goldSourceTokens:
+  description: "This spec uses GoldSource v2.0 tokens from variables.css"
+  
+  colors:
+    background: "--bg-primary"
+    accent: "--accent-primary"
+    accentGlow: "--accent-glow"
+    textPrimary: "--text-primary"
+    textSecondary: "--text-secondary"
+    textTertiary: "--text-tertiary (new - add to variables.css)"
+    semantic:
+      success: "--success"
+      error: "--error"
+      warning: "--warning"
+      info: "--info"
+  
+  glass:
+    background: "--glass-bg"
+    backgroundHeavy: "--glass-bg-heavy (workbench-specific)"
+    border: "--glass-border"
+    blur: "--glass-blur"
+    shadow: "--glass-shadow"
+  
+  spacing:
+    xs: "--space-xs"
+    sm: "--space-sm"
+    md: "--space-md"
+    lg: "--space-lg"
+    xl: "--space-xl"
+  
+  radius:
+    sm: "--radius-sm"
+    md: "--radius-md"
+    lg: "--radius-lg"
+    full: "--radius-full"
+  
+  transitions:
+    fast: "--transition-fast"
+    normal: "--transition-normal"
+    slow: "--transition-slow"
+    spring: "--spring (workbench-specific easing)"
+  
+  zIndex:
+    modalBackdrop: "--z-modal-backdrop (300)"
+    modal: "--z-modal (400)"
+  
+  typography:
+    fontHeading: "--font-heading"
+    fontBody: "--font-body"
+
+# =============================================================================
+# INTEGRATION
+# =============================================================================
+
+integration:
+  trigger:
+    location: "My Work dashboard only"
+    action: "Click on any card"
+    handler: "card-service.js should emit event or call NEXUS.openWorkbench()"
+  
+  positioning:
+    type: "modal-overlay"
+    overlapsShell: true
+    overlapsHeader: true
+    overlapsSidebar: true
+    backdropBlur: "8px"
+    zIndex: "--z-modal (400)"
+  
+  stateManagement:
+    approach: "Stateless modal - no registerStateSlice needed"
+    reason: "Workbench fetches record data on open, doesn't persist"
+  
+  closeActions:
+    - "Click close button (X)"
+    - "Click backdrop (outside workbench)"
+    - "Press Escape key"
+  
+  accessibility:
+    focusTrap: true
+    initialFocus: "Close button"
+    escapeToClose: true
 
 # =============================================================================
 # LAYOUT STRUCTURE
 # =============================================================================
 
 layout:
-  container: "16:9 canvas, 90% viewport, centered"
+  container:
+    width: "90vw"
+    maxWidth: "1400px"
+    height: "85vh"
+    maxHeight: "900px"
+    centered: true
+  
   structure:
     - segment: "TOP_BAR"
       span: "full-width"
@@ -79,36 +176,37 @@ layout:
 # =============================================================================
 
 themeSystem:
-  detection: "prefers-color-scheme (auto)"
+  detection: ".light-theme class on body (GoldSource standard)"
   
   tokens:
     dark:
-      --bg-deep: "#050608"
-      --bg-glass: "rgba(13,17,23,0.82)"
-      --emerald: "#62d84e"
-      --text-high: "#ffffff"
-      --text-med: "#94a3b8"
-      --text-low: "#4b5563"
-      --border-glass: "rgba(255,255,255,0.07)"
+      # Uses :root defaults from variables.css
+      note: "Dark is default - no class needed"
     
     light:
-      --bg-deep: "#f8fafc"
-      --bg-glass: "rgba(255,255,255,0.85)"
-      --emerald: "#22c55e"
-      --text-high: "#0f172a"
-      --text-med: "#475569"
-      --text-low: "#94a3b8"
-      --border-glass: "rgba(0,0,0,0.08)"
+      # Uses .light-theme overrides from variables.css
+      note: "Applied via document.body.classList.add('light-theme')"
 
   typography:
-    headings: "Outfit, sans-serif"
-    body: "Inter, sans-serif"
+    headings: "var(--font-heading) (Outfit)"
+    body: "var(--font-body) (Inter)"
 
 # =============================================================================
 # COMPONENT SPECIFICATIONS
 # =============================================================================
 
 components:
+
+  # --- Modal Backdrop ---
+  modalBackdrop:
+    selector: ".workbench-backdrop"
+    behavior:
+      default: "Hidden, opacity 0"
+      open: "Visible, opacity 1, blur overlay"
+    cssVariables:
+      zIndex: "--z-modal-backdrop (300)"
+      blur: "8px"
+      background: "rgba(0, 0, 0, 0.6)"
 
   # --- Close Button ---
   closeButton:
@@ -117,11 +215,11 @@ components:
       default: "Transparent with glass border"
       hover:
         - "Background: rgba(239,68,68,0.15)"
-        - "Color: #ef4444"
+        - "Color: var(--error)"
         - "Icon rotates 90°"
         - "Scale: 1.08"
       active: "Scale: 0.92"
-    transition: "0.2s ease"
+    transition: "var(--transition-fast)"
 
   # --- Pills ---
   pills:
@@ -131,7 +229,7 @@ components:
     metric:
       class: ".pill--metric"
       style: "Dull/low-contrast by default"
-      highlight: "Emerald glow when changed by AI"
+      highlight: "Accent glow when changed by AI"
     assignment:
       class: ".pill--assignment"
       style: "Rounded pill, connected with chain-sep"
@@ -143,8 +241,8 @@ components:
       style: "Left-aligned, glass border, muted text"
     human:
       class: ".msg--human"
-      style: "Right-aligned, emerald border, white text"
-    animation: "Slide-in from left (300ms)"
+      style: "Right-aligned, accent border, primary text"
+    animation: "Slide-in from left (var(--transition-normal))"
 
   # --- Field Pills (Dynamic Area) ---
   fieldPills:
@@ -156,14 +254,14 @@ components:
       full: "100% width (1 per row)"
     ghost:
       class: ".field-pill--ghost"
-      style: "Emerald glow, emerald text (AI proposal)"
-    animation: "Fade-in from bottom (300ms)"
+      style: "Accent glow, accent text (AI proposal)"
+    animation: "Fade-in from bottom (var(--transition-normal))"
 
   # --- Action Tray ---
   actionTray:
-    position: "Absolute, bottom 20px, centered"
+    position: "Absolute, bottom var(--space-lg), centered"
     buttons:
-      primary: "Emerald gradient, dark text, shadow"
+      primary: "Accent gradient, dark text, shadow"
       secondary: "Glass background, muted text"
     visibility: "Hidden until showActionTray(true)"
 
@@ -175,7 +273,7 @@ animations:
   bloomOpen:
     trigger: "openWorkbench(originX, originY)"
     duration: "600ms"
-    easing: "spring (0.19, 1, 0.22, 1)"
+    easing: "var(--spring) (0.19, 1, 0.22, 1)"
     properties:
       - "opacity: 0 → 1"
       - "scale: 0.3 → 1"
@@ -183,7 +281,7 @@ animations:
     transformOrigin: "Dynamic (from click position %)"
 
   bloomClose:
-    trigger: "closeWorkbench() or btn-close click"
+    trigger: "closeWorkbench() or btn-close click or ESC"
     duration: "500ms"
     easing: "ease-out"
     properties:
@@ -193,15 +291,16 @@ animations:
 
   messageIn:
     trigger: "addMessage()"
-    duration: "300ms"
+    duration: "var(--transition-normal)"
     easing: "ease-out"
     properties: "translateX(-5px) → 0, opacity: 0 → 1"
 
   pillIn:
     trigger: "renderSection()"
-    duration: "300ms"
+    duration: "var(--transition-normal)"
     easing: "ease-out"
     properties: "translateY(5px) → 0, opacity: 0 → 1"
+    stagger: "50ms per pill"
 
 # =============================================================================
 # JAVASCRIPT API (window.NEXUS)
@@ -214,6 +313,7 @@ jsApi:
     - name: "openWorkbench"
       signature: "openWorkbench(originX: number, originY: number)"
       description: "Opens workbench with bloom animation from origin %"
+      note: "originX/Y should be calculated from click event position"
     
     - name: "closeWorkbench"
       signature: "closeWorkbench()"
@@ -298,6 +398,8 @@ accessibility:
     - "ESC key closes workbench"
     - "Tab navigation through chat and fields"
     - "Screen reader announces new messages"
+    - "Initial focus moved to close button on open"
+    - "Click outside workbench closes it"
 
 # =============================================================================
 # IMPLEMENTATION CHECKLIST
@@ -309,17 +411,24 @@ implementationChecklist:
       - "ui/components/workbench/workbench-ui.js"
       - "ui/components/workbench/workbench.css"
   
-  - task: "Implement layout shell"
-    acceptance: "Matches prototype 16:9 canvas with 50:50 split"
+  - task: "Add workbench-specific tokens to variables.css"
+    tokens:
+      - "--text-tertiary: #4b5563 (dark) / #94a3b8 (light)"
+      - "--glass-bg-heavy: rgba(13, 17, 23, 0.92)"
+      - "--pill-bg: rgba(255, 255, 255, 0.04)"
+      - "--spring: cubic-bezier(0.19, 1, 0.22, 1)"
   
-  - task: "Implement theme tokens"
-    acceptance: "Light/dark auto-detection works"
+  - task: "Implement modal backdrop"
+    acceptance: "Covers full screen, z-index above header/sidebar"
+  
+  - task: "Implement layout shell"
+    acceptance: "Matches prototype dimensions with 50:50 split"
   
   - task: "Implement close button"
     acceptance: "Hover rotates icon, active scales down"
   
   - task: "Implement bloom animations"
-    acceptance: "Open/close animate from/to origin point"
+    acceptance: "Open/close animate from/to click origin point"
   
   - task: "Implement chat pane"
     acceptance: "Messages append with animation, input styled"
@@ -330,5 +439,8 @@ implementationChecklist:
   - task: "Expose NEXUS API"
     acceptance: "All window.NEXUS methods functional"
   
+  - task: "Integrate with card-service.js"
+    acceptance: "Clicking card on My Work triggers openWorkbench()"
+  
   - task: "Accessibility audit"
-    acceptance: "Keyboard nav, aria-labels, focus trap"
+    acceptance: "ESC close, focus trap, aria-labels"
