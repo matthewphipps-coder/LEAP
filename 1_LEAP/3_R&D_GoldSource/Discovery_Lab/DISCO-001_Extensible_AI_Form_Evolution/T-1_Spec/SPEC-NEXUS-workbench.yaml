@@ -412,11 +412,7 @@ implementationChecklist:
       - "ui/components/workbench/workbench.css"
   
   - task: "Add workbench-specific tokens to variables.css"
-    tokens:
-      - "--text-tertiary: #4b5563 (dark) / #94a3b8 (light)"
-      - "--glass-bg-heavy: rgba(13, 17, 23, 0.92)"
-      - "--pill-bg: rgba(255, 255, 255, 0.04)"
-      - "--spring: cubic-bezier(0.19, 1, 0.22, 1)"
+    acceptance: "Add to :root AND .light-theme sections"
   
   - task: "Implement modal backdrop"
     acceptance: "Covers full screen, z-index above header/sidebar"
@@ -439,8 +435,167 @@ implementationChecklist:
   - task: "Expose NEXUS API"
     acceptance: "All window.NEXUS methods functional"
   
-  - task: "Integrate with card-service.js"
+  - task: "Integrate with canvas-ui.js"
     acceptance: "Clicking card on My Work triggers openWorkbench()"
   
   - task: "Accessibility audit"
     acceptance: "ESC close, focus trap, aria-labels"
+
+# =============================================================================
+# MODULE CONTRACT TEMPLATE (REQUIRED)
+# =============================================================================
+
+moduleContract:
+  description: "All new JS files MUST start with this header format"
+  
+  workbenchUiJs: |
+    /**
+     * @file workbench-ui.js
+     * @purpose NEXUS AI Workbench - Modal overlay for conversational record editing
+     * @spec DISCO-001 / SPEC-NEXUS-workbench.yaml v3.0
+     * @layer ui-component
+     * @dependencies [state.js, logger.js]
+     * @dependents [canvas-ui.js]
+     * @modifyImpact [modal overlay, NEXUS API]
+     */
+
+# =============================================================================
+# IMPORT PATHS (CRITICAL - Prevents 404 errors)
+# =============================================================================
+
+importPaths:
+  description: "Exact import statements for workbench-ui.js"
+  depth: 3  # ui/components/workbench/ is 3 levels deep
+  
+  required:
+    - statement: "import { log } from '../../../core/logger.js';"
+      purpose: "Logging"
+    - statement: "import { StateManager } from '../../../core/state.js';"
+      purpose: "State subscription (optional for this component)"
+  
+  note: |
+    Path depth from ui/components/workbench/:
+    - To core/ = ../../../core/
+    - To features/ = ../../../features/
+
+# =============================================================================
+# TOKENS TO ADD TO VARIABLES.CSS (REQUIRED)
+# =============================================================================
+
+tokensToAdd:
+  description: "Add these tokens to 2_GoldSource/scaffold/ui/styles/variables.css"
+  
+  darkTheme:
+    section: ":root { }"
+    tokens:
+      - name: "--text-tertiary"
+        value: "#4b5563"
+        purpose: "Low-contrast text (labels, separators)"
+      - name: "--glass-bg-heavy"
+        value: "rgba(13, 17, 23, 0.92)"
+        purpose: "Modal background (higher opacity than glass-bg)"
+      - name: "--pill-bg"
+        value: "rgba(255, 255, 255, 0.04)"
+        purpose: "Subtle pill/badge background"
+      - name: "--spring"
+        value: "cubic-bezier(0.19, 1, 0.22, 1)"
+        purpose: "Bloom animation easing"
+  
+  lightTheme:
+    section: ".light-theme { }"
+    tokens:
+      - name: "--text-tertiary"
+        value: "#94a3b8"
+      - name: "--glass-bg-heavy"
+        value: "rgba(255, 255, 255, 0.95)"
+      - name: "--pill-bg"
+        value: "rgba(0, 0, 0, 0.03)"
+
+# =============================================================================
+# CARD INTEGRATION CODE (CRITICAL - Without this, workbench can't open)
+# =============================================================================
+
+cardIntegration:
+  description: |
+    This code must be added to canvas-ui.js to enable card clicks to open workbench.
+    The workbench-ui.js exposes window.NEXUS, and canvas-ui.js calls it when a card is clicked.
+  
+  targetFile: "ui/components/canvas/canvas-ui.js"
+  
+  step1_importWorkbench:
+    description: "Import workbench at top of canvas-ui.js"
+    code: |
+      // Add this import at top of file (after existing imports)
+      import '../workbench/workbench-ui.js';
+  
+  step2_addClickHandler:
+    description: "Add click handler to card elements during render"
+    location: "Inside the function that creates/renders card elements"
+    code: |
+      // Add this to each card element after creation:
+      cardElement.addEventListener('click', (e) => {
+          // Only trigger if not clicking a button/link inside the card
+          if (e.target.closest('button, a, .card-action')) return;
+          
+          // Calculate bloom origin from click position
+          const originX = (e.clientX / window.innerWidth) * 100;
+          const originY = (e.clientY / window.innerHeight) * 100;
+          
+          // Open workbench with card data
+          if (window.NEXUS && window.NEXUS.openWorkbench) {
+              window.NEXUS.openWorkbench(originX, originY);
+              
+              // Populate with card data
+              window.NEXUS.setField('number', cardData.id);
+              window.NEXUS.setField('short_description', cardData.title);
+              window.NEXUS.setField('state', cardData.horizon);
+              window.NEXUS.setField('priority', cardData.priority);
+              window.NEXUS.setField('impact', cardData.impact || 'Medium');
+              window.NEXUS.setField('urgency', cardData.urgency || 'Medium');
+              window.NEXUS.setField('assignment_group', cardData.group || 'Unassigned');
+              window.NEXUS.setField('assigned_to', cardData.assignee || 'Unassigned');
+              
+              // Render context section
+              window.NEXUS.renderSection('context', [
+                  { label: 'Category', value: cardData.category || 'Incident', size: 'third' },
+                  { label: 'Horizon', value: cardData.horizon, size: 'third' },
+                  { label: 'Priority', value: cardData.priority, size: 'third' },
+                  { label: 'Description', value: cardData.description || cardData.title, size: 'full', large: true }
+              ]);
+              
+              // Add initial AI message
+              window.NEXUS.addMessage('ai', `I see you're viewing ${cardData.id}. How can I help with this ${cardData.priority} item?`);
+          }
+      });
+  
+  step3_cursorStyle:
+    description: "Add cursor pointer to indicate cards are clickable"
+    location: "canvas.css or card.css"
+    code: |
+      .card {
+          cursor: pointer;
+      }
+      .card:hover {
+          /* existing hover styles */
+      }
+
+# =============================================================================
+# INDEX.HTML ADDITIONS (REQUIRED)
+# =============================================================================
+
+indexHtmlAdditions:
+  description: "Add these elements to index.html"
+  
+  cssLink:
+    location: "In <head>, after other component CSS links"
+    code: |
+      <link rel="stylesheet" href="scaffold/ui/components/workbench/workbench.css">
+  
+  jsModule:
+    location: "workbench-ui.js is imported by canvas-ui.js, no separate script tag needed"
+  
+  htmlSlot:
+    location: "At end of <body>, before closing </body> tag"
+    code: |
+      <!-- NEXUS Workbench Modal (rendered by workbench-ui.js) -->
+      <div id="workbench-root"></div>
